@@ -1,4 +1,4 @@
-from flask import render_template, request, redirect, url_for, jsonify, flash
+from flask import json,render_template, request, redirect, url_for, jsonify, flash
 from . import service
 from ..models.ds_models import *
 from .forms import *
@@ -18,6 +18,8 @@ def sensor():
 
     form = SensorForm()
     form.building.choices = get_building_choices(current_app.config['NAME'])
+    print "Buildings are"
+    print form.building
     if form.validate_on_submit():
         Sensor(name=str(uuid4()),
                source_name=str(form.source_name.data),
@@ -26,7 +28,108 @@ def sensor():
         return redirect(url_for('service.sensor'))
     return render_template('service/sensor.html', objs=objs, form=form)
 
+@service.route('/sensor/list', methods=['GET'])
+def sensor_list():
+    if request.method == 'GET':
+	list_sensors = Sensor._get_collection().find()
+	return jsonify({'data': create_response(list_sensors)})
 
+@service.route('/api/v1/data/id=<name>/interval=<interval>/resolution=<resolution>/meta=<meta>', methods=['GET'])
+@service.route('/api/v1/data/id=<name>/interval=<interval>/resolution=<resolution>', methods=['GET'])
+@service.route('/api/v1/data/id=<name>/interval=<interval>/', methods=['GET'])
+def get_data(name,interval,resolution=None,meta=None):
+    if meta == "True" :
+        metadata = Sensor._get_collection().find({'name': name}, {'metadata': 1, '_id': 0})[0]['metadata']
+        sensorList = metadata['Sensor_List'].split(",")
+        nameList = ""
+        for element in sensorList:
+            nameList+= "\""+element+"\","
+        nameList = nameList[:-1]
+        data = influx.query("select mean(value) from "+nameList+" WHERE time > now() - "+interval+" GROUP BY time("+resolution+")").raw
+        dataDict = {}
+        for series in data['series']:
+            dataDict[series['name']]=series['values']
+        return jsonify({'data':calculateAvg(dataDict,name)})
+    elif resolution!=None:
+		data = influx.query("select mean(value) from "+"\""+name+"\""+" WHERE time > now() - "+interval+" GROUP BY time("+resolution+")")
+    else:
+		data = influx.query("select * from "+"\""+name+"\""+" WHERE time > now() - "+interval)
+    return jsonify({'data':data.raw})
+
+def calculateAvg(dataDict,name):
+    numOfSeries = len(dataDict)
+    numOfValues = len(dataDict.keys()[0])
+    keysList = dataDict.keys()
+    finalList = []
+    for i in range(0,numOfValues):
+        temp,counter = 0,0
+        for key in keysList:
+            try:
+                currElement = dataDict[key][i][1]  
+            except Exception:
+                currElement = None
+            if currElement!=None:
+                temp+=currElement
+                counter+=1
+        if counter:
+            finalList.append([dataDict[key][0][0],temp/counter])
+    finalObj = {
+                    "series": [
+                        {
+                        "columns": [
+                                    "time", 
+                                    "mean"
+                        ], 
+                        "name": name, 
+                        "values": finalList
+                    }
+                ]
+            }
+    return finalObj
+    
+@service.route('/api/v1/<param_1>=<value_1>/<request_type>', methods=['GET'])
+@service.route('/api/v1/<param_1>=<value_1>/<param_2>=<value_2>/<request_type>',methods=['GET'])
+@service.route('/api/v1/<param_1>=<value_1>/<param_2>=<value_2>/<param_3>=<value_3>/<request_type>',methods=['GET'])
+def get_sensors_metadata(param_1,value_1,request_type,param_2=None,value_2=None,param_3=None,value_3=None):
+	if request_type == "params":
+		list_sensors = Sensor._get_collection().find({param_1:value_1})
+        	return jsonify({'data': create_response(list_sensors)})
+	elif request_type == "tags":
+		if param_2==None:
+			list_sensors = Sensor._get_collection().find({request_type:{'name':param_1, 'value': value_1}})
+                        return jsonify({'data': create_response(list_sensors)})
+		elif param_3==None :
+			list_sensors = Sensor._get_collection().find({request_type:{'name':param_1, 'value': value_1},request_type:{'name':param_2,'value':value_2}})
+			return jsonify({'data': create_response(list_sensors)})
+		else :
+			list_sensors = Sensor._get_collection().find({request_type:{'name':param_1,'value': value_1},request_type:{'name':param_2,'value':value_2},request_type:{'name':param_3,'value':value_3}})
+			return jsonify({'data': create_response(list_sensors)})
+	elif request_type == "metadata":
+		list_sensors = Sensor._get_collection().find({request_type+"."+param_1:value_1})
+		print "list sensors"
+		list_sensors[0]
+		return jsonify({'data': create_response(list_sensors)})
+
+def create_json(sensor):
+	json_object = { 'building': sensor['building'],
+			'name' : sensor['name'],
+			'tags' : sensor['tags'],
+			'metadata' : sensor['metadata'],
+			'source_identifier' : sensor['source_identifier'],
+			'source_name' : sensor['source_name']
+			}
+	return json_object
+
+def create_response(sensor_list):
+	i=0
+	sensor_dict = {}
+        for sensor in sensor_list:
+                json_temp = create_json(sensor)
+                i+=1
+                key = "sensor_"+str(i)
+                sensor_dict[key] = json_temp
+	return sensor_dict
+	
 @service.route('/sensor/<name>/metadata', methods=['GET', 'POST'])
 def sensor_metadata(name):
     if request.method == 'GET':
@@ -68,12 +171,21 @@ def sensor_subscribers(name):
 @service.route('/sensor/<name>/timeseries', methods=['POST'])
 def sensor_timeseries(name):
     points = [[int(pair['time']), pair['value']] for pair in request.get_json()['data']]
-    data = [{
-        'name': name,
-        'columns': ['time', 'value'],
-        'points': points
-    }]
 
+    try:
+        value_type = request.get_json()['value_type']
+    except KeyError:
+        value_type='value'
+    data_points = []
+    for pair in request.get_json()['data']:
+        temp_dict = {}
+        temp_dict['measurement'] = name
+        temp_dict['fields'] = { 
+                                'timestamp' : pair['time'],
+                                'value' : pair['value']
+                            }
+        data_points.append(temp_dict)
+    
     max_point = max(points)
     emails = r.smembers('subscribers:{}'.format(name))
     pipe = r.pipeline()
@@ -81,7 +193,7 @@ def sensor_timeseries(name):
         pipe.set('latest_point:{}:{}'.format(name, email), '{}-{}'.format(max_point[0], max_point[1]))
     pipe.execute()
 
-    influx.write_points(data)
+    influx.write_points(data_points)
     return jsonify({'success': 'True'})
 
 

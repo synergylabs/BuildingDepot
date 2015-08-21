@@ -1,7 +1,5 @@
-import sys
-sys.path.append('..')
-from app.models.cs_models import User, Building, TagType, BuildingTemplate, Role
-from flask.ext.restful import marshal, fields
+from cs_models import User, Building, TagType, BuildingTemplate, Role
+#from flask.ext.restful import marshal, fields
 from mongoengine import connect
 connect('buildingdepot')
 
@@ -29,5 +27,4 @@ connect('buildingdepot')
 #             {'$match': {'name': 'ECE', 'tags.name': 'floor', 'tags.value': '2'}},
 #             {'$project': {'_id': 0, 'tags': 1}}
 # ])['result'][0]['tags']
-print Building._get_collection().find()[0]
 print Building._get_collection().find({'name': 'ECE'}, {'tags.name': 1, 'tags.value': 1, '_id': 0})[0]['tags']

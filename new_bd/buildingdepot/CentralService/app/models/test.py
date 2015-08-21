@@ -4,36 +4,37 @@ from cs_models import *
 from mongoengine import connect
 
 connect('buildingdepot')
-auth = HTTPBasicAuth('admin@gmail.com', '123')
+auth = HTTPBasicAuth('synergy@gmail.com', 'synergy469321')
+
 
 
 def post_tag_types(payload):
-    url = 'http://127.0.0.1:5000/api/v0.0/tagtypes'
+    url = 'http://127.0.0.1:81/api/v0.0/tagtypes'
     requests.post(url, auth=auth, json=payload)
 
 
 def post_building_templates(payload):
-    url = 'http://127.0.0.1:5000/api/v0.0/buildingtemplates'
+    url = 'http://127.0.0.1:81/api/v0.0/buildingtemplates'
     requests.post(url, auth=auth, json=payload)
 
 
 def post_building(payload):
-    url = 'http://127.0.0.1:5000/api/v0.0/buildings'
+    url = 'http://127.0.0.1:81/api/v0.0/buildings'
     requests.post(url, auth=auth, json=payload)
 
 
 def post_building_tags(payload):
-    url = 'http://127.0.0.1:5000/api/v0.0/buildings/ECE/tags'
+    url = 'http://127.0.0.1:81/api/v0.0/buildings/ECE/tags'
     print requests.post(url, auth=auth, json=payload).content
 
 
 def get_building():
-    url = 'http://127.0.0.1:5000/api/v0.0/buildings'
+    url = 'http://127.0.0.1:81/api/v0.0/buildings'
     print requests.get(url, auth=auth).content
 
 
 def delete_building():
-    url = 'http://127.0.0.1:5000/api/v0.0/buildings/ECE'
+    url = 'http://127.0.0.1:81/api/v0.0/buildings/ECE'
     print requests.delete(url, auth=auth).content
 
 
@@ -66,19 +67,19 @@ def test_building_tag_post():
 
 
 def get_building_tags():
-    url = 'http://127.0.0.1:5000/api/v0.0/buildings/ECE/tags'
+    url = 'http://127.0.0.1:81/api/v0.0/buildings/ECE/tags'
     print requests.get(url, auth=auth).content
 
 
 def post_role(payload):
-    url = 'http://127.0.0.1:5000/api/v0.0/roles'
+    url = 'http://127.0.0.1:81/api/v0.0/roles'
     print requests.post(url, auth=auth, json=payload).content
 
 # payload = {'name': 'local', 'permission': True, 'type': 'local'}
 # post_role(payload)
 
 # def post_user():
-#     url = 'http://127.0.0.1:5000/api/v0.0/users'
+#     url = 'http://127.0.0.1:81/api/v0.0/users'
 #     payload = {
 #         'email': 'zhp2@gmail.com',
 #         'password': '1234567',
@@ -90,7 +91,7 @@ def post_role(payload):
 # post_user()
 
 # def post_local_user_buildings():
-#     url = 'http://127.0.0.1:5000/api/v0.0/users/zhp2@gmail.com/buildings'
+#     url = 'http://127.0.0.1:81/api/v0.0/users/zhp2@gmail.com/buildings'
 #     payload = {
 #         'buildings': ['ECE']
 #     }
@@ -99,14 +100,14 @@ def post_role(payload):
 # post_local_user_buildings()
 
 def post_default_user_tags_owned():
-    url = 'http://127.0.0.1:5000/api/v0.0/users/zhp@gmail.com/tags_owned'
+    url = 'http://127.0.0.1:81/api/v0.0/users/zhp@gmail.com/tags_owned'
     payload = {
         'tags_owned': [{'building': 'CSE', 'tags': [{'name': 'floor', 'value': '1'}]}]
     }
     print requests.post(url, auth=auth, json=payload).content
 
 def post_building_tag_metadata():
-    url = 'http://127.0.0.1:5000/api/v0.0/buildings/ECE/tags/floor/2/metadata'
+    url = 'http://127.0.0.1:81/api/v0.0/buildings/ECE/tags/floor/2/metadata'
     payload = {
         'metadata': {
             'ko': 'a'
@@ -114,4 +115,6 @@ def post_building_tag_metadata():
     }
     print requests.post(url, auth=auth, json=payload).content
 
-post_default_user_tags_owned()
+get_building_tags()
+#post_building_tag_metadata()
+#post_default_user_tags_owned()

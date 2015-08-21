@@ -1,7 +1,7 @@
 from .. import svr
 from flask import current_app
 
-PAGE_SIZE = 10
+PAGE_SIZE = 200
 
 
 def get_building_choices(dataservice_name):
