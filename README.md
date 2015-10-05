@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 BuildingDepot
 =============
 
@@ -54,3 +55,7 @@ Example Apps/Connectors
 BD's example apps and connectors can be found in the Tools/Examples folder. They provide a basic skeleton for
 developing Apps and Connectors using BD API.
 
+=======
+# BuildingDepot-v3
+BuildingDepot v3
+>>>>>>> 8d06dcdb093edd2ac29bc00907d870581aa7143a
