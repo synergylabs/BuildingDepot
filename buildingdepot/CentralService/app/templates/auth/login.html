@@ -1,0 +1,20 @@
+{% extends "index.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}BuildingDepot - Login{% endblock %}
+
+{% block page_content %}
+<div class="row">
+    <div class="col-sm-4">
+        <div class="well">
+            <div class="page-header">
+                <h1>Login</h1>
+            </div>
+            {{ wtf.quick_form(form) }}
+            <br>
+            <p>New user? <a href="{{ url_for('auth.register') }}">Click here to register</a>.</p>
+
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,18 @@
+{% extends "index.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}BuildingDepot - Permission Query{% endblock %}
+
+{% block page_content %}
+<div class="row">
+    <div class="page-header">
+        <h2>Permission Query</h2>
+        <div class="col-sm-4">
+        {{ wtf.quick_form(form) }}
+        {% if res %}
+            <h3>Permission: {{ res }}</h3>
+        {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

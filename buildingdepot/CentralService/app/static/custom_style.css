@@ -1,0 +1,19 @@
+.navbar {
+    height: 10px;
+}
+
+#content {
+    margin-top: 60px;
+}
+
+.page-header {
+    margin-top: 0px;
+}
+
+h1 {
+    margin-top: 5px;
+}
+
+#modalSubmit {
+    margin: 10px;
+}

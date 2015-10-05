@@ -1,0 +1,450 @@
+{% extends "index.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}BuildingDepot - User{% endblock %}
+
+{% block page_content %}
+<div class="row" ng-app="myApp" ng-controller="metadataController">
+    <div class="page-header">
+        <h2>User <a ng-init="root.addNewUser()" href="#myModal" data-toggle="modal" class="btn btn-info btn-lg"><span class="glyphicon glyphicon-hand-up"></span> Add a New User</a></h2>
+    </div>
+
+    <div class="modal fade" id="myModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Add a New User</h4>
+                </div>
+                <div class="modal-body">
+
+                    <form class="form-horizontal" ng-submit="root.submit()">
+                        <div class="form-group">
+                            <label class="col-lg-2 control-label">Email</label>
+                            <div class="col-lg-10">
+                                <input ng-model="email" required class="form-control" type="email">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-lg-2 control-label">Name</label>
+                            <div class="col-lg-10">
+                                <input ng-model="name" required class="form-control" type="text">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-lg-2 control-label">Role</label>
+                            <div class="col-lg-10">
+                                <select required class="form-control" ng-model="selectedRole" ng-options="role for role in roleOptions"></select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-lg-2 control-label">Password</label>
+                            <div class="col-lg-10">
+                                <input ng-model="password" required class="form-control" type="password">
+                            </div>
+                        </div>
+
+                        <div>
+                            <input ng-model="showPassword" type="checkbox">
+                            Show Password: <span ng-show="showPassword">{[ password ]}</span>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-lg-12">
+                                <button class="btn btn-success pull-right" type="submit">Submit</button>
+                            </div>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="buildings">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Buildings managed by {[ localUser ]} </h4>
+                </div>
+                <div class="modal-body">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Building</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="building in buildings">
+                                <td><input disabled ng-model="buildings[$index]" type="text" class="form-control" value="{[ building ]}"></td>
+                                <td><button class="close" ng-click="root.removeExistingBuilding($index)">&times;</button></td>
+                            </tr>
+
+                            <tr ng-repeat="building in addedBuildings">
+                                <td><select ng-model="addedBuildings[$index]" class="form-control" ng-options="building for building in allBuildings"></select></td>
+                                <td><button class="close" ng-click="root.removeAddedBuilding($index)">&times;</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="btn-group">
+                        <button ng-click="root.addNewBuilding()" type="button" class="btn btn-info">Add a new building</button>
+                        <button ng-click="root.updateBuildings()" type="button" class="btn btn-warning">Update</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="rolePerBuilding">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Role per Building for {[ defaultUser ]} </h4>
+                </div>
+                <div class="modal-body">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Building</th>
+                                <th>Role</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="pair in pairs">
+                                <td><input disabled ng-model="pairs[$index].building" type="text" class="form-control" value="{[ pair.building ]}"></td>
+                                <td><input disabled ng-model="pairs[$index].role" type="text" class="form-control" value="{[ pair.role ]}"></td>
+                                <td><button ng-show="pairs[$index]['can_delete']" class="close" ng-click="root.removeExistingPair($index)">&times;</button></td>
+                            </tr>
+
+                            <tr ng-repeat="pair in addedPairs">
+                                <td><select ng-model="addedPairs[$index].building" class="form-control" ng-options="building for building in allBuildings"></select></td>
+                                <td><select ng-model="addedPairs[$index].role" class="form-control" ng-options="role for role in defaultRoles"></select></td>
+                                <td><button class="close" ng-click="root.removeAddedPair($index)">&times;</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="btn-group">
+                        <button ng-click="root.addNewPair()" type="button" class="btn btn-info">Add a new pair</button>
+                        <button ng-click="root.updatePairs()" type="button" class="btn btn-warning">Update</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="tags">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Assigned Tags for {[ defaultUser ]} </h4>
+                </div>
+                <div class="modal-body">
+                    <div ng-repeat="triple in d.triples">
+                        <div class="col-sm-4">
+                            <p>
+                                <h3>{[ triple.building ]}</h3>
+                                <button class="close" ng-click="root.removeExistingTriple($index)">&times;</button>
+                            </p>
+                        </div>
+
+                        <div class="col-sm-8">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Value</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="pair in triple.tags">
+                                        <td><input disabled ng-model="d.triples[$parent.$index].tags[$index].name" type="text" class="form-control" value="{[ pair.name ]}"></td>
+                                        <td><input disabled ng-model="d.triples[$parent.$index].tags[$index].value" type="text" class="form-control" value="{[ pair.value ]}"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-4">
+                        <select ng-model="d.building" class="form-control" ng-options="building for building in d.buildings"></select>
+                    </div>
+
+                    <div class="col-sm-8">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Value</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="triple in d.addedTriples">
+                                    <td><select ng-model="d.addedTriples[$index].name" class="form-control" ng-options="name for name in d.names | nameFilter:this : d.building"></select></td>
+                                    <td><select ng-model="d.addedTriples[$index].value" class="form-control" ng-options="value for value in d.values | valueFilter:this : d.building : d.addedTriples[$index].name"></select></td>
+                                    <td><button class="close" ng-click="root.removeAddedTriple($index)">&times;</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+
+                    <div class="btn-group">
+                        <button ng-click="root.addNewTriple()" type="button" class="btn btn-info">Add a new tag</button>
+                        <button ng-click="root.updateTriples()" type="button" class="btn btn-warning">Update</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-12">
+        <div class="page-header">
+            <h4><strong>Super User</strong></h4>
+        </div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Email</th>
+                    <th>Name</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="super in supers | orderBy:['email', 'name']">
+                    <td>{[ super.email ]}</td>
+                    <td>{[ super.name ]}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="col-sm-12">
+        <div class="page-header">
+            <h4><strong>Local User</strong></h4>
+        </div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Email</th>
+                    <th>Name</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="local in locals | orderBy:['email', 'name']">
+                    <td>{[ local.email ]}</td>
+                    <td>{[ local.name ]}</td>
+                    <td >
+                    <td>
+                        <a ng-click="root.selectLocal(local.email)" href="#buildings" data-toggle="modal" class="btn btn-info">Buildings</a>
+                    </td>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="col-sm-12">
+        <div class="page-header">
+            <h4><strong>Default User</strong></h4>
+        </div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Email</th>
+                    <th>Name</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="default in defaults | orderBy:['email', 'name']">
+                    <td>{[ default.email ]}</td>
+                    <td>{[ default.name ]}</td>
+                    <td>
+                        <a ng-click="root.selectDefault(default.email)" href="#rolePerBuilding" data-toggle="modal" class="btn btn-info">Role Per Building</a>
+                    </td>
+                    <td >
+                        <a ng-click="root.tags(default.email)" href="#tags" data-toggle="modal" class="btn btn-info">Assigned Tags</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+{% endblock %}
+
+
+{% block scripts %}
+     {{ super() }}
+     <script>
+        var app = angular.module("myApp", []);
+        app.config(['$interpolateProvider', function($interpolateProvider) {
+            $interpolateProvider.startSymbol('{[');
+            $interpolateProvider.endSymbol(']}');
+        }]);
+        app.controller("metadataController", function($scope, $http) {
+            $scope.root = {};
+            $scope.roleOptions = ['super', 'local', 'default'];
+            $scope.selectedRole = 'default';
+
+            $scope.addedBuildings = [];
+            $scope.addedPairs = [];
+
+            $scope.root.addNewBuilding = function() {
+                $scope.addedBuildings.push('');
+            };
+            $scope.root.removeExistingBuilding = function(index) {
+                $scope.buildings.splice(index, 1);
+            };
+            $scope.root.removeAddedBuilding = function(index) {
+                $scope.addedBuildings.splice(index, 1);
+            };
+            $scope.root.selectLocal = function(localUser) {
+                $scope.localUser = localUser;
+                for (var i = 0; i < $scope.locals.length; i++) {
+                    if ($scope.locals[i].email === localUser) {
+                        $scope.buildings =$scope.locals[i].buildings;
+                    }
+                }
+            };
+            $scope.root.updateBuildings = function() {
+                var res = $http.post('/central/user/'+ $scope.localUser + '/add_managed_buildings', {'data': $scope.buildings.concat($scope.addedBuildings)});
+                res.success(function(data) {
+                    confirm('Success');
+                });
+                res.error(function() {
+                    alert("Ajax failed");
+                });
+            };
+
+            $scope.root.selectDefault = function(defaultUser) {
+                $scope.defaultUser = defaultUser;
+                for (var i = 0; i < $scope.defaults.length; i++) {
+                    if ($scope.defaults[i].email === defaultUser) {
+                        $scope.pairs =$scope.defaults[i].pairs;
+                    }
+                }
+            };
+            $scope.root.removeExistingPair = function(index) {
+                $scope.pairs.splice(index, 1);
+            };
+            $scope.root.removeAddedPair = function(index) {
+                $scope.addedPairs.splice(index, 1);
+            };
+            $scope.root.addNewPair = function() {
+                $scope.addedPairs.push({'building': '', 'role': ''});
+            };
+            $scope.root.updatePairs = function() {
+                var pairs = $scope.pairs.concat($scope.addedPairs);
+                var set = {};
+                for (var i = 0; i < pairs.length; i++) {
+                    if (pairs[i].building === '' || pairs[i].role === '') {
+                        alert('There is a building or a role that is not specified');
+                        return;
+                    }
+                    if (set[pairs[i].building]) {
+                        alert('Building ' + pairs[i].building + ' is specified multiple times');
+                        return;
+                    }
+                    set[pairs[i].building] = true;
+                }
+                var res = $http.post('/central/user/'+ $scope.defaultUser + '/add_role_per_building', {'data': pairs});
+                res.success(function(data) {
+                    confirm('Success');
+                });
+                res.error(function() {
+                    alert("Ajax failed");
+                });
+            };
+
+            $scope.root.tags = function(defaultUser) {
+                $scope.defaultUser = defaultUser;
+                var res = $http.get('/central/user/'+ $scope.defaultUser + '/tags_owned');
+                res.success(function(data) {
+                    $scope.d = {};
+                    $scope.d.building = '';
+                    $scope.d.triples = data.triples;
+                    $scope.d.addedTriples = [];
+                    $scope.d.tags = data.data;
+                    $scope.d.buildings = Object.keys($scope.d.tags);
+                });
+                res.error(function() {
+                    alert("Ajax failed");
+                });
+            };
+            $scope.root.removeExistingTriple = function(index) {
+                $scope.d.triples.splice(index, 1);
+            };
+            $scope.root.removeAddedTriple = function(index) {
+                $scope.d.addedTriples.splice(index, 1);
+            };
+            $scope.root.addNewTriple = function() {
+                $scope.d.addedTriples.push({'name': '', 'value': ''});
+            };
+            $scope.root.updateTriples = function() {
+                if ($scope.d.addedTriples.length === 0) {
+                    return;
+                }
+                if ($scope.d.addedTriples.length > 0) {
+                    var set = {};
+                    for (var i = 0; i < $scope.d.addedTriples.length; i++) {
+                        if ($scope.d.addedTriples[i].name === '' || $scope.d.addedTriples[i].value === '') {
+                            alert('There is a name or value that is not specified');
+                            return;
+                        }
+                        if (set[$scope.d.addedTriples[i].name+$scope.d.addedTriples[i].value]) {
+                            alert('There is a tag that is specified more than once');
+                            return;
+                        }
+                        set[$scope.d.addedTriples[i].name+$scope.d.addedTriples[i].value] = true;
+                    }
+                }
+                if ($scope.d.building !== '') {
+                    $scope.d.triples.push({'building': $scope.d.building, 'tags': $scope.d.addedTriples});
+                }
+                var res = $http.post('/central/user/'+ $scope.defaultUser + '/tags_owned', {'data': $scope.d.triples});
+                res.success(function(data) {
+                    $scope.d.building = '';
+                    $scope.d.addedTriples = [];
+                    confirm('Success');
+                });
+                res.error(function() {
+                    alert("Ajax failed");
+                });
+            };
+
+            $scope.root.addNewUser = function() {
+                var res = $http.get('/central/user/add_user');
+                res.success(function(data) {
+                    $scope.supers = data.supers;
+                    $scope.locals = data.locals;
+                    $scope.defaults = data.defaults;
+                    $scope.emails = data.emails;
+                    $scope.allBuildings = data.buildings;
+                    $scope.defaultRoles = data.roles;
+                });
+                res.error(function() {
+                    alert("Ajax failed");
+                });
+            };
+        });
+
+        app.filter('nameFilter', [function() {
+            return function(input, scope, building) {
+                console.log(input);
+                console.log(scope.d.tags[building]);
+                return Object.keys(scope.d.tags[building]);
+            };
+        }]);
+
+        app.filter('valueFilter', [function() {
+            return function(input, scope, building, name) {
+                return scope.d.tags[building][name];
+            };
+        }]);
+    </script>
+{% endblock %}

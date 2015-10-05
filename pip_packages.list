@@ -1,0 +1,14 @@
+Flask==0.10.1
+mongoengine==0.8.7
+flask-restful==0.3.1
+Flask-HTTPAuth==2.3.0
+flask-login==0.2.11
+validate_email==1.2
+requests==2.5.0
+Flask-Script==0.6.6
+Flask-WTF==0.9.5
+flask-bootstrap==3.3.0.1
+redis==2.10.3
+influxdb==2.6.0
+pymongo==2.8.0
+flask-oauthlib=0.9.1
