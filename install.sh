@@ -12,26 +12,7 @@ if [[ $UID -ne 0 ]]; then
 	exit 1
 fi
 
-# apt-get update
-
-# # Install necessary packages
-# apt-get install -y openssl python-setuptools python-dev build-essential python-software-properties
-# apt-get install -y python-pip
-
-
-# apt-get install -y nginx
 cp configs/nginx.conf /etc/nginx/nginx.conf
-
-# apt-get install -y supervisor 
-# #apt-get install -y uwsgi uwsgi-plugin-python
-
-# # MySQL
-# apt-get install -y mysql-server libmysqlclient-dev python-mysqldb mysql-client-core-5.5
-
-# # Redis
-# apt-get install -y redis-server
-
-# pip install --upgrade virtualenv
 
 mkdir -p /srv/buildingdepot
 mkdir -p /var/log/buildingdepot/CentralService
@@ -134,7 +115,7 @@ function setup_venv {
 }
 
 deploy_config
-#install_packages
+install_packages
 if [ "$DEPLOY_CS" = true ]; then
 	deploy_centralservice
 fi
