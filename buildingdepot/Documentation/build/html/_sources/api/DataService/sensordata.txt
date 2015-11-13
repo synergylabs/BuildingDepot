@@ -1,0 +1,134 @@
+.. DataService API Documentation
+
+
+Timeseries
+######
+
+The Sensor collection manages Sensors for Locations associated with the DataService.
+Sensor access is restricted to :ref:`Users <CentralS-Users>` or :ref:`Admins <DataS-Admins>` with 
+Permissions for the Sensor and to the `Admin` who owns the Sensor.
+
+.. _DataS List Sensors:
+
+Put Timeseries Datapoints
+************
+
+This stores datapoints in the timeseries of the specified Sensorpoint.
+
+The first datapoint that is posted to the uuid defines the datatype for all further timeseries datapoints e.g. if the first datapoint posted to a certain uuid is a int then all further datapoints have to be ints.
+
+
+.. http:get:: /service/sensor/(string: sensor_uuid)/timeseries
+   
+   :param string sensor_uuid: UUID associated with Sensor
+   :json list data: A dictionary of the datapoints that need to be posted for this sensor uuid
+   :json string value_type: A string that describes what the type of the datapoint e.g. temperature
+                            or humidity
+   :returns:
+      * **success** `(string)` -- Returns 'True' if data is posted succesfully otherwise 'False'
+   :status 200: Success
+   :status 401: Unauthorized Credentials (See :ref:`HTTP 401 <HTTP 401>`)
+
+.. compound::
+
+   **Example request**:
+
+   .. sourcecode:: http
+
+      POST /sensors/26da099a-3fe0-4966-b068-14f51bcedb6e/timeseries HTTP/1.1
+      Accept: application/json; charset=utf-8
+
+      { 
+        "data":[
+                {
+                  "value":24.56,
+                  "time":1225865462
+                },
+                {
+                  "value":23.12,
+                  "time":1225865500
+                }
+               ],
+        "value_type":"Temperature"
+      }
+
+   **Example response**:
+
+   .. sourcecode:: http
+   
+      HTTP/1.1 200 OK
+      Content-Type: application/json
+      
+      {
+        "success": "True"
+      }
+      
+Read Timeseries Datapoints
+************
+
+This retreives a list of datapoints for the timeseries of the specified Sensorpoint
+
+.. http:get:: /service/sensor/id=<name>/interval=<interval>/
+              /service/sensor/id=<name>/interval=<interval>/resolution=<resolution>
+   
+   :param string id: UUID associated with Sensor (compulsory)
+   :param string interval: The time interval over which data is required with respect to current time (compulsory)
+   :param string resolution: The resolution of the data required. If not specified will retrieve all the datapoints over the specified interval. (optional)
+   :returns:
+      * **data** `(struct)` -- Contains the series
+          * **series** `(list)` -- Contains the timeseries data, uuid of the sensor and the column names for the timeseries data
+          * **columns** `(list)` -- Contains the names of the columns of the data that is present in the timeseries
+          * **name** `(string)` -- uuid of the sensor whose data is being retrieved
+          * **values** `(list)` -- Contains the list of timeseries data that has been requested in the order represented by the columns. 
+   :status 200: Success
+   :status 401: Unauthorized Credentials (See :ref:`HTTP 401 <HTTP 401>`)
+
+Note: Both interval and resolution are specified with the time value appended by the type of the value e.g. 10s for 10 seconds or 10m for 10 minutes.
+
+.. compound::
+
+   **Example request**:
+
+   .. sourcecode:: http
+
+      GET /service/sensor/id=26da099a-3fe0-4966-b068-14f51bcedb6e/interval=10s HTTP/1.1
+      Accept: application/json; charset=utf-8
+
+   **Example response**:
+
+   .. sourcecode:: http
+   
+      HTTP/1.1 200 OK
+      Content-Type: application/json
+      
+      {
+        "data": {
+          "series": [
+            {
+              "columns": [
+                "time", 
+                "timestamp", 
+                "value"
+              ], 
+              "name": "35b137b2-c7c6-4608-8489-1c3f0ee7e2d5", 
+              "values": [
+                [
+                  "2015-10-22T17:41:44.762495917Z", 
+                  1445535722.0, 
+                  22.11
+                ], 
+                [
+                  "2015-10-22T17:43:19.48927063Z", 
+                  1445535818.0, 
+                  22.23
+                ], 
+                          [
+                  "2015-10-22T22:44:53.066248715Z", 
+                  1445553913.0, 
+                  24.56                  
+                ]
+              ]
+            }
+          ]
+        }
+      }

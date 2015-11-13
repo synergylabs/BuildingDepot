@@ -7,6 +7,8 @@ PAGE_SIZE = 200
 def get_building_choices(dataservice_name):
     return svr.get_building_choices(dataservice_name)
 
+def get_user_oauth(email):
+    return svr.get_user_oauth(email)
 
 def get_building_tags(building):
     return svr.get_building_tags(building)

@@ -6,7 +6,14 @@ from .utils import *
 from uuid import uuid4
 
 from .. import r, influx
+import sys
+sys.path.append('/srv/buildingdepot')
+from OAuth2Server.app import *
+from utils import get_user_oauth 
+from ..api_0_0.resources.utils import *
 
+
+permissions = {"rw":"r/w","r":"r","dr":"d/r"}
 
 @service.route('/sensor', methods=['GET', 'POST'])
 def sensor():
@@ -18,8 +25,6 @@ def sensor():
 
     form = SensorForm()
     form.building.choices = get_building_choices(current_app.config['NAME'])
-    print "Buildings are"
-    print form.building
     if form.validate_on_submit():
         Sensor(name=str(uuid4()),
                source_name=str(form.source_name.data),
@@ -28,16 +33,17 @@ def sensor():
         return redirect(url_for('service.sensor'))
     return render_template('service/sensor.html', objs=objs, form=form)
 
-@service.route('/sensor/list', methods=['GET'])
+@service.route('/api/v1/list', methods=['GET'])
 def sensor_list():
     if request.method == 'GET':
 	list_sensors = Sensor._get_collection().find()
 	return jsonify({'data': create_response(list_sensors)})
 
-@service.route('/api/v1/data/id=<name>/interval=<interval>/resolution=<resolution>/meta=<meta>', methods=['GET'])
-@service.route('/api/v1/data/id=<name>/interval=<interval>/resolution=<resolution>', methods=['GET'])
-@service.route('/api/v1/data/id=<name>/interval=<interval>/', methods=['GET'])
-def get_data(name,interval,resolution=None,meta=None):
+@service.route('/api/v1/data/id=<name>/email=<email>/interval=<interval>/resolution=<resolution>/meta=<meta>', methods=['GET'])
+@service.route('/api/v1/data/id=<name>/email=<email>/interval=<interval>/resolution=<resolution>', methods=['GET'])
+@service.route('/api/v1/data/id=<name>/email=<email>/interval=<interval>/', methods=['GET'])
+@authenticate_acl('r')
+def get_data(name,interval,email,resolution=None,meta=None):
     if meta == "True" :
         metadata = Sensor._get_collection().find({'name': name}, {'metadata': 1, '_id': 0})[0]['metadata']
         sensorList = metadata['Sensor_List'].split(",")
@@ -54,7 +60,7 @@ def get_data(name,interval,resolution=None,meta=None):
 		data = influx.query("select mean(value) from "+"\""+name+"\""+" WHERE time > now() - "+interval+" GROUP BY time("+resolution+")")
     else:
 		data = influx.query("select * from "+"\""+name+"\""+" WHERE time > now() - "+interval)
-    return jsonify({'data':data.raw})
+    return jsonify({'data':data.raw,'response':'success'})
 
 def calculateAvg(dataDict,name):
     numOfSeries = len(dataDict)
@@ -86,7 +92,8 @@ def calculateAvg(dataDict,name):
                 ]
             }
     return finalObj
-    
+
+   
 @service.route('/api/v1/<param_1>=<value_1>/<request_type>', methods=['GET'])
 @service.route('/api/v1/<param_1>=<value_1>/<param_2>=<value_2>/<request_type>',methods=['GET'])
 @service.route('/api/v1/<param_1>=<value_1>/<param_2>=<value_2>/<param_3>=<value_3>/<request_type>',methods=['GET'])
@@ -106,8 +113,6 @@ def get_sensors_metadata(param_1,value_1,request_type,param_2=None,value_2=None,
 			return jsonify({'data': create_response(list_sensors)})
 	elif request_type == "metadata":
 		list_sensors = Sensor._get_collection().find({request_type+"."+param_1:value_1})
-		print "list sensors"
-		list_sensors[0]
 		return jsonify({'data': create_response(list_sensors)})
 
 def create_json(sensor):
@@ -168,8 +173,9 @@ def sensor_subscribers(name):
         return jsonify({'success': 'False'})
 
 
-@service.route('/sensor/<name>/timeseries', methods=['POST'])
-def sensor_timeseries(name):
+@service.route('/sensor/<name>/<email>/timeseries', methods=['POST'],endpoint='sensor_timeseries')
+@authenticate_acl('r/w')
+def sensor_timeseries(name,email):
     points = [[int(pair['time']), pair['value']] for pair in request.get_json()['data']]
 
     try:
@@ -246,16 +252,16 @@ def sensor_tags(name):
             pipe.sadd(tag, name)
         for tag in deleted:
             pipe.srem(tag, name)
-        pipe.execute()
+	pipe.execute()
         # cache process done
         Sensor.objects(name=name).update(set__tags=tags)
-
+	
         added = [tag.replace('tag', 'tag-sensorgroup', 1) for tag in added]
         deleted = [tag.replace('tag', 'tag-sensorgroup', 1) for tag in deleted]
 
         pipe = r.pipeline()
         for key in added:
-            for sensorgroup_name in r.smembers(key):
+             for sensorgroup_name in r.smembers(key):
                 sensorgroup = SensorGroup.objects(name=sensorgroup_name).first()
                 sensorgroup_tags = {'tag:{}:{}:{}'.format(building, tag.name, tag.value) for tag in sensorgroup.tags}
                 if sensorgroup_tags.issubset(new):
@@ -289,6 +295,23 @@ def sensorgroup():
         return redirect(url_for('service.sensorgroup'))
     return render_template('service/sensorgroup.html', objs=objs, form=form)
 
+@service.route('/oauth',methods=['GET','POST'])
+def oauth():
+    keys = []
+    if request.method == 'POST':
+	keys.append({"client_id":gen_salt(40),"client_secret":gen_salt(50)})
+	item = Client(
+        client_id=keys[0]['client_id'],
+        client_secret=keys[0]['client_secret'],
+        _redirect_uris=' '.join([
+            'http://localhost:8000/authorized',
+            'http://127.0.0.1:8000/authorized',
+            'http://127.0.1:8000/authorized',
+            'http://127.1:8000/authorized']),
+        _default_scopes='email',
+	user = request.form.get('name')).save()
+    	return render_template('service/oauth.html',keys=keys)
+    return render_template('service/oauth.html',keys=keys)
 
 @service.route('/sensorgroup/<name>/tags', methods=['GET', 'POST'])
 def sensorgroup_tags(name):
@@ -309,7 +332,7 @@ def sensorgroup_tags(name):
             pipe.sadd(tag, name)
         for tag in deleted:
             pipe.srem(tag, name)
-
+	pipe.set('tag-count:{}'.format(name),len(new))
         # recalculate the sensors that this sensorgroup contains
         tags_owned = ['tag:{}:{}:{}'.format(sensorgroup.building, tag['name'], tag['value']) for tag in tags]
 
@@ -343,6 +366,7 @@ def sensorgroup_delete():
     pipe.delete('sensorgroup:{}'.format(sensorgroup.name))
     for tag in sensorgroup.tags:
         pipe.srem('tag-sensorgroup:{}:{}:{}'.format(sensorgroup.building, tag.name, tag.value), sensorgroup.name)
+    pipe.delete('tag-count:{}'.format(sensorgroup.name))
     pipe.execute()
     # cache process done
 
@@ -456,8 +480,7 @@ def permission_query():
         for usergroup in usergroups:
             for sensorgroup in sensorgroups:
                 res = r.get('permission:{}:{}'.format(usergroup, sensorgroup))
-                print res
-                if res == 'r/w':
+                if res == 'r/w' or res == 'd/r':
                     return render_template('service/query.html', form=form, res=res)
         if res == 'r':
             return render_template('service/query.html', form=form, res=res)
@@ -466,3 +489,28 @@ def permission_query():
         res = get_permission(sensor_tags, sensor.building, form.user.data)
 
     return render_template('service/query.html', form=form, res=res)
+
+@service.route('/permission_change/user=<user_id>/sensor_group=<sensor_group>/permission=<permission_value>',methods=['GET'])
+def permission_change(user_id,sensor_group,permission_value):
+
+    updated = 0
+    if permission_value not in permissions:
+        return jsonify({'success': 'False'})
+    permission_value = permissions[permission_value]
+
+    usergroups = r.smembers('user:{}'.format(user_id))
+
+    for user_group in usergroups:
+        permission_list = Permission.objects(user_group=user_group,\
+            sensor_group=sensor_group).first()
+        if permission_list!=None:
+            updated += 1
+            permission_list.update(set__permission=permission_value)
+            r.set('permission:{}:{}'.format(user_group,\
+                sensor_group),permission_value)
+            
+    if updated:
+        return jsonify({'success': 'True'})
+    else:
+        return jsonify({'success': 'False'})
+

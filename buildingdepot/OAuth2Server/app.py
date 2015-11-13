@@ -6,14 +6,24 @@ from werkzeug.security import gen_salt
 from flask_oauthlib.provider import OAuth2Provider
 from bson.objectid import ObjectId
 #from ..models.cs_models import *
+from xmlrpclib import ServerProxy
 import sys
-sys.path.append('/srv/buildingdepot/CentralService/app/models')
-from cs_models import User
+sys.path.append('/srv/buildingdepot/CentralReplica')
+from models import User
 from mongoengine import *
 from mongoengine.context_managers import switch_db
 
-connect('buildingdepot',host='127.0.0.1',port=27017)
-register_connection('bd',name='buildingdepot',host='127.0.0.1',port=27017)
+
+#connect('buildingdepot',host='127.0.0.1',port=27017)
+#register_connection('bd',name='buildingdepot',host='127.0.0.1',port=27017)
+
+connect('dataservice',host='127.0.0.1',port=27017)
+register_connection('ds',name='dataservice',host='127.0.0.1',port=27017)
+
+
+svr = ServerProxy("http://localhost:8080")
+
+
 
 app = Flask(__name__, template_folder='templates')
 app.debug = True
@@ -23,7 +33,8 @@ oauth = OAuth2Provider(app)
 class Client(Document):
     client_id = StringField(required=True, unique=True)
     client_secret = StringField(required=True)
-    user = ReferenceField(User)
+    #user = ReferenceField(User)
+    user = StringField()
     _redirect_uris = StringField()
     _default_scopes = StringField()
 
@@ -49,7 +60,8 @@ class Client(Document):
 
 
 class Grant(Document):
-    user = ReferenceField(User)
+    #user = ReferenceField(User)
+    user = StringField()
     client = ReferenceField(Client)
     code = StringField(required=True)
     redirect_uri = StringField()
@@ -65,14 +77,16 @@ class Grant(Document):
 
 class Token(Document):
     client = ReferenceField(Client)
-    user = ReferenceField(User)
+    #user = ReferenceField(User)
+    user = StringField()
     token_type = StringField()
     access_token = StringField(unique=True)
     refresh_token = StringField(unique=True)
     expires = DateTimeField()
     _scopes = StringField()
+    email = StringField()
 
-    meta = {"db_alias": "bd"}
+    meta = {"db_alias": "ds"}
     
     @property
     def scopes(self):
@@ -81,30 +95,35 @@ class Token(Document):
         return []
 
 
+def get_user_oauth(email):
+    return svr.get_user_oauth(email)
+
+def get_user_by_id(uid):
+   return svr.get_user_by_id(uid)
+
 def current_user():
     print "Entered current_user()"
     if 'id' in session:
-        uid = session['id']
+        email = session['id']
+	print "UID is "+email
 	try:
-		return User.objects(id=ObjectId(str(uid))).first()
+		return get_user_oauth(email)#User.objects(id=ObjectId(str(uid))).first()
 	except Exception as e:
 		return None
     return None
 
 def retrieve_user(user):
-	return User.objects(email=user['email']).first()
+	return get_user_oauth(user)#User.objects(email=user['email']).first()
 
 @app.route('/', methods=('GET', 'POST'))
 def home():
     print "Entered route /"
     if request.method == 'POST':
         email = request.form.get('username')
-	user = User.objects(email=email).first()
-        print "User"
-	print Client.objects().first().client_id
+	user = get_user_oauth(email)#User.objects(email=email).first()
 	if not user:
             return jsonify({'response': 'Access Denied'})
-        session['id'] = str(user['id'])
+        session['id'] = user #str(user['id'])
 	return redirect('/')
     user_current = current_user()
     print "Render templated"
@@ -115,6 +134,7 @@ def home():
 def client():
     print "Entered route client" 
     user_current = current_user()
+    print "User current in /client is"+user_current
     if not user_current:
         return redirect('/')
     item = Client(
@@ -162,7 +182,7 @@ def save_grant(client_id, code, request, *args, **kwargs):
 
 @oauth.tokengetter
 def load_token(access_token = None, refresh_token = None):
-    with switch_db(Token,'bd') as tkn:
+    with switch_db(Token,'ds') as tkn:
 	if access_token:
 		return tkn.objects(access_token=access_token).first()
     	elif refresh_token:
@@ -185,7 +205,8 @@ def save_token(token, request, *args, **kwargs):
 	_scopes=token['scope'], 
 	expires=expires, 
 	client=request.client, 
-	user=request.user).save()
+	user=request.user,
+	email=request.user).save()
     return tok
 
 
@@ -218,7 +239,7 @@ def authorize(*args, **kwargs):
 def me():
     print "Entered me"
     user = request.oauth.user
-    return jsonify(username=user.email, test=1)
+    return jsonify(username=user, test=1)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0')

@@ -1,6 +1,6 @@
 from flask import Flask
 from config import config
-from mongoengine import connect
+from mongoengine import connect,register_connection
 from flask.ext.bootstrap import Bootstrap
 from xmlrpclib import ServerProxy
 
@@ -21,7 +21,8 @@ def create_app(config_mode):
     connect(app.config['MONGODB_DATABASE'],
             host=app.config['MONGODB_HOST'],
             port=app.config['MONGODB_PORT'])
-
+    register_connection('bd',name='buildingdepot',host='127.0.0.1',port=27017)
+ 
     from .api_0_0 import api
     api.init_app(app)
     bootstrap.init_app(app)

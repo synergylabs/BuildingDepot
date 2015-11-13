@@ -1,0 +1,18 @@
+{% extends "index.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}BuildingDepot - Sensor Group{% endblock %}
+
+{% block page_content %}
+    <div class="page-header">
+        <form action="{{ url_for('service.oauth') }}" method="POST">
+        <input type="hidden" value="{{ session.email }}"  name="name">
+	<h2>OAuth <input type="submit" value="Generate client ID and Key" data-toggle="modal" class="btn btn-info btn-lg"></h2>
+	</form>
+    </div>
+    {% for key in keys %}
+                    <tr>
+                        <h4>Client ID : {{ key.client_id }}</h4>
+                        <h4>Client Key : {{ key.client_secret }}</h4>
+                    {% endfor %}
+{% endblock %}

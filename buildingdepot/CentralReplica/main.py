@@ -20,6 +20,21 @@ def get_user(email, password):
         return True
     return False
 
+def get_user_oauth(email):
+    user = User.objects(email=email).first()
+    res = {}
+    if user is not None:
+	#res['user']=user
+	return str(user.email)
+    return None
+
+def get_user_by_id(uid):
+    user = User.objects(id=ObjectId(str(uid))).first()
+    res = {}
+    if user is not None:
+	#res['user']=user
+	return str(user.email)
+    return None
 
 def get_building_choices(dataservice_name):
     buildings = DataService.objects(name=dataservice_name).first().buildings
@@ -47,6 +62,8 @@ def validate_users(emails):
 
 def get_permission(sensor_tags, building, user_email):
     user = User.objects(email=user_email).first()
+    if user == None:
+	return 'undefined'
     if building not in user.buildings:
         return 'undefined'
     building_permission = {pair.building: Role.objects(name=pair.role).first().permission
@@ -56,7 +73,7 @@ def get_permission(sensor_tags, building, user_email):
                       for items in user.tags_owned if items.building == building]
     for user_tags in user_tags_list:
         if user_tags.issubset(sensor_tags):
-            return building_permission[building]
+		return building_permission[building]
     return 'undefined'
 
 
@@ -81,4 +98,5 @@ svr.register_function(validate_users)
 svr.register_function(get_permission)
 svr.register_function(validate_email_password)
 svr.register_function(get_admins)
+svr.register_function(get_user_oauth)
 svr.serve_forever()
