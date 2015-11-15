@@ -34,6 +34,7 @@ def sensor():
     return render_template('service/sensor.html', objs=objs, form=form)
 
 @service.route('/api/v1/list', methods=['GET'])
+@oauth.require_oauth()
 def sensor_list():
     if request.method == 'GET':
 	list_sensors = Sensor._get_collection().find()
@@ -42,6 +43,7 @@ def sensor_list():
 @service.route('/api/v1/data/id=<name>/email=<email>/interval=<interval>/resolution=<resolution>/meta=<meta>', methods=['GET'])
 @service.route('/api/v1/data/id=<name>/email=<email>/interval=<interval>/resolution=<resolution>', methods=['GET'])
 @service.route('/api/v1/data/id=<name>/email=<email>/interval=<interval>/', methods=['GET'])
+@oauth.require_oauth()
 @authenticate_acl('r')
 def get_data(name,interval,email,resolution=None,meta=None):
     if meta == "True" :
@@ -97,6 +99,7 @@ def calculateAvg(dataDict,name):
 @service.route('/api/v1/<param_1>=<value_1>/<request_type>', methods=['GET'])
 @service.route('/api/v1/<param_1>=<value_1>/<param_2>=<value_2>/<request_type>',methods=['GET'])
 @service.route('/api/v1/<param_1>=<value_1>/<param_2>=<value_2>/<param_3>=<value_3>/<request_type>',methods=['GET'])
+@oauth.require_oauth()
 def get_sensors_metadata(param_1,value_1,request_type,param_2=None,value_2=None,param_3=None,value_3=None):
 	if request_type == "params":
 		list_sensors = Sensor._get_collection().find({param_1:value_1})
@@ -174,6 +177,7 @@ def sensor_subscribers(name):
 
 
 @service.route('/sensor/<name>/<email>/timeseries', methods=['POST'],endpoint='sensor_timeseries')
+@oauth.require_oauth()
 @authenticate_acl('r/w')
 def sensor_timeseries(name,email):
     points = [[int(pair['time']), pair['value']] for pair in request.get_json()['data']]
@@ -303,13 +307,13 @@ def oauth():
 	item = Client(
         client_id=keys[0]['client_id'],
         client_secret=keys[0]['client_secret'],
-        _redirect_uris=' '.join([
+         _redirect_uris=' '.join([
             'http://localhost:8000/authorized',
             'http://127.0.0.1:8000/authorized',
             'http://127.0.1:8000/authorized',
             'http://127.1:8000/authorized']),
         _default_scopes='email',
-	user = request.form.get('name')).save()
+        user = request.form.get('name')).save()
     	return render_template('service/oauth.html',keys=keys)
     return render_template('service/oauth.html',keys=keys)
 
@@ -490,6 +494,7 @@ def permission_query():
 
     return render_template('service/query.html', form=form, res=res)
 
+#Test API for dynamic ACL's
 @service.route('/permission_change/user=<user_id>/sensor_group=<sensor_group>/permission=<permission_value>',methods=['GET'])
 def permission_change(user_id,sensor_group,permission_value):
 

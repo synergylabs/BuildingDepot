@@ -5,17 +5,14 @@ from flask import render_template, redirect, jsonify
 from werkzeug.security import gen_salt
 from flask_oauthlib.provider import OAuth2Provider
 from bson.objectid import ObjectId
-#from ..models.cs_models import *
 from xmlrpclib import ServerProxy
-import sys
+import sys,os,binascii
 sys.path.append('/srv/buildingdepot/CentralReplica')
 from models import User
 from mongoengine import *
 from mongoengine.context_managers import switch_db
+from uuid import uuid4
 
-
-#connect('buildingdepot',host='127.0.0.1',port=27017)
-#register_connection('bd',name='buildingdepot',host='127.0.0.1',port=27017)
 
 connect('dataservice',host='127.0.0.1',port=27017)
 register_connection('ds',name='dataservice',host='127.0.0.1',port=27017)
@@ -29,6 +26,7 @@ app = Flask(__name__, template_folder='templates')
 app.debug = True
 app.secret_key = 'secret'
 oauth = OAuth2Provider(app)
+expires_in = 34560
 
 class Client(Document):
     client_id = StringField(required=True, unique=True)
@@ -102,7 +100,6 @@ def get_user_by_id(uid):
    return svr.get_user_by_id(uid)
 
 def current_user():
-    print "Entered current_user()"
     if 'id' in session:
         email = session['id']
 	print "UID is "+email
@@ -117,7 +114,6 @@ def retrieve_user(user):
 
 @app.route('/', methods=('GET', 'POST'))
 def home():
-    print "Entered route /"
     if request.method == 'POST':
         email = request.form.get('username')
 	user = get_user_oauth(email)#User.objects(email=email).first()
@@ -132,7 +128,6 @@ def home():
 
 @app.route('/client')
 def client():
-    print "Entered route client" 
     user_current = current_user()
     print "User current in /client is"+user_current
     if not user_current:
@@ -155,20 +150,17 @@ def client():
 
 @oauth.clientgetter
 def load_client(client_id):
-    print "Entered load client"
     return Client.objects(client_id=client_id).first()
 
 
 @oauth.grantgetter
 def load_grant(client_id, code):
-    print "Entered load grant"
     return Grant.objects(client=Client.objects(client_id=client_id).first(),
 	code=code).first()
 
 
 @oauth.grantsetter
 def save_grant(client_id, code, request, *args, **kwargs):
-    print "Entered save grant"
     expires = datetime.utcnow() + timedelta(seconds=100)
     grant = Grant(
 	client=Client.objects(client_id=client_id).first(),
@@ -191,7 +183,6 @@ def load_token(access_token = None, refresh_token = None):
 
 @oauth.tokensetter
 def save_token(token, request, *args, **kwargs):
-    print "Entered save token"
     toks = Token.objects(client=request.client,user=request.user)
     for t in toks:
 	t.delete()
@@ -200,9 +191,9 @@ def save_token(token, request, *args, **kwargs):
     expires = datetime.utcnow() + timedelta(seconds=expires_in)
     tok = Token(
 	access_token=token['access_token'], 
-	refresh_token=token['refresh_token'], 
-	token_type=token['token_type'], 
-	_scopes=token['scope'], 
+    refresh_token=token['refresh_token'], 
+    token_type=token['token_type'], 
+    _scopes=token['scope'], 
 	expires=expires, 
 	client=request.client, 
 	user=request.user,
@@ -213,14 +204,12 @@ def save_token(token, request, *args, **kwargs):
 @app.route('/oauth/token', methods=['GET', 'POST'])
 @oauth.token_handler
 def access_token():
-    print "Entered access token"
     return None
 
 
 @app.route('/oauth/authorize', methods=['GET', 'POST'])
 @oauth.authorize_handler
 def authorize(*args, **kwargs):
-    print "Entered authorize handler"
     user = current_user()
     if not user:
         return redirect('/')
@@ -229,15 +218,32 @@ def authorize(*args, **kwargs):
         client = Client.objects(client_id=client_current).first()
         kwargs['client'] = client
         kwargs['user'] = user
-        return render_template('authorize.html', **kwargs)
-    confirm = request.form.get('confirm', 'no')
-    return confirm == 'yes'
+        return True
 
+@app.route('/oauth/access_token/client_id=<client_id>/client_secret=<client_secret>',methods=['GET'])
+def get_access_token(client_id,client_secret):
+    client = Client.objects(client_id=client_id,client_secret=client_secret).first()
+    if client!=None:
+        toks = Token.objects(user=client.user)
+        for t in toks:
+            t.delete()
+
+        expires = datetime.utcnow() + timedelta(seconds=expires_in)
+        tok = Token(
+        access_token=str(binascii.hexlify(os.urandom(16))), 
+        refresh_token=str(binascii.hexlify(os.urandom(16))), 
+        token_type='Bearer', 
+        _scopes='email', 
+        expires=expires, 
+        client=client, 
+        user=client.user,
+        email=client.user).save()
+        return jsonify({'access_token':tok.access_token})
+    return jsonify({'access_token':'Invalid credentials'})
 
 @app.route('/api/me')
 @oauth.require_oauth()
 def me():
-    print "Entered me"
     user = request.oauth.user
     return jsonify(username=user, test=1)
 

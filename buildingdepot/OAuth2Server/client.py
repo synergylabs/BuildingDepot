@@ -2,8 +2,8 @@ from flask import Flask, url_for, session, request, jsonify
 from flask_oauthlib.client import OAuth
 
 
-CLIENT_ID = 'TqkmMTnY5iNwR2H82pV9W786Awgy0qz34hNQq0wQ'
-CLIENT_SECRET = 'CH3594MmhgnywfM0NlQhehBAY1cZE1o4yjFqsIBgiJu9F42dgi'
+CLIENT_ID = 'OPBs5ccqWAjfD9RSTSy7nxfj8DC3MarXvuJtn577'
+CLIENT_SECRET = 'MJ0AedmO5GeIx7pc3M5Pbz6Ea7rA0QW4bZUK0GhEseZRg0uAMS'
 
 
 app = Flask(__name__)
@@ -47,6 +47,7 @@ def authorized():
             request.args['error_reason'],
             request.args['error_description']
         )
+    print "Resp is"
     print resp
     session['remote_oauth'] = (resp['access_token'], '')
     return jsonify(oauth_token=resp['access_token'])
