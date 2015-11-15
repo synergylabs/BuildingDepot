@@ -37,19 +37,17 @@ function deploy_centralservice {
 
 	# Create supervisor config for central replica
 	cp configs/supervisor-replica.conf /etc/supervisor/conf.d/
+
+	# Create oauth  config
+        cp configs/supervisor-oauth.conf /etc/supervisor/conf.d/
 	
 	# Create nginx config
 	rm -f /etc/nginx/sites-enabled/default
-#	cp configs/nginx_cs.conf /etc/nginx/sites-available/cs.conf
-#	ln -sf /etc/nginx/sites-available/cs.conf /etc/nginx/sites-enabled/cs.conf
 }
 
 function deploy_dataservice {
 	setup_venv /srv/buildingdepot/
 	
-	#cp -r buildingdepot/DataService /srv/huaipeng/buildingdepot/
-	
-
 	cd /srv/buildingdepot
 
 	# copy uwsgi files
@@ -60,18 +58,12 @@ function deploy_dataservice {
 
 	# Create nginx config
 	rm -f /etc/nginx/sites-enabled/default
-#	cp configs/nginx_ds.conf /etc/nginx/sites-available/ds.conf
-#	ln -sf /etc/nginx/sites-available/ds.conf /etc/nginx/sites-enabled/ds.conf
 }
 
 
 function joint_deployment_fix {
 	# Create join nginx config
 	rm -f /etc/nginx/sites-enabled/default
-#	rm -f /etc/nginx/sites-enabled/ds.conf
-#	rm -f /etc/nginx/sites-available/ds.conf
-#	rm -f /etc/nginx/sites-enabled/cs.conf
-#	rm -f /etc/nginx/sites-available/cs.conf
 	cd /srv/buildingdepot
 	cp configs/together.conf /etc/nginx/sites-available/together.conf
 	ln -sf /etc/nginx/sites-available/together.conf /etc/nginx/sites-enabled/together.conf
@@ -111,7 +103,6 @@ function setup_venv {
 	mkdir -p /etc/uwsgi/apps-available/
 
 	deactivate
-	#rm pip_packages.list
 	cd -
 }
 
