@@ -5,6 +5,7 @@ from .forms import *
 from .utils import *
 from uuid import uuid4
 from .. import r, influx,oauth
+from werkzeug.security import gen_salt
 import sys
 sys.path.append('/srv/buildingdepot')
 from utils import get_user_oauth 
@@ -297,8 +298,8 @@ def sensorgroup():
         return redirect(url_for('service.sensorgroup'))
     return render_template('service/sensorgroup.html', objs=objs, form=form)
 
-@service.route('/oauth',methods=['GET','POST'])
-def oauth():
+@service.route('/oauth_gen',methods=['GET','POST'])
+def oauth_gen():
     keys = []
     if request.method == 'POST':
 	keys.append({"client_id":gen_salt(40),"client_secret":gen_salt(50)})
@@ -312,8 +313,8 @@ def oauth():
             'http://127.1:8000/authorized']),
         _default_scopes='email',
         user = request.form.get('name')).save()
-    	return render_template('service/oauth.html',keys=keys)
-    return render_template('service/oauth.html',keys=keys)
+    	return render_template('service/oauth_gen.html',keys=keys)
+    return render_template('service/oauth_gen.html',keys=keys)
 
 @service.route('/sensorgroup/<name>/tags', methods=['GET', 'POST'])
 def sensorgroup_tags(name):

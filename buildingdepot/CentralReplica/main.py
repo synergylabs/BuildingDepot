@@ -24,7 +24,6 @@ def get_user_oauth(email):
     user = User.objects(email=email).first()
     res = {}
     if user is not None:
-	#res['user']=user
 	return str(user.email)
     return None
 
@@ -32,7 +31,6 @@ def get_user_by_id(uid):
     user = User.objects(id=ObjectId(str(uid))).first()
     res = {}
     if user is not None:
-	#res['user']=user
 	return str(user.email)
     return None
 
