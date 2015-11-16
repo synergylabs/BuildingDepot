@@ -4,11 +4,9 @@ from ..models.ds_models import *
 from .forms import *
 from .utils import *
 from uuid import uuid4
-
-from .. import r, influx
+from .. import r, influx,oauth
 import sys
 sys.path.append('/srv/buildingdepot')
-from OAuth2Server.app import *
 from utils import get_user_oauth 
 from ..api_0_0.resources.utils import *
 
@@ -176,7 +174,7 @@ def sensor_subscribers(name):
         return jsonify({'success': 'False'})
 
 
-@service.route('/sensor/<name>/<email>/timeseries', methods=['POST'],endpoint='sensor_timeseries')
+@service.route('/sensor/id=<name>/email=<email>/timeseries', methods=['POST'],endpoint='sensor_timeseries')
 @oauth.require_oauth()
 @authenticate_acl('r/w')
 def sensor_timeseries(name,email):

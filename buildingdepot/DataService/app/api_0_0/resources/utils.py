@@ -5,7 +5,6 @@ from ... import r
 from flask import request
 import sys
 sys.path.append('/srv/buildingdepot')
-from OAuth2Server.app import *
 
 permissions_val = {"u/d":1,"r/w":2,"r":3,"d/r":4}
 def success():
