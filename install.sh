@@ -39,9 +39,6 @@ function deploy_centralservice {
 	# Create supervisor config for central replica
 	cp configs/supervisor-replica.conf /etc/supervisor/conf.d/
 
-	# Create oauth  config
-        cp configs/supervisor-oauth.conf /etc/supervisor/conf.d/
-	
 	# Create nginx config
 	rm -f /etc/nginx/sites-enabled/default
 }
