@@ -28,6 +28,7 @@ function deploy_centralservice {
 	cp -r buildingdepot/DataService /srv/buildingdepot/
 	cp -r buildingdepot/CentralReplica /srv/buildingdepot/
 	cp -r buildingdepot/OAuth2Server /srv/buildingdepot/
+	cp -r buildingdepot/Documentation /srv/buildingdepot/
 	cd /srv/buildingdepot
 	# copy uwsgi files
 	cp configs/uwsgi_cs.ini /etc/uwsgi/apps-available/cs.ini
