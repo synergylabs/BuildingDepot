@@ -82,6 +82,7 @@ function install_packages {
 	apt-get install -y supervisor
 	apt-get install -y redis-server
 	pip install --upgrade virtualenv
+	apt-get install wget
 	wget http://influxdb.s3.amazonaws.com/influxdb_0.9.2_amd64.deb
 	sudo dpkg -i influxdb_0.9.2_amd64.deb
 }
@@ -120,6 +121,7 @@ service supervisor stop
 service supervisor start 
 sleep 5
 supervisorctl restart all
+service influxdb start
 
 if [ "$DEPLOY_TOGETHER" = true ]; then
 	joint_deployment_fix
