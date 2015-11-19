@@ -21,27 +21,31 @@ An institution has a single CentralService that houses data of all buildings and
 
 A DataService may belong to any single administrative group that requires sole control over who can access the underlying sensor data points. Different buildings on a campus might desire their own DataService.
 
-Read more about the :ref:`Building Depot<BuildingDepot Overview>`
-
 
 CentralService
 **************
 
 Read more about the :ref:`CentralService<CentralService Overview>`
 
+.. toctree::
+   :maxdepth: 2
+
+   centralservice.rst
 
 DataService
 ***********
 
 Read more about the :ref:`DataService<DataService Overview>`
 
+.. toctree::
+   :maxdepth: 2
+
+   dataservice.rst
+
 Download
 ########
 
-You can get the latest BuildingDepot package (tar.gz) from `www.buildingdepot.org <http://www.buildingdepot.org>`_
-
-`Download version 3.0 <>`_
-
+You can get the latest BuildingDepot package (tar.gz) from `cmu.buildingdepot.org <http://cmu.buildingdepot.org/BuildingDepot.tar.gz>`_
 
 Install
 #######

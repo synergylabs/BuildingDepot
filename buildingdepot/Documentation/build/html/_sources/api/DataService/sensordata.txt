@@ -18,7 +18,7 @@ This stores datapoints in the timeseries of the specified Sensorpoint.
 The first datapoint that is posted to the uuid defines the datatype for all further timeseries datapoints e.g. if the first datapoint posted to a certain uuid is a int then all further datapoints have to be ints.
 
 
-.. http:get:: /service/sensor/(string: sensor_uuid)/timeseries
+.. http:get:: /service/sensor/id=<name>/email=<email>/timeseries
    
    :param string sensor_uuid: UUID associated with Sensor
    :json list data: A dictionary of the datapoints that need to be posted for this sensor uuid
@@ -35,7 +35,8 @@ The first datapoint that is posted to the uuid defines the datatype for all furt
 
    .. sourcecode:: http
 
-      POST /sensors/26da099a-3fe0-4966-b068-14f51bcedb6e/timeseries HTTP/1.1
+      POST /service/sensor/id=26da099a-3fe0-4966-b068-14f51bcedb6e/
+      email=test@gmail.com/timeseries HTTP/1.1
       Accept: application/json; charset=utf-8
 
       { 
@@ -68,8 +69,8 @@ Read Timeseries Datapoints
 
 This retreives a list of datapoints for the timeseries of the specified Sensorpoint
 
-.. http:get:: /service/sensor/id=<name>/interval=<interval>/
-              /service/sensor/id=<name>/interval=<interval>/resolution=<resolution>
+.. http:get:: /service/api/v1/data/id=<name>/email=<email>/interval=<interval>/
+              /service/api/v1/data/id=<name>/email=<email>/interval=<interval>/resolution=<resolution>
    
    :param string id: UUID associated with Sensor (compulsory)
    :param string interval: The time interval over which data is required with respect to current time (compulsory)
@@ -91,7 +92,8 @@ Note: Both interval and resolution are specified with the time value appended by
 
    .. sourcecode:: http
 
-      GET /service/sensor/id=26da099a-3fe0-4966-b068-14f51bcedb6e/interval=10s HTTP/1.1
+      GET /service/api/v1/data/id=26da099a-3fe0-4966-b068-14f51bcedb6e/
+      email=test@gmail.com/interval=10s HTTP/1.1
       Accept: application/json; charset=utf-8
 
    **Example response**:

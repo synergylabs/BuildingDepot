@@ -175,7 +175,7 @@ def sensor_subscribers(name):
         return jsonify({'success': 'False'})
 
 
-@service.route('/sensor/id=<name>/email=<email>/timeseries', methods=['POST'],endpoint='sensor_timeseries')
+@service.route('/api/v1/data/id=<name>/email=<email>/timeseries', methods=['POST'],endpoint='sensor_timeseries')
 @oauth.require_oauth()
 @authenticate_acl('r/w')
 def sensor_timeseries(name,email):

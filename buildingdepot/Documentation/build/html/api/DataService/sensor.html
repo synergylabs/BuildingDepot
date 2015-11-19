@@ -49,8 +49,8 @@ Permissions for the Sensor and to the <cite>Admin</cite> who owns the Sensor.</p
 <p>Retreive a list of Sensors accessible to the User initiating the request. This list
 can be context filtered by specifying the context query string.</p>
 <dl class="get">
-<dt id="get--service-sensor-list">
-<code class="descname">GET </code><code class="descname">/service/sensor/list</code><a class="headerlink" href="#get--service-sensor-list" title="Permalink to this definition">¶</a></dt>
+<dt id="get--service-api-v1-list">
+<code class="descname">GET </code><code class="descname">/service/api/v1/list</code><a class="headerlink" href="#get--service-api-v1-list" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -72,7 +72,7 @@ can be context filtered by specifying the context query string.</p>
 
 <div class="compound">
 <p class="compound-first"><strong>Example request</strong>:</p>
-<div class="compound-middle highlight-http"><div class="highlight"><pre><span class="nf">GET</span> <span class="nn">/service/sensor/list</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<div class="compound-middle highlight-http"><div class="highlight"><pre><span class="nf">GET</span> <span class="nn">/service/api/v1/list</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
 <span class="na">Accept</span><span class="o">:</span> <span class="l">application/json; charset=utf-8</span>
 </pre></div>
 </div>
@@ -123,8 +123,8 @@ Content-Type: application/json
 <h2>List Sensors by tag<a class="headerlink" href="#list-sensors-by-tag" title="Permalink to this headline">¶</a></h2>
 <p>Retreives a list of Sensors accessible to the User initiating the request filtered on the basis of the tags specified by the user</p>
 <dl class="get">
-<dt id="get--service-sensor--param_1-=-value_1--tag">
-<code class="descname">GET </code><code class="descname">/service/sensor/&lt;param_1&gt;=&lt;value_1&gt;/tag</code><a class="headerlink" href="#get--service-sensor--param_1-=-value_1--tag" title="Permalink to this definition">¶</a></dt>
+<dt id="get--service-api-v1--param_1-=-value_1--tag">
+<code class="descname">GET </code><code class="descname">/service/api/v1/&lt;param_1&gt;=&lt;value_1&gt;/tag</code><a class="headerlink" href="#get--service-api-v1--param_1-=-value_1--tag" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -149,7 +149,7 @@ Content-Type: application/json
 </tbody>
 </table>
 <p><strong>Example request</strong>:</p>
-<div class="highlight-http"><div class="highlight"><pre><span class="nf">GET</span> <span class="nn">/service/sensor/Floor=1/tag</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<div class="highlight-http"><div class="highlight"><pre><span class="nf">GET</span> <span class="nn">/service/api/v1/Floor=1/tag</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
 <span class="na">Accept</span><span class="o">:</span> <span class="l">application/json; charset=utf-8</span>
 </pre></div>
 </div>
@@ -201,8 +201,8 @@ Content-Type: application/json
 <h2>List Sensors by Metadata<a class="headerlink" href="#list-sensors-by-metadata" title="Permalink to this headline">¶</a></h2>
 <p>Retreives a list of Sensors accessible to the User initiating the request filtered on the basis of the metadata specified by the user</p>
 <dl class="get">
-<dt id="get--service-sensor--param_1-=-value_1--metadata">
-<code class="descname">GET </code><code class="descname">/service/sensor/&lt;param_1&gt;=&lt;value_1&gt;/metadata</code><a class="headerlink" href="#get--service-sensor--param_1-=-value_1--metadata" title="Permalink to this definition">¶</a></dt>
+<dt id="get--service-api-v1--param_1-=-value_1--metadata">
+<code class="descname">GET </code><code class="descname">/service/api/v1/&lt;param_1&gt;=&lt;value_1&gt;/metadata</code><a class="headerlink" href="#get--service-api-v1--param_1-=-value_1--metadata" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -227,7 +227,7 @@ Content-Type: application/json
 </tbody>
 </table>
 <p><strong>Example request</strong>:</p>
-<div class="highlight-http"><div class="highlight"><pre><span class="nf">GET</span> <span class="nn">/service/sensor/Type=Temperature/metadata/tag</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<div class="highlight-http"><div class="highlight"><pre><span class="nf">GET</span> <span class="nn">/service/api/v1/Type=Temperature/metadata</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
 <span class="na">Accept</span><span class="o">:</span> <span class="l">application/json; charset=utf-8</span>
 </pre></div>
 </div>

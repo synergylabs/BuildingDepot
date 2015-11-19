@@ -24,7 +24,7 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="top" title="BuildingDepot 3.0 documentation" href="#" />
-    <link rel="next" title="Installation" href="install.html" />
+    <link rel="next" title="Central Service" href="centralservice.html" />
    
   
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
@@ -48,20 +48,41 @@ Service :</p>
 <p>Data Service - The core component of BD and is responsible for handling the actual sensor data. Exposes a RESTful API for retrieving data and inserting data into the system.</p>
 <p>An institution has a single CentralService that houses data of all buildings and user accounts on campus, and multiple DataServices, each of which may contain sensor data of several buildings.</p>
 <p>A DataService may belong to any single administrative group that requires sole control over who can access the underlying sensor data points. Different buildings on a campus might desire their own DataService.</p>
-<p>Read more about the <span class="xref std std-ref">Building Depot</span></p>
 <div class="section" id="centralservice">
 <h3>CentralService<a class="headerlink" href="#centralservice" title="Permalink to this headline">¶</a></h3>
 <p>Read more about the <span class="xref std std-ref">CentralService</span></p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="centralservice.html">Central Service</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="centralservice.html#tagtype">TagType</a></li>
+<li class="toctree-l2"><a class="reference internal" href="centralservice.html#buildingtemplate">BuildingTemplate</a></li>
+<li class="toctree-l2"><a class="reference internal" href="centralservice.html#building">Building</a></li>
+<li class="toctree-l2"><a class="reference internal" href="centralservice.html#data-services">Data Services</a></li>
+</ul>
+</li>
+</ul>
+</div>
 </div>
 <div class="section" id="dataservice">
 <h3>DataService<a class="headerlink" href="#dataservice" title="Permalink to this headline">¶</a></h3>
 <p>Read more about the <span class="xref std std-ref">DataService</span></p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="dataservice.html">Data Service</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="dataservice.html#sensor">Sensor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dataservice.html#sensor-group">Sensor Group</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dataservice.html#user-group">User Group</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dataservice.html#permission">Permission</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dataservice.html#oauth">OAuth</a></li>
+</ul>
+</li>
+</ul>
+</div>
 </div>
 </div>
 <div class="section" id="download">
 <h2>Download<a class="headerlink" href="#download" title="Permalink to this headline">¶</a></h2>
-<p>You can get the latest BuildingDepot package (tar.gz) from <a class="reference external" href="http://www.buildingdepot.org">www.buildingdepot.org</a></p>
-<p><a href="#id1"><span class="problematic" id="id2">`Download version 3.0 &lt;&gt;`_</span></a></p>
+<p>You can get the latest BuildingDepot package (tar.gz) from <a class="reference external" href="http://cmu.buildingdepot.org/BuildingDepot.tar.gz">cmu.buildingdepot.org</a></p>
 </div>
 <div class="section" id="install">
 <h2>Install<a class="headerlink" href="#install" title="Permalink to this headline">¶</a></h2>
@@ -107,7 +128,7 @@ Service :</p>
 <h3>Related Topics</h3>
 <ul>
   <li><a href="#">Documentation overview</a><ul>
-      <li>Next: <a href="install.html" title="next chapter">Installation</a></li>
+      <li>Next: <a href="centralservice.html" title="next chapter">Central Service</a></li>
   </ul></li>
 </ul>
 </div>

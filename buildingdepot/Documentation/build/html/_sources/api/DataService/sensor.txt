@@ -16,7 +16,7 @@ List Sensors
 Retreive a list of Sensors accessible to the User initiating the request. This list
 can be context filtered by specifying the context query string.
 
-.. http:get:: /service/sensor/list
+.. http:get:: /service/api/v1/list
 
    :returns:
       * **sensors** `(list)` -- List of Sensors (See `View Sensor`_)
@@ -29,7 +29,7 @@ can be context filtered by specifying the context query string.
 
    .. sourcecode:: http
 
-      GET /service/sensor/list HTTP/1.1
+      GET /service/api/v1/list HTTP/1.1
       Accept: application/json; charset=utf-8
 
    **Example response**:
@@ -79,7 +79,7 @@ List Sensors by tag
 *******************
 Retreives a list of Sensors accessible to the User initiating the request filtered on the basis of the tags specified by the user
 
-.. http:get:: /service/sensor/<param_1>=<value_1>/tag
+.. http:get:: /service/api/v1/<param_1>=<value_1>/tag
 
    :param string param_1: Name of the tag on the basis of which filtering of the sensors is to be done
    :param string value_1: Value of the tag on the basis of which filtering of the sensors is to be done
@@ -94,7 +94,7 @@ Retreives a list of Sensors accessible to the User initiating the request filter
 
    .. sourcecode:: http
 
-      GET /service/sensor/Floor=1/tag HTTP/1.1
+      GET /service/api/v1/Floor=1/tag HTTP/1.1
       Accept: application/json; charset=utf-8
 
    **Example response**:
@@ -144,7 +144,7 @@ List Sensors by Metadata
 ************************
 Retreives a list of Sensors accessible to the User initiating the request filtered on the basis of the metadata specified by the user
 
-.. http:get:: /service/sensor/<param_1>=<value_1>/metadata
+.. http:get:: /service/api/v1/<param_1>=<value_1>/metadata
 
    :param string param_1: Name of the metadata on the basis of which filtering of the sensors is to be done
    :param string value_1: Value of the metadata on the basis of which filtering of the sensors is to be done
@@ -159,7 +159,7 @@ Retreives a list of Sensors accessible to the User initiating the request filter
 
    .. sourcecode:: http
 
-      GET /service/sensor/Type=Temperature/metadata/tag HTTP/1.1
+      GET /service/api/v1/Type=Temperature/metadata HTTP/1.1
       Accept: application/json; charset=utf-8
 
    **Example response**:
