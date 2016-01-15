@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 BuildingDepot
 =============
 
@@ -6,56 +5,86 @@ BuildingDepot (BD) is a data sensor and actuation system for building management
 
 The BD server consists of three seperate services - the DataService, the DirectoryService, and the UserService.
 
-BD Minimum Requirements
-=======================
-
-
-
 What's Next
 ===========
 
 1. Installation
-2. Configuration
-3. Example Apps/Connectors
-
-
+2. What's Installed
+3. Configuration
 
 Installation
 ============
 
-To install BD, run the install.sh script in the Installation folder. The default installation location is /opt.
-You can provide an installation path to the script e.g. $ ./install.sh /usr. This will cause BD to be installed
-at /usr/buildingdepot
+To install BD, run the install.sh script in the Installation folder. The default installation location is /srv.
 
-By Default, BD uses Https and will attempt to generate an SSL Certificate for the host on which it is installed.
+Note:
+This installer installs the BD DataService, CentralService, MongoDB, InfluxDB and Redis on the same machine.
 
-The installer provides a menu of two options:
-1. Install/Reinstall BD 
-2. Reconfigure an existing BD Installation
+1. Extract the package and cd into the folder**:
 
-Option one will cause any previous installation of BD found at the installation path to be overwritten. It will
-also attempt to revert the MySQL and Cassandra databases to a clean install state. Option two allows the admin
-to reconfigure an exisiting BD Installation. 
+$ tar -xzf buildingdepot-3.#.#.tar.gz
 
+$ cd buildingdepot-3.#.#/
+
+2. Run the installer
+
+$ ./install.sh
+
+This will install BuildingDepot in the default installation location /srv/buildingdepot with the following directory structure:
+
+buildingdepot
+|-- CentralService - CentralService
+|-- DataService - DataService
+|-- CentralReplica - The central replica that is present at every DataService
++-- venv - Python Virtual Environment
+
+What's installed
+===============
+
+The following packages are installed using apt-get
+
+openssl
+python-setuptools
+python-dev
+build-essential
+python-software-properties
+mongodb
+python-pip
+nginx
+supervisor
+redis-server
+influxdb
+The following packages are installed in the python virtual environment
+
+Flask
+mongoengine
+flask-restful
+Flask-HTTPAuth
+flask-login
+validate-email
+requests
+Flask-Script
+Flask-WTF
+flask-bootstrap
+redis
+influxdb
+pymongo
 
 Configuration
 =============
 
-BD Configuration consists of the steps outlined below:
+The BD Installer configures BD with some default values.
 
-1. Provide SuperAdmin Info (Email, Name, Password)
-2. Provide BD Host Info (Domain Name, Port)
-3. Provide info for SSL Certificate Generation
+The CentralService can be accessed on port 81 and the DataService on port 81.
 
+DataService
 
+To access the DataService, go to
 
-Example Apps/Connectors
-=======================
+   URL - http://<host>:82
 
-BD's example apps and connectors can be found in the Tools/Examples folder. They provide a basic skeleton for
-developing Apps and Connectors using BD API.
+CentralService
 
-=======
-# BuildingDepot-v3
-BuildingDepot v3
->>>>>>> 8d06dcdb093edd2ac29bc00907d870581aa7143a
+To access the CentralService, go to
+
+   URL - http://<host>:81
