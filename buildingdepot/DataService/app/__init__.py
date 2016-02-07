@@ -1,3 +1,23 @@
+"""
+DataService.app
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This file creates the following:
+- Initiates the connection object to InfluxDB that will be used by
+  the DataService
+
+- Initializes the connection to the Redis cache
+
+- Initializes the OAuth2Provider
+
+The flask application is also created here and all the different
+services such as the main dataservice,rest_api and oauth service are
+registered as blueprints.
+
+@copyright: (c) 2016 SynergyLabs
+@license: UCSD License. See License file for details.
+"""
+
 from flask import Flask
 from config import config
 from mongoengine import connect,register_connection
@@ -21,7 +41,7 @@ def create_app(config_mode):
     app.config.from_object(config[config_mode])
 
     app.debug = True
-    app.secret_key = 'secret'	
+    app.secret_key = 'secret'
 
     oauth.init_app(app)
 
@@ -30,9 +50,7 @@ def create_app(config_mode):
             host=app.config['MONGODB_HOST'],
             port=app.config['MONGODB_PORT'])
     register_connection('bd',name='buildingdepot',host='127.0.0.1',port=27017)
- 
-    from .api_0_0 import api
-    api.init_app(app)
+
     bootstrap.init_app(app)
 
     from .main import main as main_blueprint
@@ -46,5 +64,8 @@ def create_app(config_mode):
 
     from .oauth_bd import oauth_bd as oauth_bd_blueprint
     app.register_blueprint(oauth_bd_blueprint, url_prefix='/oauth')
+
+    from .rest_api import api as api_blueprint
+    app.register_blueprint(api_blueprint, url_prefix='/api')
 
     return app

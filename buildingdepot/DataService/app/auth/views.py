@@ -1,3 +1,13 @@
+"""
+DataService.auth.views
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Functions for user login and logout from the DataService
+
+@copyright: (c) 2016 SynergyLabs
+@license: UCSD License. See License file for details.
+"""
+
 from flask import render_template, redirect, request, url_for, flash, session
 from . import auth
 from .forms import LoginForm

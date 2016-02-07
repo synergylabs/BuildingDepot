@@ -238,7 +238,7 @@
             };
             $scope.root.select = function(sensorName) {
                 this.sensorName = sensorName;
-                var res = $http.get('/service/sensor/'+ sensorName + '/metadata');
+                var res = $http.get('/api/sensor/'+ sensorName + '/metadata');
                 res.success(function(data) {
                     $scope.metadata = data.data;
                 });
@@ -247,7 +247,7 @@
                 });
             };
             $scope.root.update = function() {
-                var res = $http.post('/service/sensor/'+ this.sensorName + '/metadata', {'data': $scope.metadata});
+                var res = $http.post('/api/sensor/'+ this.sensorName + '/metadata', {'data': $scope.metadata});
                 res.success(function(data) {
                     confirm('Success');
                 });
@@ -259,7 +259,7 @@
             $scope.root.tags = function(sensorName) {
                 $scope.addedTags = [];
                 $scope.sensorName = sensorName;
-                var res = $http.get('/service/sensor/' + sensorName + '/tags');
+                var res = $http.get('/api/sensor/' + sensorName + '/tags');
                 res.success(function(data) {
                     $scope.tags = data.tags;
                     $scope.tags_owned = data.tags_owned;
@@ -295,7 +295,7 @@
                     }
                 }
 
-                var res = $http.post('/service/sensor/'+ $scope.sensorName + '/tags', {'data': tags});
+                var res = $http.post('/api/sensor/'+ $scope.sensorName + '/tags', {'data': tags});
                 res.success(function(data) {
                     confirm('Success');
                 });
@@ -312,7 +312,7 @@
             };
             $scope.root.selectSubscribers = function(sensorName) {
                 $scope.sensorName = sensorName;
-                var res = $http.get('/service/sensor/'+ sensorName + '/subscribers');
+                var res = $http.get('/api/sensor/'+ sensorName + '/subscribers');
                 res.success(function(data) {
                     $scope.subscribers = data.subscribers;
                 });
@@ -333,7 +333,7 @@
                     }
                     set[$scope.subscribers[i].email] = true;
                 }
-                var res = $http.post('/service/sensor/'+ $scope.sensorName + '/subscribers', {'data': $scope.subscribers});
+                var res = $http.post('/api/sensor/'+ $scope.sensorName + '/subscribers', {'data': $scope.subscribers});
                 res.success(function(data) {
                     if (data.success === 'True') {
                         confirm('Success');
@@ -371,7 +371,7 @@
                     }
                     set[$scope.ts[i].time] = true;
                 }
-                var res = $http.post('/service/sensor/'+ $scope.sensorName + '/timeseries', {'data': $scope.ts});
+                var res = $http.post('/api/sensor/'+ $scope.sensorName + '/timeseries', {'data': $scope.ts});
                 res.success(function(data) {
                     if (data.success === 'True') {
                         confirm('Success');
