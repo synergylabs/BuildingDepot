@@ -1,3 +1,15 @@
+"""
+DataService.config
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Contains the configuration definitions needed for the Dataservice.
+This sample config file for example requires that a DataService be
+registered in the CentralService with the name "ds1".
+
+@copyright: (c) 2016 SynergyLabs
+@license: UCSD License. See License file for details.
+"""
+
 class Config:
     MONGODB_DATABASE = 'dataservice'
     MONGODB_HOST = '127.0.0.1'
