@@ -25,7 +25,7 @@
     <script type="text/javascript" src="../../_static/doctools.js"></script>
     <link rel="top" title="BuildingDepot 3.0 documentation" href="../../index.html" />
     <link rel="next" title="Sensor" href="sensor.html" />
-    <link rel="prev" title="CentalService API" href="../CentralService/index.html" />
+    <link rel="prev" title="Installation" href="../../install.html" />
    
   
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
@@ -43,7 +43,7 @@
 <p>All urls in this chapter are with respect to the base url of the DataService. For example: If the DataService is at <a class="reference external" href="http://www.example.com:82">http://www.example.com:82</a> then a url such as /service/sensor refers to <a class="reference external" href="http://www.example.com/dataservice/api/user/account">http://www.example.com/dataservice/api/user/account</a>.</p>
 <div class="section" id="authentication">
 <h2>Authentication<a class="headerlink" href="#authentication" title="Permalink to this headline">¶</a></h2>
-<p>In order to access the DataService all users will first have to generate an OAuth Token using the Client ID and secret Client Key that they obtain from their account at the CentralService. Once logged into the CentralService users can go to the OAuth tab and generate a Client ID and Key that should never be shared with any other users.</p>
+<p>In order to access the DataService all users will first have to generate an OAuth Token using the Client ID and secret Client Key that they obtain from their account at the DataService. Once logged into the DataService users can go to the OAuth tab and generate a Client ID and Key that should never be shared with any other users.</p>
 <p>Once these have been generated the user can request BuildingDepot for the access token and refresh token. The access token will be valid for the next 24 hours after which another will have to be generated using the refresh token. The OAuth token should also never be shared publicly.</p>
 <p>This OAuth token will have to be sent in the headers of all the requests made to BuildingDepot.</p>
 <div class="toctree-wrapper compound">
@@ -60,6 +60,32 @@
 <li class="toctree-l1"><a class="reference internal" href="sensordata.html">Timeseries</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="sensordata.html#put-timeseries-datapoints">Put Timeseries Datapoints</a></li>
 <li class="toctree-l2"><a class="reference internal" href="sensordata.html#read-timeseries-datapoints">Read Timeseries Datapoints</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="metadata.html">Metadata</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="metadata.html#add-metadata">Add Metadata</a></li>
+<li class="toctree-l2"><a class="reference internal" href="metadata.html#read-metadata">Read Metadata</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="tags.html">Tags</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tags.html#add-tags">Add Tags</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tags.html#read-tags">Read Tags</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="usergroup.html">Usergroups</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="usergroup.html#create-usergroup">Create UserGroup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usergroup.html#add-users-to-usergroup">Add users to UserGroup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usergroup.html#get-list-of-users-in-usergroup">Get list of users in UserGroup</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="sensorgroup.html">SensorGroups</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="sensorgroup.html#create-sensorgroup">Create SensorGroup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sensorgroup.html#add-tags-to-sensorgroup">Add tags to SensorGroup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sensorgroup.html#get-list-of-tags-in-sensorgroup">Get list of tags in SensorGroup</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="oauth.html">OAuth</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="oauth.html#generating-access-tokens">Generating access tokens</a></li>
 </ul>
 </li>
 </ul>
@@ -84,7 +110,7 @@
 <h3>Related Topics</h3>
 <ul>
   <li><a href="../../index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="../CentralService/index.html" title="previous chapter">CentalService API</a></li>
+      <li>Previous: <a href="../../install.html" title="previous chapter">Installation</a></li>
       <li>Next: <a href="sensor.html" title="next chapter">Sensor</a></li>
   </ul></li>
 </ul>

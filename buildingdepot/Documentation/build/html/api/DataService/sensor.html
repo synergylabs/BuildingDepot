@@ -49,8 +49,8 @@ Permissions for the Sensor and to the <cite>Admin</cite> who owns the Sensor.</p
 <p>Retreive a list of Sensors accessible to the User initiating the request. This list
 can be context filtered by specifying the context query string.</p>
 <dl class="get">
-<dt id="get--service-api-v1-list">
-<code class="descname">GET </code><code class="descname">/service/api/v1/list</code><a class="headerlink" href="#get--service-api-v1-list" title="Permalink to this definition">¶</a></dt>
+<dt id="get--api-list">
+<code class="descname">GET </code><code class="descname">/api/list</code><a class="headerlink" href="#get--api-list" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -72,7 +72,7 @@ can be context filtered by specifying the context query string.</p>
 
 <div class="compound">
 <p class="compound-first"><strong>Example request</strong>:</p>
-<div class="compound-middle highlight-http"><div class="highlight"><pre><span class="nf">GET</span> <span class="nn">/service/api/v1/list</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<div class="compound-middle highlight-http"><div class="highlight"><pre><span class="nf">GET</span> <span class="nn">/api/list</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
 <span class="na">Accept</span><span class="o">:</span> <span class="l">application/json; charset=utf-8</span>
 </pre></div>
 </div>
@@ -123,8 +123,8 @@ Content-Type: application/json
 <h2>List Sensors by tag<a class="headerlink" href="#list-sensors-by-tag" title="Permalink to this headline">¶</a></h2>
 <p>Retreives a list of Sensors accessible to the User initiating the request filtered on the basis of the tags specified by the user</p>
 <dl class="get">
-<dt id="get--service-api-v1--param_1-=-value_1--tag">
-<code class="descname">GET </code><code class="descname">/service/api/v1/&lt;param_1&gt;=&lt;value_1&gt;/tag</code><a class="headerlink" href="#get--service-api-v1--param_1-=-value_1--tag" title="Permalink to this definition">¶</a></dt>
+<dt id="get--api--param_1-=-value_1--tags">
+<code class="descname">GET </code><code class="descname">/api/&lt;param_1&gt;=&lt;value_1&gt;/tags</code><a class="headerlink" href="#get--api--param_1-=-value_1--tags" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -149,7 +149,7 @@ Content-Type: application/json
 </tbody>
 </table>
 <p><strong>Example request</strong>:</p>
-<div class="highlight-http"><div class="highlight"><pre><span class="nf">GET</span> <span class="nn">/service/api/v1/Floor=1/tag</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<div class="highlight-http"><div class="highlight"><pre><span class="nf">GET</span> <span class="nn">/api/Floor=1/tags</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
 <span class="na">Accept</span><span class="o">:</span> <span class="l">application/json; charset=utf-8</span>
 </pre></div>
 </div>
@@ -201,8 +201,8 @@ Content-Type: application/json
 <h2>List Sensors by Metadata<a class="headerlink" href="#list-sensors-by-metadata" title="Permalink to this headline">¶</a></h2>
 <p>Retreives a list of Sensors accessible to the User initiating the request filtered on the basis of the metadata specified by the user</p>
 <dl class="get">
-<dt id="get--service-api-v1--param_1-=-value_1--metadata">
-<code class="descname">GET </code><code class="descname">/service/api/v1/&lt;param_1&gt;=&lt;value_1&gt;/metadata</code><a class="headerlink" href="#get--service-api-v1--param_1-=-value_1--metadata" title="Permalink to this definition">¶</a></dt>
+<dt id="get--api--param_1-=-value_1--metadata">
+<code class="descname">GET </code><code class="descname">/api/&lt;param_1&gt;=&lt;value_1&gt;/metadata</code><a class="headerlink" href="#get--api--param_1-=-value_1--metadata" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -227,7 +227,7 @@ Content-Type: application/json
 </tbody>
 </table>
 <p><strong>Example request</strong>:</p>
-<div class="highlight-http"><div class="highlight"><pre><span class="nf">GET</span> <span class="nn">/service/api/v1/Type=Temperature/metadata</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<div class="highlight-http"><div class="highlight"><pre><span class="nf">GET</span> <span class="nn">/api/Type=Temperature/metadata</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
 <span class="na">Accept</span><span class="o">:</span> <span class="l">application/json; charset=utf-8</span>
 </pre></div>
 </div>
@@ -261,11 +261,53 @@ Content-Type: application/json
 </div>
 <div class="section" id="create-a-sensor">
 <h2>Create a Sensor<a class="headerlink" href="#create-a-sensor" title="Permalink to this headline">¶</a></h2>
-<p>Creates a Sensor.</p>
-<div class="admonition attention">
-<p class="first admonition-title">Attention</p>
-<p>Restricted to Admins only</p>
-<p class="last">Currently can only be done through the GUI</p>
+<p>Creates a new Sensor point in BuildingDepot and returns the UUID.</p>
+<dl class="post">
+<dt id="post--api-sensor_create-name=-name--identifier=-identifier--building=-building-">
+<code class="descname">POST </code><code class="descname">/api/sensor_create/name=&lt;name&gt;/identifier=&lt;identifier&gt;/building=&lt;building&gt;</code><a class="headerlink" href="#post--api-sensor_create-name=-name--identifier=-identifier--building=-building-" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>name</strong> (<em>string</em>) &#8211; Name of the sensor</li>
+<li><strong>identifier</strong> (<em>string</em>) &#8211; Identifier that user would like to be associated with the Sensor point</li>
+<li><strong>building</strong> (<em>string</em>) &#8211; Building in which sensor is located</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><ul class="first simple">
+<li><strong>success</strong> <cite>(string)</cite> &#8211; Returns &#8216;True&#8217; if data is posted succesfully otherwise &#8216;False&#8217;</li>
+<li><strong>uuid</strong> <cite>(string)</cite> &#8211; Returns the uuid of the sensor on succesful creation</li>
+</ul>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> &#8211; Success</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a> &#8211; Unauthorized Credentials (See <span class="xref std std-ref">HTTP 401</span>)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="compound">
+<p class="compound-first"><strong>Example request</strong>:</p>
+<div class="compound-middle highlight-http"><div class="highlight"><pre><span class="nf">POST</span> <span class="nn">/api/data/id=test_sensor/identifier=Temp_Sensor/building=NSH</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Accept</span><span class="o">:</span> <span class="l">application/json; charset=utf-8</span>
+</pre></div>
+</div>
+<p class="compound-middle"><strong>Example response</strong>:</p>
+<div class="compound-last highlight-http"><div class="highlight"><pre><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+
+<span class="p">{</span>
+  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;True&quot;</span>
+  <span class="s2">&quot;uuid&quot;</span><span class="p">:</span> <span class="s2">&quot;6cf53d24-e3a3-41bd-b2b5-8f109694f628&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
 </div>
 </div>
 <div class="section" id="delete-a-sensor">

@@ -61,7 +61,6 @@ REST API Documentation
 .. toctree::
    :maxdepth: 1
    
-   api/CentralService/index.rst
    api/DataService/index.rst
    
 .. may be needed for html generation

@@ -3,10 +3,6 @@
 Installation
 ############
 
-Get BD
-******
-Download from http://www.buildingdepot.org/downloads.html
-
 Using install.sh
 ****************
 

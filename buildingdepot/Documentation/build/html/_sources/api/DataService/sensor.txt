@@ -5,7 +5,7 @@ Sensor
 ######
 
 The Sensor collection manages Sensors for Locations associated with the DataService.
-Sensor access is restricted to :ref:`Users <CentralS-Users>` or :ref:`Admins <DataS-Admins>` with 
+Sensor access is restricted to :ref:`Users <CentralS-Users>` or :ref:`Admins <DataS-Admins>` with
 Permissions for the Sensor and to the `Admin` who owns the Sensor.
 
 .. _DataS List Sensors:
@@ -16,7 +16,7 @@ List Sensors
 Retreive a list of Sensors accessible to the User initiating the request. This list
 can be context filtered by specifying the context query string.
 
-.. http:get:: /service/api/v1/list
+.. http:get:: /api/list
 
    :returns:
       * **sensors** `(list)` -- List of Sensors (See `View Sensor`_)
@@ -29,42 +29,42 @@ can be context filtered by specifying the context query string.
 
    .. sourcecode:: http
 
-      GET /service/api/v1/list HTTP/1.1
+      GET /api/list HTTP/1.1
       Accept: application/json; charset=utf-8
 
    **Example response**:
 
    .. sourcecode:: http
-   
+
       HTTP/1.1 200 OK
       Content-Type: application/json
-      
+
       {
         "data": {
           "sensor_1": {
-            "building": "NSH", 
+            "building": "NSH",
             "metadata": {
                  "Type": "Temperature"
             },
-            "name": "26da099a-3fe0-4966-b068-14f51bcedb6e", 
-            "source_identifier": "SensorTag", 
-            "source_name": "Sensor Tag 1", 
+            "name": "26da099a-3fe0-4966-b068-14f51bcedb6e",
+            "source_identifier": "SensorTag",
+            "source_name": "Sensor Tag 1",
             "tags": [
                {
-                 "name": "Floor", 
+                 "name": "Floor",
                  "value": "3"
                }
             ]
-          }, 
+          },
           "sensor_2": {
-            "building": "NSH", 
-            "metadata": {}, 
-            "name": "3a99ca8f-b8c1-4489-b448-d463f0852208", 
-            "source_identifier": "SensorTag", 
-            "source_name": "Sensor Tag 1", 
+            "building": "NSH",
+            "metadata": {},
+            "name": "3a99ca8f-b8c1-4489-b448-d463f0852208",
+            "source_identifier": "SensorTag",
+            "source_name": "Sensor Tag 1",
             "tags": [
                {
-                 "name": "Floor", 
+                 "name": "Floor",
                  "value": "3"
                },
                {
@@ -74,12 +74,12 @@ can be context filtered by specifying the context query string.
           }
         }
       }
-      
+
 List Sensors by tag
 *******************
 Retreives a list of Sensors accessible to the User initiating the request filtered on the basis of the tags specified by the user
 
-.. http:get:: /service/api/v1/<param_1>=<value_1>/tag
+.. http:get:: /api/<param_1>=<value_1>/tags
 
    :param string param_1: Name of the tag on the basis of which filtering of the sensors is to be done
    :param string value_1: Value of the tag on the basis of which filtering of the sensors is to be done
@@ -94,42 +94,42 @@ Retreives a list of Sensors accessible to the User initiating the request filter
 
    .. sourcecode:: http
 
-      GET /service/api/v1/Floor=1/tag HTTP/1.1
+      GET /api/Floor=1/tags HTTP/1.1
       Accept: application/json; charset=utf-8
 
    **Example response**:
 
    .. sourcecode:: http
-   
+
       HTTP/1.1 200 OK
       Content-Type: application/json
-      
+
       {
         "data": {
           "sensor_1": {
-            "building": "NSH", 
+            "building": "NSH",
             "metadata": {
                  "Type": "Temperature"
             },
-            "name": "26da099a-3fe0-4966-b068-14f51bcedb6e", 
-            "source_identifier": "SensorTag", 
-            "source_name": "Sensor Tag 1", 
+            "name": "26da099a-3fe0-4966-b068-14f51bcedb6e",
+            "source_identifier": "SensorTag",
+            "source_name": "Sensor Tag 1",
             "tags": [
                {
-                 "name": "Floor", 
+                 "name": "Floor",
                  "value": "1"
                }
             ]
-          }, 
+          },
           "sensor_2": {
-            "building": "NSH", 
-            "metadata": {}, 
-            "name": "3a99ca8f-b8c1-4489-b448-d463f0852208", 
-            "source_identifier": "SensorTag", 
-            "source_name": "Sensor Tag 1", 
+            "building": "NSH",
+            "metadata": {},
+            "name": "3a99ca8f-b8c1-4489-b448-d463f0852208",
+            "source_identifier": "SensorTag",
+            "source_name": "Sensor Tag 1",
             "tags": [
                {
-                 "name": "Floor", 
+                 "name": "Floor",
                  "value": "1"
                },
                {
@@ -144,7 +144,7 @@ List Sensors by Metadata
 ************************
 Retreives a list of Sensors accessible to the User initiating the request filtered on the basis of the metadata specified by the user
 
-.. http:get:: /service/api/v1/<param_1>=<value_1>/metadata
+.. http:get:: /api/<param_1>=<value_1>/metadata
 
    :param string param_1: Name of the metadata on the basis of which filtering of the sensors is to be done
    :param string value_1: Value of the metadata on the basis of which filtering of the sensors is to be done
@@ -159,29 +159,29 @@ Retreives a list of Sensors accessible to the User initiating the request filter
 
    .. sourcecode:: http
 
-      GET /service/api/v1/Type=Temperature/metadata HTTP/1.1
+      GET /api/Type=Temperature/metadata HTTP/1.1
       Accept: application/json; charset=utf-8
 
    **Example response**:
 
    .. sourcecode:: http
-   
+
       HTTP/1.1 200 OK
       Content-Type: application/json
-      
+
       {
         "data": {
           "sensor_1": {
-            "building": "Wean Hall", 
+            "building": "Wean Hall",
             "metadata": {
               "Type": "Temperature"
-            }, 
-            "name": "f8ab0fed-8230-4509-9ae8-42b95a0bf03c", 
-            "source_identifier": "SensorTag", 
-            "source_name": "SensorTag_1", 
+            },
+            "name": "f8ab0fed-8230-4509-9ae8-42b95a0bf03c",
+            "source_identifier": "SensorTag",
+            "source_name": "SensorTag_1",
             "tags": [
               {
-                "name": "Floor", 
+                "name": "Floor",
                 "value": "3"
               }
             ]
@@ -192,13 +192,41 @@ Retreives a list of Sensors accessible to the User initiating the request filter
 Create a Sensor
 ***************
 
-Creates a Sensor. 
+Creates a new Sensor point in BuildingDepot and returns the UUID.
 
-.. attention::
+.. http:post:: /api/sensor_create/name=<name>/identifier=<identifier>/building=<building>
 
-   Restricted to Admins only
+   :param string name: Name of the sensor
+   :param string identifier: Identifier that user would like to be associated with the Sensor point
+   :param string building: Building in which sensor is located
 
-   Currently can only be done through the GUI
+   :returns:
+      * **success** `(string)` -- Returns 'True' if data is posted succesfully otherwise 'False'
+      * **uuid** `(string)` -- Returns the uuid of the sensor on succesful creation
+   :status 200: Success
+   :status 401: Unauthorized Credentials (See :ref:`HTTP 401 <HTTP 401>`)
+
+.. compound::
+
+   **Example request**:
+
+   .. sourcecode:: http
+
+      POST /api/data/id=test_sensor/identifier=Temp_Sensor/building=NSH HTTP/1.1
+      Accept: application/json; charset=utf-8
+
+   **Example response**:
+
+   .. sourcecode:: http
+
+      HTTP/1.1 200 OK
+      Content-Type: application/json
+
+      {
+        "success": "True"
+        "uuid": "6cf53d24-e3a3-41bd-b2b5-8f109694f628"
+      }
+
 
 
 Delete a Sensor
@@ -224,7 +252,7 @@ As the names suggest a user with read access to a sensor will be able to read al
 
 The basis of deciding these permissions is dependent on the abstraction of SensorGroups and UserGroups within BuildingDepot.
 
-SensorGroups are created on the basis of tags that are specified at the time of creation. All sensors with the specified tags will be a part of the SensorGroup that is created. Usergroups are basically a list of users which are connected to a SensorGroup via a "Permissions" link. This link is what defines the level of access that the users in the UserGroup have to the sensors in the SensorGroup. 
+SensorGroups are created on the basis of tags that are specified at the time of creation. All sensors with the specified tags will be a part of the SensorGroup that is created. Usergroups are basically a list of users which are connected to a SensorGroup via a "Permissions" link. This link is what defines the level of access that the users in the UserGroup have to the sensors in the SensorGroup.
 
 .. raw:: pdf
 
