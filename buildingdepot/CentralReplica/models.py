@@ -1,3 +1,15 @@
+"""
+CentralReplica.models
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Replicates all the models that are defined in the CentralService
+as the CentralReplica needs them for it's RPC's.
+
+@copyright: (c) 2016 SynergyLabs
+@license: UCSD License. See License file for details.
+"""
+
+
 from mongoengine import *
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from werkzeug.security import check_password_hash
