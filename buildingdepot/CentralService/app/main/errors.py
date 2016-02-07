@@ -1,12 +1,37 @@
-# from flask import render_template
-# from . import main
-#
-#
-# @main.app_errorhandler(404)
-# def page_not_found(e):
-#     return render_template('404.html'), 404
-#
-#
-# @main.app_errorhandler(500)
-# def internal_server_error(e):
-#     return render_template('500.html'), 500
+from flask import jsonify
+
+
+def bad_request(message):
+    response = jsonify({'error': 'Bad request', 'message': message})
+    response.status_code = 400
+    return response
+
+
+def unauthorized(message):
+    response = jsonify({'error': 'Unauthorized', 'message': message})
+    response.status_code = 401
+    return response
+
+
+def forbidden(message):
+    response = jsonify({'error': 'Forbidden', 'message': message})
+    response.status_code = 403
+    return response
+
+
+def not_exist(message):
+    response = jsonify({'error': 'Not exists', 'message': message})
+    response.status_code = 404
+    return response
+
+
+def not_allowed(message):
+    response = jsonify({'error': 'Not allowed', 'message': message})
+    response.status_code = 405
+    return response
+
+
+def internal_error(message):
+    response = jsonify({'error': 'Internal server error', 'message': message})
+    response.status_code = 500
+    return response

@@ -1,7 +1,23 @@
+"""
+CentralService.app
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This file creates the following:
+- Initializes the LoginManager that will be used for the frontend
+
+-
+
+The flask application is also created here and all the different
+services such as the main centralservice,auth service are
+registered as blueprints.
+
+@copyright: (c) 2016 SynergyLabs
+@license: UCSD License. See License file for details.
+"""
+
 from flask import Flask
 from config import config
 from mongoengine import connect
-from .api_0_0 import api
 from flask.ext.login import LoginManager
 from flask.ext.bootstrap import Bootstrap
 
@@ -21,7 +37,6 @@ def create_app(config_mode):
             host=app.config['MONGODB_HOST'],
             port=app.config['MONGODB_PORT'])
 
-    api.init_app(app)
     login_manager.init_app(app)
     bootstrap.init_app(app)
 

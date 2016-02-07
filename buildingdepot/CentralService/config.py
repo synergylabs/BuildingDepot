@@ -1,3 +1,13 @@
+"""
+CentralService.config
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Contains the configuration definitions needed for the Centralservice.
+
+@copyright: (c) 2016 SynergyLabs
+@license: UCSD License. See License file for details.
+"""
+
 class Config:
     MONGODB_DATABASE = 'BuildingDepot'
     MONGODB_HOST = '127.0.0.1'

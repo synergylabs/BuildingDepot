@@ -1,3 +1,15 @@
+"""
+CentralService.models
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Contains all the class definitions that are required for the CentralService.
+Each class here is a Table in MongoDB where each value that is inserted into
+these tables can have any of the paramteres defined within the class
+
+@copyright: (c) 2016 SynergyLabs
+@license: UCSD License. See License file for details.
+"""
+
 from flask import current_app
 from mongoengine import *
 from flask.ext.login import UserMixin

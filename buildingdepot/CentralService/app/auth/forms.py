@@ -1,3 +1,14 @@
+"""
+CentalService.auth.views
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Contains all the forms for the CentralService authorization functions.
+The two forms that are used are for login and for creating a new user.
+
+@copyright: (c) 2016 SynergyLabs
+@license: UCSD License. See License file for details.
+"""
+
 from flask.ext.wtf import Form
 from wtforms import StringField, PasswordField, BooleanField, SubmitField
 from wtforms.validators import DataRequired, Email, Length, EqualTo
