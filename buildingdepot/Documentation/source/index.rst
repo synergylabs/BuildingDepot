@@ -1,5 +1,5 @@
 .. BuildingDepot documentation master file.
-   
+
 ===================
 Building Depot v3.0
 ===================
@@ -10,7 +10,7 @@ Overview
 This is the official documentaion of BuildingDepot v3.0. BuildingDepot is essentialy an Extensible and Distributed Architecture for Sensor Data Storage, Access and Sharing.
 
 
-Building Depot has two essential components a Central Service and a Data 
+Building Depot has two essential components a Central Service and a Data
 Service :
 
 Central Service - A central directory containing details of all the buildings,users
@@ -49,20 +49,20 @@ You can get the latest BuildingDepot package (tar.gz) from `cmu.buildingdepot.or
 
 Install
 #######
-  
+
 .. toctree::
    :maxdepth: 1
-   
+
    install.rst
 
-REST API Documentation
+API Documentation
 ######################
-  
+
 .. toctree::
    :maxdepth: 1
-   
+
    api/DataService/index.rst
-   
+
 .. may be needed for html generation
 .. * :ref:`genindex`
 .. * :ref:`modindex`
