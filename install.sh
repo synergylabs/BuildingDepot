@@ -130,5 +130,6 @@ fi
 
 rm -rf configs
 
+curl -G http://localhost:8086/query --data-urlencode "q=CREATE DATABASE buildingdepot"
 echo -e "\nInstallation Finished..\n"
 
