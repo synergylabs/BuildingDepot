@@ -1,7 +1,7 @@
 .. BuildingDepot documentation master file.
 
 ===================
-Building Depot v3.0
+Building Depot v3.1
 ===================
 
 Overview
