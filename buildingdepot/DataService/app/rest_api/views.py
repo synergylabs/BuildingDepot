@@ -16,7 +16,7 @@ from . import api
 from ..models.ds_models import *
 from ..service.utils import *
 from uuid import uuid4
-from .. import r, influx,oauth
+from .. import r, influx,oauth,pubsub,exchange
 from werkzeug.security import gen_salt
 import sys
 sys.path.append('/srv/buildingdepot')
@@ -28,6 +28,7 @@ permissions = {"rw":"r/w","r":"r","dr":"d/r"}
 
 
 @api.route('/sensor_create/name=<name>/identifier=<identifier>/building=<building>', methods=['POST'])
+@oauth.require_oauth()
 def sensor_create(name=None,identifier=None,building=None):
     """Check if the building the user has specified is valid and if so create
      the sensor and return the uuid"""
@@ -142,6 +143,7 @@ def sensor_subscribers(name):
             #been deleted in order to update the cache
             added, deleted = get_add_delete(old_subscribers, new_subscribers)
             pipe = r.pipeline()
+            sensor = Sensor.objects(name=name).first()
             for email in added:
                 pipe.sadd('subscribed_sensors:{}'.format(email), name)
             for email in deleted:
@@ -333,6 +335,62 @@ def usergroup_users(name):
             UserGroup.objects(name=name).update(set__users=emails)
             return jsonify({'success': 'True'})
         return jsonify({'success': 'False','error':'One or more users not registered'})
+
+@api.route('/apps',methods=['GET','POST'])
+def register_app():
+    json_data = request.get_json()
+    try:
+        email = json_data['email']
+    except Exception as e:
+        return jsonify({'success':'False','error':'Missing email id'})
+
+    if request.method=='POST':
+        try:
+            channel = pubsub.channel()
+            result = channel.queue_declare(durable=True)
+        except Exception as e:
+            print "Failed to create queue "+str(e)
+            return jsonify({'success':'False','error':'Failed to create queue'})
+        channel.close()
+
+        apps = Application._get_collection().find({'user': email})
+
+        if apps.count() == 0:
+            Application(user=email,applications = [result.method.queue]).save()
+        else:
+            app_list = apps[0]['applications']
+            app_list.append(result.method.queue)
+            Application.objects(user=email).update(set__applications=app_list)
+    else:
+        apps = Application._get_collection().find({'user': email})
+        return jsonify({'success':'True','app_list': apps[0]['applications']})
+
+    return jsonify({'success':'True','app_id':result.method.queue})
+
+@api.route('/apps/subscription',methods=['POST','DELETE'])
+def subscribe_sensor():
+    json_data = request.get_json()
+    try:
+        email = json_data['email']
+        app = json_data['app']
+        sensor = json_data['sensor']
+    except Exception as e:
+        return jsonify({'success':'False','error':'Missing parameters'})
+
+    if app not in Application._get_collection().find({'user': email})[0]['applications']:
+        return jsonify({'success':'False','error':'App id doesn\'t exist'})
+
+    try:
+        channel = pubsub.channel()
+        if request.method == 'POST':
+            channel.queue_bind(exchange=exchange,queue=app,routing_key=sensor)
+        elif request.method == 'DELETE':
+            channel.queue_unbind(exchange=exchange,queue=app,routing_key=sensor)
+    except Exception as e:
+        print "Failed to bind queue "+str(e)
+        return jsonify({'success':'False','error':'Failed to bind queue'})
+    channel.close()
+    return jsonify({'success':'True'})
 
 def xstr(s):
     if s is None:

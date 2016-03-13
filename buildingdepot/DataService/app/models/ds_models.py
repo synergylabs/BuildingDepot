@@ -26,6 +26,7 @@ class Sensor(Document):
     metadata = DictField()
     building = StringField()
     tags = ListField(EmbeddedDocumentField(Node))
+    subscribers = ListField(StringField())
 
 
 class SensorGroup(Document):
@@ -47,6 +48,10 @@ class Permission(Document):
     user_group = StringField()
     sensor_group = StringField()
     permission = StringField()
+
+class Application(Document):
+    user = StringField()
+    applications = ListField(StringField())
 
 class Client(Document):
     client_id = StringField(required=True, unique=True)
