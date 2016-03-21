@@ -1,0 +1,502 @@
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {}
+[test1@ucsd.edu] Transaction end : {}
+[test1@ucsd.edu] Transaction end : {}
+[test1@ucsd.edu] Transaction end : {u'success': u'False', u'Error': u'transaction violation'}
+[test1@ucsd.edu] Transaction end : {u'success': u'False', u'Error': u'transaction timeout: 10s'}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {u'success': u'False', u'Error': u'transaction timeout: 10s'}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {u'data': {u'series': [{u'values': [[u'2016-03-03T22:47:03.093859146Z', 1457045223.073184, 28]], u'name': u'3afadf60-742d-45ad-8dfa-28b18bb7f60b', u'columns': [u'time', u'timestamp', u'value']}]}, u'success': u'True'}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {u'data': {u'series': [{u'values': [[u'2016-03-03T22:49:46.302944405Z', 1457045386.283614, 35]], u'name': u'3afadf60-742d-45ad-8dfa-28b18bb7f60b', u'columns': [u'time', u'timestamp', u'value']}]}, u'success': u'True'}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {u'data': {u'series': [{u'values': [[u'2016-03-03T22:52:14.776238201Z', 1457045534.755952, 0]], u'name': u'3afadf60-742d-45ad-8dfa-28b18bb7f60b', u'columns': [u'time', u'timestamp', u'value']}]}, u'success': u'True'}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {u'success': u'False', u'Error': u'transaction timeout: 10s'}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {u'success': u'False', u'Error': u'transaction timeout: 10s'}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {u'success': u'False', u'Error': u'transaction timeout: 10s'}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {u'data': {u'series': [{u'values': [[u'2016-03-03T23:04:31.321449229Z', 1457046271.297594, 10]], u'name': u'3afadf60-742d-45ad-8dfa-28b18bb7f60b', u'columns': [u'time', u'timestamp', u'value']}]}, u'success': u'True'}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {u'data': {u'series': [{u'values': [[u'2016-03-03T23:05:03.510169377Z', 1457046303.484133, 84]], u'name': u'3afadf60-742d-45ad-8dfa-28b18bb7f60b', u'columns': [u'time', u'timestamp', u'value']}]}, u'success': u'True'}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {u'data': {u'series': [{u'values': [[u'2016-03-03T23:05:11.624668886Z', 1457046311.605394, 53]], u'name': u'3afadf60-742d-45ad-8dfa-28b18bb7f60b', u'columns': [u'time', u'timestamp', u'value']}]}, u'success': u'True'}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {u'success': u'False', u'Error': u'transaction violation'}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {u'success': u'False', u'Error': u'transaction violation'}
+[test1@ucsd.edu] Transaction end : {u'data': {u'series': [{u'values': [[u'2016-03-03T23:05:35.755264404Z', 1457046335.735938, 4]], u'name': u'3afadf60-742d-45ad-8dfa-28b18bb7f60b', u'columns': [u'time', u'timestamp', u'value']}]}, u'success': u'True'}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {u'data': {u'series': [{u'values': [[u'2016-03-03T23:05:43.848488864Z', 1457046343.829864, 50]], u'name': u'3afadf60-742d-45ad-8dfa-28b18bb7f60b', u'columns': [u'time', u'timestamp', u'value']}]}, u'success': u'True'}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {}
+[test1@ucsd.edu] Transaction end : {}
+[test1@ucsd.edu] Transaction end : {}
+[test1@ucsd.edu] Transaction end : {}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {}
+[test1@ucsd.edu] Transaction end : {}
+[test1@ucsd.edu] Transaction end : {u'success': u'False', u'Error': u'transaction violation'}
+[test1@ucsd.edu] Transaction end : {u'success': u'False', u'Error': u'transaction violation'}
+[test1@ucsd.edu] Transaction end : {u'data': {u'series': [{u'values': [[u'2016-03-03T23:06:16.000334942Z', 1457046375.981071, 66]], u'name': u'3afadf60-742d-45ad-8dfa-28b18bb7f60b', u'columns': [u'time', u'timestamp', u'value']}]}, u'success': u'True'}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {u'data': {u'series': [{u'values': [[u'2016-03-03T23:06:24.103527021Z', 1457046384.083733, 32]], u'name': u'3afadf60-742d-45ad-8dfa-28b18bb7f60b', u'columns': [u'time', u'timestamp', u'value']}]}, u'success': u'True'}
+[test2@ucsd.edu] Try read : {u'data': {}, u'response': u'success'}
+[test2@ucsd.edu] Try read : {u'data': {u'series': [{u'values': [[u'2016-03-03T23:06:24.103527021Z', 1457046384.083733, 32]], u'name': u'3afadf60-742d-45ad-8dfa-28b18bb7f60b', u'columns': [u'time', u'timestamp', u'value']}]}, u'response': u'success'}
+[test2@ucsd.edu] Try read : {}
+[test2@ucsd.edu] Try read : {}
+[test2@ucsd.edu] Try read : {}
+[test2@ucsd.edu] Try read : {}
+[test2@ucsd.edu] Try read : {}
+[test2@ucsd.edu] Try read : {}
+[test2@ucsd.edu] Try read : {}
+[test2@ucsd.edu] Try read : {}
+[test2@ucsd.edu] Try read : {}
+[test2@ucsd.edu] Try read : {u'data': {}, u'response': u'success'}
+[test2@ucsd.edu] Try read : {}
+[test2@ucsd.edu] Try read : {}
+[test2@ucsd.edu] Try read : {}
+[test2@ucsd.edu] Try read : {}
+[test2@ucsd.edu] Try read : {}
+[test2@ucsd.edu] Try read : {}
+[test2@ucsd.edu] Try read : {}
+[test2@ucsd.edu] Try read : {u'data': {}, u'response': u'success'}
+[test2@ucsd.edu] Try read : {u'data': {}, u'response': u'success'}
+[test2@ucsd.edu] Try read : {u'data': {}, u'response': u'success'}
+[test2@ucsd.edu] Try read : {u'data': {}, u'response': u'success'}
+[test2@ucsd.edu] Try read : {u'data': {}, u'response': u'success'}
+[test2@ucsd.edu] Try read : {}
+[test2@ucsd.edu] Try read : {u'data': {}, u'response': u'success'}
+[test2@ucsd.edu] Try read : {u'data': {}, u'response': u'success'}
+[test2@ucsd.edu] Try read : {u'data': {u'series': [{u'values': [[u'2016-03-03T22:44:17.130255561Z', 1457045057.104682, 98], [u'2016-03-03T22:46:32.858805121Z', 1457045192.840246, 7], [u'2016-03-03T22:47:03.093859146Z', 1457045223.073184, 28], [u'2016-03-03T22:49:46.302944405Z', 1457045386.283614, 35], [u'2016-03-03T22:52:14.776238201Z', 1457045534.755952, 0], [u'2016-03-03T23:04:31.321449229Z', 1457046271.297594, 10], [u'2016-03-03T23:05:03.510169377Z', 1457046303.484133, 84], [u'2016-03-03T23:05:11.624668886Z', 1457046311.605394, 53], [u'2016-03-03T23:05:35.755264404Z', 1457046335.735938, 4], [u'2016-03-03T23:05:43.848488864Z', 1457046343.829864, 50], [u'2016-03-03T23:06:16.000334942Z', 1457046375.981071, 66], [u'2016-03-03T23:06:24.103527021Z', 1457046384.083733, 32]], u'name': u'3afadf60-742d-45ad-8dfa-28b18bb7f60b', u'columns': [u'time', u'timestamp', u'value']}]}, u'response': u'success'}
+[test2@ucsd.edu] Try read : {}
+[test2@ucsd.edu] Try read : {u'data': {u'series': [{u'values': [[u'2016-03-03T22:44:17.130255561Z', 1457045057.104682, 98], [u'2016-03-03T22:46:32.858805121Z', 1457045192.840246, 7], [u'2016-03-03T22:47:03.093859146Z', 1457045223.073184, 28], [u'2016-03-03T22:49:46.302944405Z', 1457045386.283614, 35], [u'2016-03-03T22:52:14.776238201Z', 1457045534.755952, 0], [u'2016-03-03T23:04:31.321449229Z', 1457046271.297594, 10], [u'2016-03-03T23:05:03.510169377Z', 1457046303.484133, 84], [u'2016-03-03T23:05:11.624668886Z', 1457046311.605394, 53], [u'2016-03-03T23:05:35.755264404Z', 1457046335.735938, 4], [u'2016-03-03T23:05:43.848488864Z', 1457046343.829864, 50], [u'2016-03-03T23:06:16.000334942Z', 1457046375.981071, 66], [u'2016-03-03T23:06:24.103527021Z', 1457046384.083733, 32]], u'name': u'3afadf60-742d-45ad-8dfa-28b18bb7f60b', u'columns': [u'time', u'timestamp', u'value']}]}, u'response': u'success'}
+[test2@ucsd.edu] Try read : {u'data': {u'series': [{u'values': [[u'2016-03-03T22:44:17.130255561Z', 1457045057.104682, 98], [u'2016-03-03T22:46:32.858805121Z', 1457045192.840246, 7], [u'2016-03-03T22:47:03.093859146Z', 1457045223.073184, 28], [u'2016-03-03T22:49:46.302944405Z', 1457045386.283614, 35], [u'2016-03-03T22:52:14.776238201Z', 1457045534.755952, 0], [u'2016-03-03T23:04:31.321449229Z', 1457046271.297594, 10], [u'2016-03-03T23:05:03.510169377Z', 1457046303.484133, 84], [u'2016-03-03T23:05:11.624668886Z', 1457046311.605394, 53], [u'2016-03-03T23:05:35.755264404Z', 1457046335.735938, 4], [u'2016-03-03T23:05:43.848488864Z', 1457046343.829864, 50], [u'2016-03-03T23:06:16.000334942Z', 1457046375.981071, 66], [u'2016-03-03T23:06:24.103527021Z', 1457046384.083733, 32]], u'name': u'3afadf60-742d-45ad-8dfa-28b18bb7f60b', u'columns': [u'time', u'timestamp', u'value']}]}, u'response': u'success'}
+[test2@ucsd.edu] Try read : {u'data': {u'series': [{u'values': [[u'2016-03-03T22:44:17.130255561Z', 1457045057.104682, 98], [u'2016-03-03T22:46:32.858805121Z', 1457045192.840246, 7], [u'2016-03-03T22:47:03.093859146Z', 1457045223.073184, 28], [u'2016-03-03T22:49:46.302944405Z', 1457045386.283614, 35], [u'2016-03-03T22:52:14.776238201Z', 1457045534.755952, 0], [u'2016-03-03T23:04:31.321449229Z', 1457046271.297594, 10], [u'2016-03-03T23:05:03.510169377Z', 1457046303.484133, 84], [u'2016-03-03T23:05:11.624668886Z', 1457046311.605394, 53], [u'2016-03-03T23:05:35.755264404Z', 1457046335.735938, 4], [u'2016-03-03T23:05:43.848488864Z', 1457046343.829864, 50], [u'2016-03-03T23:06:16.000334942Z', 1457046375.981071, 66], [u'2016-03-03T23:06:24.103527021Z', 1457046384.083733, 32]], u'name': u'3afadf60-742d-45ad-8dfa-28b18bb7f60b', u'columns': [u'time', u'timestamp', u'value']}]}, u'response': u'success'}
+[test2@ucsd.edu] Try read : {u'data': {u'series': [{u'values': [[u'2016-03-03T22:44:17.130255561Z', 1457045057.104682, 98], [u'2016-03-03T22:46:32.858805121Z', 1457045192.840246, 7], [u'2016-03-03T22:47:03.093859146Z', 1457045223.073184, 28], [u'2016-03-03T22:49:46.302944405Z', 1457045386.283614, 35], [u'2016-03-03T22:52:14.776238201Z', 1457045534.755952, 0], [u'2016-03-03T23:04:31.321449229Z', 1457046271.297594, 10], [u'2016-03-03T23:05:03.510169377Z', 1457046303.484133, 84], [u'2016-03-03T23:05:11.624668886Z', 1457046311.605394, 53], [u'2016-03-03T23:05:35.755264404Z', 1457046335.735938, 4], [u'2016-03-03T23:05:43.848488864Z', 1457046343.829864, 50], [u'2016-03-03T23:06:16.000334942Z', 1457046375.981071, 66], [u'2016-03-03T23:06:24.103527021Z', 1457046384.083733, 32]], u'name': u'3afadf60-742d-45ad-8dfa-28b18bb7f60b', u'columns': [u'time', u'timestamp', u'value']}]}, u'response': u'success'}
+[test2@ucsd.edu] Try read : {u'data': {u'series': [{u'values': [[u'2016-03-03T22:44:17.130255561Z', 1457045057.104682, 98], [u'2016-03-03T22:46:32.858805121Z', 1457045192.840246, 7], [u'2016-03-03T22:47:03.093859146Z', 1457045223.073184, 28], [u'2016-03-03T22:49:46.302944405Z', 1457045386.283614, 35], [u'2016-03-03T22:52:14.776238201Z', 1457045534.755952, 0], [u'2016-03-03T23:04:31.321449229Z', 1457046271.297594, 10], [u'2016-03-03T23:05:03.510169377Z', 1457046303.484133, 84], [u'2016-03-03T23:05:11.624668886Z', 1457046311.605394, 53], [u'2016-03-03T23:05:35.755264404Z', 1457046335.735938, 4], [u'2016-03-03T23:05:43.848488864Z', 1457046343.829864, 50], [u'2016-03-03T23:06:16.000334942Z', 1457046375.981071, 66], [u'2016-03-03T23:06:24.103527021Z', 1457046384.083733, 32]], u'name': u'3afadf60-742d-45ad-8dfa-28b18bb7f60b', u'columns': [u'time', u'timestamp', u'value']}]}, u'response': u'success'}
+[test2@ucsd.edu] Try read : {u'data': {u'series': [{u'values': [[u'2016-03-03T22:44:17.130255561Z', 1457045057.104682, 98], [u'2016-03-03T22:46:32.858805121Z', 1457045192.840246, 7], [u'2016-03-03T22:47:03.093859146Z', 1457045223.073184, 28], [u'2016-03-03T22:49:46.302944405Z', 1457045386.283614, 35], [u'2016-03-03T22:52:14.776238201Z', 1457045534.755952, 0], [u'2016-03-03T23:04:31.321449229Z', 1457046271.297594, 10], [u'2016-03-03T23:05:03.510169377Z', 1457046303.484133, 84], [u'2016-03-03T23:05:11.624668886Z', 1457046311.605394, 53], [u'2016-03-03T23:05:35.755264404Z', 1457046335.735938, 4], [u'2016-03-03T23:05:43.848488864Z', 1457046343.829864, 50], [u'2016-03-03T23:06:16.000334942Z', 1457046375.981071, 66], [u'2016-03-03T23:06:24.103527021Z', 1457046384.083733, 32]], u'name': u'3afadf60-742d-45ad-8dfa-28b18bb7f60b', u'columns': [u'time', u'timestamp', u'value']}]}, u'response': u'success'}
+[test2@ucsd.edu] Try read : {u'data': {u'series': [{u'values': [[u'2016-03-03T22:44:17.130255561Z', 1457045057.104682, 98], [u'2016-03-03T22:46:32.858805121Z', 1457045192.840246, 7], [u'2016-03-03T22:47:03.093859146Z', 1457045223.073184, 28], [u'2016-03-03T22:49:46.302944405Z', 1457045386.283614, 35], [u'2016-03-03T22:52:14.776238201Z', 1457045534.755952, 0], [u'2016-03-03T23:04:31.321449229Z', 1457046271.297594, 10], [u'2016-03-03T23:05:03.510169377Z', 1457046303.484133, 84], [u'2016-03-03T23:05:11.624668886Z', 1457046311.605394, 53], [u'2016-03-03T23:05:35.755264404Z', 1457046335.735938, 4], [u'2016-03-03T23:05:43.848488864Z', 1457046343.829864, 50], [u'2016-03-03T23:06:16.000334942Z', 1457046375.981071, 66], [u'2016-03-03T23:06:24.103527021Z', 1457046384.083733, 32]], u'name': u'3afadf60-742d-45ad-8dfa-28b18bb7f60b', u'columns': [u'time', u'timestamp', u'value']}]}, u'response': u'success'}
+[test2@ucsd.edu] Try read : {}
+[test2@ucsd.edu] Try read : {u'data': {u'series': [{u'values': [[u'2016-03-03T22:44:17.130255561Z', 1457045057.104682, 98], [u'2016-03-03T22:46:32.858805121Z', 1457045192.840246, 7], [u'2016-03-03T22:47:03.093859146Z', 1457045223.073184, 28], [u'2016-03-03T22:49:46.302944405Z', 1457045386.283614, 35], [u'2016-03-03T22:52:14.776238201Z', 1457045534.755952, 0], [u'2016-03-03T23:04:31.321449229Z', 1457046271.297594, 10], [u'2016-03-03T23:05:03.510169377Z', 1457046303.484133, 84], [u'2016-03-03T23:05:11.624668886Z', 1457046311.605394, 53], [u'2016-03-03T23:05:35.755264404Z', 1457046335.735938, 4], [u'2016-03-03T23:05:43.848488864Z', 1457046343.829864, 50], [u'2016-03-03T23:06:16.000334942Z', 1457046375.981071, 66], [u'2016-03-03T23:06:24.103527021Z', 1457046384.083733, 32]], u'name': u'3afadf60-742d-45ad-8dfa-28b18bb7f60b', u'columns': [u'time', u'timestamp', u'value']}]}, u'response': u'success'}
+[test2@ucsd.edu] Try read : {}
+[test2@ucsd.edu] Try read : {u'data': {u'series': [{u'values': [[u'2016-03-03T22:44:17.130255561Z', 1457045057.104682, 98], [u'2016-03-03T22:46:32.858805121Z', 1457045192.840246, 7], [u'2016-03-03T22:47:03.093859146Z', 1457045223.073184, 28], [u'2016-03-03T22:49:46.302944405Z', 1457045386.283614, 35], [u'2016-03-03T22:52:14.776238201Z', 1457045534.755952, 0], [u'2016-03-03T23:04:31.321449229Z', 1457046271.297594, 10], [u'2016-03-03T23:05:03.510169377Z', 1457046303.484133, 84], [u'2016-03-03T23:05:11.624668886Z', 1457046311.605394, 53], [u'2016-03-03T23:05:35.755264404Z', 1457046335.735938, 4], [u'2016-03-03T23:05:43.848488864Z', 1457046343.829864, 50], [u'2016-03-03T23:06:16.000334942Z', 1457046375.981071, 66], [u'2016-03-03T23:06:24.103527021Z', 1457046384.083733, 32]], u'name': u'3afadf60-742d-45ad-8dfa-28b18bb7f60b', u'columns': [u'time', u'timestamp', u'value']}]}, u'response': u'success'}
+[test2@ucsd.edu] Try read : {}
+[test2@ucsd.edu] Try read : {u'data': {u'series': [{u'values': [[u'2016-03-03T22:44:17.130255561Z', 1457045057.104682, 98], [u'2016-03-03T22:46:32.858805121Z', 1457045192.840246, 7], [u'2016-03-03T22:47:03.093859146Z', 1457045223.073184, 28], [u'2016-03-03T22:49:46.302944405Z', 1457045386.283614, 35], [u'2016-03-03T22:52:14.776238201Z', 1457045534.755952, 0], [u'2016-03-03T23:04:31.321449229Z', 1457046271.297594, 10], [u'2016-03-03T23:05:03.510169377Z', 1457046303.484133, 84], [u'2016-03-03T23:05:11.624668886Z', 1457046311.605394, 53], [u'2016-03-03T23:05:35.755264404Z', 1457046335.735938, 4], [u'2016-03-03T23:05:43.848488864Z', 1457046343.829864, 50], [u'2016-03-03T23:06:16.000334942Z', 1457046375.981071, 66], [u'2016-03-03T23:06:24.103527021Z', 1457046384.083733, 32]], u'name': u'3afadf60-742d-45ad-8dfa-28b18bb7f60b', u'columns': [u'time', u'timestamp', u'value']}]}, u'response': u'success'}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {u'data': {u'series': [{u'values': [[u'2016-03-03T23:13:45.579332009Z', 1457046825.55915, 60]], u'name': u'3afadf60-742d-45ad-8dfa-28b18bb7f60b', u'columns': [u'time', u'timestamp', u'value']}]}, u'success': u'True'}
+[test1@ucsd.edu] Transaction end : {u'data': {u'series': [{u'values': [[u'2016-03-03T23:13:45.579332009Z', 1457046825.55915, 60]], u'name': u'3afadf60-742d-45ad-8dfa-28b18bb7f60b', u'columns': [u'time', u'timestamp', u'value']}]}, u'success': u'True'}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {}
+[test1@ucsd.edu] Transaction end : {}
+[test1@ucsd.edu] Transaction end : {u'data': {u'series': [{u'values': [[u'2016-03-03T23:14:17.748300329Z', 1457046857.728921, 81]], u'name': u'3afadf60-742d-45ad-8dfa-28b18bb7f60b', u'columns': [u'time', u'timestamp', u'value']}]}, u'success': u'True'}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {u'data': {u'series': [{u'values': [[u'2016-03-03T23:15:30.035623446Z', 1457046930.014285, 90]], u'name': u'3afadf60-742d-45ad-8dfa-28b18bb7f60b', u'columns': [u'time', u'timestamp', u'value']}]}, u'success': u'True'}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {u'success': u'False', u'Error': u'transaction violation'}
+[test1@ucsd.edu] Transaction end : {u'data': {u'series': [{u'values': [[u'2016-03-03T23:15:46.135369721Z', 1457046946.114732, 3]], u'name': u'3afadf60-742d-45ad-8dfa-28b18bb7f60b', u'columns': [u'time', u'timestamp', u'value']}]}, u'success': u'True'}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {u'success': u'False', u'Error': u'transaction violation'}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {u'success': u'False', u'Error': u'transaction violation'}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {u'success': u'False', u'Error': u'transaction violation'}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {u'success': u'False', u'Error': u'transaction violation'}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {u'success': u'False', u'Error': u'transaction violation'}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {u'success': u'False', u'Error': u'transaction violation'}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {u'data': {u'series': [{u'values': [[u'2016-03-03T23:16:02.240890798Z', 1457046962.220557, 16]], u'name': u'3afadf60-742d-45ad-8dfa-28b18bb7f60b', u'columns': [u'time', u'timestamp', u'value']}]}, u'success': u'True'}
+[test1@ucsd.edu] Transaction end : {u'data': {u'series': [{u'values': [[u'2016-03-03T23:16:10.336559119Z', 1457046970.318451, 58]], u'name': u'3afadf60-742d-45ad-8dfa-28b18bb7f60b', u'columns': [u'time', u'timestamp', u'value']}]}, u'success': u'True'}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {u'data': {u'series': [{u'values': [[u'2016-03-03T23:16:18.41098515Z', 1457046978.392043, 83]], u'name': u'3afadf60-742d-45ad-8dfa-28b18bb7f60b', u'columns': [u'time', u'timestamp', u'value']}]}, u'success': u'True'}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {u'data': {u'series': [{u'values': [[u'2016-03-03T23:16:26.519824214Z', 1457046986.500287, 73]], u'name': u'3afadf60-742d-45ad-8dfa-28b18bb7f60b', u'columns': [u'time', u'timestamp', u'value']}]}, u'success': u'True'}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {u'success': u'False', u'Error': u'transaction violation'}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {u'success': u'False', u'Error': u'transaction violation'}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {u'success': u'False', u'Error': u'transaction violation'}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {u'success': u'False', u'Error': u'transaction violation'}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {u'success': u'False', u'Error': u'transaction violation'}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {u'success': u'False', u'Error': u'transaction violation'}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {u'success': u'False', u'Error': u'transaction violation'}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {u'success': u'False', u'Error': u'transaction violation'}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {u'success': u'False', u'Error': u'transaction violation'}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {u'success': u'False', u'Error': u'transaction violation'}
+[test1@ucsd.edu] Transaction end : {u'data': {u'series': [{u'values': [[u'2016-03-03T23:16:50.715072239Z', 1457047010.698263, 79]], u'name': u'3afadf60-742d-45ad-8dfa-28b18bb7f60b', u'columns': [u'time', u'timestamp', u'value']}]}, u'success': u'True'}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {u'data': {u'series': [{u'values': [[u'2016-03-03T23:16:58.802203919Z', 1457047018.782366, 78]], u'name': u'3afadf60-742d-45ad-8dfa-28b18bb7f60b', u'columns': [u'time', u'timestamp', u'value']}]}, u'success': u'True'}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {u'data': {u'series': [{u'values': [[u'2016-03-03T23:17:06.902510942Z', 1457047026.882389, 94]], u'name': u'3afadf60-742d-45ad-8dfa-28b18bb7f60b', u'columns': [u'time', u'timestamp', u'value']}]}, u'success': u'True'}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {u'data': {u'series': [{u'values': [[u'2016-03-03T23:17:14.990221961Z', 1457047034.970461, 50]], u'name': u'3afadf60-742d-45ad-8dfa-28b18bb7f60b', u'columns': [u'time', u'timestamp', u'value']}]}, u'success': u'True'}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {u'success': u'False', u'Error': u'transaction violation'}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {u'success': u'False', u'Error': u'transaction violation'}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {u'success': u'False', u'Error': u'transaction violation'}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {u'data': {u'series': [{u'values': [[u'2016-03-03T23:17:31.168268077Z', 1457047051.148262, 69]], u'name': u'3afadf60-742d-45ad-8dfa-28b18bb7f60b', u'columns': [u'time', u'timestamp', u'value']}]}, u'success': u'True'}
+[test1@ucsd.edu] Transaction end : {u'data': {u'series': [{u'values': [[u'2016-03-03T23:17:31.168268077Z', 1457047051.148262, 69]], u'name': u'3afadf60-742d-45ad-8dfa-28b18bb7f60b', u'columns': [u'time', u'timestamp', u'value']}]}, u'success': u'True'}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {u'success': u'False', u'Error': u'transaction violation'}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {u'success': u'False', u'Error': u'transaction violation'}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {u'success': u'False', u'Error': u'transaction violation'}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {u'success': u'False', u'Error': u'transaction violation'}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {u'success': u'False', u'Error': u'transaction violation'}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {u'success': u'False', u'Error': u'transaction violation'}
+[test1@ucsd.edu] Transaction end : {u'data': {u'series': [{u'values': [[u'2016-03-03T23:17:39.252212914Z', 1457047059.23257, 69]], u'name': u'3afadf60-742d-45ad-8dfa-28b18bb7f60b', u'columns': [u'time', u'timestamp', u'value']}]}, u'success': u'True'}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {u'success': u'False', u'Error': u'transaction violation'}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {u'success': u'False', u'Error': u'transaction violation'}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {u'success': u'False', u'Error': u'transaction violation'}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {u'success': u'False', u'Error': u'transaction violation'}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {u'success': u'False', u'Error': u'transaction violation'}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {u'success': u'False', u'Error': u'transaction violation'}
+[test1@ucsd.edu] Transaction end : {u'data': {u'series': [{u'values': [[u'2016-03-03T23:17:47.32390039Z', 1457047067.304459, 88]], u'name': u'3afadf60-742d-45ad-8dfa-28b18bb7f60b', u'columns': [u'time', u'timestamp', u'value']}]}, u'success': u'True'}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {u'data': {u'series': [{u'values': [[u'2016-03-03T23:17:47.32390039Z', 1457047067.304459, 88]], u'name': u'3afadf60-742d-45ad-8dfa-28b18bb7f60b', u'columns': [u'time', u'timestamp', u'value']}]}, u'success': u'True'}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {u'success': u'False', u'Error': u'transaction violation'}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {u'success': u'False', u'Error': u'transaction violation'}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {u'success': u'False', u'Error': u'transaction violation'}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {u'success': u'False', u'Error': u'transaction violation'}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {u'success': u'False', u'Error': u'transaction violation'}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {u'success': u'False', u'Error': u'transaction violation'}
+[test1@ucsd.edu] Transaction end : {u'data': {u'series': [{u'values': [[u'2016-03-03T23:17:55.403549595Z', 1457047075.384512, 55]], u'name': u'3afadf60-742d-45ad-8dfa-28b18bb7f60b', u'columns': [u'time', u'timestamp', u'value']}]}, u'success': u'True'}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {u'data': {u'series': [{u'values': [[u'2016-03-03T23:17:55.403549595Z', 1457047075.384512, 55]], u'name': u'3afadf60-742d-45ad-8dfa-28b18bb7f60b', u'columns': [u'time', u'timestamp', u'value']}]}, u'success': u'True'}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {u'success': u'False', u'Error': u'transaction violation'}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {u'success': u'False', u'Error': u'transaction violation'}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {u'success': u'False', u'Error': u'transaction violation'}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {u'success': u'False', u'Error': u'transaction violation'}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {u'success': u'False', u'Error': u'transaction violation'}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {u'success': u'False', u'Error': u'transaction violation'}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {u'success': u'False', u'Error': u'transaction violation'}
+[test1@ucsd.edu] Transaction end : {u'data': {u'series': [{u'values': [[u'2016-03-03T23:18:03.492085555Z', 1457047083.47031, 37]], u'name': u'3afadf60-742d-45ad-8dfa-28b18bb7f60b', u'columns': [u'time', u'timestamp', u'value']}]}, u'success': u'True'}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {u'success': u'False', u'Error': u'transaction violation'}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {u'success': u'False', u'Error': u'transaction violation'}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {u'success': u'False', u'Error': u'transaction violation'}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {u'success': u'False', u'Error': u'transaction violation'}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {u'success': u'False', u'Error': u'transaction violation'}
+[test1@ucsd.edu] Transaction end : {u'data': {u'series': [{u'values': [[u'2016-03-03T23:18:11.608031333Z', 1457047091.588085, 33]], u'name': u'3afadf60-742d-45ad-8dfa-28b18bb7f60b', u'columns': [u'time', u'timestamp', u'value']}]}, u'success': u'True'}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {u'success': u'False', u'Error': u'transaction violation'}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {u'success': u'False', u'Error': u'transaction violation'}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {u'success': u'False', u'Error': u'transaction violation'}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {u'success': u'False', u'Error': u'transaction violation'}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {u'success': u'False', u'Error': u'transaction violation'}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {u'success': u'False', u'Error': u'transaction violation'}
+[test1@ucsd.edu] Transaction end : {u'data': {u'series': [{u'values': [[u'2016-03-03T23:18:19.700338759Z', 1457047099.682026, 98]], u'name': u'3afadf60-742d-45ad-8dfa-28b18bb7f60b', u'columns': [u'time', u'timestamp', u'value']}]}, u'success': u'True'}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {u'data': {u'series': [{u'values': [[u'2016-03-03T23:18:19.700338759Z', 1457047099.682026, 98]], u'name': u'3afadf60-742d-45ad-8dfa-28b18bb7f60b', u'columns': [u'time', u'timestamp', u'value']}]}, u'success': u'True'}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {u'success': u'False', u'Error': u'transaction violation'}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {u'success': u'False', u'Error': u'transaction violation'}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {u'success': u'False', u'Error': u'transaction violation'}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {u'success': u'False', u'Error': u'transaction violation'}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {u'data': {u'series': [{u'values': [[u'2016-03-04T22:06:04.605476916Z', 1457129164.580684, 51]], u'name': u'3afadf60-742d-45ad-8dfa-28b18bb7f60b', u'columns': [u'time', u'timestamp', u'value']}]}, u'success': u'True'}
+[test1@ucsd.edu] Transaction start
+[test2@ucsd.edu] Try read : {}
+[test2@ucsd.edu] Try read : {u'data': {}, u'response': u'success'}
+[test2@ucsd.edu] Try read : {u'data': {}, u'response': u'success'}
+[test2@ucsd.edu] Try read : {u'data': {}, u'response': u'success'}
+[test2@ucsd.edu] Try read : {u'data': {}, u'response': u'success'}
+[test2@ucsd.edu] Try read : {u'data': {}, u'response': u'success'}
+[test2@ucsd.edu] Try read : {u'data': {}, u'response': u'success'}
+[test2@ucsd.edu] Try read : {u'data': {}, u'response': u'success'}
+[test2@ucsd.edu] Try read : {u'data': {}, u'response': u'success'}
+[test2@ucsd.edu] Try read : {u'data': {}, u'response': u'success'}
+[test2@ucsd.edu] Try read : {u'data': {}, u'response': u'success'}
+[test2@ucsd.edu] Try read : {u'data': {}, u'response': u'success'}
+[test2@ucsd.edu] Try read : {}
+[test2@ucsd.edu] Try read : {u'data': {}, u'response': u'success'}
+[test2@ucsd.edu] Try read : {}
+[test2@ucsd.edu] Try read : {u'data': {}, u'response': u'success'}
+[test2@ucsd.edu] Try read : {}
+[test2@ucsd.edu] Try read : {u'data': {}, u'response': u'success'}
+[test2@ucsd.edu] Try read : {u'data': {}, u'response': u'success'}
+[test2@ucsd.edu] Try read : {u'data': {}, u'response': u'success'}
+[test1@ucsd.edu] Transaction end : {u'success': u'False', u'Error': u'transaction timeout: 20s'}
+[test1@ucsd.edu] Transaction start
+[test2@ucsd.edu] Try read : {}
+[test1@ucsd.edu] Transaction end : {u'success': u'False', u'Error': u'transaction violation'}
+[test2@ucsd.edu] Try read : {u'data': {}, u'response': u'success'}
+[test2@ucsd.edu] Try read : {}
+[test2@ucsd.edu] Try read : {u'data': {}, u'response': u'success'}
+[test2@ucsd.edu] Try read : {u'data': {}, u'response': u'success'}
+[test2@ucsd.edu] Try read : {u'data': {}, u'response': u'success'}
+[test2@ucsd.edu] Try read : {u'data': {}, u'response': u'success'}
+[test2@ucsd.edu] Try read : {u'data': {}, u'response': u'success'}
+[test2@ucsd.edu] Try read : {u'data': {}, u'response': u'success'}
+[test2@ucsd.edu] Try read : {u'data': {}, u'response': u'success'}
+[test2@ucsd.edu] Try read : {}
+[test2@ucsd.edu] Try read : {u'data': {}, u'response': u'success'}
+[test2@ucsd.edu] Try read : {}
+[test2@ucsd.edu] Try read : {u'data': {}, u'response': u'success'}
+[test2@ucsd.edu] Try read : {}
+[test2@ucsd.edu] Try read : {u'data': {}, u'response': u'success'}
+[test2@ucsd.edu] Try read : {u'data': {}, u'response': u'success'}
+[test2@ucsd.edu] Try read : {u'data': {}, u'response': u'success'}
+[test2@ucsd.edu] Try read : {u'data': {}, u'response': u'success'}
+[test2@ucsd.edu] Try read : {u'data': {}, u'response': u'success'}
+[test1@ucsd.edu] Transaction start
+[test2@ucsd.edu] Try read : {u'data': {}, u'response': u'success'}
+[test2@ucsd.edu] Try read : {u'data': {}, u'response': u'success'}
+[test2@ucsd.edu] Try read : {u'data': {}, u'response': u'success'}
+[test2@ucsd.edu] Try read : {u'data': {}, u'response': u'success'}
+[test2@ucsd.edu] Try read : {u'data': {}, u'response': u'success'}
+[test2@ucsd.edu] Try read : {u'data': {}, u'response': u'success'}
+[test1@ucsd.edu] Transaction end : {u'data': {u'series': [{u'values': [[u'2016-03-04T23:35:59.606842513Z', 1457134559.588074, 33]], u'name': u'3afadf60-742d-45ad-8dfa-28b18bb7f60b', u'columns': [u'time', u'timestamp', u'value']}]}, u'success': u'True'}
+[test2@ucsd.edu] Try read : {u'data': {u'series': [{u'values': [[u'2016-03-04T23:35:59.606842513Z', 1457134559.588074, 33]], u'name': u'3afadf60-742d-45ad-8dfa-28b18bb7f60b', u'columns': [u'time', u'timestamp', u'value']}]}, u'response': u'success'}
+[test2@ucsd.edu] Try read : {u'data': {u'series': [{u'values': [[u'2016-03-04T23:35:59.606842513Z', 1457134559.588074, 33]], u'name': u'3afadf60-742d-45ad-8dfa-28b18bb7f60b', u'columns': [u'time', u'timestamp', u'value']}]}, u'response': u'success'}
+[test2@ucsd.edu] Try read : {u'data': {u'series': [{u'values': [[u'2016-03-04T23:35:59.606842513Z', 1457134559.588074, 33]], u'name': u'3afadf60-742d-45ad-8dfa-28b18bb7f60b', u'columns': [u'time', u'timestamp', u'value']}]}, u'response': u'success'}
+[test2@ucsd.edu] Try read : {u'data': {u'series': [{u'values': [[u'2016-03-04T23:35:59.606842513Z', 1457134559.588074, 33]], u'name': u'3afadf60-742d-45ad-8dfa-28b18bb7f60b', u'columns': [u'time', u'timestamp', u'value']}]}, u'response': u'success'}
+[test2@ucsd.edu] Try read : {u'data': {u'series': [{u'values': [[u'2016-03-04T23:35:59.606842513Z', 1457134559.588074, 33]], u'name': u'3afadf60-742d-45ad-8dfa-28b18bb7f60b', u'columns': [u'time', u'timestamp', u'value']}]}, u'response': u'success'}
+[test2@ucsd.edu] Try read : {u'data': {u'series': [{u'values': [[u'2016-03-04T23:35:59.606842513Z', 1457134559.588074, 33]], u'name': u'3afadf60-742d-45ad-8dfa-28b18bb7f60b', u'columns': [u'time', u'timestamp', u'value']}]}, u'response': u'success'}
+[test2@ucsd.edu] Try read : {u'data': {u'series': [{u'values': [[u'2016-03-04T23:35:59.606842513Z', 1457134559.588074, 33]], u'name': u'3afadf60-742d-45ad-8dfa-28b18bb7f60b', u'columns': [u'time', u'timestamp', u'value']}]}, u'response': u'success'}
+[test2@ucsd.edu] Try read : {u'data': {u'series': [{u'values': [[u'2016-03-04T23:35:59.606842513Z', 1457134559.588074, 33]], u'name': u'3afadf60-742d-45ad-8dfa-28b18bb7f60b', u'columns': [u'time', u'timestamp', u'value']}]}, u'response': u'success'}
+[test2@ucsd.edu] Try read : {u'data': {u'series': [{u'values': [[u'2016-03-04T23:35:59.606842513Z', 1457134559.588074, 33]], u'name': u'3afadf60-742d-45ad-8dfa-28b18bb7f60b', u'columns': [u'time', u'timestamp', u'value']}]}, u'response': u'success'}
+[test2@ucsd.edu] Try read : {u'data': {u'series': [{u'values': [[u'2016-03-04T23:35:59.606842513Z', 1457134559.588074, 33]], u'name': u'3afadf60-742d-45ad-8dfa-28b18bb7f60b', u'columns': [u'time', u'timestamp', u'value']}]}, u'response': u'success'}
+[test2@ucsd.edu] Try read : {u'data': {u'series': [{u'values': [[u'2016-03-04T23:35:59.606842513Z', 1457134559.588074, 33]], u'name': u'3afadf60-742d-45ad-8dfa-28b18bb7f60b', u'columns': [u'time', u'timestamp', u'value']}]}, u'response': u'success'}
+[test2@ucsd.edu] Try read : {}
+[test2@ucsd.edu] Try read : {u'data': {u'series': [{u'values': [[u'2016-03-04T23:35:59.606842513Z', 1457134559.588074, 33]], u'name': u'3afadf60-742d-45ad-8dfa-28b18bb7f60b', u'columns': [u'time', u'timestamp', u'value']}]}, u'response': u'success'}
+[test2@ucsd.edu] Try read : {u'data': {u'series': [{u'values': [[u'2016-03-04T23:35:59.606842513Z', 1457134559.588074, 33]], u'name': u'3afadf60-742d-45ad-8dfa-28b18bb7f60b', u'columns': [u'time', u'timestamp', u'value']}]}, u'response': u'success'}
+[test2@ucsd.edu] Try read : {u'data': {u'series': [{u'values': [[u'2016-03-04T23:35:59.606842513Z', 1457134559.588074, 33]], u'name': u'3afadf60-742d-45ad-8dfa-28b18bb7f60b', u'columns': [u'time', u'timestamp', u'value']}]}, u'response': u'success'}
+[test2@ucsd.edu] Try read : {}
+[test2@ucsd.edu] Try read : {u'data': {u'series': [{u'values': [[u'2016-03-04T23:35:59.606842513Z', 1457134559.588074, 33]], u'name': u'3afadf60-742d-45ad-8dfa-28b18bb7f60b', u'columns': [u'time', u'timestamp', u'value']}]}, u'response': u'success'}
+[test2@ucsd.edu] Try read : {}
+[test2@ucsd.edu] Try read : {u'data': {u'series': [{u'values': [[u'2016-03-04T23:35:59.606842513Z', 1457134559.588074, 33]], u'name': u'3afadf60-742d-45ad-8dfa-28b18bb7f60b', u'columns': [u'time', u'timestamp', u'value']}]}, u'response': u'success'}
+[test2@ucsd.edu] Try read : {}
+[test2@ucsd.edu] Try read : {u'data': {u'series': [{u'values': [[u'2016-03-04T23:35:59.606842513Z', 1457134559.588074, 33]], u'name': u'3afadf60-742d-45ad-8dfa-28b18bb7f60b', u'columns': [u'time', u'timestamp', u'value']}]}, u'response': u'success'}
+[test2@ucsd.edu] Try read : {u'data': {u'series': [{u'values': [[u'2016-03-04T23:35:59.606842513Z', 1457134559.588074, 33]], u'name': u'3afadf60-742d-45ad-8dfa-28b18bb7f60b', u'columns': [u'time', u'timestamp', u'value']}]}, u'response': u'success'}
+[test1@ucsd.edu] Transaction start
+[test2@ucsd.edu] Try read : {u'data': {u'series': [{u'values': [[u'2016-03-04T23:35:59.606842513Z', 1457134559.588074, 33]], u'name': u'3afadf60-742d-45ad-8dfa-28b18bb7f60b', u'columns': [u'time', u'timestamp', u'value']}]}, u'response': u'success'}
+[test2@ucsd.edu] Try read : {u'data': {u'series': [{u'values': [[u'2016-03-04T23:35:59.606842513Z', 1457134559.588074, 33]], u'name': u'3afadf60-742d-45ad-8dfa-28b18bb7f60b', u'columns': [u'time', u'timestamp', u'value']}]}, u'response': u'success'}
+[test2@ucsd.edu] Try read : {u'data': {u'series': [{u'values': [[u'2016-03-04T23:35:59.606842513Z', 1457134559.588074, 33]], u'name': u'3afadf60-742d-45ad-8dfa-28b18bb7f60b', u'columns': [u'time', u'timestamp', u'value']}]}, u'response': u'success'}
+[test2@ucsd.edu] Try read : {u'data': {u'series': [{u'values': [[u'2016-03-04T23:35:59.606842513Z', 1457134559.588074, 33]], u'name': u'3afadf60-742d-45ad-8dfa-28b18bb7f60b', u'columns': [u'time', u'timestamp', u'value']}]}, u'response': u'success'}
+[test2@ucsd.edu] Try read : {u'data': {u'series': [{u'values': [[u'2016-03-04T23:35:59.606842513Z', 1457134559.588074, 33]], u'name': u'3afadf60-742d-45ad-8dfa-28b18bb7f60b', u'columns': [u'time', u'timestamp', u'value']}]}, u'response': u'success'}
+[test2@ucsd.edu] Try read : {u'data': {u'series': [{u'values': [[u'2016-03-04T23:35:59.606842513Z', 1457134559.588074, 33]], u'name': u'3afadf60-742d-45ad-8dfa-28b18bb7f60b', u'columns': [u'time', u'timestamp', u'value']}]}, u'response': u'success'}
+[test2@ucsd.edu] Try read : {u'data': {u'series': [{u'values': [[u'2016-03-04T23:35:59.606842513Z', 1457134559.588074, 33]], u'name': u'3afadf60-742d-45ad-8dfa-28b18bb7f60b', u'columns': [u'time', u'timestamp', u'value']}]}, u'response': u'success'}
+[test2@ucsd.edu] Try read : {u'data': {u'series': [{u'values': [[u'2016-03-04T23:35:59.606842513Z', 1457134559.588074, 33], [u'2016-03-04T23:36:55.880791489Z', 1457134615.861709, 5]], u'name': u'3afadf60-742d-45ad-8dfa-28b18bb7f60b', u'columns': [u'time', u'timestamp', u'value']}]}, u'response': u'success'}
+[test1@ucsd.edu] Transaction end : {u'data': {u'series': [{u'values': [[u'2016-03-04T23:36:55.880791489Z', 1457134615.861709, 5]], u'name': u'3afadf60-742d-45ad-8dfa-28b18bb7f60b', u'columns': [u'time', u'timestamp', u'value']}]}, u'success': u'True'}
+[test2@ucsd.edu] Try read : {u'data': {u'series': [{u'values': [[u'2016-03-04T23:35:59.606842513Z', 1457134559.588074, 33], [u'2016-03-04T23:36:55.880791489Z', 1457134615.861709, 5]], u'name': u'3afadf60-742d-45ad-8dfa-28b18bb7f60b', u'columns': [u'time', u'timestamp', u'value']}]}, u'response': u'success'}
+[test1@ucsd.edu] Transaction start
+[test2@ucsd.edu] Try read : {u'data': {u'series': [{u'values': [[u'2016-03-04T23:35:59.606842513Z', 1457134559.588074, 33], [u'2016-03-04T23:36:55.880791489Z', 1457134615.861709, 5]], u'name': u'3afadf60-742d-45ad-8dfa-28b18bb7f60b', u'columns': [u'time', u'timestamp', u'value']}]}, u'response': u'success'}
+[test1@ucsd.edu] Transaction end : {u'data': {u'series': [{u'values': [[u'2016-03-04T23:37:03.978121076Z', 1457134623.95956, 40]], u'name': u'3afadf60-742d-45ad-8dfa-28b18bb7f60b', u'columns': [u'time', u'timestamp', u'value']}]}, u'success': u'True'}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {u'data': {u'series': [{u'values': [[u'2016-03-04T23:37:28.195302242Z', 1457134648.176667, 82]], u'name': u'3afadf60-742d-45ad-8dfa-28b18bb7f60b', u'columns': [u'time', u'timestamp', u'value']}]}, u'success': u'True'}
+[test1@ucsd.edu] Transaction end : {u'data': {u'series': [{u'values': [[u'2016-03-04T23:37:28.195302242Z', 1457134648.176667, 82]], u'name': u'3afadf60-742d-45ad-8dfa-28b18bb7f60b', u'columns': [u'time', u'timestamp', u'value']}]}, u'success': u'True'}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {u'success': u'False', u'Error': u'transaction violation'}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {u'success': u'False', u'Error': u'transaction violation'}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {u'success': u'False', u'Error': u'transaction violation'}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {u'success': u'False', u'Error': u'transaction violation'}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {u'success': u'False', u'Error': u'transaction violation'}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {u'data': {u'series': [{u'values': [[u'2016-03-04T23:37:36.278991301Z', 1457134656.261354, 48]], u'name': u'3afadf60-742d-45ad-8dfa-28b18bb7f60b', u'columns': [u'time', u'timestamp', u'value']}]}, u'success': u'True'}
+[test1@ucsd.edu] Transaction end : {u'data': {u'series': [{u'values': [[u'2016-03-04T23:37:36.278991301Z', 1457134656.261354, 48]], u'name': u'3afadf60-742d-45ad-8dfa-28b18bb7f60b', u'columns': [u'time', u'timestamp', u'value']}]}, u'success': u'True'}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {u'success': u'False', u'Error': u'transaction violation'}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {u'success': u'False', u'Error': u'transaction violation'}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {u'success': u'False', u'Error': u'transaction violation'}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {u'success': u'False', u'Error': u'transaction violation'}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {u'success': u'False', u'Error': u'transaction violation'}
+[test1@ucsd.edu] Transaction end : {u'data': {u'series': [{u'values': [[u'2016-03-04T23:37:44.366681746Z', 1457134664.34805, 80]], u'name': u'3afadf60-742d-45ad-8dfa-28b18bb7f60b', u'columns': [u'time', u'timestamp', u'value']}]}, u'success': u'True'}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {u'data': {u'series': [{u'values': [[u'2016-03-04T23:37:44.366681746Z', 1457134664.34805, 80]], u'name': u'3afadf60-742d-45ad-8dfa-28b18bb7f60b', u'columns': [u'time', u'timestamp', u'value']}]}, u'success': u'True'}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {u'success': u'False', u'Error': u'transaction violation'}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {}
+[test1@ucsd.edu] Transaction end : {}
+[test1@ucsd.edu] Transaction end : {}
+[test1@ucsd.edu] Transaction end : {}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {}
+[test1@ucsd.edu] Transaction end : {}
+[test1@ucsd.edu] Transaction end : {}
+[test1@ucsd.edu] Transaction end : {u'success': u'False', u'Error': u'transaction violation'}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {}
+[test1@ucsd.edu] Transaction end : {}
+[test1@ucsd.edu] Transaction end : {u'success': u'False', u'Error': u'transaction violation'}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {u'success': u'False', u'Error': u'transaction violation'}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {}
+[test1@ucsd.edu] Transaction end : {u'success': u'False', u'Error': u'transaction violation'}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {u'success': u'False', u'Error': u'transaction violation'}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {}
+[test1@ucsd.edu] Transaction end : {u'success': u'False', u'Error': u'transaction violation'}
+[test1@ucsd.edu] Transaction end : {u'success': u'False', u'Error': u'transaction violation'}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {u'success': u'False', u'Error': u'transaction violation'}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {}
+[test1@ucsd.edu] Transaction end : {}
+[test1@ucsd.edu] Transaction end : {u'success': u'False', u'Error': u'transaction violation'}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {u'success': u'False', u'Error': u'transaction violation'}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {u'success': u'False', u'Error': u'transaction violation'}
+[test1@ucsd.edu] Transaction end : {u'success': u'False', u'Error': u'transaction violation'}
+[test1@ucsd.edu] Transaction end : {u'data': {u'series': [{u'values': [[u'2016-03-04T23:38:00.564625348Z', 1457134680.545867, 67]], u'name': u'3afadf60-742d-45ad-8dfa-28b18bb7f60b', u'columns': [u'time', u'timestamp', u'value']}]}, u'success': u'True'}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {u'data': {u'series': [{u'values': [[u'2016-03-04T23:38:00.564625348Z', 1457134680.545867, 67]], u'name': u'3afadf60-742d-45ad-8dfa-28b18bb7f60b', u'columns': [u'time', u'timestamp', u'value']}]}, u'success': u'True'}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {u'data': {u'series': [{u'values': [[u'2016-03-04T23:38:00.564625348Z', 1457134680.545867, 67]], u'name': u'3afadf60-742d-45ad-8dfa-28b18bb7f60b', u'columns': [u'time', u'timestamp', u'value']}]}, u'success': u'True'}
+[test1@ucsd.edu] Transaction end : {u'data': {u'series': [{u'values': [[u'2016-03-04T23:38:00.564625348Z', 1457134680.545867, 67]], u'name': u'3afadf60-742d-45ad-8dfa-28b18bb7f60b', u'columns': [u'time', u'timestamp', u'value']}]}, u'success': u'True'}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {u'success': u'False', u'Error': u'transaction violation'}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {u'success': u'False', u'Error': u'transaction violation'}
+[test1@ucsd.edu] Transaction end : {u'success': u'False', u'Error': u'transaction violation'}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {}
+[test1@ucsd.edu] Transaction end : {u'success': u'False', u'Error': u'transaction violation'}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {u'success': u'False', u'Error': u'transaction violation'}
+[test1@ucsd.edu] Transaction end : {u'success': u'False', u'Error': u'transaction violation'}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {u'success': u'False', u'Error': u'transaction violation'}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {u'success': u'False', u'Error': u'transaction violation'}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {u'success': u'False', u'Error': u'transaction violation'}
+[test1@ucsd.edu] Transaction start
+[test1@ucsd.edu] Transaction end : {u'success': u'False', u'Error': u'transaction violation'}
+[test2@ucsd.edu] Try read : {u'data': {u'series': [{u'values': [[u'2016-03-05T21:16:06.020883298Z', 1457212566.001688, 75], [u'2016-03-05T21:16:14.107542298Z', 1457212574.087879, 19], [u'2016-03-05T21:16:22.211194952Z', 1457212582.190793, 87], [u'2016-03-05T21:16:30.306718398Z', 1457212590.273204, 91], [u'2016-03-05T21:16:38.394239148Z', 1457212598.37478, 8], [u'2016-03-05T21:16:46.482925018Z', 1457212606.462501, 31], [u'2016-03-05T21:16:54.564616663Z', 1457212614.546235, 9], [u'2016-03-05T21:17:02.643098858Z', 1457212622.623101, 76], [u'2016-03-05T21:17:10.80951477Z', 1457212630.790277, 60], [u'2016-03-05T21:17:18.895299102Z', 1457212638.874932, 60], [u'2016-03-05T21:17:35.028903927Z', 1457212655.008329, 12], [u'2016-03-05T21:17:43.121889408Z', 1457212663.102716, 71], [u'2016-03-05T21:17:51.219975717Z', 1457212671.199479, 4], [u'2016-03-05T21:19:59.66507025Z', 1457212799.645719, 39], [u'2016-03-05T21:20:07.74340085Z', 1457212807.725453, 33], [u'2016-03-05T21:20:15.827851651Z', 1457212815.810356, 11], [u'2016-03-05T21:20:23.928447862Z', 1457212823.909024, 46], [u'2016-03-05T21:20:32.016341966Z', 1457212831.998366, 60], [u'2016-03-05T21:20:40.124268345Z', 1457212840.091326, 66], [u'2016-03-05T21:20:48.211565235Z', 1457212848.192602, 62], [u'2016-03-05T21:20:56.307676223Z', 1457212856.288141, 15], [u'2016-03-05T21:21:04.388574036Z', 1457212864.368626, 45], [u'2016-03-05T21:21:12.46482657Z', 1457212872.446403, 33], [u'2016-03-05T21:21:20.562724115Z', 1457212880.543169, 92], [u'2016-03-05T21:21:28.661846915Z', 1457212888.641545, 50], [u'2016-03-05T21:21:36.772750404Z', 1457212896.752886, 53], [u'2016-03-05T21:21:44.876784012Z', 1457212904.855909, 21], [u'2016-03-05T21:21:52.959001044Z', 1457212912.939464, 17], [u'2016-03-05T21:22:01.043089399Z', 1457212921.022597, 28], [u'2016-03-05T21:22:09.139729176Z', 1457212929.118914, 14], [u'2016-03-05T21:22:17.237948481Z', 1457212937.218678, 91], [u'2016-03-05T21:22:25.326188748Z', 1457212945.303978, 66], [u'2016-03-05T21:22:33.408163731Z', 1457212953.389517, 6], [u'2016-03-05T21:22:41.51114582Z', 1457212961.491715, 84], [u'2016-03-05T21:22:49.607945284Z', 1457212969.588472, 89], [u'2016-03-05T21:22:57.682931753Z', 1457212977.664088, 97], [u'2016-03-05T21:23:05.812537767Z', 1457212985.793057, 43], [u'2016-03-05T21:23:13.899806262Z', 1457212993.880109, 94], [u'2016-03-05T21:23:21.987273717Z', 1457213001.967134, 79], [u'2016-03-05T21:23:30.076611644Z', 1457213010.057044, 23], [u'2016-03-05T21:23:38.16910166Z', 1457213018.150293, 47], [u'2016-03-05T21:23:46.24588915Z', 1457213026.226091, 53], [u'2016-03-05T21:23:54.342681149Z', 1457213034.321326, 1], [u'2016-03-05T21:24:26.494186676Z', 1457213066.473495, 92], [u'2016-03-05T21:24:34.581387754Z', 1457213074.561523, 31], [u'2016-03-05T21:24:42.658554586Z', 1457213082.638351, 29], [u'2016-03-05T21:24:50.733852529Z', 1457213090.712677, 43], [u'2016-03-05T21:24:58.817929871Z', 1457213098.79947, 0], [u'2016-03-05T21:25:06.903255894Z', 1457213106.882699, 86], [u'2016-03-05T21:25:14.980355808Z', 1457213114.96078, 16], [u'2016-03-05T21:25:23.075189391Z', 1457213123.054718, 16], [u'2016-03-05T21:25:31.171347441Z', 1457213131.151905, 74], [u'2016-03-05T21:25:39.261497919Z', 1457213139.24176, 77], [u'2016-03-05T21:25:47.355225553Z', 1457213147.335713, 31], [u'2016-03-05T21:25:55.43163363Z', 1457213155.411951, 15], [u'2016-03-05T21:26:03.509053414Z', 1457213163.488625, 92], [u'2016-03-05T21:26:11.623118584Z', 1457213171.602877, 3], [u'2016-03-05T21:26:19.71106338Z', 1457213179.69172, 92], [u'2016-03-05T21:26:27.78780037Z', 1457213187.76777, 67], [u'2016-03-05T21:26:35.889299526Z', 1457213195.870044, 33], [u'2016-03-05T21:26:43.963769541Z', 1457213203.944074, 96], [u'2016-03-05T21:26:52.05887305Z', 1457213212.039694, 16], [u'2016-03-05T21:27:00.135388473Z', 1457213220.116373, 85], [u'2016-03-05T21:27:08.213027961Z', 1457213228.193329, 53], [u'2016-03-05T21:27:16.305727216Z', 1457213236.285549, 6], [u'2016-03-05T21:27:24.391906523Z', 1457213244.370705, 17], [u'2016-03-05T21:27:32.465275301Z', 1457213252.446268, 63], [u'2016-03-05T21:27:40.558598163Z', 1457213260.539174, 48], [u'2016-03-05T21:27:48.648964563Z', 1457213268.628566, 77], [u'2016-03-05T21:27:56.746195356Z', 1457213276.726376, 66], [u'2016-03-05T21:28:04.82431804Z', 1457213284.805218, 85], [u'2016-03-05T21:28:12.901885843Z', 1457213292.882591, 95], [u'2016-03-05T21:28:20.987871643Z', 1457213300.965601, 41]], u'name': u'3afadf60-742d-45ad-8dfa-28b18bb7f60b', u'columns': [u'time', u'timestamp', u'value']}]}, u'response': u'success'}
+[test2@ucsd.edu] Try read : {u'data': {u'series': [{u'values': [[u'2016-03-05T21:16:06.020883298Z', 1457212566.001688, 75], [u'2016-03-05T21:16:14.107542298Z', 1457212574.087879, 19], [u'2016-03-05T21:16:22.211194952Z', 1457212582.190793, 87], [u'2016-03-05T21:16:30.306718398Z', 1457212590.273204, 91], [u'2016-03-05T21:16:38.394239148Z', 1457212598.37478, 8], [u'2016-03-05T21:16:46.482925018Z', 1457212606.462501, 31], [u'2016-03-05T21:16:54.564616663Z', 1457212614.546235, 9], [u'2016-03-05T21:17:02.643098858Z', 1457212622.623101, 76], [u'2016-03-05T21:17:10.80951477Z', 1457212630.790277, 60], [u'2016-03-05T21:17:18.895299102Z', 1457212638.874932, 60], [u'2016-03-05T21:17:35.028903927Z', 1457212655.008329, 12], [u'2016-03-05T21:17:43.121889408Z', 1457212663.102716, 71], [u'2016-03-05T21:17:51.219975717Z', 1457212671.199479, 4], [u'2016-03-05T21:19:59.66507025Z', 1457212799.645719, 39], [u'2016-03-05T21:20:07.74340085Z', 1457212807.725453, 33], [u'2016-03-05T21:20:15.827851651Z', 1457212815.810356, 11], [u'2016-03-05T21:20:23.928447862Z', 1457212823.909024, 46], [u'2016-03-05T21:20:32.016341966Z', 1457212831.998366, 60], [u'2016-03-05T21:20:40.124268345Z', 1457212840.091326, 66], [u'2016-03-05T21:20:48.211565235Z', 1457212848.192602, 62], [u'2016-03-05T21:20:56.307676223Z', 1457212856.288141, 15], [u'2016-03-05T21:21:04.388574036Z', 1457212864.368626, 45], [u'2016-03-05T21:21:12.46482657Z', 1457212872.446403, 33], [u'2016-03-05T21:21:20.562724115Z', 1457212880.543169, 92], [u'2016-03-05T21:21:28.661846915Z', 1457212888.641545, 50], [u'2016-03-05T21:21:36.772750404Z', 1457212896.752886, 53], [u'2016-03-05T21:21:44.876784012Z', 1457212904.855909, 21], [u'2016-03-05T21:21:52.959001044Z', 1457212912.939464, 17], [u'2016-03-05T21:22:01.043089399Z', 1457212921.022597, 28], [u'2016-03-05T21:22:09.139729176Z', 1457212929.118914, 14], [u'2016-03-05T21:22:17.237948481Z', 1457212937.218678, 91], [u'2016-03-05T21:22:25.326188748Z', 1457212945.303978, 66], [u'2016-03-05T21:22:33.408163731Z', 1457212953.389517, 6], [u'2016-03-05T21:22:41.51114582Z', 1457212961.491715, 84], [u'2016-03-05T21:22:49.607945284Z', 1457212969.588472, 89], [u'2016-03-05T21:22:57.682931753Z', 1457212977.664088, 97], [u'2016-03-05T21:23:05.812537767Z', 1457212985.793057, 43], [u'2016-03-05T21:23:13.899806262Z', 1457212993.880109, 94], [u'2016-03-05T21:23:21.987273717Z', 1457213001.967134, 79], [u'2016-03-05T21:23:30.076611644Z', 1457213010.057044, 23], [u'2016-03-05T21:23:38.16910166Z', 1457213018.150293, 47], [u'2016-03-05T21:23:46.24588915Z', 1457213026.226091, 53], [u'2016-03-05T21:23:54.342681149Z', 1457213034.321326, 1], [u'2016-03-05T21:24:26.494186676Z', 1457213066.473495, 92], [u'2016-03-05T21:24:34.581387754Z', 1457213074.561523, 31], [u'2016-03-05T21:24:42.658554586Z', 1457213082.638351, 29], [u'2016-03-05T21:24:50.733852529Z', 1457213090.712677, 43], [u'2016-03-05T21:24:58.817929871Z', 1457213098.79947, 0], [u'2016-03-05T21:25:06.903255894Z', 1457213106.882699, 86], [u'2016-03-05T21:25:14.980355808Z', 1457213114.96078, 16], [u'2016-03-05T21:25:23.075189391Z', 1457213123.054718, 16], [u'2016-03-05T21:25:31.171347441Z', 1457213131.151905, 74], [u'2016-03-05T21:25:39.261497919Z', 1457213139.24176, 77], [u'2016-03-05T21:25:47.355225553Z', 1457213147.335713, 31], [u'2016-03-05T21:25:55.43163363Z', 1457213155.411951, 15], [u'2016-03-05T21:26:03.509053414Z', 1457213163.488625, 92], [u'2016-03-05T21:26:11.623118584Z', 1457213171.602877, 3], [u'2016-03-05T21:26:19.71106338Z', 1457213179.69172, 92], [u'2016-03-05T21:26:27.78780037Z', 1457213187.76777, 67], [u'2016-03-05T21:26:35.889299526Z', 1457213195.870044, 33], [u'2016-03-05T21:26:43.963769541Z', 1457213203.944074, 96], [u'2016-03-05T21:26:52.05887305Z', 1457213212.039694, 16], [u'2016-03-05T21:27:00.135388473Z', 1457213220.116373, 85], [u'2016-03-05T21:27:08.213027961Z', 1457213228.193329, 53], [u'2016-03-05T21:27:16.305727216Z', 1457213236.285549, 6], [u'2016-03-05T21:27:24.391906523Z', 1457213244.370705, 17], [u'2016-03-05T21:27:32.465275301Z', 1457213252.446268, 63], [u'2016-03-05T21:27:40.558598163Z', 1457213260.539174, 48], [u'2016-03-05T21:27:48.648964563Z', 1457213268.628566, 77], [u'2016-03-05T21:27:56.746195356Z', 1457213276.726376, 66], [u'2016-03-05T21:28:04.82431804Z', 1457213284.805218, 85], [u'2016-03-05T21:28:12.901885843Z', 1457213292.882591, 95], [u'2016-03-05T21:28:20.987871643Z', 1457213300.965601, 41]], u'name': u'3afadf60-742d-45ad-8dfa-28b18bb7f60b', u'columns': [u'time', u'timestamp', u'value']}]}, u'response': u'success'}
+[test2@ucsd.edu] Try read : {u'data': {u'series': [{u'values': [[u'2016-03-05T21:16:06.020883298Z', 1457212566.001688, 75], [u'2016-03-05T21:16:14.107542298Z', 1457212574.087879, 19], [u'2016-03-05T21:16:22.211194952Z', 1457212582.190793, 87], [u'2016-03-05T21:16:30.306718398Z', 1457212590.273204, 91], [u'2016-03-05T21:16:38.394239148Z', 1457212598.37478, 8], [u'2016-03-05T21:16:46.482925018Z', 1457212606.462501, 31], [u'2016-03-05T21:16:54.564616663Z', 1457212614.546235, 9], [u'2016-03-05T21:17:02.643098858Z', 1457212622.623101, 76], [u'2016-03-05T21:17:10.80951477Z', 1457212630.790277, 60], [u'2016-03-05T21:17:18.895299102Z', 1457212638.874932, 60], [u'2016-03-05T21:17:35.028903927Z', 1457212655.008329, 12], [u'2016-03-05T21:17:43.121889408Z', 1457212663.102716, 71], [u'2016-03-05T21:17:51.219975717Z', 1457212671.199479, 4], [u'2016-03-05T21:19:59.66507025Z', 1457212799.645719, 39], [u'2016-03-05T21:20:07.74340085Z', 1457212807.725453, 33], [u'2016-03-05T21:20:15.827851651Z', 1457212815.810356, 11], [u'2016-03-05T21:20:23.928447862Z', 1457212823.909024, 46], [u'2016-03-05T21:20:32.016341966Z', 1457212831.998366, 60], [u'2016-03-05T21:20:40.124268345Z', 1457212840.091326, 66], [u'2016-03-05T21:20:48.211565235Z', 1457212848.192602, 62], [u'2016-03-05T21:20:56.307676223Z', 1457212856.288141, 15], [u'2016-03-05T21:21:04.388574036Z', 1457212864.368626, 45], [u'2016-03-05T21:21:12.46482657Z', 1457212872.446403, 33], [u'2016-03-05T21:21:20.562724115Z', 1457212880.543169, 92], [u'2016-03-05T21:21:28.661846915Z', 1457212888.641545, 50], [u'2016-03-05T21:21:36.772750404Z', 1457212896.752886, 53], [u'2016-03-05T21:21:44.876784012Z', 1457212904.855909, 21], [u'2016-03-05T21:21:52.959001044Z', 1457212912.939464, 17], [u'2016-03-05T21:22:01.043089399Z', 1457212921.022597, 28], [u'2016-03-05T21:22:09.139729176Z', 1457212929.118914, 14], [u'2016-03-05T21:22:17.237948481Z', 1457212937.218678, 91], [u'2016-03-05T21:22:25.326188748Z', 1457212945.303978, 66], [u'2016-03-05T21:22:33.408163731Z', 1457212953.389517, 6], [u'2016-03-05T21:22:41.51114582Z', 1457212961.491715, 84], [u'2016-03-05T21:22:49.607945284Z', 1457212969.588472, 89], [u'2016-03-05T21:22:57.682931753Z', 1457212977.664088, 97], [u'2016-03-05T21:23:05.812537767Z', 1457212985.793057, 43], [u'2016-03-05T21:23:13.899806262Z', 1457212993.880109, 94], [u'2016-03-05T21:23:21.987273717Z', 1457213001.967134, 79], [u'2016-03-05T21:23:30.076611644Z', 1457213010.057044, 23], [u'2016-03-05T21:23:38.16910166Z', 1457213018.150293, 47], [u'2016-03-05T21:23:46.24588915Z', 1457213026.226091, 53], [u'2016-03-05T21:23:54.342681149Z', 1457213034.321326, 1], [u'2016-03-05T21:24:26.494186676Z', 1457213066.473495, 92], [u'2016-03-05T21:24:34.581387754Z', 1457213074.561523, 31], [u'2016-03-05T21:24:42.658554586Z', 1457213082.638351, 29], [u'2016-03-05T21:24:50.733852529Z', 1457213090.712677, 43], [u'2016-03-05T21:24:58.817929871Z', 1457213098.79947, 0], [u'2016-03-05T21:25:06.903255894Z', 1457213106.882699, 86], [u'2016-03-05T21:25:14.980355808Z', 1457213114.96078, 16], [u'2016-03-05T21:25:23.075189391Z', 1457213123.054718, 16], [u'2016-03-05T21:25:31.171347441Z', 1457213131.151905, 74], [u'2016-03-05T21:25:39.261497919Z', 1457213139.24176, 77], [u'2016-03-05T21:25:47.355225553Z', 1457213147.335713, 31], [u'2016-03-05T21:25:55.43163363Z', 1457213155.411951, 15], [u'2016-03-05T21:26:03.509053414Z', 1457213163.488625, 92], [u'2016-03-05T21:26:11.623118584Z', 1457213171.602877, 3], [u'2016-03-05T21:26:19.71106338Z', 1457213179.69172, 92], [u'2016-03-05T21:26:27.78780037Z', 1457213187.76777, 67], [u'2016-03-05T21:26:35.889299526Z', 1457213195.870044, 33], [u'2016-03-05T21:26:43.963769541Z', 1457213203.944074, 96], [u'2016-03-05T21:26:52.05887305Z', 1457213212.039694, 16], [u'2016-03-05T21:27:00.135388473Z', 1457213220.116373, 85], [u'2016-03-05T21:27:08.213027961Z', 1457213228.193329, 53], [u'2016-03-05T21:27:16.305727216Z', 1457213236.285549, 6], [u'2016-03-05T21:27:24.391906523Z', 1457213244.370705, 17], [u'2016-03-05T21:27:32.465275301Z', 1457213252.446268, 63], [u'2016-03-05T21:27:40.558598163Z', 1457213260.539174, 48], [u'2016-03-05T21:27:48.648964563Z', 1457213268.628566, 77], [u'2016-03-05T21:27:56.746195356Z', 1457213276.726376, 66], [u'2016-03-05T21:28:04.82431804Z', 1457213284.805218, 85], [u'2016-03-05T21:28:12.901885843Z', 1457213292.882591, 95], [u'2016-03-05T21:28:20.987871643Z', 1457213300.965601, 41]], u'name': u'3afadf60-742d-45ad-8dfa-28b18bb7f60b', u'columns': [u'time', u'timestamp', u'value']}]}, u'response': u'success'}
