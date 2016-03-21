@@ -22,6 +22,7 @@ import sys
 sys.path.append('/srv/buildingdepot')
 from utils import get_user_oauth
 from ..api_0_0.resources.utils import *
+from ...__init__ import get_current
 
 
 permissions = {"rw":"r/w","r":"r","dr":"d/r"}
@@ -342,7 +343,7 @@ def register_app():
     try:
         email = json_data['email']
     except Exception as e:
-        return jsonify({'success':'False','error':'Missing email id'})
+        return jsonify({'success':'False','error':'Missing email id','errortype' : str(e)})
 
     if request.method=='POST':
         try:
@@ -423,3 +424,131 @@ def permission_change(user_id,sensor_group,permission_value):
     else:
         return jsonify({'success': 'False'})
 
+app = get_current() # for API debugging. Will be removed (honam)
+@api.route('/data/id=<name>/email=<email>/actuation', methods=['POST'], endpoint='actuation_command')
+@oauth.require_oauth()
+@authenticate_acl('r/w')
+def actuation_command(name,email):
+    """
+    Transactional actuation for controlling data inconsistency in stored data caused by multi-actuations. 
+    A request is waiting while BD is processing the actuation request for the given MAX_TIMEOUT seconds. 
+    Current MAX_TIMEOUT = 20 sec
+    Current ACTUATION_INTERVAL = 5 sec (BD recognize any actuation results created within only 5 secs)
+    """
+    MAX_TIMEOUT = 20 
+    ACTUATION_INTERVAL = 5 
+    points = [[int(pair['time']), pair['value']] for pair in request.get_json()['data']]
+    data_points = []
+    values = [] # To check the actuation value is written in BACnet
+    # Parse through all the received data and format it to write to the DB
+    for pair in request.get_json()['data']:
+        temp_dict = {}
+        temp_dict['measurement'] = name
+        temp_dict['fields'] = {
+                                'timestamp' : pair['time'],
+                                'value' : pair['value']
+                            }
+        data_points.append(temp_dict)
+        values.append(pair['value'])
+
+    if is_bd_connector(name, email) == True: # Acquire a lock to write changes if it is a bd_connector
+        influx.write_points(data_points)
+
+        return jsonify({'success': 'True'})
+    else : # Initialize for actuation
+        app.logger.info("[" + email + "]" + " transaction start")
+        if check_existing_transaction(name) == True:
+            app.logger.info("[" + email + "]" + " Failed to acquire a lock")
+            return jsonify({'success': 'False', 'Error' : 'Failed to acquire a lock'}) 
+        
+        try:
+            # Set an actuation lock
+            transaction = Transaction(sensor_uuid=name, isLocked="true", value=str(data_points)).save()
+        except Exception as e:
+            app.logger.error(str(e))
+            return jsonify({'success': 'False', 'Error' : 'Internal server error', 'Details' : str(e)}) 
+        
+        loop_cnt = 0 
+        while loop_cnt < MAX_TIMEOUT:
+            try:
+                data = influx.query("select * from "+"\""+name+"\""+" WHERE time > now() - "+ str(ACTUATION_INTERVAL) + "s and value =" + str(values[0]))
+            
+                if data.raw != {} :
+                    app.logger.info("[" + email + "]" + " transaction - Received actuation result : " + str(data.raw)) 
+                    Transaction.objects(sensor_uuid=name).delete()
+                    app.logger.info("[" + email + "]" + " transaction end")
+                
+                    return jsonify({'success': 'True', 'data' : data.raw})
+                else:
+                    app.logger.info("[" + email + "]" + " transaction - Waiting for actuation result : " + str(data.raw)) 
+                    time.sleep(1) # Waiting interval : 1sec   
+            except Exception as e:
+                return jsonify({'success': 'False', 'Error' : 'Internal server error', 'Details' : str(e)})        
+            
+            loop_cnt += 1
+
+        # Removing an actuation lock
+        Transaction.objects(sensor_uuid=name).delete()
+        app.logger.info("[" + email + "]" + " transaction end")
+
+        return jsonify({'success': 'False', 'Error' : 'Transaction timeout: ' + str(MAX_TIMEOUT) + "s"})
+
+def check_existing_transaction(name):
+    obj = Transaction.objects(sensor_uuid=name).first()
+
+    if obj != None and obj.isLocked == "true":
+        return True   
+
+    return False
+
+#if it is a bd_connector, acquire a lock to actuate
+def is_bd_connector(name, email): 
+    for document in Transaction._get_collection().find({"_id" : name, "isLocked" : "true", "bd_connector" : email}):
+        return True
+
+    return False
+
+@api.route('/list/email=<email>/changes', methods=['GET'])
+@oauth.require_oauth()
+def list_subscriber_changes(email):
+    """
+    1. Get user group name by searching user_group (email)
+    2. Get sensor group/permission name by searching permission (user group name)
+    3. Get tags by searching sensor_group (sensor group)
+    4. Get sensor UUID by searching sensor table (tags)
+    5. Get datapoints to be modifed from transaction table (sensorUUID) 
+    """
+    
+    name_list = []
+    for user in UserGroup._get_collection().find({"users": email}):
+        name_list.append(user['name'])
+
+    sensorgroup_list = []
+    for user_group in name_list:
+        sensorgroup_list.append(Permission.objects(user_group=user_group).first().sensor_group)
+    
+    tags_list = []
+    for sensorgroup_name in sensorgroup_list:
+       tags_list.append(SensorGroup.objects(name=sensorgroup_name).first().tags)    
+    
+    sensor_list = []
+    for tags in tags_list:
+        for tag in tags:
+            sensor_list = Sensor._get_collection().find({"tags":{'name':tag.name, 'value': tag.value}})         
+     
+    sensorUUID_list = []
+    for index, sensor in enumerate(sensor_list, start=1):
+        json_temp = create_json(sensor)
+        sensorUUID_list.append(json_temp["name"])
+
+    transaction_obj_list = []
+    for UUID in sensorUUID_list:
+        transaction_obj_list.append(Transaction._get_collection().find({"_id" : UUID, "isLocked" : "true"}))
+        Transaction.objects(sensor_uuid=UUID).update(set__bd_connector=email)
+
+    datapoint_dict = dict()
+    for transaction_obj in transaction_obj_list:
+        for index, item in enumerate(transaction_obj, start=1):
+            datapoint_dict[item["_id"]] = item["value"]
+
+    return jsonify({'data': datapoint_dict,'response':'success'})          

@@ -11,7 +11,7 @@ these tables can have any of the paramteres defined within the class
 """
 
 from mongoengine import *
-
+from datetime import datetime
 
 class Node(EmbeddedDocument):
     name = StringField()
@@ -80,4 +80,9 @@ class Client(Document):
             return self._default_scopes.split()
         return []
 
-
+class Transaction(Document):
+    sensor_uuid = StringField(required=True, unique=True, primary_key=True)
+    isLocked = StringField()
+    time = DateTimeField(default=datetime.now)
+    value = StringField()
+    bd_connector = StringField()
