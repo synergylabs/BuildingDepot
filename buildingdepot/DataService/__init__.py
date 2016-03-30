@@ -13,10 +13,15 @@ config file or falls back to the default one.
 import os
 from app import create_app
 from flask.ext.script import Manager, Shell
+import logging
+from logging.handlers import RotatingFileHandler
 
 app = create_app(os.getenv('FLASK_CONFIG') or 'dev')
 manager = Manager(app)
 
+handler = RotatingFileHandler('debug.log', maxBytes=1000000, backupCount=1)
+handler.setLevel(logging.DEBUG)
+app.logger.addHandler(handler)
 
 def make_shell_context():
     return dict(app=app)

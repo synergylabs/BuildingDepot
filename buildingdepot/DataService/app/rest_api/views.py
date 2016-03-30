@@ -352,7 +352,7 @@ def register_app():
             result = channel.queue_declare(durable=True)
         except Exception as e:
             print "Failed to create queue "+str(e)
-            return jsonify({'success':'False','error':'Failed to create queue'})
+            return jsonify({'success':'False','error':'Failed to create queue: ' + str(e)})
         channel.close()
 
         apps = Application._get_collection().find({'user': email})
@@ -368,6 +368,16 @@ def register_app():
         return jsonify({'success':'True','app_list': apps[0]['applications']})
 
     return jsonify({'success':'True','app_id':result.method.queue})
+
+
+@api.route('/apps/email=<email>',methods=['GET'])
+def get_registered_app(email):
+    apps = Application._get_collection().find({'user': email})
+
+    if apps.count() > 0:
+        return jsonify({'success':'True','app_list': apps[0]['applications']})
+    else:
+        return jsonify({'success': 'False','error':'Not found the registered email'})
 
 @api.route('/apps/subscription',methods=['POST','DELETE'])
 def subscribe_sensor():
@@ -390,7 +400,7 @@ def subscribe_sensor():
             channel.queue_unbind(exchange=exchange,queue=app,routing_key=sensor)
     except Exception as e:
         print "Failed to bind queue "+str(e)
-        return jsonify({'success':'False','error':'Failed to bind queue'})
+        return jsonify({'success':'False','error':'Failed to bind queue : ' + str(e)})
     channel.close()
     return jsonify({'success':'True'})
 
@@ -425,7 +435,6 @@ def permission_change(user_id,sensor_group,permission_value):
     else:
         return jsonify({'success': 'False'})
 
-app = get_current() # for API debugging. Will be removed (honam)
 @api.route('/data/id=<name>/email=<email>/actuation', methods=['POST'], endpoint='actuation_command')
 @oauth.require_oauth()
 @authenticate_acl('r/w')
@@ -433,15 +442,15 @@ def actuation_command(name,email):
     """
     Transactional actuation for controlling data inconsistency in stored data caused by multi-actuations. 
     A request is waiting while BD is processing the actuation request for the given MAX_TIMEOUT seconds. 
-    Current MAX_TIMEOUT = 20 sec
-    Current ACTUATION_INTERVAL = 5 sec (BD recognize any actuation results created within only 5 secs)
+    Current MAX_TIMEOUT = 10 sec
+    Current ACTUATION_INTERVAL = 3 sec (BD recognize any actuation results created within only 3 secs)
     """
-    MAX_TIMEOUT = 20 
-    ACTUATION_INTERVAL = 5 
+    MAX_TIMEOUT = 10 
+    ACTUATION_INTERVAL = 3 
     points = [[int(pair['time']), pair['value']] for pair in request.get_json()['data']]
     data_points = []
-    values = [] # To check the actuation value is written in BACnet
-    # Parse through all the received data and format it to write to the DB
+    values = []
+
     for pair in request.get_json()['data']:
         temp_dict = {}
         temp_dict['measurement'] = name
@@ -452,47 +461,42 @@ def actuation_command(name,email):
         data_points.append(temp_dict)
         values.append(pair['value'])
 
-    if is_bd_connector(name, email) == True: # Acquire a lock to write changes if it is a bd_connector
-        influx.write_points(data_points)
+    # Initialize for actuation
+    if check_existing_transaction(name) == True:
+        return jsonify({'success': 'False', 'Error' : 'Failed to acquire a lock'}) 
+    
+    try:
+        # Set an actuation lock
+        transaction = Transaction(sensor_uuid=name, isLocked="true", value=str(data_points)).save()
+    except Exception as e:
+        return jsonify({'success': 'False', 'Error' : 'Internal server error', 'Details' : str(e)}) 
+    
+    channel = pubsub.channel()
+    channel.basic_publish(exchange=exchange, routing_key=name, body=str(data_points))
+    channel.close()
 
-        return jsonify({'success': 'True'})
-    else : # Initialize for actuation
-        app.logger.info("[" + email + "]" + " transaction start")
-        if check_existing_transaction(name) == True:
-            app.logger.info("[" + email + "]" + " Failed to acquire a lock")
-            return jsonify({'success': 'False', 'Error' : 'Failed to acquire a lock'}) 
-        
+    loop_cnt = 0 
+    while loop_cnt < MAX_TIMEOUT:
         try:
-            # Set an actuation lock
-            transaction = Transaction(sensor_uuid=name, isLocked="true", value=str(data_points)).save()
-        except Exception as e:
-            app.logger.error(str(e))
-            return jsonify({'success': 'False', 'Error' : 'Internal server error', 'Details' : str(e)}) 
+            data = influx.query("select * from "+"\""+name+"\""+" WHERE time > now() - "+ str(ACTUATION_INTERVAL) + "s and value =" + str(values[0]))
         
-        loop_cnt = 0 
-        while loop_cnt < MAX_TIMEOUT:
-            try:
-                data = influx.query("select * from "+"\""+name+"\""+" WHERE time > now() - "+ str(ACTUATION_INTERVAL) + "s and value =" + str(values[0]))
-            
-                if data.raw != {} :
-                    app.logger.info("[" + email + "]" + " transaction - Received actuation result : " + str(data.raw)) 
-                    Transaction.objects(sensor_uuid=name).delete()
-                    app.logger.info("[" + email + "]" + " transaction end")
-                
-                    return jsonify({'success': 'True', 'data' : data.raw})
-                else:
-                    app.logger.info("[" + email + "]" + " transaction - Waiting for actuation result : " + str(data.raw)) 
-                    time.sleep(1) # Waiting interval : 1sec   
-            except Exception as e:
-                return jsonify({'success': 'False', 'Error' : 'Internal server error', 'Details' : str(e)})        
-            
-            loop_cnt += 1
+            if data.raw != {} :
+                Transaction.objects(sensor_uuid=name).delete()
 
-        # Removing an actuation lock
-        Transaction.objects(sensor_uuid=name).delete()
-        app.logger.info("[" + email + "]" + " transaction end")
+                return jsonify({'success': 'True', 'data' : data.raw})
+            else:
+                time.sleep(1) # Waiting interval : 1sec   
+        except Exception as e:
+            Transaction.objects(sensor_uuid=name).delete()
 
-        return jsonify({'success': 'False', 'Error' : 'Transaction timeout: ' + str(MAX_TIMEOUT) + "s"})
+            return jsonify({'success': 'False', 'Error' : 'Internal server error', 'Details' : str(e)})        
+        
+        loop_cnt += 1
+
+    # Removing an actuation lock
+    Transaction.objects(sensor_uuid=name).delete()
+
+    return jsonify({'success': 'False', 'Error' : 'Transaction timeout: ' + str(MAX_TIMEOUT) + "s"})
 
 def check_existing_transaction(name):
     obj = Transaction.objects(sensor_uuid=name).first()
