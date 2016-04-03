@@ -198,7 +198,7 @@ def insert_timeseries_to_bd():
     Args as data:
         [
             {
-                "sensor_uuid":
+                "sensor_id":
                 "samples":[
                         {
                             "time": A unix timestamp of a sampling
@@ -222,10 +222,10 @@ def insert_timeseries_to_bd():
         for sensor in json:
             # check a user has permission
             unauthorised_sensor = []
-            if permission(sensor['sensor_uuid'])=='r/w':
+            if permission(sensor['sensor_id'])=='r/w':
                 for sample in sensor['samples']:
                     dic = {
-                        'measurement':sensor['sensor_uuid'],
+                        'measurement':sensor['sensor_id'],
                         'time':timestamp_to_time_string(sample['time']),
                         'fields':{
                             'inserted_at':timestamp_to_time_string(time.time()),
@@ -234,7 +234,7 @@ def insert_timeseries_to_bd():
                     }
                     points.append(dic)
             else:
-                unauthorised_sensor.append(sensor['sensor_uuid'])
+                unauthorised_sensor.append(sensor['sensor_id'])
     except KeyError:
         abort(400)
 

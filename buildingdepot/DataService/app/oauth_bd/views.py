@@ -227,10 +227,6 @@ def get_access_token(client_id,client_secret):
         client_secret provided by them are valid"""
     client = Client.objects(client_id=client_id,client_secret=client_secret).first()
     if client!=None:
-        toks = Token.objects(user=client.user)
-        for t in toks:
-            t.delete()
-
         #Set token expiry period and create it
         expires = datetime.utcnow() + timedelta(seconds=expires_in)
         tok = Token(
