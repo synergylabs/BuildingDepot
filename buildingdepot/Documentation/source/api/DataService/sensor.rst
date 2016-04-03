@@ -10,79 +10,18 @@ Permissions for the Sensor and to the `Admin` who owns the Sensor.
 
 .. _DataS List Sensors:
 
-List Sensors
-************
-
-Retreive a list of Sensors accessible to the User initiating the request. This list
-can be context filtered by specifying the context query string.
-
-.. http:get:: /api/list
-
-   :returns:
-      * **sensors** `(list)` -- List of Sensors (See `View Sensor`_)
-   :status 200: Success
-   :status 401: Unauthorized Credentials (See :ref:`HTTP 401 <HTTP 401>`)
-
-.. compound::
-
-   **Example request**:
-
-   .. sourcecode:: http
-
-      GET /api/list HTTP/1.1
-      Accept: application/json; charset=utf-8
-
-   **Example response**:
-
-   .. sourcecode:: http
-
-      HTTP/1.1 200 OK
-      Content-Type: application/json
-
-      {
-        "data": {
-          "sensor_1": {
-            "building": "NSH",
-            "metadata": {
-                 "Type": "Temperature"
-            },
-            "name": "26da099a-3fe0-4966-b068-14f51bcedb6e",
-            "source_identifier": "SensorTag",
-            "source_name": "Sensor Tag 1",
-            "tags": [
-               {
-                 "name": "Floor",
-                 "value": "3"
-               }
-            ]
-          },
-          "sensor_2": {
-            "building": "NSH",
-            "metadata": {},
-            "name": "3a99ca8f-b8c1-4489-b448-d463f0852208",
-            "source_identifier": "SensorTag",
-            "source_name": "Sensor Tag 1",
-            "tags": [
-               {
-                 "name": "Floor",
-                 "value": "3"
-               },
-               {
-                 "name": "Room",
-                 "value": "3600"
-               }
-          }
-        }
-      }
-
-List Sensors by tag
-*******************
+List Sensors by Tags or Metadata
+********************************
 Retreives a list of Sensors accessible to the User initiating the request filtered on the basis of the tags specified by the user
 
-.. http:get:: /api/<param_1>=<value_1>/tags
+.. http:get:: /api/sensor/list?filter=<filter_type>&param=value
 
-   :param string param_1: Name of the tag on the basis of which filtering of the sensors is to be done
-   :param string value_1: Value of the tag on the basis of which filtering of the sensors is to be done
+   :param string filter: Type of filter that has to be applied on the sensor list. Valid values are:
+                            - "tags"
+                            - "metadata"
+                         Note: url has to be encoded if it contains characters such as ":"
+   :param string param: Name of the filter on the basis of which filtering of the sensors is to be done
+   :param string value: Value of the filter on the basis of which filtering of the sensors is to be done
    :returns:
       * **sensors** `(list)` -- List of Sensors (See `View Sensor`_)
    :status 200: Success
@@ -94,7 +33,7 @@ Retreives a list of Sensors accessible to the User initiating the request filter
 
    .. sourcecode:: http
 
-      GET /api/Floor=1/tags HTTP/1.1
+      GET /api/sensor/list?filter=tags&Floor=3600 HTTP/1.1
       Accept: application/json; charset=utf-8
 
    **Example response**:
@@ -136,55 +75,6 @@ Retreives a list of Sensors accessible to the User initiating the request filter
                  "name": "Room",
                  "value": "3600"
                }
-          }
-        }
-      }
-
-List Sensors by Metadata
-************************
-Retreives a list of Sensors accessible to the User initiating the request filtered on the basis of the metadata specified by the user
-
-.. http:get:: /api/<param_1>=<value_1>/metadata
-
-   :param string param_1: Name of the metadata on the basis of which filtering of the sensors is to be done
-   :param string value_1: Value of the metadata on the basis of which filtering of the sensors is to be done
-   :returns:
-      * **sensors** `(list)` -- List of Sensors (See `View Sensor`_)
-   :status 200: Success
-   :status 401: Unauthorized Credentials (See :ref:`HTTP 401 <HTTP 401>`)
-
-   .. compound::
-
-   **Example request**:
-
-   .. sourcecode:: http
-
-      GET /api/Type=Temperature/metadata HTTP/1.1
-      Accept: application/json; charset=utf-8
-
-   **Example response**:
-
-   .. sourcecode:: http
-
-      HTTP/1.1 200 OK
-      Content-Type: application/json
-
-      {
-        "data": {
-          "sensor_1": {
-            "building": "Wean Hall",
-            "metadata": {
-              "Type": "Temperature"
-            },
-            "name": "f8ab0fed-8230-4509-9ae8-42b95a0bf03c",
-            "source_identifier": "SensorTag",
-            "source_name": "SensorTag_1",
-            "tags": [
-              {
-                "name": "Floor",
-                "value": "3"
-              }
-            ]
           }
         }
       }
@@ -194,7 +84,7 @@ Create a Sensor
 
 Creates a new Sensor point in BuildingDepot and returns the UUID.
 
-.. http:post:: /api/sensor_create/name=<name>/identifier=<identifier>/building=<building>
+.. http:post:: /api/sensor?name=<Name>&identifier=<Identifier>&building=<building>
 
    :param string name: Name of the sensor
    :param string identifier: Identifier that user would like to be associated with the Sensor point
@@ -212,7 +102,7 @@ Creates a new Sensor point in BuildingDepot and returns the UUID.
 
    .. sourcecode:: http
 
-      POST /api/data/id=test_sensor/identifier=Temp_Sensor/building=NSH HTTP/1.1
+      POST /api/sensor?id=test_sensor&identifier=Temp_Sensor&building=NSH HTTP/1.1
       Accept: application/json; charset=utf-8
 
    **Example response**:
@@ -227,6 +117,64 @@ Creates a new Sensor point in BuildingDepot and returns the UUID.
         "uuid": "6cf53d24-e3a3-41bd-b2b5-8f109694f628"
       }
 
+Get Sensor details
+******************
+
+Retrieves all the details of the sensor based on the uuid specified
+
+.. http:post:: /api/sensor/<name>
+
+   :param string name: Name of the sensor
+
+   :returns:
+      * **success** `(string)` -- Returns 'True' if data is retrieved succesfully otherwise 'False'
+      * **building** `(string)` -- Building in which the sensor is located
+      * **name** `(string)` -- Name of the sensor
+      * **tags** '(list)' -- List of tags owned by the sensor
+      * **metadata** '(list)' -- List of metadata owned by the sensor
+      * **source_identifier** '(dictionary)' -- Source identifier of the sensor
+      * **source_name** '(dictionary)' -- Source name of the sensor
+   :status 200: Success
+   :status 401: Unauthorized Credentials (See :ref:`HTTP 401 <HTTP 401>`)
+
+.. compound::
+
+   **Example request**:
+
+   .. sourcecode:: http
+
+      POST /api/sensor/86ac8207-6372-46a5-ba0b-6b392dbff645
+      Accept: application/json; charset=utf-8
+
+   **Example response**:
+
+   .. sourcecode:: http
+
+      HTTP/1.1 200 OK
+      Content-Type: application/json
+
+      {
+          "building": "NSH",
+          "metadata": [
+            {
+              "name": "MAC",
+              "value": "01:02:03:04:05:06"
+            },
+            {
+              "name": "Type",
+              "value": "Temperature"
+            }
+          ],
+          "name": "86ac8207-6372-46a5-ba0b-6b392dbff645",
+          "source_identifier": "Sensor Tag",
+          "source_name": "SensorTag_1",
+          "tags": [
+            {
+              "name": "Floor",
+              "value": "3"
+            }
+          ]
+    }
 
 
 Delete a Sensor

@@ -24,9 +24,9 @@
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
     <link rel="top" title="BuildingDepot 3.0 documentation" href="../../index.html" />
-    <link rel="up" title="DataService API" href="index.html" />
+    <link rel="up" title="REST API’s" href="index.html" />
     <link rel="next" title="Timeseries" href="sensordata.html" />
-    <link rel="prev" title="DataService API" href="index.html" />
+    <link rel="prev" title="REST API’s" href="index.html" />
    
   
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
@@ -44,99 +44,34 @@
 <p>The Sensor collection manages Sensors for Locations associated with the DataService.
 Sensor access is restricted to <span class="xref std std-ref">Users</span> or <span class="xref std std-ref">Admins</span> with
 Permissions for the Sensor and to the <cite>Admin</cite> who owns the Sensor.</p>
-<div class="section" id="list-sensors">
-<span id="datas-list-sensors"></span><h2>List Sensors<a class="headerlink" href="#list-sensors" title="Permalink to this headline">¶</a></h2>
-<p>Retreive a list of Sensors accessible to the User initiating the request. This list
-can be context filtered by specifying the context query string.</p>
-<dl class="get">
-<dt id="get--api-list">
-<code class="descname">GET </code><code class="descname">/api/list</code><a class="headerlink" href="#get--api-list" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><ul class="first simple">
-<li><strong>sensors</strong> <cite>(list)</cite> &#8211; List of Sensors (See <a href="#id1"><span class="problematic" id="id2">`View Sensor`_</span></a>)</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
-<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> &#8211; Success</li>
-<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a> &#8211; Unauthorized Credentials (See <span class="xref std std-ref">HTTP 401</span>)</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<div class="compound">
-<p class="compound-first"><strong>Example request</strong>:</p>
-<div class="compound-middle highlight-http"><div class="highlight"><pre><span class="nf">GET</span> <span class="nn">/api/list</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
-<span class="na">Accept</span><span class="o">:</span> <span class="l">application/json; charset=utf-8</span>
-</pre></div>
-</div>
-<p class="compound-middle"><strong>Example response</strong>:</p>
-<div class="compound-last highlight-http"><div class="highlight"><pre>HTTP/1.1 200 OK
-Content-Type: application/json
-
-{
-  &quot;data&quot;: {
-    &quot;sensor_1&quot;: {
-      &quot;building&quot;: &quot;NSH&quot;,
-      &quot;metadata&quot;: {
-           &quot;Type&quot;: &quot;Temperature&quot;
-      },
-      &quot;name&quot;: &quot;26da099a-3fe0-4966-b068-14f51bcedb6e&quot;,
-      &quot;source_identifier&quot;: &quot;SensorTag&quot;,
-      &quot;source_name&quot;: &quot;Sensor Tag 1&quot;,
-      &quot;tags&quot;: [
-         {
-           &quot;name&quot;: &quot;Floor&quot;,
-           &quot;value&quot;: &quot;3&quot;
-         }
-      ]
-    },
-    &quot;sensor_2&quot;: {
-      &quot;building&quot;: &quot;NSH&quot;,
-      &quot;metadata&quot;: {},
-      &quot;name&quot;: &quot;3a99ca8f-b8c1-4489-b448-d463f0852208&quot;,
-      &quot;source_identifier&quot;: &quot;SensorTag&quot;,
-      &quot;source_name&quot;: &quot;Sensor Tag 1&quot;,
-      &quot;tags&quot;: [
-         {
-           &quot;name&quot;: &quot;Floor&quot;,
-           &quot;value&quot;: &quot;3&quot;
-         },
-         {
-           &quot;name&quot;: &quot;Room&quot;,
-           &quot;value&quot;: &quot;3600&quot;
-         }
-    }
-  }
-}
-</pre></div>
-</div>
-</div>
-</div>
-<div class="section" id="list-sensors-by-tag">
-<h2>List Sensors by tag<a class="headerlink" href="#list-sensors-by-tag" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="list-sensors-by-tags-or-metadata">
+<span id="datas-list-sensors"></span><h2>List Sensors by Tags or Metadata<a class="headerlink" href="#list-sensors-by-tags-or-metadata" title="Permalink to this headline">¶</a></h2>
 <p>Retreives a list of Sensors accessible to the User initiating the request filtered on the basis of the tags specified by the user</p>
 <dl class="get">
-<dt id="get--api--param_1-=-value_1--tags">
-<code class="descname">GET </code><code class="descname">/api/&lt;param_1&gt;=&lt;value_1&gt;/tags</code><a class="headerlink" href="#get--api--param_1-=-value_1--tags" title="Permalink to this definition">¶</a></dt>
+<dt id="get--api-sensor-list?filter=-filter_type-&amp;param=value">
+<code class="descname">GET </code><code class="descname">/api/sensor/list?filter=&lt;filter_type&gt;&amp;param=value</code><a class="headerlink" href="#get--api-sensor-list?filter=-filter_type-&param=value" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>param_1</strong> (<em>string</em>) &#8211; Name of the tag on the basis of which filtering of the sensors is to be done</li>
-<li><strong>value_1</strong> (<em>string</em>) &#8211; Value of the tag on the basis of which filtering of the sensors is to be done</li>
+<li><strong>filter</strong> (<em>string</em>) &#8211; <dl class="docutils">
+<dt>Type of filter that has to be applied on the sensor list. Valid values are:</dt>
+<dd><ul class="first last">
+<li>&#8220;tags&#8221;</li>
+<li>&#8220;metadata&#8221;</li>
+</ul>
+</dd>
+</dl>
+<p>Note: url has to be encoded if it contains characters such as &#8221;:&#8221;</p>
+</li>
+<li><strong>param</strong> (<em>string</em>) &#8211; Name of the filter on the basis of which filtering of the sensors is to be done</li>
+<li><strong>value</strong> (<em>string</em>) &#8211; Value of the filter on the basis of which filtering of the sensors is to be done</li>
 </ul>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><ul class="first simple">
-<li><strong>sensors</strong> <cite>(list)</cite> &#8211; List of Sensors (See <a href="#id3"><span class="problematic" id="id4">`View Sensor`_</span></a>)</li>
+<li><strong>sensors</strong> <cite>(list)</cite> &#8211; List of Sensors (See <a href="#id1"><span class="problematic" id="id2">`View Sensor`_</span></a>)</li>
 </ul>
 </td>
 </tr>
@@ -149,7 +84,7 @@ Content-Type: application/json
 </tbody>
 </table>
 <p><strong>Example request</strong>:</p>
-<div class="highlight-http"><div class="highlight"><pre><span class="nf">GET</span> <span class="nn">/api/Floor=1/tags</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<div class="highlight-http"><div class="highlight"><pre><span class="nf">GET</span> <span class="nn">/api/sensor/list?filter=tags&amp;Floor=3600</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
 <span class="na">Accept</span><span class="o">:</span> <span class="l">application/json; charset=utf-8</span>
 </pre></div>
 </div>
@@ -197,74 +132,12 @@ Content-Type: application/json
 </dd></dl>
 
 </div>
-<div class="section" id="list-sensors-by-metadata">
-<h2>List Sensors by Metadata<a class="headerlink" href="#list-sensors-by-metadata" title="Permalink to this headline">¶</a></h2>
-<p>Retreives a list of Sensors accessible to the User initiating the request filtered on the basis of the metadata specified by the user</p>
-<dl class="get">
-<dt id="get--api--param_1-=-value_1--metadata">
-<code class="descname">GET </code><code class="descname">/api/&lt;param_1&gt;=&lt;value_1&gt;/metadata</code><a class="headerlink" href="#get--api--param_1-=-value_1--metadata" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>param_1</strong> (<em>string</em>) &#8211; Name of the metadata on the basis of which filtering of the sensors is to be done</li>
-<li><strong>value_1</strong> (<em>string</em>) &#8211; Value of the metadata on the basis of which filtering of the sensors is to be done</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><ul class="first simple">
-<li><strong>sensors</strong> <cite>(list)</cite> &#8211; List of Sensors (See <a href="#id5"><span class="problematic" id="id6">`View Sensor`_</span></a>)</li>
-</ul>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
-<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> &#8211; Success</li>
-<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a> &#8211; Unauthorized Credentials (See <span class="xref std std-ref">HTTP 401</span>)</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Example request</strong>:</p>
-<div class="highlight-http"><div class="highlight"><pre><span class="nf">GET</span> <span class="nn">/api/Type=Temperature/metadata</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
-<span class="na">Accept</span><span class="o">:</span> <span class="l">application/json; charset=utf-8</span>
-</pre></div>
-</div>
-<p><strong>Example response</strong>:</p>
-<div class="highlight-http"><div class="highlight"><pre><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
-<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
-
-<span class="p">{</span>
-  <span class="nt">&quot;data&quot;</span><span class="p">:</span> <span class="p">{</span>
-    <span class="nt">&quot;sensor_1&quot;</span><span class="p">:</span> <span class="p">{</span>
-      <span class="nt">&quot;building&quot;</span><span class="p">:</span> <span class="s2">&quot;Wean Hall&quot;</span><span class="p">,</span>
-      <span class="nt">&quot;metadata&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="nt">&quot;Type&quot;</span><span class="p">:</span> <span class="s2">&quot;Temperature&quot;</span>
-      <span class="p">},</span>
-      <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;f8ab0fed-8230-4509-9ae8-42b95a0bf03c&quot;</span><span class="p">,</span>
-      <span class="nt">&quot;source_identifier&quot;</span><span class="p">:</span> <span class="s2">&quot;SensorTag&quot;</span><span class="p">,</span>
-      <span class="nt">&quot;source_name&quot;</span><span class="p">:</span> <span class="s2">&quot;SensorTag_1&quot;</span><span class="p">,</span>
-      <span class="nt">&quot;tags&quot;</span><span class="p">:</span> <span class="p">[</span>
-        <span class="p">{</span>
-          <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Floor&quot;</span><span class="p">,</span>
-          <span class="nt">&quot;value&quot;</span><span class="p">:</span> <span class="s2">&quot;3&quot;</span>
-        <span class="p">}</span>
-      <span class="p">]</span>
-    <span class="p">}</span>
-  <span class="p">}</span>
-<span class="p">}</span>
-</pre></div>
-</div>
-</dd></dl>
-
-</div>
 <div class="section" id="create-a-sensor">
 <h2>Create a Sensor<a class="headerlink" href="#create-a-sensor" title="Permalink to this headline">¶</a></h2>
 <p>Creates a new Sensor point in BuildingDepot and returns the UUID.</p>
 <dl class="post">
-<dt id="post--api-sensor_create-name=-name--identifier=-identifier--building=-building-">
-<code class="descname">POST </code><code class="descname">/api/sensor_create/name=&lt;name&gt;/identifier=&lt;identifier&gt;/building=&lt;building&gt;</code><a class="headerlink" href="#post--api-sensor_create-name=-name--identifier=-identifier--building=-building-" title="Permalink to this definition">¶</a></dt>
+<dt id="post--api-sensor?name=-Name-&amp;identifier=-Identifier-&amp;building=-building-">
+<code class="descname">POST </code><code class="descname">/api/sensor?name=&lt;Name&gt;&amp;identifier=&lt;Identifier&gt;&amp;building=&lt;building&gt;</code><a class="headerlink" href="#post--api-sensor?name=-Name-&identifier=-Identifier-&building=-building-" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -294,7 +167,7 @@ Content-Type: application/json
 
 <div class="compound">
 <p class="compound-first"><strong>Example request</strong>:</p>
-<div class="compound-middle highlight-http"><div class="highlight"><pre><span class="nf">POST</span> <span class="nn">/api/data/id=test_sensor/identifier=Temp_Sensor/building=NSH</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<div class="compound-middle highlight-http"><div class="highlight"><pre><span class="nf">POST</span> <span class="nn">/api/sensor?id=test_sensor&amp;identifier=Temp_Sensor&amp;building=NSH</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
 <span class="na">Accept</span><span class="o">:</span> <span class="l">application/json; charset=utf-8</span>
 </pre></div>
 </div>
@@ -306,6 +179,78 @@ Content-Type: application/json
   <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;True&quot;</span>
   <span class="s2">&quot;uuid&quot;</span><span class="p">:</span> <span class="s2">&quot;6cf53d24-e3a3-41bd-b2b5-8f109694f628&quot;</span>
 <span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="get-sensor-details">
+<h2>Get Sensor details<a class="headerlink" href="#get-sensor-details" title="Permalink to this headline">¶</a></h2>
+<p>Retrieves all the details of the sensor based on the uuid specified</p>
+<dl class="post">
+<dt id="post--api-sensor--name-">
+<code class="descname">POST </code><code class="descname">/api/sensor/&lt;name&gt;</code><a class="headerlink" href="#post--api-sensor--name-" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>name</strong> (<em>string</em>) &#8211; Name of the sensor</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><ul class="first simple">
+<li><strong>success</strong> <cite>(string)</cite> &#8211; Returns &#8216;True&#8217; if data is retrieved succesfully otherwise &#8216;False&#8217;</li>
+<li><strong>building</strong> <cite>(string)</cite> &#8211; Building in which the sensor is located</li>
+<li><strong>name</strong> <cite>(string)</cite> &#8211; Name of the sensor</li>
+<li><strong>tags</strong> &#8216;(list)&#8217; &#8211; List of tags owned by the sensor</li>
+<li><strong>metadata</strong> &#8216;(list)&#8217; &#8211; List of metadata owned by the sensor</li>
+<li><strong>source_identifier</strong> &#8216;(dictionary)&#8217; &#8211; Source identifier of the sensor</li>
+<li><strong>source_name</strong> &#8216;(dictionary)&#8217; &#8211; Source name of the sensor</li>
+</ul>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> &#8211; Success</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a> &#8211; Unauthorized Credentials (See <span class="xref std std-ref">HTTP 401</span>)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="compound">
+<p class="compound-first"><strong>Example request</strong>:</p>
+<div class="compound-middle highlight-http"><div class="highlight"><pre>POST /api/sensor/86ac8207-6372-46a5-ba0b-6b392dbff645
+Accept: application/json; charset=utf-8
+</pre></div>
+</div>
+<p class="compound-middle"><strong>Example response</strong>:</p>
+<div class="compound-last highlight-http"><div class="highlight"><pre>  HTTP/1.1 200 OK
+  Content-Type: application/json
+
+  {
+      &quot;building&quot;: &quot;NSH&quot;,
+      &quot;metadata&quot;: [
+        {
+          &quot;name&quot;: &quot;MAC&quot;,
+          &quot;value&quot;: &quot;01:02:03:04:05:06&quot;
+        },
+        {
+          &quot;name&quot;: &quot;Type&quot;,
+          &quot;value&quot;: &quot;Temperature&quot;
+        }
+      ],
+      &quot;name&quot;: &quot;86ac8207-6372-46a5-ba0b-6b392dbff645&quot;,
+      &quot;source_identifier&quot;: &quot;Sensor Tag&quot;,
+      &quot;source_name&quot;: &quot;SensorTag_1&quot;,
+      &quot;tags&quot;: [
+        {
+          &quot;name&quot;: &quot;Floor&quot;,
+          &quot;value&quot;: &quot;3&quot;
+        }
+      ]
+}
 </pre></div>
 </div>
 </div>
@@ -345,10 +290,9 @@ Content-Type: application/json
   <h3><a href="../../index.html">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">Sensor</a><ul>
-<li><a class="reference internal" href="#list-sensors">List Sensors</a></li>
-<li><a class="reference internal" href="#list-sensors-by-tag">List Sensors by tag</a></li>
-<li><a class="reference internal" href="#list-sensors-by-metadata">List Sensors by Metadata</a></li>
+<li><a class="reference internal" href="#list-sensors-by-tags-or-metadata">List Sensors by Tags or Metadata</a></li>
 <li><a class="reference internal" href="#create-a-sensor">Create a Sensor</a></li>
+<li><a class="reference internal" href="#get-sensor-details">Get Sensor details</a></li>
 <li><a class="reference internal" href="#delete-a-sensor">Delete a Sensor</a></li>
 <li><a class="reference internal" href="#sensorgroups-and-usergroups">SensorGroups and UserGroups</a></li>
 </ul>
@@ -358,8 +302,8 @@ Content-Type: application/json
 <h3>Related Topics</h3>
 <ul>
   <li><a href="../../index.html">Documentation overview</a><ul>
-  <li><a href="index.html">DataService API</a><ul>
-      <li>Previous: <a href="index.html" title="previous chapter">DataService API</a></li>
+  <li><a href="index.html">REST API&#8217;s</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">REST API&#8217;s</a></li>
       <li>Next: <a href="sensordata.html" title="next chapter">Timeseries</a></li>
   </ul></li>
   </ul></li>

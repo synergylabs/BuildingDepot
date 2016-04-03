@@ -11,9 +11,10 @@ Create SensorGroup
 
 This request creates a new SensorGroup with the name and description in the building specified by the user.
 
-.. http:post:: /api/sensorgroup_create/name=<name>/building=<building>/description=<description>
+.. http:post:: /api/sensor_group?name=<Name>&building=<Building>
 
    :param string name: Name of SensorGroup
+   :param string building: Name of building in which the SensorGroup is to be created
    :param string description (optional): Descrption for SensorGroup
    :returns:
       * **success** `(string)` -- Returns 'True' if data is posted succesfully otherwise 'False'
@@ -27,7 +28,7 @@ This request creates a new SensorGroup with the name and description in the buil
 
    .. sourcecode:: http
 
-      POST /api/sensorgroup_create/name=Test/building=NSH/description=Test-Group
+      POST /api/sensor_group?name=test_group&building=NSH
 
    **Example response** (for succcess):
 

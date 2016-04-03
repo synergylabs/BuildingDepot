@@ -11,9 +11,10 @@ Create SensorGroup
 
 This request creates a new SensorGroup with the name and description in the building specified by the user.
 
-.. http:post:: /api/sensorgroup_create/name=<name>/building=<building>/description=<description>
+.. http:post:: /api/sensor_group?name=<Name>&building=<Building>
 
    :param string name: Name of SensorGroup
+   :param string building: Name of building in which the SensorGroup is to be created
    :param string description (optional): Descrption for SensorGroup
    :returns:
       * **success** `(string)` -- Returns 'True' if data is posted succesfully otherwise 'False'
@@ -27,7 +28,7 @@ This request creates a new SensorGroup with the name and description in the buil
 
    .. sourcecode:: http
 
-      POST /api/sensorgroup_create/name=Test/building=NSH/description=Test-Group
+      POST /api/sensor_group?name=test_group&building=NSH
 
    **Example response** (for succcess):
 
@@ -59,7 +60,7 @@ This request adds the tags specified in the request to the SensorGroup
 
 Note: The list of tags sent in this request will overwrite the previous list.
 
-.. http:post:: /api/sensorgroup/<name>/tags
+.. http:post:: /api/sensor_group/<name>/tags
 
    :param string name: Name of SensorGroup
    :JSON Parameters:
@@ -77,7 +78,7 @@ Note: The list of tags sent in this request will overwrite the previous list.
 
    .. sourcecode:: http
 
-      POST /api/sensorgroup/test/tags
+      POST /api/sensor_group/test/tags
       Accept: application/json; charset=utf-8
 
 
@@ -111,7 +112,7 @@ Get list of tags in SensorGroup
 
 This request retrieves two lists of key-value pairs, one list contains the array of eligible tags that can be attached to this SensorGroup and the other list contains the array of tags that are currently attached to this SensorGroup.
 
-.. http:get:: /api/sensorgroup/<name>/tags
+.. http:get:: /api/sensor_group/<name>/tags
 
    :param string name: Name of SensorGroup (compulsory)
    :returns:
@@ -132,7 +133,7 @@ This request retrieves two lists of key-value pairs, one list contains the array
 
    .. sourcecode:: http
 
-      GET /api/SensorGroup/test/tags
+      GET /api/sensor_group/test/tags
       Accept: application/json; charset=utf-8
 
    **Example response**:
