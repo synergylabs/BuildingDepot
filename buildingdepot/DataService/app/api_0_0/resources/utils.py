@@ -51,10 +51,12 @@ def authenticate_acl(read_write):
        the user has to the specified sensor"""
     def authenticate_write(f):
         def decorated_function(*args, **kwargs):
-            email = kwargs['email']
-            sensor_name = kwargs['name']
+            try:
+                sensor_name = kwargs['name']
+            except KeyError:
+                sensor_name = request.get_json()['sensor_id']
             #Check what level of access this user has to the sensor
-            response = permission(email,sensor_name)
+            response = permission(sensor_name)
             if response == 'd/r':
                 return jsonify({'response':'You are not authenticated to use to this sensor'})
             elif response  == read_write or response == 'r/w':
@@ -68,16 +70,11 @@ def authenticate_acl(read_write):
         return decorated_function
     return authenticate_write
 
-def permission(email, sensor_name):
+def permission(sensor_name):
 
     headers = request.headers
     token = headers['Authorization'].split()[1]
-    email_db = Token.objects(access_token=token).first().email
-
-    #If the email id attached to the OAuth access token and the email id
-    #sent in the request do not match then doesn't authorize the request
-    if email!=email_db:
-        return 'unauthorized'
+    email = Token.objects(access_token=token).first().email
 
     sensor = Sensor.objects(name=sensor_name).first()
     if sensor == None:
