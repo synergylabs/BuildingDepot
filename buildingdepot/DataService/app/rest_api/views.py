@@ -11,14 +11,15 @@ the user has access to the specific sensor
 @license: UCSD License. See License file for details.
 """
 
-from flask import json,render_template, request, redirect, url_for, jsonify, flash
+from flask import json,render_template,abort
+from flask import request, redirect, url_for, jsonify, flash
 from . import api
 from ..models.ds_models import *
 from ..service.utils import *
 from uuid import uuid4
 from .. import r, influx,oauth,pubsub,exchange
 from werkzeug.security import gen_salt
-import sys
+import sys,time,influxdb,urllib
 sys.path.append('/srv/buildingdepot')
 from utils import get_user_oauth
 from ..api_0_0.resources.utils import *
@@ -27,90 +28,124 @@ from ..api_0_0.resources.utils import *
 permissions = {"rw":"r/w","r":"r","dr":"d/r"}
 
 
-@api.route('/sensor_create/name=<name>/identifier=<identifier>/building=<building>', methods=['POST'])
+@api.route('/sensor/<name>', methods=['GET'])
+@api.route('/sensor', methods=['POST'])
 @oauth.require_oauth()
-def sensor_create(name=None,identifier=None,building=None):
+def sensor_create(name=None):
     """Check if the building the user has specified is valid and if so create
      the sensor and return the uuid"""
-    for item in get_building_choices(current_app.config['NAME']):
-        if building in item:
-            uuid = str(uuid4())
-            Sensor(name=uuid,
-                       source_name=name,
-                       source_identifier=identifier,
-                       building=building).save()
-            return jsonify({'success': 'True','uuid':uuid})
-    return jsonify({'success': 'False','error':'Building does not exist'})
+    if request.method == 'POST':
+        building = request.args.get('building')
+        if building is None:
+            return jsonify({'success': 'False','error':'Missing parameters'})
+
+        for item in get_building_choices(current_app.config['NAME']):
+            if building in item:
+                uuid = str(uuid4())
+                Sensor(name=uuid,
+                           source_name=xstr(request.args.get('name')),
+                           source_identifier=xstr(request.args.get('identifier')),
+                           building=building).save()
+                return jsonify({'success': 'True','uuid':uuid})
+        return jsonify({'success': 'False','error':'Building does not exist'})
+    elif request.method == 'GET':
+        if name is None:
+            return jsonify({'success': 'False','error':'Missing parameters'})
+        sensor = Sensor.objects(name=name).first()
+        if sensor is None:
+            return jsonify({'success': 'False','error':'Sensor doesn\'t exist'})
+        tags_owned = [{'name': tag.name, 'value': tag.value} for tag in sensor.tags]
+        metadata = Sensor._get_collection().find({'name': name}, {'metadata': 1, '_id': 0})[0]['metadata']
+        metadata = [{'name': key, 'value': val} for key, val in metadata.iteritems()]
+        return jsonify ({'building': str(sensor.building),
+            'name' : str(sensor.name),
+            'tags' : tags_owned,
+            'metadata' : metadata,
+            'source_identifier' : str(sensor.source_identifier),
+            'source_name' : str(sensor.source_name)
+        })
 
 
-
-@api.route('/list', methods=['GET'])
-@oauth.require_oauth()
-def sensor_list():
-    """Forms a list of sensors in the system and returns them to the user"""
-    if request.method == 'GET':
-        list_sensors = Sensor._get_collection().find()
-        return jsonify({'data': create_response(list_sensors)})
-
-@api.route('/data/id=<name>/email=<email>/interval=<interval>/resolution=<resolution>', methods=['GET'])
-@api.route('/data/id=<name>/email=<email>/interval=<interval>', methods=['GET'])
+@api.route('/sensor/<name>/timeseries', methods=['GET'])
 @oauth.require_oauth()
 @authenticate_acl('r')
-def get_data(name,interval,email,resolution=None):
+def get_data(name):
     """Reads the time series data of the sensor over the interval specified and returns it to the
        user. If resolution is also specified then data points will be averaged over the resolution
        period and returned"""
+
+    start_time = request.args.get('start_time')
+    end_time = request.args.get('end_time')
+    resolution = request.args.get('resolution')
+
+    if not all([start_time,end_time]):
+        return jsonify({'error':'Missing parameters'})
+
     if resolution!=None:
-        data = influx.query("select mean(value) from "+"\""+name+"\""+" WHERE time > now() - "+\
-            interval+" GROUP BY time("+resolution+")")
+        try:
+            data = influx.query('select mean(value) from "' + name + '" where (time>\''+ timestamp_to_time_string(float(start_time))\
+             +'\' and time<\'' + timestamp_to_time_string(float(end_time)) +'\')'+" GROUP BY time("+resolution+")")
+        except influxdb.exceptions.InfluxDBClientError:
+            return jsonify({'error':'Too many points for this resolution'})
     else:
-        data = influx.query("select * from "+"\""+name+"\""+" WHERE time > now() - "+interval)
+        data = influx.query('select * from "' + name + '" where time>\''+ timestamp_to_time_string(float(start_time))\
+         +'\' and time<\'' + timestamp_to_time_string(float(end_time)) +'\'')
     return jsonify({'data':data.raw,'response':'success'})
 
-@api.route('/<param_1>=<value_1>/<request_type>', methods=['GET'])
-@api.route('/<param_1>=<value_1>/<param_2>=<value_2>/<request_type>',methods=['GET'])
-@api.route('/<param_1>=<value_1>/<param_2>=<value_2>/<param_3>=<value_3>/<request_type>',methods=['GET'])
+def timestamp_to_time_string(t):
+    '''Converts a unix timestamp to a string representation of the timestamp
+    Args:
+        t: A unix timestamp float
+    Returns
+        A string representation of the timestamp
+    '''
+    return time.strftime("%Y-%m-%dT%H:%M:%S", time.gmtime(t)) + str(t-int(t))[1:10]+ 'Z'
+
+@api.route('/sensor/list', methods=['GET'])
 @oauth.require_oauth()
-def get_sensors_metadata(param_1,value_1,request_type,param_2=None,value_2=None,param_3=None,value_3=None):
+def get_sensors_metadata():
     """ If request type is params all the sensors with the specified paramter key and values are returned,
         for request type of tags all the sensors with the matching tag key and value are searched for and
         returned, similarly for metadata"""
+    request_type = request.args.get('filter')
+
+    if (request_type is None) or (len(request.args)<2):
+        return jsonify({'success':'False','error':'Missing parameters'})
+
+    for key, val in request.args.iteritems():
+        if key!='filter':
+            param = urllib.unquote(key).decode('utf8')
+            value = urllib.unquote(val).decode('utf8')
+            print param,value
+
     if request_type == "params":
-        list_sensors = Sensor._get_collection().find({param_1:value_1})
+        list_sensors = Sensor._get_collection().find({param:value})
         return jsonify({'data': create_response(list_sensors)})
     elif request_type == "tags":
-        if param_2==None:
-            list_sensors = Sensor._get_collection().find({request_type:{'name':param_1, 'value': value_1}})
-            return jsonify({'data': create_response(list_sensors)})
-        elif param_3==None :
-            list_sensors = Sensor._get_collection().find({request_type:{'name':param_1, 'value': value_1},request_type:{'name':param_2,'value':value_2}})
-            return jsonify({'data': create_response(list_sensors)})
-        else :
-            list_sensors = Sensor._get_collection().find({request_type:{'name':param_1,'value': value_1},request_type:{'name':param_2,'value':value_2},request_type:{'name':param_3,'value':value_3}})
-            return jsonify({'data': create_response(list_sensors)})
+        list_sensors = Sensor._get_collection().find({request_type:{'name':param, 'value': value}})
+        return jsonify({'data': create_response(list_sensors)})
     elif request_type == "metadata":
-        list_sensors = Sensor._get_collection().find({request_type+"."+param_1:value_1})
+        list_sensors = Sensor._get_collection().find({request_type+"."+param:value})
         return jsonify({'data': create_response(list_sensors)})
 
 def create_json(sensor):
     """Simple function that creates a json object to return for each sensor"""
-    json_object = { 'building': sensor['building'],
-            'name' : sensor['name'],
-            'tags' : sensor['tags'],
-            'metadata' : sensor['metadata'],
-            'source_identifier' : sensor['source_identifier'],
-            'source_name' : sensor['source_name']
+    json_object = { 'building': sensor.get('building'),
+            'name' : sensor.get('name'),
+            'tags' : sensor.get('tags'),
+            'metadata' : sensor.get('metadata'),
+            'source_identifier' : sensor.get('source_identifier'),
+            'source_name' : sensor.get('source_name')
             }
     return json_object
 
-def create_response(sensor_list):
+def create_response(sensors):
     """Iterates over the list and generates a json response of sensors list"""
-    sensor_dict = dict()
-    for index,sensor in enumerate(sensor_list,start=1):
+    sensor_list = []
+    for sensor in sensors:
         json_temp = create_json(sensor)
-        key = "sensor_"+str(index)
-        sensor_dict[key] = json_temp
-    return sensor_dict
+        sensor_list.append(json_temp)
+    return sensor_list
 
 @api.route('/sensor/<name>/metadata', methods=['GET', 'POST'])
 def sensor_metadata(name):
@@ -156,34 +191,71 @@ def sensor_subscribers(name):
             return jsonify({'success': 'True'})
         return jsonify({'success': 'False'})
 
-
-@api.route('/data/id=<name>/email=<email>/timeseries', methods=['POST'],endpoint='sensor_timeseries')
+@api.route('/sensor/timeseries', methods=['POST'])
 @oauth.require_oauth()
-@authenticate_acl('r/w')
-def sensor_timeseries(name,email):
-    """Parses the data sent in the request and posts it to the timeseries data of the
-       sensorpoint with uuid <name> in InfluxDB"""
-    points = [[int(pair['time']), pair['value']] for pair in request.get_json()['data']]
+def insert_timeseries_to_bd():
+    '''
+    Args as data:
+        [
+            {
+                "sensor_uuid":
+                "samples":[
+                        {
+                            "time": A unix timestamp of a sampling
+                            "value": A sensor value
+                        },
+                        { more times and values }
+                    ]
+            },
+            { more sensors }
+        ]
+    Returns:
+        {
+            "success": True or False
+            "error": details of an error if it happends
+        }
+    '''
 
     try:
-        value_type = request.get_json()['value_type']
+        json = request.get_json()
+        points = []
+        for sensor in json:
+            # check a user has permission
+            unauthorised_sensor = []
+            if permission(sensor['sensor_uuid'])=='r/w':
+                for sample in sensor['samples']:
+                    dic = {
+                        'measurement':sensor['sensor_uuid'],
+                        'time':timestamp_to_time_string(sample['time']),
+                        'fields':{
+                            'inserted_at':timestamp_to_time_string(time.time()),
+                            'value':sample['value']
+                        }
+                    }
+                    points.append(dic)
+            else:
+                unauthorised_sensor.append(sensor['sensor_uuid'])
     except KeyError:
-        value_type='value'
-    data_points = []
+        abort(400)
 
-    #Parse through all the received data and format it to write to the DB
-    for pair in request.get_json()['data']:
-        temp_dict = {}
-        temp_dict['measurement'] = name
-        temp_dict['fields'] = {
-                                'timestamp' : pair['time'],
-                                'value' : pair['value']
-                            }
-        data_points.append(temp_dict)
+    result = influx.write_points(points)
 
-    #Write to db
-    influx.write_points(data_points)
-    return jsonify({'success': 'True'})
+    dic = {}
+
+    if result:
+        dic['success'] = 'True'
+        dic['unauthorised_sensor'] = unauthorised_sensor
+    else:
+        dic['success'] = 'False'
+        dic['error'] = 'Error in writing in InfluxDB'
+
+    return jsonString(dic)
+
+def jsonString(obj,pretty=False):
+    if pretty == True:
+        return json.dumps(obj, sort_keys=True, indent=4, separators=(',', ': ')) + '\n'
+    else:
+        return json.dumps(obj)
 
 @api.route('/sensor/<name>/tags', methods=['GET', 'POST'])
 def sensor_tags(name):
@@ -239,7 +311,7 @@ def sensor_tags(name):
         return jsonify({'success': 'True'})
 
 
-@api.route('/sensorgroup/<name>/tags', methods=['GET', 'POST'])
+@api.route('/sensor_group/<name>/tags', methods=['GET', 'POST'])
 def sensorgroup_tags(name):
     """Returns/Updates the list of tags that are attached to the sensorgroup <name>"""
     if request.method == 'GET':
@@ -282,23 +354,26 @@ def sensorgroup_tags(name):
         return jsonify({'success': 'True'})
 
 
-@api.route('/usergroup_create/name=<name>/description=<description>', methods=['POST'])
-@api.route('/usergroup_create/name=<name>', methods=['POST'])
-def usergroup_create(name,description=None):
+@api.route('/user_group', methods=['POST'])
+def usergroup_create():
     #Create the usergroup
-    if name == None or name == "":
-        return jsonify({'success':'False','error':'No Name'})
-    else:
-        UserGroup(name=xstr(name),
-                    description=xstr(description)).save()
-        return jsonify({'success':'True'})
+    name = request.args.get('name')
+    description = request.args.get('description')
+    if name is None:
+        return jsonify({'success':'False','error':'Missing parameters'})
+    UserGroup(name=xstr(name),
+                description=xstr(description)).save()
+    return jsonify({'success':'True'})
 
-@api.route('/sensorgroup_create/name=<name>/building=<building>/description=<description>', methods=['POST'])
-@api.route('/sensorgroup_create/name=<name>/building=<building>', methods=['POST'])
-def sensorgroup_create(name,building,description=None):
+@api.route('/sensor_group', methods=['POST'])
+def sensorgroup_create():
     #Create the sensorgroup
-    if name == None or name == "":
-        return jsonify({'success':'False','error':'No Name'})
+    name = request.args.get('name')
+    building = request.args.get('building')
+    description = request.args.get('description')
+
+    if not all([name,building]):
+        return jsonify({'success':'False','error':'Missing parameters'})
 
     #Get the list of buildings and verify that the one specified in the
     #request exists
@@ -311,7 +386,7 @@ def sensorgroup_create(name,building,description=None):
 
     return jsonify({'success':'False','error':'Building does not exist'})
 
-@api.route('/usergroup/<name>/users', methods=['GET', 'POST'])
+@api.route('/user_group/<name>/users', methods=['GET', 'POST'])
 def usergroup_users(name):
     """ Updates/Returns the lists of users that are attached to the usergroup <name>"""
     if request.method == 'GET':
@@ -350,6 +425,7 @@ def register_app():
             result = channel.queue_declare(durable=True)
         except Exception as e:
             print "Failed to create queue "+str(e)
+            channel.close()
             return jsonify({'success':'False','error':'Failed to create queue'})
         channel.close()
 
@@ -388,6 +464,7 @@ def subscribe_sensor():
             channel.queue_unbind(exchange=exchange,queue=app,routing_key=sensor)
     except Exception as e:
         print "Failed to bind queue "+str(e)
+        channel.close()
         return jsonify({'success':'False','error':'Failed to bind queue'})
     channel.close()
     return jsonify({'success':'True'})
