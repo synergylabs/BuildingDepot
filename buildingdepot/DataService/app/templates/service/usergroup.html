@@ -109,7 +109,7 @@
             $scope.root.users = function(userGroupName) {
                 $scope.addedUsers = [];
                 $scope.userGroupName = userGroupName;
-                var res = $http.get('/api/usergroup/' + userGroupName + '/users');
+                var res = $http.get('/api/user_group/' + userGroupName + '/users');
                 res.success(function(data) {
                     $scope.emails = data.users;
                 });
@@ -147,7 +147,7 @@
                     }
                 }
 
-                var res = $http.post('/api/usergroup/'+ $scope.userGroupName + '/users', {'data': users});
+                var res = $http.post('/api/user_group/'+ $scope.userGroupName + '/users', {'data': users});
                 res.success(function(data) {
                     var success = data.success;
                     if (success === 'True') {
