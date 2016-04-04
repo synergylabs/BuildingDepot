@@ -73,6 +73,7 @@ function deploy_config {
 }
 
 function install_packages {
+	echo 'deb http://www.rabbitmq.com/debian/ testing main' | sudo tee /etc/apt/sources.list.d/rabbitmq.list
 	apt-get update
 	apt-get install
 	apt-get -y install python-pip
@@ -85,6 +86,7 @@ function install_packages {
 	apt-get install wget
 	wget http://influxdb.s3.amazonaws.com/influxdb_0.9.2_amd64.deb
 	sudo dpkg -i influxdb_0.9.2_amd64.deb
+ 	sudo apt-get install rabbitmq-server
 }
  
 function setup_venv {
