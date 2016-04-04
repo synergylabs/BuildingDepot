@@ -32,8 +32,35 @@ permissions = {"rw":"r/w","r":"r","dr":"d/r"}
 @api.route('/sensor', methods=['POST'])
 @oauth.require_oauth()
 def sensor_create(name=None):
-    """Check if the building the user has specified is valid and if so create
-     the sensor and return the uuid"""
+    '''Check if the building the user has specified is valid and if so create
+    the sensor and return the uuid
+    For GET:
+    Args as data:
+        name : <name of sensor>
+
+    Returns (JSON):
+        {
+            'building': <name of building in which sensor is present>,
+            'name' : <sensor uuid>,
+            'tags' : tags_owned,
+            'metadata' : metadata,
+            'source_identifier' : str(sensor.source_identifier),
+            'source_name' : str(sensor.source_name)
+        }
+
+    For POST:
+    Args as data:
+        "name":<name-of-sensor>
+        "building":<building in which sensor is present>
+        "identifier":<identifier for sensor>
+
+    Returns (JSON) :
+        {
+            "success": <True or False>
+            "uuid" : <uuid of sensor if created>
+            "error": <details of an error if it happends>
+        }
+    '''
     if request.method == 'POST':
         building = request.args.get('building')
         if building is None:
@@ -72,25 +99,44 @@ def sensor_create(name=None):
 def get_data(name):
     """Reads the time series data of the sensor over the interval specified and returns it to the
        user. If resolution is also specified then data points will be averaged over the resolution
-       period and returned"""
+       period and returned
+
+       Args as data:
+        "name" : <sensor uuid>
+        "start_time" : <unix timestamp of start time>
+        "end_time" : <unix timestamp of end time>
+        "resolution" : <optional resolution can be specified to scale down data"
+
+       Returns (JSON):
+       {
+            "data": {
+                    "series" : [
+                        "columns" : [column definitions]
+                    ]
+                    "name": <sensor-uuid>
+                    "values" : [list of sensor values]
+            }
+            "success" : <True or False>
+       }
+       """
 
     start_time = request.args.get('start_time')
     end_time = request.args.get('end_time')
     resolution = request.args.get('resolution')
 
     if not all([start_time,end_time]):
-        return jsonify({'error':'Missing parameters'})
+        return jsonify({'success':'False','error':'Missing parameters'})
 
     if resolution!=None:
         try:
             data = influx.query('select mean(value) from "' + name + '" where (time>\''+ timestamp_to_time_string(float(start_time))\
              +'\' and time<\'' + timestamp_to_time_string(float(end_time)) +'\')'+" GROUP BY time("+resolution+")")
         except influxdb.exceptions.InfluxDBClientError:
-            return jsonify({'error':'Too many points for this resolution'})
+            return jsonify({'success':'False','error':'Too many points for this resolution'})
     else:
         data = influx.query('select * from "' + name + '" where time>\''+ timestamp_to_time_string(float(start_time))\
          +'\' and time<\'' + timestamp_to_time_string(float(end_time)) +'\'')
-    return jsonify({'data':data.raw,'response':'success'})
+    return jsonify({'success':'True','data':data.raw})
 
 def timestamp_to_time_string(t):
     '''Converts a unix timestamp to a string representation of the timestamp
@@ -106,7 +152,41 @@ def timestamp_to_time_string(t):
 def get_sensors_metadata():
     """ If request type is params all the sensors with the specified paramter key and values are returned,
         for request type of tags all the sensors with the matching tag key and value are searched for and
-        returned, similarly for metadata"""
+        returned, similarly for metadata
+
+        Args as data:
+
+        "filter" : <Type of filter e.g. tags or metadata>
+        "param": "value"
+
+        Returns (JSON):
+        {
+          "data": [
+            {
+              "building": <building name>,
+              "metadata": {
+                    "metadata-name":"metadata value
+                    .
+                    .
+                    <metadata key value pairs>
+              },
+              "name": <uuid of sensor>,
+              "source_identifier": <identifier of sensor>,
+              "source_name": <Sensor source name>,
+              "tags": [
+                {
+                  "name": <name of tag>,
+                  "value": <value of tag>
+                }
+                .
+                .
+                .
+                <tag key value pairs>
+              ]
+            }
+          ]
+        }
+    """
     request_type = request.args.get('filter')
 
     if (request_type is None) or (len(request.args)<2):
@@ -129,7 +209,15 @@ def get_sensors_metadata():
         return jsonify({'data': create_response(list_sensors)})
 
 def create_json(sensor):
-    """Simple function that creates a json object to return for each sensor"""
+    """Simple function that creates a json object to return for each sensor
+    Args as data:
+    sensor object retrieved from MongoDB
+
+    Returns:
+    {
+        Formatted sensor object as below
+    }
+    """
     json_object = { 'building': sensor.get('building'),
             'name' : sensor.get('name'),
             'tags' : sensor.get('tags'),
@@ -140,7 +228,16 @@ def create_json(sensor):
     return json_object
 
 def create_response(sensors):
-    """Iterates over the list and generates a json response of sensors list"""
+    """Iterates over the list and generates a json response of sensors list
+    Args as data:
+    list of sensor retrieved from MongoDB
+
+
+    Returns:
+    {
+        List of formatted sensor objects
+    }
+    """
     sensor_list = []
     for sensor in sensors:
         json_temp = create_json(sensor)
@@ -148,8 +245,51 @@ def create_response(sensors):
     return sensor_list
 
 @api.route('/sensor/<name>/metadata', methods=['GET', 'POST'])
+@oauth.require_oauth()
 def sensor_metadata(name):
-    """For the specified sensor returns all the metadata attached to it in a json response"""
+    """For the specified sensor returns all the metadata attached to it in a json response
+
+    For GET request:
+    Args as data:
+    "name": <sensor-uuid>
+
+    Returns (JSON):
+    {
+      "data": [
+               {
+                  "name": <name of metadata>,
+                  "value": <value of metadata>"
+               },
+               .
+               .
+               .
+
+              ]
+    }
+
+    For POST Request:
+    Args as data:
+    "name": <sensor uuid>
+
+    Following data in JSON:
+    {
+      "data": [
+               {
+                  "name": <name of metadata>,
+                  "value": <value of metadata>"
+               },
+               .
+               .
+               .
+
+              ]
+    }
+
+    Returns (JSON):
+    {
+        "success": <True or false>
+    }
+    """
     if request.method == 'GET':
         metadata = Sensor._get_collection().find({'name': name}, {'metadata': 1, '_id': 0})[0]['metadata']
         metadata = [{'name': key, 'value': val} for key, val in metadata.iteritems()]
@@ -163,9 +303,35 @@ def sensor_metadata(name):
 
 
 @api.route('/sensor/<name>/subscribers', methods=['GET', 'POST'])
+@oauth.require_oauth()
 def sensor_subscribers(name):
     """ Either updates or retrieves the list of subscribers for the sensor with uuid
-        <name> depending on whether the request is GET or POST"""
+        <name> depending on whether the request is GET or POST
+
+    For GET request:
+    Args as data:
+    "name" : <sensor-uuid>
+
+    Returns (JSON) :
+    {
+        "subscribers":[ list of user ids,....]
+    }
+
+    For POST request:
+    Args as data:
+    "name" : <sensor-uuid>
+
+    Following data in JSON:
+    {
+        "data":[ list of user ids,....]
+    }
+
+    Returns (JSON) :
+    {
+        "success": <True or False>
+    }
+    """
+
     if request.method == 'GET':
         subscribers = r.smembers('subscribers:{}'.format(name))
         data = [{'email': subscriber} for subscriber in subscribers]
@@ -217,6 +383,11 @@ def insert_timeseries_to_bd():
     '''
 
     try:
+        channel = pubsub.channel()
+    except Exception as e:
+        print "Failed to open channel"+" error"+str(e)
+
+    try:
         json = request.get_json()
         points = []
         for sensor in json:
@@ -233,6 +404,11 @@ def insert_timeseries_to_bd():
                         }
                     }
                     points.append(dic)
+                try:
+                    channel.basic_publish(exchange=exchange,routing_key=sensor['sensor_id'],\
+                        body=str(dic))
+                except Exception as e:
+                    print "Failed to write to broker "+str(e)
             else:
                 unauthorised_sensor.append(sensor['sensor_id'])
     except KeyError:
@@ -249,6 +425,11 @@ def insert_timeseries_to_bd():
         dic['success'] = 'False'
         dic['error'] = 'Error in writing in InfluxDB'
 
+    try:
+        channel.close()
+    except Exception as e:
+        print "Failed to close channel "+str(e)
+
     return jsonString(dic)
 
 def jsonString(obj,pretty=False):
@@ -258,8 +439,54 @@ def jsonString(obj,pretty=False):
         return json.dumps(obj)
 
 @api.route('/sensor/<name>/tags', methods=['GET', 'POST'])
+@oauth.require_oauth()
 def sensor_tags(name):
-    """Returns/Updates the list of tags that are attached to the sensor with the uuid <name>"""
+    """Returns/Updates the list of tags that are attached to the sensor with the uuid <name>
+    For GET request:
+    Args as data:
+    "name" : <sensor-uuid>
+
+    Returns (JSON):
+    {
+      "tags": {
+               "Tag Name": [ List of eligible values],
+               .
+               .
+               .
+              }, (These are the list of eligibile tags for this sensor)
+      "tags_owned": [
+                      {
+                       "name": <Tag-Name>,
+                       "value": <Tag-Value>
+                      },
+                      .
+                      .
+                      .
+                    ] (These are the list of tags owned by this sensor)
+    }
+
+    For POST request:
+    Args as data:
+    "name" : <sensor-uuid>
+
+    Following data in JSON:
+    {
+      "data": [
+               {
+                "name": <Tag-Name>,
+                "value": <Tag-Value>
+                },
+                .
+                .
+                .
+              ]
+    }
+
+    Returns:
+    {
+        "success": <True or False>
+    }
+    """
     if request.method == 'GET':
         #If request is a GET then return the list of tags
         obj = Sensor.objects(name=name).first()
@@ -312,8 +539,55 @@ def sensor_tags(name):
 
 
 @api.route('/sensor_group/<name>/tags', methods=['GET', 'POST'])
+@oauth.require_oauth()
 def sensorgroup_tags(name):
-    """Returns/Updates the list of tags that are attached to the sensorgroup <name>"""
+    """Returns/Updates the list of tags that are attached to the sensorgroup <name>
+    For GET request:
+    Args as data:
+    "name" : <Name of SensorGroup>
+
+    Returns (JSON):
+    {
+      "tags": {
+               "Tag Name": [ List of eligible values],
+               .
+               .
+               .
+              }, (These are the list of eligibile tags for this sensor)
+      "tags_owned": [
+                      {
+                       "name": <Tag-Name>,
+                       "value": <Tag-Value>
+                      },
+                      .
+                      .
+                      .
+                    ] (These are the list of tags owned by this sensor)
+    }
+
+    For POST request:
+    Args as data:
+    "name" : <Name of SensorGroup>
+
+    Following data in JSON:
+    {
+      "data": [
+               {
+                "name": <Tag-Name>,
+                "value": <Tag-Value>
+                },
+                .
+                .
+                .
+              ]
+    }
+
+    Returns:
+    {
+        "success" : <True or False>
+    }
+
+    """
     if request.method == 'GET':
         #Retrieve the list
         obj = SensorGroup.objects(name=name).first()
@@ -355,8 +629,19 @@ def sensorgroup_tags(name):
 
 
 @api.route('/user_group', methods=['POST'])
+@oauth.require_oauth()
 def usergroup_create():
-    #Create the usergroup
+    """
+    Args as data:
+    name = <name of user group>
+    description = <description for group>
+
+    Returns (JSON) :
+    {
+        "success" : <True or False>
+        "error" : <If False then error will be returned>
+    }
+    """
     name = request.args.get('name')
     description = request.args.get('description')
     if name is None:
@@ -366,7 +651,20 @@ def usergroup_create():
     return jsonify({'success':'True'})
 
 @api.route('/sensor_group', methods=['POST'])
+@oauth.require_oauth()
 def sensorgroup_create():
+    """
+    Args as data:
+    name = <name of user group>
+    description = <description for group>
+    building = <building in which sensor group will be created>
+
+    Returns (JSON) :
+    {
+        "success" : <True or False>
+        "error" : <If False then error will be returned>
+    }
+    """
     #Create the sensorgroup
     name = request.args.get('name')
     building = request.args.get('building')
@@ -387,8 +685,32 @@ def sensorgroup_create():
     return jsonify({'success':'False','error':'Building does not exist'})
 
 @api.route('/user_group/<name>/users', methods=['GET', 'POST'])
+@oauth.require_oauth()
 def usergroup_users(name):
-    """ Updates/Returns the lists of users that are attached to the usergroup <name>"""
+    """ Updates/Returns the lists of users that are attached to the usergroup <name>
+    For GET request:
+    Args as data:
+    name = <name of user group>
+
+    Returns (JSON):
+    {
+        "users" : [user-id's,.......]
+    }
+
+    For POST request:
+    Args as data:
+    name = <name of user group>
+
+    Following data as JSON:
+    {
+        "users" : [user-id's,.......]
+    }
+
+    Returns (JSON):
+    {
+        "success" : <True or False>
+    }
+    """
     if request.method == 'GET':
         obj = UserGroup.objects(name=name).first()
         return jsonify({'users': obj.users})
@@ -412,6 +734,7 @@ def usergroup_users(name):
         return jsonify({'success': 'False','error':'One or more users not registered'})
 
 @api.route('/apps',methods=['GET','POST'])
+@oauth.require_oauth()
 def register_app():
     json_data = request.get_json()
     try:
@@ -444,6 +767,7 @@ def register_app():
     return jsonify({'success':'True','app_id':result.method.queue})
 
 @api.route('/apps/subscription',methods=['POST','DELETE'])
+@oauth.require_oauth()
 def subscribe_sensor():
     json_data = request.get_json()
     try:
