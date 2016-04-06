@@ -90,7 +90,7 @@ def login():
             resp = make_response(redirect(url_for('main.index')))
             resp.set_cookie('access_token', value=token, expires=expire_date)
             return resp
-        flash('Invalid email or password!:)')
+        flash('Invalid email or password')
     return render_template('auth/login.html', form=form)
 
 
