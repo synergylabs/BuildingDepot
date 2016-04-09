@@ -6,7 +6,8 @@
 {% block page_content %}
 <div class="row">
     <div class="page-header">
-        <h2>Sensor <a href="#myModal" data-toggle="modal" class="btn btn-info btn-lg"><span class="glyphicon glyphicon-hand-up"></span> Add a New Sensor</a></h2>
+        <h2>Sensor <a href="#myModal" data-toggle="modal" class="btn btn-info btn-lg"><span class="glyphicon glyphicon-hand-up"></span> Add a New Sensor</a>
+        <a href="#filter_search" data-toggle="modal" class="btn btn-info btn-lg"><span class="glyphicon glyphicon-search"></span> Search</a></h2>
     </div>
 
     <div class="modal fade" id="myModal">
@@ -23,10 +24,41 @@
         </div>
     </div>
 
-
-
     <div ng-app="myApp" ng-controller="metadataController">
-        <div class="modal fade" id="metadata">
+
+        <div class="modal fade" id="filter_search">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title"> Filter Search</h4>
+                    </div>
+                    <div class="modal-body">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Key</th>
+                                    <th>Value</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="pair in filter_search">
+                                    <td><select ng-model="filter_search[$index].key" class="form-control" ng-options="opt for opt in filter_strings | orderBy: opt"></select></td>
+                                    <td><input ng-model="filter_search[$index].value" type="text" class="form-control" value="{[ pair.value ]}"></td>
+                                    <td><button class="close" ng-click="root.removeFilter($index)">&times;</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="btn-group">
+                            <button ng-click="root.addNewFilter()" type="button" class="btn btn-info">Add a new Filter</button>
+                            <button ng-click="root.updateFilter()" type="button" class="btn btn-warning">Update</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+      <div class="modal fade" id="metadata">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -205,7 +237,7 @@
                         </td>
                         {% if obj.can_delete %}
                         <td>
-                            <form action="{{ url_for('service.sensor_delete') }}" method="POST">
+                            <form action="{{ url_for('service.sensor_delete') }}" method="POST" onsubmit="return confirm('Are you sure you want to Delete?');">
                             <input type="hidden" value="{{ obj.name }}" name="name">
                             <input type="submit" value="Delete" class="btn btn-danger">
                             </form>
@@ -232,7 +264,94 @@
         }]);
         app.controller("metadataController", function($scope, $http) {
             $scope.root = {};
+            $scope.filter_search = [];
+            $scope.filter_strings = ["ID","Building","SourceName","SourceIdentifier","MetaData","Tags"];
+            $scope.root.addNewFilter = function () {
+                $scope.filter_search.push({'key': '', 'value': ''});
+
+            };
+            $scope.root.removeFilter = function(index) {
+                $scope.filter_search.splice(index, 1);
+            };
+            $scope.root.updateFilter=function(){
+                var temp =$scope.filter_search;
+                var json={};
+                if(temp.length>0) {
+                    var set ={};
+                    for(var i=0; i<temp.length;i++) {
+
+                        if (temp[i].key === '' || temp[i].value === '') {
+                            alert('There is a name or value that is not specified');
+                            return;
+                        }
+                        if (set[temp[i].key+temp[i].value]) {
+                            alert('There is a search value that is specified more than once');
+                            return;
+                        }
+                        //Change Format of payload before send
+                        if(temp[i].key=='Building'){
+                            if ("Building" in json) {
+                                json["Building"].push(temp[i].value);
+                            }
+                            else{
+                                json["Building"]=[];
+                                json["Building"].push(temp[i].value);
+                            }
+                        }
+                        else if(temp[i].key=='ID'){
+                            if ("ID" in json) {
+                                json["ID"].push(temp[i].value);
+                            }
+                            else{
+                                json["ID"]=[];
+                                json["ID"].push(temp[i].value);
+                            }
+                        }
+                        else if(temp[i].key=='MetaData'){
+                            if ("MetaData" in json) {
+                                json["MetaData"].push(temp[i].value);
+                            }
+                            else{
+                                json["MetaData"]=[];
+                                json["MetaData"].push(temp[i].value);
+                            }
+                        }
+                        else if(temp[i].key=='SourceIdentifier'){
+                            if ("SourceIdentifier" in json) {
+                                json["SourceIdentifier"].push(temp[i].value);
+                            }
+                            else{
+                                json["SourceIdentifier"]=[];
+                                json["SourceIdentifier"].push(temp[i].value);
+                            }
+                        }
+                        else if(temp[i].key=='SourceName'){
+                            if ("SourceName" in json) {
+                                json["SourceName"].push(temp[i].value);
+                            }
+                            else{
+                                json["SourceName"]=[];
+                                json["SourceName"].push(temp[i].value);
+                            }
+                        }
+                    }
+                    console.log(json);
+                }
+                else{
+                    alert('Please Enter Some Search Query');
+                }
+
+                var res = $http.post('/api/sensor/search', {'data': json},{ headers: header });
+                res.success(function(data) {
+                    confirm('Success');
+                });
+                res.error(function() {
+                    alert("Ajax failed");
+                });
+            };
+
             $scope.root.addNewPair = function() {
+
                 $scope.metadata.push({'name': '', 'value': ''});
             };
             $scope.root.removeName = function(index) {
@@ -248,6 +367,7 @@
                     alert("Ajax failed");
                 });
             };
+
             $scope.root.update = function() {
                 var res = $http.post('/api/sensor/'+ this.sensorName + '/metadata', {'data': $scope.metadata},{ headers: header });
                 res.success(function(data) {
