@@ -17,9 +17,9 @@ from . import api
 from ..models.ds_models import *
 from ..service.utils import *
 from uuid import uuid4
-from .. import r, influx, oauth, pubsub, exchange
+from .. import r, influx, oauth, exchange
 from werkzeug.security import gen_salt
-import sys, time, influxdb, urllib
+import sys, time, influxdb, urllib, traceback, pika
 
 sys.path.append('/srv/buildingdepot')
 from utils import get_user_oauth
@@ -62,16 +62,21 @@ def sensor_create(name=None):
         }
     '''
     if request.method == 'POST':
-        building = request.args.get('building')
-        if building is None:
+        data = request.get_json()
+        try:
+            building = data['building']
+        except KeyError:
             return jsonify({'success': 'False', 'error': 'Missing parameters'})
+
+        sensor_name = data.get('name')
+        identifier = data.get('identifier')
 
         for item in get_building_choices(current_app.config['NAME']):
             if building in item:
                 uuid = str(uuid4())
                 Sensor(name=uuid,
-                       source_name=xstr(request.args.get('name')),
-                       source_identifier=xstr(request.args.get('identifier')),
+                       source_name=xstr(sensor_name),
+                       source_identifier=xstr(identifier),
                        building=building).save()
                 return jsonify({'success': 'True', 'uuid': uuid})
         return jsonify({'success': 'False', 'error': 'Building does not exist'})
@@ -389,10 +394,12 @@ def insert_timeseries_to_bd():
         }
     '''
 
-    try:
-        channel = pubsub.channel()
-    except Exception as e:
-        print "Failed to open channel"+" error"+str(e)
+    pubsub = connect_broker()
+    if pubsub:
+        try:
+            channel = pubsub.channel()
+        except Exception as e:
+            print "Failed to open channel"+" error"+str(e)
 
     try:
         json = request.get_json()
@@ -426,16 +433,22 @@ def insert_timeseries_to_bd():
     dic = {}
 
     if result:
-        dic['success'] = 'True'
-        dic['unauthorised_sensor'] = unauthorised_sensor
+        if len(unauthorised_sensor) > 0:
+            dic['success'] = 'False'
+            dic['unauthorised_sensor'] = unauthorised_sensor
+            dic['error'] = 'Unauthorised sensors present'
+        else:
+            dic['success'] = 'True'
     else:
         dic['success'] = 'False'
         dic['error'] = 'Error in writing in InfluxDB'
 
-    try:
-        channel.close()
-    except Exception as e:
-        print "Failed to close channel "+str(e)
+    if pubsub:
+        try:
+            channel.close()
+            pubsub.close()
+        except Exception as e:
+            print "Failed to end RabbitMQ session"+str(e)
 
     return jsonString(dic)
 
@@ -747,64 +760,110 @@ def usergroup_users(name):
 @api.route('/apps',methods=['GET','POST'])
 @oauth.require_oauth()
 def register_app():
-    json_data = request.get_json()
-    try:
-        email = json_data['email']
-    except Exception as e:
-        return jsonify({'success': 'False', 'error': 'Missing email id'})
-
+    email = get_email()
     if request.method == 'POST':
+        json_data = request.get_json()
+        try:
+            name = json_data['name']
+        except KeyError:
+            return jsonify({'success': 'False', 'error': 'Missing parameters'})
+        apps = Application._get_collection().find({'user': email})
+
+        if apps.count()!=0:
+            app_list = apps[0]['apps']
+            for app in app_list:
+                if name==app['name']:
+                    return jsonify({'success':'True','app_id':app['value']})
+
+        pubsub = connect_broker()
+        if pubsub is None:
+            return jsonify({'success': 'False', 'error': 'Failed to connect to broker'})
+
         try:
             channel = pubsub.channel()
             result = channel.queue_declare(durable=True)
         except Exception as e:
             print "Failed to create queue " + str(e)
-            channel.close()
-            return jsonify({'success': 'False', 'error': 'Failed to create queue'})
-        channel.close()
-
-        apps = Application._get_collection().find({'user': email})
+            print traceback.print_exc()
+            if channel:
+                channel.close()
+            return jsonify({'success':'False','error':'Failed to create queue'})
 
         if apps.count() == 0:
-            Application(user=email, applications=[result.method.queue]).save()
+            Application(user=email, apps=[{'name':name,'value':result.method.queue}]).save()
         else:
-            app_list = apps[0]['applications']
-            app_list.append(result.method.queue)
-            Application.objects(user=email).update(set__applications=app_list)
+            app_list.append({'name':name,'value':result.method.queue})
+            Application.objects(user=email).update(set__apps=app_list)
     else:
+        if email is None:
+            return jsonify({'success': 'False', 'error': 'Missing parameters'})
         apps = Application._get_collection().find({'user': email})
-        return jsonify({'success': 'True', 'app_list': apps[0]['applications']})
+        return jsonify({'success': 'True', 'app_list': apps[0]['apps']})
+
+    if pubsub:
+        try:
+            channel.close()
+            pubsub.close()
+        except Exception as e:
+            print "Failed to end RabbitMQ session"+str(e)
 
     return jsonify({'success': 'True', 'app_id': result.method.queue})
 
+def get_email():
+    headers = request.headers
+    token = headers['Authorization'].split()[1]
+    return Token.objects(access_token=token).first().email
 
 @api.route('/apps/subscription',methods=['POST','DELETE'])
 @oauth.require_oauth()
 def subscribe_sensor():
     json_data = request.get_json()
+    email = get_email()
     try:
-        email = json_data['email']
-        app = json_data['app']
+        app_id = json_data['app']
         sensor = json_data['sensor']
     except Exception as e:
         return jsonify({'success': 'False', 'error': 'Missing parameters'})
 
-    if app not in Application._get_collection().find({'user': email})[0]['applications']:
-        return jsonify({'success': 'False', 'error': 'App id doesn\'t exist'})
+    app_list = Application._get_collection().find({'user': email})[0]['apps']
 
+    pubsub = connect_broker()
+    if pubsub:
+        return jsonify({'success': 'False', 'error': 'Failed to connect to broker'})
+
+    for app in app_list:
+        if app_id == app['value']:
+            try:
+                channel = pubsub.channel()
+                if request.method == 'POST':
+                    channel.queue_bind(exchange=exchange, queue=app['value'], routing_key=sensor)
+                elif request.method == 'DELETE':
+                    channel.queue_unbind(exchange=exchange, queue=app['value'], routing_key=sensor)
+            except Exception as e:
+                print "Failed to bind queue " + str(e)
+                print traceback.print_exc()
+                return jsonify({'success': 'False', 'error': 'Failed to bind queue'})
+
+            if pubsub:
+                try:
+                    channel.close()
+                    pubsub.close()
+                except Exception as e:
+                    print "Failed to end RabbitMQ session"+str(e)
+
+            return jsonify({'success': 'True'})
+
+    return jsonify({'success': 'False', 'error': 'App id doesn\'t exist'})
+
+def connect_broker():
     try:
+        pubsub = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
         channel = pubsub.channel()
-        if request.method == 'POST':
-            channel.queue_bind(exchange=exchange, queue=app, routing_key=sensor)
-        elif request.method == 'DELETE':
-            channel.queue_unbind(exchange=exchange, queue=app, routing_key=sensor)
+        channel.exchange_declare(exchange=exchange,type='direct')
+        return pubsub
     except Exception as e:
-        print "Failed to bind queue " + str(e)
-        channel.close()
-        return jsonify({'success': 'False', 'error': 'Failed to bind queue'})
-    channel.close()
-    return jsonify({'success': 'True'})
-
+        print "Failed to open connection to broker "+str(e)
+        return None
 
 def xstr(s):
     if s is None:
