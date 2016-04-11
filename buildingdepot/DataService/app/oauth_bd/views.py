@@ -238,8 +238,8 @@ def get_access_token(client_id,client_secret):
         client=client,
         user=client.user,
         email=client.user).save()
-        return jsonify({'access_token':tok.access_token})
-    return jsonify({'access_token':'Invalid credentials'})
+        return jsonify({'success':'True','access_token':tok.access_token})
+    return jsonify({'success':'False','access_token':'Invalid credentials'})
 
 @oauth_bd.route('/api/me')
 @oauth.require_oauth()

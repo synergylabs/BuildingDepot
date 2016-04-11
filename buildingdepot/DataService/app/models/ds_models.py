@@ -51,7 +51,7 @@ class Permission(Document):
 
 class Application(Document):
     user = StringField()
-    applications = ListField(StringField())
+    apps = ListField(EmbeddedDocumentField(Node))
 
 class Client(Document):
     client_id = StringField(required=True, unique=True)
