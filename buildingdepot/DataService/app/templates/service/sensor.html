@@ -6,8 +6,8 @@
 {% block page_content %}
 <div class="row">
     <div class="page-header">
-        <h2>Sensor <a href="#myModal" data-toggle="modal" class="btn btn-info btn-lg"><span class="glyphicon glyphicon-hand-up"></span> Add a New Sensor</a>
-        <a href="#filter_search" data-toggle="modal" class="btn btn-info btn-lg"><span class="glyphicon glyphicon-search"></span> Search</a></h2>
+        <h2>  &nbsp;&nbsp;&nbsp;Sensor&nbsp;&nbsp;<a href="#myModal" data-toggle="modal" class="btn btn-info btn-lg"><span class="glyphicon glyphicon-hand-up"></span>&nbsp;Add a New Sensor</a>
+        <a href="#filter_search" data-toggle="modal" class="btn btn-info btn-lg"><span class="glyphicon glyphicon-search"></span>&nbsp;Search</a></h2>
     </div>
 
     <div class="modal fade" id="myModal">
@@ -219,7 +219,7 @@
                 <tbody>
                     {% for obj in objs %}
                     <tr>
-                        <td>{{ obj.name }}</td>
+                         <td><a onclick="window.location='graph/{{ obj.name }}';" style="cursor: pointer;" >{{ obj.name }}</a></td>
                         <td>{{ obj.building }}</td>
                         <td>{{ obj.source_name }}</td>
                         <td>{{ obj.source_identifier }}</td>
