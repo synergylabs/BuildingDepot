@@ -63,7 +63,24 @@ function joint_deployment_fix {
 	# Create join nginx config
 	rm -f /etc/nginx/sites-enabled/default
 	cd /srv/buildingdepot
-	cp configs/together.conf /etc/nginx/sites-available/together.conf
+	#Setting up SSL
+	echo "Do you have a SSL certificate and key that you would like to use? Please enter [y/n]"
+	read response
+	#If user already has certificate
+	if [ "$response" == "y" ]; then
+    		echo "Please enter the path to the certificate:"
+    		read cert_path
+    		sed -i "s|<cert_path>|$cert_path|g" /srv/buildingdepot/configs/together_ssl.conf
+    		echo "Please enter the path to the key:"
+    		read key_path
+    		sed -i "s|<key_path>|$key_path|g" /srv/buildingdepot/configs/together_ssl.conf
+		echo "Please enter the ip address or the domain name of this installation"
+        	read domain
+        	sed -i "s|<domain>|$domain|g" /srv/buildingdepot/configs/together_ssl.conf
+		cp configs/together_ssl.conf /etc/nginx/sites-available/together.conf
+	else 
+		cp configs/together.conf /etc/nginx/sites-available/together.conf
+	fi
 	ln -sf /etc/nginx/sites-available/together.conf /etc/nginx/sites-enabled/together.conf
 }
 
