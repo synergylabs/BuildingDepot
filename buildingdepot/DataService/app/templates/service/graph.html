@@ -44,7 +44,7 @@
     <script src="{{ url_for('static', filename='amcharts/serial.js') }}"></script>
     <script src="{{ url_for('static', filename="themes/light.js")}}"></script>
     <script src="{{ url_for('static', filename='amcharts/amstock.js') }}"></script>
-    <script src="{{ url_for('static', filename='notify.js') }}"></script>
+
     <script src="{{ url_for('static', filename='graph.js') }}" type="application/javascript"></script>
     <script type="text/javascript">
         var access_token=document.cookie.replace(/(?:(?:^|.*;\s*)access_token\s*\=\s*([^;]*).*$)|^.*$/, "$1");
@@ -99,10 +99,8 @@
                         }
 
                     },
-                    error:function(error){
+                    error:function(){
                         $.notify(" Error Loading or Empty Time Series Data", { position:"top center",clickToHide: true,autoHide:false});
-
-                        console.log(error);
                     }
                 } );
         if(data.length!=0){

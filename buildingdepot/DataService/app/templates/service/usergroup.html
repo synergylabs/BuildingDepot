@@ -81,7 +81,7 @@
                         </td>
                         {% if obj.can_delete %}
                         <td>
-                            <form action="{{ url_for('service.usergroup_delete') }}" method="POST">
+                            <form action="{{ url_for('service.usergroup_delete') }}" method="POST" onsubmit="return confirm('Are you sure you want to Delete?');">
                             <input type="hidden" value="{{ obj.name }}" name="name">
                             <input type="submit" value="Delete" class="btn btn-danger">
                             </form>
@@ -116,7 +116,7 @@
                     $scope.emails = data.users;
                 });
                 res.error(function() {
-                    alert("Ajax failed");
+                    $.notify("Ajax failed", { position:"top center",clickToHide: true,autoHideDelay:2000});
                 });
             };
             $scope.root.addNewUser = function() {
@@ -138,11 +138,11 @@
                     var set = {};
                     for (var i = 0; i < users.length; i++) {
                         if (users[i] === '') {
-                            alert('There is an email that is not specified');
+                            $.notify("There is an email that is not specified", { position:"top center",clickToHide: true,autoHideDelay:2000});
                             return;
                         }
                         if (set[users[i]]) {
-                            alert('There is a tag that is specified more than once');
+                            $.notify("There is a tag that is specified more than once", { position:"top center",clickToHide: true,autoHideDelay:2000});
                             return;
                         }
                         set[users[i]] = true;
@@ -153,14 +153,14 @@
                 res.success(function(data) {
                     var success = data.success;
                     if (success === 'True') {
-                        confirm('Success');
+                        $.notify("Success",{ globalPosition:'top center',clickToHide: true,autoHideDelay:2000, className:'success'});
                     } else {
-                        alert("There is one or more emails that are not in the database");
+                        $.notify("There is one or more emails that are not in the database", { position:"top center",clickToHide: true,autoHideDelay:2000});
                     }
 
                 });
                 res.error(function() {
-                    alert("Ajax Failure");
+                        $.notify("Ajax failed", { position:"top center",clickToHide: true,autoHideDelay:2000});
                 });
             };
         });
