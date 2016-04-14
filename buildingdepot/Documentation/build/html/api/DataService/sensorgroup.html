@@ -106,8 +106,8 @@
 <p>This request adds the tags specified in the request to the SensorGroup</p>
 <p>Note: The list of tags sent in this request will overwrite the previous list.</p>
 <dl class="post">
-<dt id="post--api-sensorgroup--name--tags">
-<code class="descname">POST </code><code class="descname">/api/sensorgroup/&lt;name&gt;/tags</code><a class="headerlink" href="#post--api-sensorgroup--name--tags" title="Permalink to this definition">¶</a></dt>
+<dt id="post--api-sensor_group--name--tags">
+<code class="descname">POST </code><code class="descname">/api/sensor_group/&lt;name&gt;/tags</code><a class="headerlink" href="#post--api-sensor_group--name--tags" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -148,7 +148,7 @@
 
 <div class="compound">
 <p class="compound-first"><strong>Example request</strong>:</p>
-<div class="compound-middle highlight-http"><div class="highlight"><pre>POST /api/sensorgroup/test/tags
+<div class="compound-middle highlight-http"><div class="highlight"><pre>POST /api/sensor_group/test/tags
 Accept: application/json; charset=utf-8
 
 
@@ -181,8 +181,8 @@ Accept: application/json; charset=utf-8
 <h2>Get list of tags in SensorGroup<a class="headerlink" href="#get-list-of-tags-in-sensorgroup" title="Permalink to this headline">¶</a></h2>
 <p>This request retrieves two lists of key-value pairs, one list contains the array of eligible tags that can be attached to this SensorGroup and the other list contains the array of tags that are currently attached to this SensorGroup.</p>
 <dl class="get">
-<dt id="get--api-sensorgroup--name--tags">
-<code class="descname">GET </code><code class="descname">/api/sensorgroup/&lt;name&gt;/tags</code><a class="headerlink" href="#get--api-sensorgroup--name--tags" title="Permalink to this definition">¶</a></dt>
+<dt id="get--api-sensor_group--name--tags">
+<code class="descname">GET </code><code class="descname">/api/sensor_group/&lt;name&gt;/tags</code><a class="headerlink" href="#get--api-sensor_group--name--tags" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -226,7 +226,7 @@ Accept: application/json; charset=utf-8
 
 <div class="compound">
 <p class="compound-first"><strong>Example request</strong>:</p>
-<div class="compound-middle highlight-http"><div class="highlight"><pre>GET /api/SensorGroup/test/tags
+<div class="compound-middle highlight-http"><div class="highlight"><pre>GET /api/sensor_group/test/tags
 Accept: application/json; charset=utf-8
 </pre></div>
 </div>

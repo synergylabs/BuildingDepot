@@ -11,7 +11,7 @@ Create UserGroup
 
 This request creates a new UserGroup with the name and description as specified by the user.
 
-.. http:post:: /api/usergroup?name=<Name>
+.. http:post:: /api/user_group?name=<Name>
 
    :param string name: Name of UserGroup
    :param string description (optional): Descrption for UserGroup
@@ -27,7 +27,7 @@ This request creates a new UserGroup with the name and description as specified 
 
    .. sourcecode:: http
 
-      POST /api/usergroup
+      POST /api/user_group
 
    **Example response** (for succcess):
 
@@ -59,7 +59,7 @@ This request adds the users specified in the request to the usergroup
 
 Note: The list of user id's sent in this request will overwrite the previous list
 
-.. http:post:: /api/usergroup/<name>/users
+.. http:post:: /api/user_group/<name>/users
 
    :param string name: Name of UserGroup
    :JSON Parameters:
@@ -76,7 +76,7 @@ Note: The list of user id's sent in this request will overwrite the previous lis
 
    .. sourcecode:: http
 
-      POST /api/usergroup/Test/users
+      POST /api/user_group/Test/users
       Accept: application/json; charset=utf-8
 
       {
@@ -115,7 +115,7 @@ Get list of users in UserGroup
 
 This request retrieves the list of users that are in the specified UserGroup
 
-.. http:get:: /api/usergroup/<name>/users
+.. http:get:: /api/user_group/<name>/users
 
    :param string name: Name of user group (compulsory)
    :returns:
@@ -130,7 +130,7 @@ This request retrieves the list of users that are in the specified UserGroup
 
    .. sourcecode:: http
 
-      GET /api/usergroup/Test/users
+      GET /api/user_group/Test/users
       Accept: application/json; charset=utf-8
 
    **Example response**:

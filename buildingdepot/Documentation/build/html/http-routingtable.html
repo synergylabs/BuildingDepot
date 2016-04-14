@@ -48,23 +48,14 @@
 
    <div class="modindex-jumpbox">
    <a href="#cap-/api"><strong>/api</strong></a> | 
-   <a href="#cap-/oauth"><strong>/oauth</strong></a>
+   <a href="#cap-/oauth"><strong>/oauth</strong></a> | 
+   <a href="#cap-/sensor"><strong>/sensor</strong></a>
    </div>
 
    <table class="indextable modindextable" cellspacing="0" cellpadding="2">
      <tr class="pcap"><td></td><td>&nbsp;</td><td></td></tr>
      <tr class="cap" id="cap-/api"><td></td><td>
        <strong>/api</strong></td><td></td></tr>
-     <tr>
-       <td></td>
-       <td>
-       <a href="api/DataService/sensordata.html#get--api-data-id=-name--email=-email--interval=-interval--"><code class="xref">GET /api/data/id=&lt;name&gt;/email=&lt;email&gt;/interval=&lt;interval&gt;/</code></a></td><td>
-       <em></em></td></tr>
-     <tr>
-       <td></td>
-       <td>
-       <a href="api/DataService/sensordata.html#get--api-data-id=-name--email=-email--interval=-interval--resolution=-resolution-"><code class="xref">GET /api/data/id=&lt;name&gt;/email=&lt;email&gt;/interval=&lt;interval&gt;/resolution=&lt;resolution&gt;</code></a></td><td>
-       <em></em></td></tr>
      <tr>
        <td></td>
        <td>
@@ -83,17 +74,12 @@
      <tr>
        <td></td>
        <td>
-       <a href="api/DataService/sensorgroup.html#get--api-sensorgroup--name--tags"><code class="xref">GET /api/sensorgroup/&lt;name&gt;/tags</code></a></td><td>
+       <a href="api/DataService/sensorgroup.html#get--api-sensor_group--name--tags"><code class="xref">GET /api/sensor_group/&lt;name&gt;/tags</code></a></td><td>
        <em></em></td></tr>
      <tr>
        <td></td>
        <td>
-       <a href="api/DataService/usergroup.html#get--api-usergroup--name--users"><code class="xref">GET /api/usergroup/&lt;name&gt;/users</code></a></td><td>
-       <em></em></td></tr>
-     <tr>
-       <td></td>
-       <td>
-       <a href="api/DataService/sensordata.html#post--api-data-id=-name--email=-email--timeseries"><code class="xref">POST /api/data/id=&lt;name&gt;/email=&lt;email&gt;/timeseries</code></a></td><td>
+       <a href="api/DataService/usergroup.html#get--api-user_group--name--users"><code class="xref">GET /api/user_group/&lt;name&gt;/users</code></a></td><td>
        <em></em></td></tr>
      <tr>
        <td></td>
@@ -113,7 +99,17 @@
      <tr>
        <td></td>
        <td>
+       <a href="api/DataService/sensordata.html#post--api-sensor-timeseries"><code class="xref">POST /api/sensor/timeseries</code></a></td><td>
+       <em></em></td></tr>
+     <tr>
+       <td></td>
+       <td>
        <a href="api/DataService/sensor.html#post--api-sensor?name=-Name-&identifier=-Identifier-&building=-building-"><code class="xref">POST /api/sensor?name=&lt;Name&gt;&amp;identifier=&lt;Identifier&gt;&amp;building=&lt;building&gt;</code></a></td><td>
+       <em></em></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="api/DataService/sensorgroup.html#post--api-sensor_group--name--tags"><code class="xref">POST /api/sensor_group/&lt;name&gt;/tags</code></a></td><td>
        <em></em></td></tr>
      <tr>
        <td></td>
@@ -123,17 +119,12 @@
      <tr>
        <td></td>
        <td>
-       <a href="api/DataService/sensorgroup.html#post--api-sensorgroup--name--tags"><code class="xref">POST /api/sensorgroup/&lt;name&gt;/tags</code></a></td><td>
+       <a href="api/DataService/usergroup.html#post--api-user_group--name--users"><code class="xref">POST /api/user_group/&lt;name&gt;/users</code></a></td><td>
        <em></em></td></tr>
      <tr>
        <td></td>
        <td>
-       <a href="api/DataService/usergroup.html#post--api-usergroup--name--users"><code class="xref">POST /api/usergroup/&lt;name&gt;/users</code></a></td><td>
-       <em></em></td></tr>
-     <tr>
-       <td></td>
-       <td>
-       <a href="api/DataService/usergroup.html#post--api-usergroup?name=-Name-"><code class="xref">POST /api/usergroup?name=&lt;Name&gt;</code></a></td><td>
+       <a href="api/DataService/usergroup.html#post--api-user_group?name=-Name-"><code class="xref">POST /api/user_group?name=&lt;Name&gt;</code></a></td><td>
        <em></em></td></tr>
      <tr class="pcap"><td></td><td>&nbsp;</td><td></td></tr>
      <tr class="cap" id="cap-/oauth"><td></td><td>
@@ -142,6 +133,14 @@
        <td></td>
        <td>
        <a href="api/DataService/oauth.html#get--oauth-access_token-client_id=-client_id--client_secret=-client_secret-"><code class="xref">GET /oauth/access_token/client_id=&lt;client_id&gt;/client_secret=&lt;client_secret&gt;</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="pcap"><td></td><td>&nbsp;</td><td></td></tr>
+     <tr class="cap" id="cap-/sensor"><td></td><td>
+       <strong>/sensor</strong></td><td></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="api/DataService/sensordata.html#get--sensor--sensor-uuid--timeseries?start_time=-start_timestamp-&end_time=-end_timestamp-&resolution=-resolution_units-"><code class="xref">GET /sensor/&lt;sensor-uuid&gt;/timeseries?start_time=&lt;start_timestamp&gt;&amp;end_time=&lt;end_timestamp&gt;&amp;resolution=&lt;resolution_units&gt;</code></a></td><td>
        <em></em></td></tr>
    </table>
 
