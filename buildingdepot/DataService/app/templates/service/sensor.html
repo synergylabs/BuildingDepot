@@ -7,7 +7,7 @@
 <div class="row">
     <div class="page-header">
         <h2>Sensor <a href="#myModal" data-toggle="modal" class="btn btn-info btn-lg"><span class="glyphicon glyphicon-hand-up"></span> Add a New Sensor</a>
-        <a href="#filter_search" data-toggle="modal" class="btn btn-info btn-lg"><span class="glyphicon glyphicon-search"></span> Search</a></h2>
+<!--        <a href="#filter_search" data-toggle="modal" class="btn btn-info btn-lg"><span class="glyphicon glyphicon-search"></span> Search</a></h2> -->
     </div>
 
     <div class="modal fade" id="myModal">
@@ -341,7 +341,7 @@
                     alert('Please Enter Some Search Query');
                 }
 
-                var res = $http.post('/api/sensor/search', {'data': json},{ headers: header });
+                var res = $http.post('/service/search', {'data': json},{ headers: header });
                 res.success(function(data) {
                     confirm('Success');
                 });
