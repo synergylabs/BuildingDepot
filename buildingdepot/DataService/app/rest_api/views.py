@@ -11,7 +11,7 @@ the user has access to the specific sensor
 @license: UCSD License. See License file for details.
 """
 
-from flask import json, render_template, abort
+from flask import json, render_template, abort, session
 from flask import request, redirect, url_for, jsonify, flash
 from . import api
 from ..models.ds_models import *
@@ -70,6 +70,7 @@ def sensor_create(name=None):
 
         sensor_name = data.get('name')
         identifier = data.get('identifier')
+        email = get_email()
 
         for item in get_building_choices(current_app.config['NAME']):
             if building in item:
@@ -77,7 +78,9 @@ def sensor_create(name=None):
                 Sensor(name=uuid,
                        source_name=xstr(sensor_name),
                        source_identifier=xstr(identifier),
-                       building=building).save()
+                       building=building,
+                       owner = email).save()
+                r.set(uuid,email)
                 return jsonify({'success': 'True', 'uuid': uuid})
         return jsonify({'success': 'False', 'error': 'Building does not exist'})
     elif request.method == 'GET':
@@ -828,7 +831,7 @@ def subscribe_sensor():
     app_list = Application._get_collection().find({'user': email})[0]['apps']
 
     pubsub = connect_broker()
-    if pubsub:
+    if pubsub is None:
         return jsonify({'success': 'False', 'error': 'Failed to connect to broker'})
 
     for app in app_list:
@@ -860,6 +863,7 @@ def connect_broker():
         pubsub = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
         channel = pubsub.channel()
         channel.exchange_declare(exchange=exchange,type='direct')
+        channel.close()
         return pubsub
     except Exception as e:
         print "Failed to open connection to broker "+str(e)

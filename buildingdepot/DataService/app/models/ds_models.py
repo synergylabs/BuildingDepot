@@ -22,6 +22,7 @@ class Sensor(Document):
     name = StringField(required=True, unique=True)
     source_name = StringField()
     source_identifier = StringField()
+    owner = StringField()
 
     metadata = DictField()
     building = StringField()

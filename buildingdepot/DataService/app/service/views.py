@@ -14,7 +14,8 @@ of BD will call the sensor() function
 """
 
 
-from flask import json,render_template, request, redirect, url_for, jsonify, flash
+from flask import json,render_template, request
+from flask import session, redirect, url_for, jsonify, flash
 from . import service
 from ..models.ds_models import *
 from .forms import *
@@ -44,10 +45,13 @@ def sensor():
     form.building.choices = get_building_choices(current_app.config['NAME'])
     #Create a Sensor
     if form.validate_on_submit():
-        Sensor(name=str(uuid4()),
+        uuid = str(uuid4())
+        Sensor(name=uuid,
                source_name=str(form.source_name.data),
                source_identifier=str(form.source_identifier.data),
-               building=str(form.building.data)).save()
+               building=str(form.building.data),
+               owner=session['email']).save()
+        r.set(uuid,session['email'])
         return redirect(url_for('service.sensor'))
     return render_template('service/sensor.html', objs=objs, form=form)
 
@@ -75,6 +79,7 @@ def sensor_delete():
 
     pipe.delete('sensor:{}'.format(sensor.name))
     pipe.execute()
+    r.delete(request.form.get('name'))
     #cache process done
 
     Sensor.objects(name=sensor.name).delete()
@@ -237,4 +242,10 @@ def permission_query():
         res = get_permission(sensor_tags, sensor.building, form.user.data)
 
     return render_template('service/query.html', form=form, res=res)
+
+@service.route('/search', methods=['GET', 'POST'])
+def sensor_search():
+    print "Entered"
+    print request.get_json()
+    return jsonify({"success":"True"})
 

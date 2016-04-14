@@ -84,6 +84,10 @@ def permission(sensor_name):
     if email in get_admins():
         return 'r/w'
 
+    #check if user is the sensor owner
+    if r.get(sensor_name) == email:
+        return 'r/w'
+
     current_res = 'u/d'
     usergroups = r.smembers('user:{}'.format(email))
     sensorgroups = r.smembers('sensor:{}'.format(sensor_name))
