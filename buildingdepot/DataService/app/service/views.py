@@ -13,7 +13,6 @@ of BD will call the sensor() function
 @license: UCSD License. See License file for details.
 """
 
-
 from flask import json,render_template, request
 from flask import session, redirect, url_for, jsonify, flash
 from . import service
@@ -21,29 +20,30 @@ from ..models.ds_models import *
 from .forms import *
 from ..rest_api.utils import *
 from uuid import uuid4
-from .. import r, influx,oauth
+from .. import r, influx, oauth
 from werkzeug.security import gen_salt
 import sys
+
 sys.path.append('/srv/buildingdepot')
 from utils import get_user_oauth
 from ..api_0_0.resources.utils import *
 
+permissions = {"rw": "r/w", "r": "r", "dr": "d/r"}
 
-permissions = {"rw":"r/w","r":"r","dr":"d/r"}
 
 @service.route('/sensor', methods=['GET', 'POST'])
 def sensor():
-    #Show the user PAGE_SIZE number of sensors on each page
+    # Show the user PAGE_SIZE number of sensors on each page
     page = request.args.get('page', 1, type=int)
-    skip_size = (page-1)*PAGE_SIZE
+    skip_size = (page - 1) * PAGE_SIZE
     objs = Sensor.objects().skip(skip_size).limit(PAGE_SIZE)
     for obj in objs:
         obj.can_delete = True
 
     form = SensorForm()
-    #Get the list of valid buildings for this DataService
+    # Get the list of valid buildings for this DataService
     form.building.choices = get_building_choices(current_app.config['NAME'])
-    #Create a Sensor
+    # Create a Sensor
     if form.validate_on_submit():
         uuid = str(uuid4())
         Sensor(name=uuid,
@@ -58,14 +58,14 @@ def sensor():
 
 @service.route('/sensor_delete', methods=['POST'])
 def sensor_delete():
-    #cache process
+    # cache process
     sensor = Sensor.objects(name=request.form.get('name')).first()
     tags = ['tag:{}:{}:{}'.format(sensor.building, tag.name, tag.value) for tag in sensor.tags]
     pipe = r.pipeline()
     for tag in tags:
         pipe.srem(tag, sensor.name)
 
-    #Remove the sensor from the sensorgroup caching
+    # Remove the sensor from the sensorgroup caching
     deleted = [tag.replace('tag', 'tag-sensorgroup', 1) for tag in tags]
     for key in deleted:
         for name in r.smembers(key):
@@ -89,13 +89,13 @@ def sensor_delete():
 @service.route('/sensorgroup', methods=['GET', 'POST'])
 def sensorgroup():
     page = request.args.get('page', 1, type=int)
-    skip_size = (page-1)*PAGE_SIZE
+    skip_size = (page - 1) * PAGE_SIZE
     objs = SensorGroup.objects().skip(skip_size).limit(PAGE_SIZE)
     for obj in objs:
         obj.can_delete = True
 
     form = SensorGroupForm()
-    #Get list of valid buildings for this DataService and create a sensorgroup
+    # Get list of valid buildings for this DataService and create a sensorgroup
     form.building.choices = get_building_choices(current_app.config['NAME'])
     if form.validate_on_submit():
         SensorGroup(name=str(form.name.data),
@@ -104,25 +104,27 @@ def sensorgroup():
         return redirect(url_for('service.sensorgroup'))
     return render_template('service/sensorgroup.html', objs=objs, form=form)
 
-@service.route('/oauth_gen',methods=['GET','POST'])
+
+@service.route('/oauth_gen', methods=['GET', 'POST'])
 def oauth_gen():
     keys = []
     """If a post request is made then generate a client id and secret key
        that the user can use later to generate an OAuth token"""
     if request.method == 'POST':
-        keys.append({"client_id":gen_salt(40),"client_secret":gen_salt(50)})
+        keys.append({"client_id": gen_salt(40), "client_secret": gen_salt(50)})
         item = Client(
             client_id=keys[0]['client_id'],
             client_secret=keys[0]['client_secret'],
-             _redirect_uris=' '.join([
+            _redirect_uris=' '.join([
                 'http://localhost:8000/authorized',
                 'http://127.0.0.1:8000/authorized',
                 'http://127.0.1:8000/authorized',
                 'http://127.1:8000/authorized']),
             _default_scopes='email',
-            user = request.form.get('name')).save()
-        return render_template('service/oauth_gen.html',keys=keys)
-    return render_template('service/oauth_gen.html',keys=keys)
+            user=request.form.get('name')).save()
+        return render_template('service/oauth_gen.html', keys=keys)
+    return render_template('service/oauth_gen.html', keys=keys)
+
 
 @service.route('/sensorgroup_delete', methods=['POST'])
 def sensorgroup_delete():
@@ -133,7 +135,7 @@ def sensorgroup_delete():
     for sensor_name in r.smembers('sensorgroup:{}'.format(sensorgroup.name)):
         pipe.srem('sensor:{}'.format(sensor_name), sensorgroup.name)
 
-    #delete sensorgroup from the cache
+    # delete sensorgroup from the cache
     pipe.delete('sensorgroup:{}'.format(sensorgroup.name))
     for tag in sensorgroup.tags:
         pipe.srem('tag-sensorgroup:{}:{}:{}'.format(sensorgroup.building, tag.name, tag.value), sensorgroup.name)
@@ -148,7 +150,7 @@ def sensorgroup_delete():
 @service.route('/usergroup', methods=['GET', 'POST'])
 def usergroup():
     page = request.args.get('page', 1, type=int)
-    skip_size = (page-1)*PAGE_SIZE
+    skip_size = (page - 1) * PAGE_SIZE
     objs = UserGroup.objects().skip(skip_size).limit(PAGE_SIZE)
     for obj in objs:
         obj.can_delete = True
@@ -179,7 +181,7 @@ def usergroup_delete():
 @service.route('/permission', methods=['GET', 'POST'])
 def permission():
     page = request.args.get('page', 1, type=int)
-    skip_size = (page-1)*PAGE_SIZE
+    skip_size = (page - 1) * PAGE_SIZE
     objs = Permission.objects().skip(skip_size).limit(PAGE_SIZE)
     for obj in objs:
         obj.can_delete = True
@@ -188,12 +190,12 @@ def permission():
     form.user_group.choices = sorted([(obj.name, obj.name) for obj in UserGroup.objects])
     form.sensor_group.choices = sorted([(obj.name, obj.name) for obj in SensorGroup.objects])
     if form.validate_on_submit():
-        #Doesn't allow duplicate permissions
+        # Doesn't allow duplicate permissions
         if Permission.objects(user_group=form.user_group.data, sensor_group=form.sensor_group.data).first() is not None:
             flash('There is already permission pair {} - {} specified'.format(
                 form.user_group.data, form.sensor_group.data))
             return redirect(url_for('service.permission'))
-        #If permission doesn't exist then create it
+        # If permission doesn't exist then create it
         Permission(user_group=str(form.user_group.data),
                    sensor_group=str(form.sensor_group.data),
                    permission=form.permission.data).save()
@@ -249,3 +251,15 @@ def sensor_search():
     print request.get_json()
     return jsonify({"success":"True"})
 
+@service.route('/graph/<name>')
+def graph(name):
+    objs = Sensor.objects()
+    for obj in objs:
+        if obj.name == name:
+            temp = obj
+            break
+    metadata = Sensor._get_collection().find({'name': name}, {'metadata': 1, '_id': 0})[0]['metadata']
+    metadata = [{'name': key, 'value': val} for key, val in metadata.iteritems()]
+    obj = Sensor.objects(name=name).first()
+    tags_owned = [{'name': tag.name, 'value': tag.value} for tag in obj.tags]
+    return render_template('service/graph.html', name=name, obj=temp, metadata=metadata, tags=tags_owned)

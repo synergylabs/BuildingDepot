@@ -6,8 +6,8 @@
 {% block page_content %}
 <div class="row">
     <div class="page-header">
-        <h2>Sensor <a href="#myModal" data-toggle="modal" class="btn btn-info btn-lg"><span class="glyphicon glyphicon-hand-up"></span> Add a New Sensor</a>
-<!--        <a href="#filter_search" data-toggle="modal" class="btn btn-info btn-lg"><span class="glyphicon glyphicon-search"></span> Search</a></h2> -->
+        <h2>  &nbsp;&nbsp;&nbsp;Sensor&nbsp;&nbsp;<a href="#myModal" data-toggle="modal" class="btn btn-info btn-lg"><span class="glyphicon glyphicon-hand-up"></span>&nbsp;Add a New Sensor</a>
+        <a href="#filter_search" data-toggle="modal" class="btn btn-info btn-lg"><span class="glyphicon glyphicon-search"></span>&nbsp;Search</a></h2>
     </div>
 
     <div class="modal fade" id="myModal">
@@ -219,7 +219,7 @@
                 <tbody>
                     {% for obj in objs %}
                     <tr>
-                        <td>{{ obj.name }}</td>
+                         <td><a onclick="window.location='graph/{{ obj.name }}';" style="cursor: pointer;" >{{ obj.name }}</a></td>
                         <td>{{ obj.building }}</td>
                         <td>{{ obj.source_name }}</td>
                         <td>{{ obj.source_identifier }}</td>
@@ -265,6 +265,7 @@
         app.controller("metadataController", function($scope, $http) {
             $scope.root = {};
             $scope.filter_search = [];
+            $scope.filter_search.push({'key': '', 'value': ''});
             $scope.filter_strings = ["ID","Building","SourceName","SourceIdentifier","MetaData","Tags"];
             $scope.root.addNewFilter = function () {
                 $scope.filter_search.push({'key': '', 'value': ''});
@@ -281,11 +282,11 @@
                     for(var i=0; i<temp.length;i++) {
 
                         if (temp[i].key === '' || temp[i].value === '') {
-                            alert('There is a name or value that is not specified');
+                            $.notify("There is a name or value that is not specified", { position:"top center",clickToHide: true,autoHideDelay:2000});
                             return;
                         }
                         if (set[temp[i].key+temp[i].value]) {
-                            alert('There is a search value that is specified more than once');
+                            $.notify("There is a search value that is specified more than once", { position:"top center",clickToHide: true,autoHideDelay:2000});
                             return;
                         }
                         //Change Format of payload before send
@@ -336,11 +337,20 @@
                         }
                     }
                     console.log(json);
-                }
+                    var res = $http.post('/api/sensor/search', {'data': json},{ headers: header });
+                    res.success(function(data) {
+                        $.notify("Success",{ globalPosition:'top center',clickToHide: true,autoHideDelay:2000, className:'success'});
+                        });
+                    res.error(function() {
+                            $.notify("Search Failed", { position:"top center",clickToHide: true,autoHideDelay:2000});
+                        });
+                    }
                 else{
-                    alert('Please Enter Some Search Query');
+                    $.notify("Please Enter Some Search Query", { position:"top center",clickToHide: true,autoHideDelay:2000});
+
                 }
 
+<<<<<<< HEAD
                 var res = $http.post('/service/search', {'data': json},{ headers: header });
                 res.success(function(data) {
                     confirm('Success');
@@ -348,6 +358,9 @@
                 res.error(function() {
                     alert("Ajax failed");
                 });
+=======
+
+>>>>>>> 3ff2a1c7d0cdbd4c10d2a985fb05ef57a86f0eda
             };
 
             $scope.root.addNewPair = function() {
@@ -364,17 +377,17 @@
                     $scope.metadata = data.data;
                 });
                 res.error(function() {
-                    alert("Ajax failed");
+                    $.notify("Ajax failed", { position:"top center",clickToHide: true,autoHideDelay:2000});
                 });
             };
 
             $scope.root.update = function() {
                 var res = $http.post('/api/sensor/'+ this.sensorName + '/metadata', {'data': $scope.metadata},{ headers: header });
                 res.success(function(data) {
-                    confirm('Success');
+                    $.notify("Success",{ globalPosition:'top center',clickToHide: true,autoHideDelay:2000, className:'success'});
                 });
                 res.error(function() {
-                    alert("Ajax failed");
+                    $.notify("Ajax failed", { position:"top center",clickToHide: true,autoHideDelay:2000});
                 });
             };
 
@@ -388,7 +401,7 @@
                     $scope.names = Object.keys($scope.tags);
                 });
                 res.error(function() {
-                    alert("Ajax failed");
+                    $.notify("Ajax failed", { position:"top center",clickToHide: true,autoHideDelay:2000});
                 });
             };
             $scope.root.addNewTag = function() {
@@ -406,11 +419,11 @@
                     var set = {};
                     for (var i = 0; i < tags.length; i++) {
                         if (tags[i].name === '' || tags[i].value === '') {
-                            alert('There is a name or value that is not specified');
+                            $.notify("There is a name or value that is not specified", { position:"top center",clickToHide: true,autoHideDelay:2000});
                             return;
                         }
                         if (set[tags[i].name+tags[i].value]) {
-                            alert('There is a tag that is specified more than once');
+                            $.notify("There is a tag that is specified more than once", { position:"top center",clickToHide: true,autoHideDelay:2000});
                             return;
                         }
                         set[tags[i].name+tags[i].value] = true;
@@ -419,10 +432,10 @@
 
                 var res = $http.post('/api/sensor/'+ $scope.sensorName + '/tags', {'data': tags},{ headers: header });
                 res.success(function(data) {
-                    confirm('Success');
+                    $.notify("Success",{ globalPosition:'top center',clickToHide: true,autoHideDelay:2000, className:'success'});
                 });
                 res.error(function() {
-                    alert("Ajax failed");
+                    $.notify("Ajax failed", { position:"top center",clickToHide: true,autoHideDelay:2000});
                 });
             };
 
@@ -439,18 +452,18 @@
                     $scope.subscribers = data.subscribers;
                 });
                 res.error(function() {
-                    alert("Ajax failed");
+                    $.notify("Ajax failed", { position:"top center",clickToHide: true,autoHideDelay:2000});
                 });
             };
             $scope.root.updateSubscribers = function() {
                 var set = {};
                 for (var i = 0; i < $scope.subscribers.length; i++) {
                     if ($scope.subscribers[i].email === '') {
-                        alert('There is one subscriber that you did not specify');
+                        $.notify("There is one subscriber that you did not specify", { position:"top center",clickToHide: true,autoHideDelay:2000});
                         return;
                     }
                     if (set[$scope.subscribers[i].email]) {
-                        alert('You specify more than or two same subscribers');
+                        $.notify("You specify more than or two same subscribers", { position:"top center",clickToHide: true,autoHideDelay:2000});
                         return;
                     }
                     set[$scope.subscribers[i].email] = true;
@@ -458,14 +471,14 @@
                 var res = $http.post('/api/sensor/'+ $scope.sensorName + '/subscribers', {'data': $scope.subscribers}, { headers: header });
                 res.success(function(data) {
                     if (data.success === 'True') {
-                        confirm('Success');
+                        $.notify("Success",{ globalPosition:'top center',clickToHide: true,autoHideDelay:2000, className:'success'});
                     } else {
-                        alert('There is one or more emails that are not in the database');
+                        $.notify("There is one or more emails that are not in the database", { position:"top center",clickToHide: true,autoHideDelay:2000});
                     }
 
                 });
                 res.error(function() {
-                    alert("Ajax failed");
+                    $.notify("Ajax failed", { position:"top center",clickToHide: true,autoHideDelay:2000});
                 });
             };
 
@@ -484,11 +497,11 @@
                 var set = {};
                 for (var i = 0; i < $scope.ts.length; i++) {
                     if ($scope.ts[i].time === '' || $scope.ts[i].value === '') {
-                        alert('There is one pair that you did not specify the time or value');
+                        $.notify("There is one pair that you did not specify the time or value", { position:"top center",clickToHide: true,autoHideDelay:2000});
                         return;
                     }
                     if (set[$scope.ts[i].time]) {
-                        alert('You specify more than or two same time stamps');
+                        $.notify("You specify more than or two same time stamps", { position:"top center",clickToHide: true,autoHideDelay:2000});
                         return;
                     }
                     set[$scope.ts[i].time] = true;
@@ -496,14 +509,14 @@
                 var res = $http.post('/api/sensor/'+ $scope.sensorName + '/timeseries', {'data': $scope.ts},{ headers: header });
                 res.success(function(data) {
                     if (data.success === 'True') {
-                        confirm('Success');
+                       $.notify("Success",{ globalPosition:'top center',clickToHide: true,autoHideDelay:2000, className:'success'});
                     } else {
-                        alert('Ajax failed');
+                        $.notify("Ajax failed", { position:"top center",clickToHide: true,autoHideDelay:2000});
                     }
 
                 });
                 res.error(function() {
-                    alert("Ajax failed");
+                    $.notify("Ajax failed", { position:"top center",clickToHide: true,autoHideDelay:2000});
                 });
             };
 
