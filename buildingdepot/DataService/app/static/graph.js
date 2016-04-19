@@ -26,7 +26,7 @@ function makechart(data) {
   "theme": "light",
 
   "categoryAxesSettings": {
-    "minPeriod": "ss"
+    "minPeriod": "fff"
   },
 
   "dataSets": [ {

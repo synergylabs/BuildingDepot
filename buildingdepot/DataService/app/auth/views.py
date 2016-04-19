@@ -85,7 +85,7 @@ def login():
         if svr.get_user(form.email.data, form.password.data):
             session['email'] = form.email.data
             token = oauth_gen(form.email.data)
-            resp = make_response(redirect(url_for('main.index')))
+            resp = make_response(redirect(url_for('service.sensor')))
             resp.set_cookie('access_token', value=token)
             return resp
         flash('Invalid email or password!:)')
