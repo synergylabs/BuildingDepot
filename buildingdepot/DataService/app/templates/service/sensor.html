@@ -254,7 +254,7 @@
 
 {% block scripts %}
      {{ super() }}
-     <script>
+<script>
         var app = angular.module("myApp", []);
         var access_token=document.cookie.replace(/(?:(?:^|.*;\s*)access_token\s*\=\s*([^;]*).*$)|^.*$/, "$1");
         var header ={'Authorization': 'bearer ' + access_token};
@@ -335,9 +335,18 @@
                                 json["SourceName"].push(temp[i].value);
                             }
                         }
+                        else if(temp[i].key=='Tags'){
+                            if ("Tags" in json) {
+                                json["Tags"].push(temp[i].value);
+                            }
+                            else{
+                                json["Tags"]=[];
+                                json["Tags"].push(temp[i].value);
+                            }
+                        }
                     }
                     console.log(json);
-                    var res = $http.post('/api/sensor/search', {'data': json},{ headers: header });
+                    var res = $http.post('/service/search', {'data': json},{ headers: header });
                     res.success(function(data) {
                         $.notify("Success",{ globalPosition:'top center',clickToHide: true,autoHideDelay:2000, className:'success'});
                         });
@@ -347,20 +356,8 @@
                     }
                 else{
                     $.notify("Please Enter Some Search Query", { position:"top center",clickToHide: true,autoHideDelay:2000});
-
                 }
 
-<<<<<<< HEAD
-                var res = $http.post('/service/search', {'data': json},{ headers: header });
-                res.success(function(data) {
-                    confirm('Success');
-                });
-                res.error(function() {
-                    alert("Ajax failed");
-                });
-=======
-
->>>>>>> 3ff2a1c7d0cdbd4c10d2a985fb05ef57a86f0eda
             };
 
             $scope.root.addNewPair = function() {
