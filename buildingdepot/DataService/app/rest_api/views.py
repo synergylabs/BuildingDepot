@@ -875,7 +875,6 @@ def xstr(s):
     else:
         return str(s)
 
-
 # Test API for dynamic ACL's
 @api.route('/permission_change/user=<user_id>/sensor_group=<sensor_group>/permission=<permission_value>',
            methods=['GET'])

@@ -245,12 +245,6 @@ def permission_query():
 
     return render_template('service/query.html', form=form, res=res)
 
-@service.route('/search', methods=['GET', 'POST'])
-def sensor_search():
-    print "Entered"
-    print request.get_json()
-    return jsonify({"success":"True"})
-
 @service.route('/graph/<name>')
 def graph(name):
     objs = Sensor.objects()

@@ -337,7 +337,7 @@
                         }
                     }
                     console.log(json);
-                    var res = $http.post('/api/sensor/search', {'data': json},{ headers: header });
+                    var res = $http.post('/service/sensor/search', {'data': json},{ headers: header });
                     res.success(function(data) {
                         $.notify("Success",{ globalPosition:'top center',clickToHide: true,autoHideDelay:2000, className:'success'});
                         });
@@ -350,17 +350,6 @@
 
                 }
 
-<<<<<<< HEAD
-                var res = $http.post('/service/search', {'data': json},{ headers: header });
-                res.success(function(data) {
-                    confirm('Success');
-                });
-                res.error(function() {
-                    alert("Ajax failed");
-                });
-=======
-
->>>>>>> 3ff2a1c7d0cdbd4c10d2a985fb05ef57a86f0eda
             };
 
             $scope.root.addNewPair = function() {
