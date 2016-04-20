@@ -245,6 +245,42 @@ def permission_query():
 
     return render_template('service/query.html', form=form, res=res)
 
+@service.route('/sensor/search',methods=['GET','POST'])
+def sensors_search():
+    data = request.get_json()['data']
+    args = {}
+    for key,values in data.iteritems():
+        if key == 'Building':
+            args['building__in'] = values
+        elif key == 'SourceName':
+            args['source_name__in'] = values
+        elif key == 'SourceIdentifier':
+            args['source_identifier__in'] = values
+        elif key == 'ID':
+            args['name__in'] = values
+        elif key == 'Tags':
+            tag_list = []
+            for tag in values:
+                key_value = tag.split(":",1)
+                current_tag = {"name":key_value[0],"value":key_value[1]}
+                tag_list.append(current_tag)
+            args['tags_all'] = tag_list
+        elif key == 'MetaData':
+            metadata_list = []
+            for meta in values:
+                key_value = tag.split(":",1)
+                current_meta = {key_value[0]:key_value[1]}
+                metdata_list.append(current_meta)
+            args['metadata_all'] = metdata_list
+    print args
+    sensors = Sensor.objects(**args)
+    for sensor in sensors:
+        print sensor.name
+    form = SensorForm()
+    # Get the list of valid buildings for this DataService
+    form.building.choices = get_building_choices(current_app.config['NAME'])
+    return render_template('service/sensor.html', objs=sensors,form = form)
+
 @service.route('/graph/<name>')
 def graph(name):
     objs = Sensor.objects()
