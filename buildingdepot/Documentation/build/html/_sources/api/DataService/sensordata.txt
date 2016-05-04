@@ -123,7 +123,7 @@ Note: Both interval and resolution are specified with the time value appended by
       Content-Type: application/json
 
       {
-        "success":"True"
+        "success":"True",
         "data": {
           "series": [
             {

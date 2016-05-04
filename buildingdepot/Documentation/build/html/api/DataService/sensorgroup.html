@@ -46,16 +46,17 @@
 <h2>Create SensorGroup<a class="headerlink" href="#create-sensorgroup" title="Permalink to this headline">¶</a></h2>
 <p>This request creates a new SensorGroup with the name and description in the building specified by the user.</p>
 <dl class="post">
-<dt id="post--api-sensor_group?name=-Name-&amp;building=-Building-">
-<code class="descname">POST </code><code class="descname">/api/sensor_group?name=&lt;Name&gt;&amp;building=&lt;Building&gt;</code><a class="headerlink" href="#post--api-sensor_group?name=-Name-&building=-Building-" title="Permalink to this definition">¶</a></dt>
+<dt id="post--api-sensor_group">
+<code class="descname">POST </code><code class="descname">/api/sensor_group</code><a class="headerlink" href="#post--api-sensor_group" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>name</strong> (<em>string</em>) &#8211; Name of SensorGroup</li>
-<li><strong>building</strong> (<em>string</em>) &#8211; Name of building in which the SensorGroup is to be created</li>
-<li><strong>description (optional)</strong> (<em>string</em>) &#8211; Descrption for SensorGroup</li>
+<tr class="field-odd field"><th class="field-name" colspan="2">JSON Parameters:</th></tr>
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body"><ul class="first simple">
+<li><strong>name</strong> (<em>string</em>) &#8211; Name of the sensor group</li>
+<li><strong>building</strong> (<em>string</em>) &#8211; Building to which this sensor group belongs</li>
+<li><strong>description</strong> (<em>string</em>) &#8211; Description for the sensor group</li>
 </ul>
 </td>
 </tr>
@@ -77,7 +78,13 @@
 
 <div class="compound">
 <p class="compound-first"><strong>Example request</strong>:</p>
-<div class="compound-middle highlight-http"><div class="highlight"><pre>POST /api/sensor_group?name=test_group&amp;building=NSH
+<div class="compound-middle highlight-http"><div class="highlight"><pre>POST /api/sensor_group
+
+{
+  &quot;name&quot;:&quot;Test Sensor Group&quot;,
+  &quot;building&quot;:&quot;NSH&quot;,
+  &quot;description&quot;:&quot;Description for Sensor Group&quot;
+}
 </pre></div>
 </div>
 <p class="compound-middle"><strong>Example response</strong> (for succcess):</p>

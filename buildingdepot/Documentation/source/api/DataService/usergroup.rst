@@ -11,7 +11,7 @@ Create UserGroup
 
 This request creates a new UserGroup with the name and description as specified by the user.
 
-.. http:post:: /api/user_group?name=<Name>
+.. http:post:: /api/user_group
 
    :param string name: Name of UserGroup
    :param string description (optional): Descrption for UserGroup
@@ -28,6 +28,11 @@ This request creates a new UserGroup with the name and description as specified 
    .. sourcecode:: http
 
       POST /api/user_group
+
+      {
+        "name": "Test User Group",
+        "description": "Description for User Group"
+      }
 
    **Example response** (for succcess):
 
