@@ -13,7 +13,7 @@ of BD will call the sensor() function
 @license: UCSD License. See License file for details.
 """
 
-from flask import json,render_template, request
+from flask import json, render_template, request
 from flask import session, redirect, url_for, jsonify, flash
 from . import service
 from ..models.ds_models import *
@@ -23,6 +23,7 @@ from uuid import uuid4
 from .. import r, influx, oauth
 from werkzeug.security import gen_salt
 import sys
+import math
 
 sys.path.append('/srv/buildingdepot')
 from utils import get_user_oauth
@@ -37,9 +38,18 @@ def sensor():
     page = request.args.get('page', 1, type=int)
     skip_size = (page - 1) * PAGE_SIZE
     objs = Sensor.objects().skip(skip_size).limit(PAGE_SIZE)
+    type(objs)
     for obj in objs:
         obj.can_delete = True
-
+    total = len(Sensor.objects())
+    if(total):
+        if total != PAGE_SIZE:
+            pages = int(math.ceil(float(total) / PAGE_SIZE)) + 1
+        else:
+            pages = int(math.ceil(float(total) / PAGE_SIZE))
+    else:
+        pages = 0
+    print total, PAGE_SIZE, pages
     form = SensorForm()
     # Get the list of valid buildings for this DataService
     form.building.choices = get_building_choices(current_app.config['NAME'])
@@ -51,9 +61,9 @@ def sensor():
                source_identifier=str(form.source_identifier.data),
                building=str(form.building.data),
                owner=session['email']).save()
-        r.set(uuid,session['email'])
+        r.set(uuid, session['email'])
         return redirect(url_for('service.sensor'))
-    return render_template('service/sensor.html', objs=objs, form=form)
+    return render_template('service/sensor.html', objs=objs, form=form, total=total, pages=pages, current_page=page)
 
 
 @service.route('/sensor_delete', methods=['POST'])
@@ -80,7 +90,7 @@ def sensor_delete():
     pipe.delete('sensor:{}'.format(sensor.name))
     pipe.execute()
     r.delete(request.form.get('name'))
-    #cache process done
+    # cache process done
 
     Sensor.objects(name=sensor.name).delete()
     return redirect(url_for('service.sensor'))
@@ -245,11 +255,12 @@ def permission_query():
 
     return render_template('service/query.html', form=form, res=res)
 
-@service.route('/sensor/search',methods=['GET','POST'])
+
+@service.route('/sensor/search', methods=['GET', 'POST'])
 def sensors_search():
-    data = request.get_json()['data']
+    data = json.loads(request.form.get('api_url'))
     args = {}
-    for key,values in data.iteritems():
+    for key, values in data.iteritems():
         if key == 'Building':
             args['building__in'] = values
         elif key == 'SourceName':
@@ -261,15 +272,15 @@ def sensors_search():
         elif key == 'Tags':
             tag_list = []
             for tag in values:
-                key_value = tag.split(":",1)
-                current_tag = {"name":key_value[0],"value":key_value[1]}
+                key_value = tag.split(":", 1)
+                current_tag = {"name": key_value[0], "value": key_value[1]}
                 tag_list.append(current_tag)
             args['tags_all'] = tag_list
         elif key == 'MetaData':
             metadata_list = []
             for meta in values:
-                key_value = tag.split(":",1)
-                current_meta = {key_value[0]:key_value[1]}
+                key_value = tag.split(":", 1)
+                current_meta = {key_value[0]: key_value[1]}
                 metdata_list.append(current_meta)
             args['metadata_all'] = metdata_list
     print args
@@ -279,9 +290,11 @@ def sensors_search():
     form = SensorForm()
     # Get the list of valid buildings for this DataService
     form.building.choices = get_building_choices(current_app.config['NAME'])
-    return render_template('service/sensor.html', objs=sensors,form = form)
+    return render_template('service/sensor1.html', objs=sensors, form=form)
+
 
 @service.route('/graph/<name>')
+@service.route('/sensor/graph/<name>')
 def graph(name):
     objs = Sensor.objects()
     for obj in objs:

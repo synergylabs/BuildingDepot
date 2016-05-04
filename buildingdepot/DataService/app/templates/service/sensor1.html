@@ -6,35 +6,9 @@
 {% block page_content %}
 <div class="row">
     <div class="page-header">
-        <h2 style="display: inline-block;">  &nbsp;&nbsp;&nbsp;Sensor&nbsp;&nbsp;<a href="#myModal" data-toggle="modal" class="btn btn-info btn-lg"><span class="glyphicon glyphicon-hand-up"></span>&nbsp;Add a New Sensor</a>
-        <a href="#filter_search" data-toggle="modal" class="btn btn-info btn-lg"><span class="glyphicon glyphicon-search"></span>&nbsp;Search</a></h2>
-        <ul class="pagination" style="float: right">
-                {% if current_page == 1 %}
-                <li class="page-item disabled"><a href="#">&laquo;</a></li>
-                {% else %}
-                <li><a href="?page={{ current_page - 1 }}">&laquo;</a></li>
-                {% endif %}
-                {{ pages }}
-                {% for i in range(1,pages) %}
-                    {% if current_page == i %}
-                    <li class="page-item"><a style="background-color: #33ccff;" href="?page={{ i }}">{{ i }}</a></li>
-                    {% else %}
-                    <li><a href="?page={{ i }}">{{ i }}</a></li>
-                    {% endif %}
-                {% endfor %}
+        <h2 style="display: inline-block;">&nbsp;&nbsp;&nbsp;Sensor&nbsp;&nbsp;</h2><a href="#myModal" data-toggle="modal" class="btn btn-info btn-lg"><span class="glyphicon glyphicon-hand-up"></span>&nbsp;Add a New Sensor</a>
+        <a href="#filter_search" data-toggle="modal" class="btn btn-info btn-lg"><span class="glyphicon glyphicon-search"></span>&nbsp;Search</a>
 
-                {% if current_page == pages-1 or pages<=1 %}
-                <li class="page-item disabled"><a href="#">&raquo;</a></li>
-                {% else %}
-                <li><a href="?page={{ current_page + 1 }}">&raquo;</a></li>
-                {% endif %}
-
-        </ul>
-        {% if total>100 %}
-            <div style="text-align: center">Showing 0 - 100 of {{ total }} Sensors</div>
-        {% else %}
-            <div style="text-align: center">Showing 0 - {{ total }} of {{ total }} Sensors</div>
-        {% endif %}
     </div>
 
     <div class="modal fade" id="myModal">
@@ -103,7 +77,7 @@
                             <tbody>
                                 <tr ng-repeat="pair in metadata">
                                     <td><input ng-model="metadata[$index].name" type="text" class="form-control" value="{[ pair.name ]}"></td>
-                                    <td><input ng-model="metadata[$index].value" type=2/service/sensor"text" class="form-control" value="{[ pair.value ]}"></td>
+                                    <td><input ng-model="metadata[$index].value" type="text" class="form-control" value="{[ pair.value ]}"></td>
                                     <td><button class="close" ng-click="root.removeName($index)">&times;</button></td>
                                 </tr>
                             </tbody>
@@ -232,8 +206,8 @@
                 </div>
             </div>
         </div>
-
         <div class="col-sm-12">
+
             <table class="table">
                 <thead>
                     <tr>
@@ -281,7 +255,7 @@
 
 {% block scripts %}
      {{ super() }}
-<script>
+     <script>
         var app = angular.module("myApp", []);
         var access_token=document.cookie.replace(/(?:(?:^|.*;\s*)access_token\s*\=\s*([^;]*).*$)|^.*$/, "$1");
         var header ={'Authorization': 'bearer ' + access_token};
@@ -304,103 +278,85 @@
             $scope.root.updateFilter=function(){
                 var temp =$scope.filter_search;
                 var json={};
-                if (temp.length <= 0) {
-                    $.notify("Please Enter Some Search Query", {
-                        position: "top center",
-                        clickToHide: true,
-                        autoHideDelay: 2000
-                    });
-                } else {
-                    var set = {};
-                    for (var i = 0; i < temp.length; i++) {
+                if(temp.length>0) {
+                    var set ={};
+                    for(var i=0; i<temp.length;i++) {
 
                         if (temp[i].key === '' || temp[i].value === '') {
-                            $.notify("There is a name or value that is not specified", {
-                                position: "top center",
-                                clickToHide: true,
-                                autoHideDelay: 2000
-                            });
+                            $.notify("There is a name or value that is not specified", { position:"top center",clickToHide: true,autoHideDelay:2000});
                             return;
                         }
-                        if (set[temp[i].key + temp[i].value]) {
-                            $.notify("There is a search value that is specified more than once", {
-                                position: "top center",
-                                clickToHide: true,
-                                autoHideDelay: 2000
-                            });
+                        if (set[temp[i].key+temp[i].value]) {
+                            $.notify("There is a search value that is specified more than once", { position:"top center",clickToHide: true,autoHideDelay:2000});
                             return;
                         }
                         //Change Format of payload before send
-                        if (temp[i].key == 'Building') {
+                        if(temp[i].key=='Building'){
                             if ("Building" in json) {
                                 json["Building"].push(temp[i].value);
                             }
-                            else {
-                                json["Building"] = [];
+                            else{
+                                json["Building"]=[];
                                 json["Building"].push(temp[i].value);
                             }
                         }
-                        else if (temp[i].key == 'ID') {
+                        else if(temp[i].key=='ID'){
                             if ("ID" in json) {
                                 json["ID"].push(temp[i].value);
                             }
-                            else {
-                                json["ID"] = [];
+                            else{
+                                json["ID"]=[];
                                 json["ID"].push(temp[i].value);
                             }
                         }
-                        else if (temp[i].key == 'MetaData') {
+                        else if(temp[i].key=='MetaData'){
                             if ("MetaData" in json) {
                                 json["MetaData"].push(temp[i].value);
                             }
-                            else {
-                                json["MetaData"] = [];
+                            else{
+                                json["MetaData"]=[];
                                 json["MetaData"].push(temp[i].value);
                             }
                         }
-                        else if (temp[i].key == 'SourceIdentifier') {
+                        else if(temp[i].key=='SourceIdentifier'){
                             if ("SourceIdentifier" in json) {
                                 json["SourceIdentifier"].push(temp[i].value);
                             }
-                            else {
-                                json["SourceIdentifier"] = [];
+                            else{
+                                json["SourceIdentifier"]=[];
                                 json["SourceIdentifier"].push(temp[i].value);
                             }
                         }
-                        else if (temp[i].key == 'SourceName') {
+                        else if(temp[i].key=='SourceName'){
                             if ("SourceName" in json) {
                                 json["SourceName"].push(temp[i].value);
                             }
-                            else {
-                                json["SourceName"] = [];
+                            else{
+                                json["SourceName"]=[];
                                 json["SourceName"].push(temp[i].value);
                             }
                         }
-                        else if (temp[i].key == 'Tags') {
+                        else if(temp[i].key=='Tags'){
                             if ("Tags" in json) {
                                 json["Tags"].push(temp[i].value);
                             }
-                            else {
-                                json["Tags"] = [];
+                            else{
+                                json["Tags"]=[];
                                 json["Tags"].push(temp[i].value);
                             }
                         }
                     }
-                    console.log(typeof(json));
-                    var url='/service/sensor/search';
-                    var value=json;
-                    var form =$('<form action="' + url + '" method="post">' + '<input type="hidden" name="api_url" value=' +JSON.stringify(value)+ ' />' + '</form>');
-                    $('body').append(form);
-                    form.submit();
-{#                     var res = $http.post('/service/sensor/search', {'data': json},{ headers: header });#}
-{#                     res.success(function(data) {#}
-{#                         alert (data);#}
-{#                         console.log(data);#}
-{#                     $.notify("Success",{ globalPosition:'top center',clickToHide: true,autoHideDelay:2000, className:'success'});#}
-{#                     });#}
-{#                     res.error(function() {#}
-{#                     $.notify("Search Failed", { position:"top center",clickToHide: true,autoHideDelay:2000});#}
-{#                     });#}
+                    console.log(json);
+                    var res = $http.post('/service/search', {'data': json},{ headers: header });
+                    res.success(function(data) {
+                        $.notify("Success",{ globalPosition:'top center',clickToHide: true,autoHideDelay:2000, className:'success'});
+                        });
+                    res.error(function() {
+                            $.notify("Search Failed", { position:"top center",clickToHide: true,autoHideDelay:2000});
+                        });
+                    }
+                else{
+                    $.notify("Please Enter Some Search Query", { position:"top center",clickToHide: true,autoHideDelay:2000});
                 }
 
             };
