@@ -26,7 +26,7 @@ $ tar -xzf buildingdepot-3.#.#.tar.gz
 
 $ cd buildingdepot-3.#.#/
 
-2. Run the installer
+2. Run the installer (if running installer using sudo, please consider adding -H flag)
 
 $ ./install.sh
 
