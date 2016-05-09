@@ -10,3 +10,4 @@ flask-bootstrap==3.3.0.1
 redis==2.10.3
 influxdb==2.6.0
 pymongo==2.8.0
+pika==0.10.0
