@@ -38,18 +38,13 @@ def sensor():
     page = request.args.get('page', 1, type=int)
     skip_size = (page - 1) * PAGE_SIZE
     objs = Sensor.objects().skip(skip_size).limit(PAGE_SIZE)
-    type(objs)
     for obj in objs:
         obj.can_delete = True
     total = len(Sensor.objects())
-    if(total):
-        if total != PAGE_SIZE:
-            pages = int(math.ceil(float(total) / PAGE_SIZE)) + 1
-        else:
-            pages = int(math.ceil(float(total) / PAGE_SIZE))
+    if (total):
+        pages = int(math.ceil(float(total) / PAGE_SIZE))
     else:
         pages = 0
-    print total, PAGE_SIZE, pages
     form = SensorForm()
     # Get the list of valid buildings for this DataService
     form.building.choices = get_building_choices(current_app.config['NAME'])
@@ -63,7 +58,8 @@ def sensor():
                owner=session['email']).save()
         r.set(uuid, session['email'])
         return redirect(url_for('service.sensor'))
-    return render_template('service/sensor.html', objs=objs, form=form, total=total, pages=pages, current_page=page)
+    return render_template('service/sensor.html', objs=objs, form=form, total=total,
+                           pages=pages, current_page=page, pagesize=PAGE_SIZE)
 
 
 @service.route('/sensor_delete', methods=['POST'])
@@ -258,7 +254,8 @@ def permission_query():
 
 @service.route('/sensor/search', methods=['GET', 'POST'])
 def sensors_search():
-    data = json.loads(request.form.get('api_url'))
+    data = json.loads(request.args.get('q'))
+    print data, type(data)
     args = {}
     for key, values in data.iteritems():
         if key == 'Building':
@@ -284,13 +281,24 @@ def sensors_search():
                 metdata_list.append(current_meta)
             args['metadata_all'] = metdata_list
     print args
-    sensors = Sensor.objects(**args)
+    # Show the user PAGE_SIZE number of sensors on each page
+    page = request.args.get('page', 1, type=int)
+    skip_size = (page - 1) * PAGE_SIZE
+    sensors = Sensor.objects(**args).skip(skip_size).limit(PAGE_SIZE)
+
     for sensor in sensors:
-        print sensor.name
+        sensor.can_delete = True
+
+    total = len(Sensor.objects(**args))
+    if (total):
+        pages = int(math.ceil(float(total) / PAGE_SIZE))
+    else:
+        pages = 0
     form = SensorForm()
     # Get the list of valid buildings for this DataService
     form.building.choices = get_building_choices(current_app.config['NAME'])
-    return render_template('service/sensor1.html', objs=sensors, form=form)
+    return render_template('service/sensor.html', objs=sensors, form=form, total=total,
+                           pages=pages, current_page=page, pagesize=PAGE_SIZE)
 
 
 @service.route('/graph/<name>')
@@ -306,3 +314,10 @@ def graph(name):
     obj = Sensor.objects(name=name).first()
     tags_owned = [{'name': tag.name, 'value': tag.value} for tag in obj.tags]
     return render_template('service/graph.html', name=name, obj=temp, metadata=metadata, tags=tags_owned)
+
+
+@service.route('/sensor/random', methods=['GET', 'POST'])
+def random():
+    request_type = json.loads(request.args.get('q'))
+    print request_type, type(request_type)
+    return render_template('index.html')
