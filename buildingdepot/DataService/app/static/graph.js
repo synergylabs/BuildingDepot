@@ -50,10 +50,7 @@ function makechart(data) {
 
     "stockGraphs": [ {
       "id": "g1",
-      "valueField": "value",
-      "type": "smoothedLine",
-      "lineThickness": 2,
-      "bullet": "round"
+      "valueField": "value"
     } ],
 
 
