@@ -32,7 +32,7 @@ permissions = {"rw": "r/w", "r": "r", "dr": "d/r"}
 @api.route('/sensor', methods=['POST'])
 @oauth.require_oauth()
 def sensor_create(name=None):
-    '''Check if the building the user has specified is valid and if so create
+    """Check if the building the user has specified is valid and if so create
     the sensor and return the uuid
     For GET:
     Args as data:
@@ -60,7 +60,7 @@ def sensor_create(name=None):
             "uuid" : <uuid of sensor if created>
             "error": <details of an error if it happends>
         }
-    '''
+    """
     if request.method == 'POST':
         data = request.get_json()
         try:
@@ -79,8 +79,8 @@ def sensor_create(name=None):
                        source_name=xstr(sensor_name),
                        source_identifier=xstr(identifier),
                        building=building,
-                       owner = email).save()
-                r.set(uuid,email)
+                       owner=email).save()
+                r.set(uuid, email)
                 return jsonify({'success': 'True', 'uuid': uuid})
         return jsonify({'success': 'False', 'error': 'Building does not exist'})
     elif request.method == 'GET':
@@ -132,8 +132,8 @@ def get_data(name):
     end_time = request.args.get('end_time')
     resolution = request.args.get('resolution')
 
-    if not all([start_time,end_time]):
-        return jsonify({'success':'False','error':'Missing parameters'})
+    if not all([start_time, end_time]):
+        return jsonify({'success': 'False', 'error': 'Missing parameters'})
 
     if resolution != None:
         try:
@@ -142,19 +142,20 @@ def get_data(name):
                 + '\' and time<\'' + timestamp_to_time_string(
                     float(end_time)) + '\')' + " GROUP BY time(" + resolution + ")")
         except influxdb.exceptions.InfluxDBClientError:
-            return jsonify({'success':'False','error':'Too many points for this resolution'})
+            return jsonify({'success': 'False', 'error': 'Too many points for this resolution'})
     else:
-        data = influx.query('select * from "' + name + '" where time>\''+ timestamp_to_time_string(float(start_time))\
-         +'\' and time<\'' + timestamp_to_time_string(float(end_time)) +'\'')
-    return jsonify({'success':'True','data':data.raw})
+        data = influx.query('select * from "' + name + '" where time>\'' + timestamp_to_time_string(float(start_time)) \
+                            + '\' and time<\'' + timestamp_to_time_string(float(end_time)) + '\'')
+    return jsonify({'success': 'True', 'data': data.raw})
+
 
 def timestamp_to_time_string(t):
-    '''Converts a unix timestamp to a string representation of the timestamp
+    """Converts a unix timestamp to a string representation of the timestamp
     Args:
         t: A unix timestamp float
     Returns
         A string representation of the timestamp
-    '''
+    """
     return time.strftime("%Y-%m-%dT%H:%M:%S", time.gmtime(t)) + str(t - int(t))[1:10] + 'Z'
 
 
@@ -199,7 +200,6 @@ def get_sensors_metadata():
         }
     """
     request_type = request.args.get('filter')
-
     if (request_type is None) or (len(request.args) < 2):
         return jsonify({'success': 'False', 'error': 'Missing parameters'})
 
@@ -230,13 +230,13 @@ def create_json(sensor):
         Formatted sensor object as below
     }
     """
-    json_object = { 'building': sensor.get('building'),
-            'name' : sensor.get('name'),
-            'tags' : sensor.get('tags'),
-            'metadata' : sensor.get('metadata'),
-            'source_identifier' : sensor.get('source_identifier'),
-            'source_name' : sensor.get('source_name')
-            }
+    json_object = {'building': sensor.get('building'),
+                   'name': sensor.get('name'),
+                   'tags': sensor.get('tags'),
+                   'metadata': sensor.get('metadata'),
+                   'source_identifier': sensor.get('source_identifier'),
+                   'source_name': sensor.get('source_name')
+                   }
     return json_object
 
 
@@ -375,7 +375,7 @@ def sensor_subscribers(name):
 @api.route('/sensor/timeseries', methods=['POST'])
 @oauth.require_oauth()
 def insert_timeseries_to_bd():
-    '''
+    """
     Args as data:
         [
             {
@@ -395,14 +395,14 @@ def insert_timeseries_to_bd():
             "success": True or False
             "error": details of an error if it happends
         }
-    '''
+    """
 
     pubsub = connect_broker()
     if pubsub:
         try:
             channel = pubsub.channel()
         except Exception as e:
-            print "Failed to open channel"+" error"+str(e)
+            print "Failed to open channel" + " error" + str(e)
 
     try:
         json = request.get_json()
@@ -422,10 +422,10 @@ def insert_timeseries_to_bd():
                     }
                     points.append(dic)
                 try:
-                    channel.basic_publish(exchange=exchange,routing_key=sensor['sensor_id'],\
-                        body=str(dic))
+                    channel.basic_publish(exchange=exchange, routing_key=sensor['sensor_id'], \
+                                          body=str(dic))
                 except Exception as e:
-                    print "Failed to write to broker "+str(e)
+                    print "Failed to write to broker " + str(e)
             else:
                 unauthorised_sensor.append(sensor['sensor_id'])
     except KeyError:
@@ -451,7 +451,7 @@ def insert_timeseries_to_bd():
             channel.close()
             pubsub.close()
         except Exception as e:
-            print "Failed to end RabbitMQ session"+str(e)
+            print "Failed to end RabbitMQ session" + str(e)
 
     return jsonString(dic)
 
@@ -760,7 +760,7 @@ def usergroup_users(name):
         return jsonify({'success': 'False', 'error': 'One or more users not registered'})
 
 
-@api.route('/apps',methods=['GET','POST'])
+@api.route('/apps', methods=['GET', 'POST'])
 @oauth.require_oauth()
 def register_app():
     email = get_email()
@@ -772,11 +772,11 @@ def register_app():
             return jsonify({'success': 'False', 'error': 'Missing parameters'})
         apps = Application._get_collection().find({'user': email})
 
-        if apps.count()!=0:
+        if apps.count() != 0:
             app_list = apps[0]['apps']
             for app in app_list:
-                if name==app['name']:
-                    return jsonify({'success':'True','app_id':app['value']})
+                if name == app['name']:
+                    return jsonify({'success': 'True', 'app_id': app['value']})
 
         pubsub = connect_broker()
         if pubsub is None:
@@ -790,12 +790,12 @@ def register_app():
             print traceback.print_exc()
             if channel:
                 channel.close()
-            return jsonify({'success':'False','error':'Failed to create queue'})
+            return jsonify({'success': 'False', 'error': 'Failed to create queue'})
 
         if apps.count() == 0:
-            Application(user=email, apps=[{'name':name,'value':result.method.queue}]).save()
+            Application(user=email, apps=[{'name': name, 'value': result.method.queue}]).save()
         else:
-            app_list.append({'name':name,'value':result.method.queue})
+            app_list.append({'name': name, 'value': result.method.queue})
             Application.objects(user=email).update(set__apps=app_list)
     else:
         if email is None:
@@ -808,16 +808,18 @@ def register_app():
             channel.close()
             pubsub.close()
         except Exception as e:
-            print "Failed to end RabbitMQ session"+str(e)
+            print "Failed to end RabbitMQ session" + str(e)
 
     return jsonify({'success': 'True', 'app_id': result.method.queue})
+
 
 def get_email():
     headers = request.headers
     token = headers['Authorization'].split()[1]
     return Token.objects(access_token=token).first().email
 
-@api.route('/apps/subscription',methods=['POST','DELETE'])
+
+@api.route('/apps/subscription', methods=['POST', 'DELETE'])
 @oauth.require_oauth()
 def subscribe_sensor():
     json_data = request.get_json()
@@ -852,28 +854,31 @@ def subscribe_sensor():
                     channel.close()
                     pubsub.close()
                 except Exception as e:
-                    print "Failed to end RabbitMQ session"+str(e)
+                    print "Failed to end RabbitMQ session" + str(e)
 
             return jsonify({'success': 'True'})
 
     return jsonify({'success': 'False', 'error': 'App id doesn\'t exist'})
 
+
 def connect_broker():
     try:
         pubsub = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
         channel = pubsub.channel()
-        channel.exchange_declare(exchange=exchange,type='direct')
+        channel.exchange_declare(exchange=exchange, type='direct')
         channel.close()
         return pubsub
     except Exception as e:
-        print "Failed to open connection to broker "+str(e)
+        print "Failed to open connection to broker " + str(e)
         return None
+
 
 def xstr(s):
     if s is None:
         return ""
     else:
         return str(s)
+
 
 # Test API for dynamic ACL's
 @api.route('/permission_change/user=<user_id>/sensor_group=<sensor_group>/permission=<permission_value>',
@@ -888,13 +893,12 @@ def permission_change(user_id, sensor_group, permission_value):
     usergroups = r.smembers('user:{}'.format(user_id))
 
     for user_group in usergroups:
-        permission_list = Permission.objects(user_group=user_group, \
+        permission_list = Permission.objects(user_group=user_group,
                                              sensor_group=sensor_group).first()
         if permission_list != None:
             updated += 1
             permission_list.update(set__permission=permission_value)
-            r.set('permission:{}:{}'.format(user_group, \
-                                            sensor_group), permission_value)
+            r.set('permission:{}:{}'.format(user_group, sensor_group), permission_value)
 
     if updated:
         return jsonify({'success': 'True'})
