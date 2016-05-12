@@ -128,9 +128,14 @@ def oauth_gen():
                 'http://127.1:8000/authorized']),
             _default_scopes='email',
             user=request.form.get('name')).save()
-        return render_template('service/oauth_gen.html', keys=keys)
-    return render_template('service/oauth_gen.html', keys=keys)
+    clientkeys = Client.objects(user=session['email'])
+    return render_template('service/oauth_gen.html', keys=clientkeys)
 
+@service.route('/oauth_delete', methods=['POST'])
+def oauth_delete():
+    if request.method == 'POST':
+        Client.objects(client_id=request.form.get('client_id')).delete()
+        return redirect(url_for('service.oauth_gen'))
 
 @service.route('/sensorgroup_delete', methods=['POST'])
 def sensorgroup_delete():
@@ -314,10 +319,3 @@ def graph(name):
     obj = Sensor.objects(name=name).first()
     tags_owned = [{'name': tag.name, 'value': tag.value} for tag in obj.tags]
     return render_template('service/graph.html', name=name, obj=temp, metadata=metadata, tags=tags_owned)
-
-
-@service.route('/sensor/random', methods=['GET', 'POST'])
-def random():
-    request_type = json.loads(request.args.get('q'))
-    print request_type, type(request_type)
-    return render_template('index.html')

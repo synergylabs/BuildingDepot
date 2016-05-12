@@ -4,19 +4,6 @@
 {% block title %}BuildingDepot - Sensor{% endblock %}
 
 {% block page_content %}
-<div class="row" ng-app="myApp" ng-controller="metadataController">
-    <div class="page-header">
-        <h2 style="display: inline-block;" id = "header">  &nbsp;&nbsp;&nbsp;Sensor&nbsp;&nbsp;<a href="#myModal" data-toggle="modal" class="btn btn-info btn-lg"><span class="glyphicon glyphicon-hand-up"></span>&nbsp;Add a New Sensor</a>
-        <a ng-click="root.filter()" href="#filter_search" data-toggle="modal" class="btn btn-info btn-lg"><span class="glyphicon glyphicon-search"></span>&nbsp;Search</a></h2>
-        <ul class="pagination" id="pagination" style="float: right"></ul>
-        {% if current_page == 1 %}
-            <div style="text-align: center">Showing 0 - {{ total }} of {{ total }} Sensors</div>
-        {% elif current_page<pages %}
-            <div style="text-align: center">Showing {{ (current_page*pagesize) + 1 }} - {{ (current_page+ 1)*pagesize }} of {{ total }} Sensors</div>
-        {% elif current_page==pages %}
-            <div style="text-align: center">Showing {{(current_page*pagesize) + 1}} - {{ total }} of {{ total }} Sensors</div>
-        {% endif %}
-    </div>
 
     <div class="modal fade" id="myModal">
         <div class="modal-dialog">
@@ -31,275 +18,287 @@
             </div>
         </div>
     </div>
-
-    <div>
-        <div class="modal fade" id="filter_search">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title"> Filter Search</h4>
-                    </div>
-                    <div class="modal-body">
-                        <div>
-                            <table class="table" ng-show="old_search.length > 0">
-                                <thead>
-                                <tr>
-                                    <th>Name</th>
-                                    <th>Value</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr ng-repeat="pair in old_search">
-                                    <td><input disabled ng-model="old_search[$index].key" type="text" class="form-control" value="{[ pair.key ]}"></td>
-                                    <td><input disabled ng-model="old_search[$index].value" type="text" class="form-control" value="{[ pair.value ]}"></td>
-                                    <td><button class="close" ng-click="root.removeOldFilter($index)">&times;</button></td>
-                                </tr>
-                                </tbody>
-                            </table>
+    <div class="row" ng-app="myApp" ng-controller="metadataController">
+        <div class="page-header">
+            <h2 style="display: inline-block;" id = "header">  &nbsp;&nbsp;&nbsp;Sensor&nbsp;&nbsp;<a href="#myModal" data-toggle="modal" class="btn btn-info btn-lg"><span class="glyphicon glyphicon-hand-up"></span>&nbsp;Add a New Sensor</a>
+                <a ng-click="root.filter()" href="#filter_search" data-toggle="modal" class="btn btn-info btn-lg"><span class="glyphicon glyphicon-search"></span>&nbsp;Search</a></h2>
+            <ul class="pagination" id="pagination" style="float: right"></ul>
+            {% if current_page == 1 %}
+                <div style="text-align: center">Showing 0 - {{ total }} of {{ total }} Sensors</div>
+            {% elif current_page<pages %}
+                <div style="text-align: center">Showing {{ (current_page*pagesize) + 1 }} - {{ (current_page+ 1)*pagesize }} of {{ total }} Sensors</div>
+            {% elif current_page==pages %}
+                <div style="text-align: center">Showing {{(current_page*pagesize) + 1}} - {{ total }} of {{ total }} Sensors</div>
+            {% endif %}
+        </div>
+        <div>
+            <div class="modal fade" id="filter_search">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title"> Filter Search</h4>
                         </div>
+                        <div class="modal-body">
+                            <div>
+                                <table class="table" ng-show="old_search.length > 0">
+                                    <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Value</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr ng-repeat="pair in old_search">
+                                        <td><input disabled ng-model="old_search[$index].key" type="text" class="form-control" value="{[ pair.key ]}"></td>
+                                        <td><input disabled ng-model="old_search[$index].value" type="text" class="form-control" value="{[ pair.value ]}"></td>
+                                        <td><button class="close" ng-click="root.removeOldFilter($index)">&times;</button></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
 
-                        <div>
-                            <table class="table">
-                                <thead>
-                                <tr>
-                                    <th>Key</th>
-                                    <th>Value</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr ng-repeat="pair in filter_search">
-                                    <td><select ng-model="filter_search[$index].key" class="form-control" ng-options="opt for opt in filter_strings | orderBy: opt"></select></td>
-                                    <td><input ng-model="filter_search[$index].value" type="text" class="form-control" value="{[ pair.value ]}"></td>
-                                    <td><button class="close" ng-click="root.removeFilter($index)">&times;</button></td>
-                                </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="btn-group">
-                            <button ng-click="root.addNewFilter()" type="button" class="btn btn-info">Add a new Filter</button>
-                            <button ng-click="root.updateFilter()" type="button" class="btn btn-warning">Update</button>
+                            <div>
+                                <table class="table">
+                                    <thead>
+                                    <tr>
+                                        <th>Key</th>
+                                        <th>Value</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr ng-repeat="pair in filter_search">
+                                        <td><select ng-model="filter_search[$index].key" class="form-control" ng-options="opt for opt in filter_strings | orderBy: opt"></select></td>
+                                        <td><input ng-model="filter_search[$index].value" type="text" class="form-control" value="{[ pair.value ]}"></td>
+                                        <td><button class="close" ng-click="root.removeFilter($index)">&times;</button></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="btn-group">
+                                <button ng-click="root.addNewFilter()" type="button" class="btn btn-info">Add a new Filter</button>
+                                <button ng-click="root.updateFilter()" type="button" class="btn btn-warning">Update</button>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-      <div class="modal fade" id="metadata">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title">Metadata of Sensor {[ root.sensorName ]}</h4>
-                    </div>
-                    <div class="modal-body">
-                        <table class="table">
-                            <thead>
+            <div class="modal fade" id="metadata">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title">Metadata of Sensor {[ root.sensorName ]}</h4>
+                        </div>
+                        <div class="modal-body">
+                            <table class="table">
+                                <thead>
                                 <tr>
                                     <th>Name</th>
                                     <th>Value</th>
                                 </tr>
-                            </thead>
-                            <tbody>
+                                </thead>
+                                <tbody>
                                 <tr ng-repeat="pair in metadata">
                                     <td><input ng-model="metadata[$index].name" type="text" class="form-control" value="{[ pair.name ]}"></td>
                                     <td><input ng-model="metadata[$index].value" type="text" class="form-control" value="{[ pair.value ]}"></td>
                                     <td><button class="close" ng-click="root.removeName($index)">&times;</button></td>
                                 </tr>
-                            </tbody>
-                        </table>
-                        <div class="btn-group">
-                            <button ng-click="root.addNewPair()" type="button" class="btn btn-info">Add a new pair</button>
-                            <button ng-click="root.update()" type="button" class="btn btn-warning">Update</button>
+                                </tbody>
+                            </table>
+                            <div class="btn-group">
+                                <button ng-click="root.addNewPair()" type="button" class="btn btn-info">Add a new pair</button>
+                                <button ng-click="root.update()" type="button" class="btn btn-warning">Update</button>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <div class="modal fade" id="tags">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title">Assigned Tags for Sensor {[ sensorName ]} </h4>
-                    </div>
-                    <div class="modal-body">
-                        <div>
-                            <table class="table" ng-show="tags_owned.length > 0">
-                                <thead>
+            <div class="modal fade" id="tags">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title">Assigned Tags for Sensor {[ sensorName ]} </h4>
+                        </div>
+                        <div class="modal-body">
+                            <div>
+                                <table class="table" ng-show="tags_owned.length > 0">
+                                    <thead>
                                     <tr>
                                         <th>Name</th>
                                         <th>Value</th>
                                     </tr>
-                                </thead>
-                                <tbody>
+                                    </thead>
+                                    <tbody>
                                     <tr ng-repeat="tag in tags_owned">
                                         <td><input disabled ng-model="tags_owned[$index].name" type="text" class="form-control" value="{[ tag.name ]}"></td>
                                         <td><input disabled ng-model="tags_owned[$index].value" type="text" class="form-control" value="{[ tag.value ]}"></td>
                                         <td><button class="close" ng-click="root.removeExistingTag($index)">&times;</button></td>
                                     </tr>
-                                </tbody>
-                            </table>
-                        </div>
+                                    </tbody>
+                                </table>
+                            </div>
 
-                        <div>
-                            <table class="table">
-                                <thead>
+                            <div>
+                                <table class="table">
+                                    <thead>
                                     <tr>
                                         <th>Name</th>
                                         <th>Value</th>
                                     </tr>
-                                </thead>
-                                <tbody>
+                                    </thead>
+                                    <tbody>
                                     <tr ng-repeat="tag in addedTags">
                                         <td><select ng-model="addedTags[$index].name" class="form-control" ng-options="name for name in names | orderBy: name"></select></td>
                                         <td><select ng-model="addedTags[$index].value" class="form-control" ng-options="value for value in values | valueFilter: this: addedTags[$index].name | orderBy: value"></select></td>
                                         <td><button class="close" ng-click="root.removeTag($index)">&times;</button></td>
                                     </tr>
-                                </tbody>
-                            </table>
-                        </div>
+                                    </tbody>
+                                </table>
+                            </div>
 
 
-                        <div class="btn-group">
-                            <button ng-click="root.addNewTag()" type="button" class="btn btn-info">Add a new tag</button>
-                            <button ng-click="root.updateTags()" type="button" class="btn btn-warning">Update</button>
+                            <div class="btn-group">
+                                <button ng-click="root.addNewTag()" type="button" class="btn btn-info">Add a new tag</button>
+                                <button ng-click="root.updateTags()" type="button" class="btn btn-warning">Update</button>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <div class="modal fade" id="subscribers">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title">Subscribers for Sensor {[ sensorName ]}</h4>
-                    </div>
-                    <div class="modal-body">
-                        <table class="table">
-                            <thead>
+            <div class="modal fade" id="subscribers">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title">Subscribers for Sensor {[ sensorName ]}</h4>
+                        </div>
+                        <div class="modal-body">
+                            <table class="table">
+                                <thead>
                                 <tr>
                                     <th>User Email</th>
                                 </tr>
-                            </thead>
-                            <tbody>
+                                </thead>
+                                <tbody>
                                 <tr ng-repeat="subscriber in subscribers">
                                     <td><input ng-model="subscribers[$index].email" type="text" class="form-control" value="{[ subscriber ]}"></td>
                                     <td><button class="close" ng-click="root.removeSubscriber($index)">&times;</button></td>
                                 </tr>
-                            </tbody>
-                        </table>
-                        <div class="btn-group">
-                            <button ng-click="root.addNewSubscriber()" type="button" class="btn btn-info">Add a new subscriber</button>
-                            <button ng-click="root.updateSubscribers()" type="button" class="btn btn-warning">Update</button>
+                                </tbody>
+                            </table>
+                            <div class="btn-group">
+                                <button ng-click="root.addNewSubscriber()" type="button" class="btn btn-info">Add a new subscriber</button>
+                                <button ng-click="root.updateSubscribers()" type="button" class="btn btn-warning">Update</button>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <div class="modal fade" id="write">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title">Time Series Data of Sensor {[ sensorName ]}</h4>
-                    </div>
-                    <div class="modal-body">
-                        <table class="table">
-                            <thead>
+            <div class="modal fade" id="write">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title">Time Series Data of Sensor {[ sensorName ]}</h4>
+                        </div>
+                        <div class="modal-body">
+                            <table class="table">
+                                <thead>
                                 <tr>
                                     <th>Unix Timestamp</th>
                                     <th>Value</th>
                                 </tr>
-                            </thead>
-                            <tbody>
+                                </thead>
+                                <tbody>
                                 <tr ng-repeat="pair in ts">
                                     <td><input ng-model="ts[$index].time" type="text" class="form-control" value="{[ pair.time ]}"></td>
                                     <td><input ng-model="ts[$index].value" type="text" class="form-control" value="{[ pair.value ]}"></td>
                                     <td><button class="close" ng-click="root.removeTS($index)">&times;</button></td>
                                 </tr>
-                            </tbody>
-                        </table>
-                        <div class="btn-group">
-                            <button ng-click="root.addNewTS()" type="button" class="btn btn-info">Add a new pair</button>
-                            <button ng-click="root.updateWrite()" type="button" class="btn btn-warning">Update</button>
+                                </tbody>
+                            </table>
+                            <div class="btn-group">
+                                <button ng-click="root.addNewTS()" type="button" class="btn btn-info">Add a new pair</button>
+                                <button ng-click="root.updateWrite()" type="button" class="btn btn-warning">Update</button>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <div class="col-sm-12">
-            <table class="table">
-                <thead>
+            <div class="col-sm-12">
+                <table class="table">
+                    <thead>
                     <tr>
                         <th>ID</th>
                         <th>Building</th>
                         <th>Source Name</th>
                         <th>Source Identifier</th>
                     </tr>
-                </thead>
-                <tbody>
+                    </thead>
+                    <tbody>
                     {% for obj in objs %}
-                    <tr>
-                         <td><a onclick="window.location='graph/{{ obj.name }}';" style="cursor: pointer;" >{{ obj.name }}</a></td>
-                        <td>{{ obj.building }}</td>
-                        <td>{{ obj.source_name }}</td>
-                        <td>{{ obj.source_identifier }}</td>
-                        <td>
-                            <a ng-click="root.select('{{ obj.name }}')" href="#metadata" data-toggle="modal" class="btn btn-info">Metadata</a>
-                        </td>
-                        <td>
-                            <a ng-click="root.tags('{{ obj.name }}')" href="#tags" data-toggle="modal" class="btn btn-info">Tags</a>
-                        </td>
-                        <td>
-                            <a ng-click="root.selectSubscribers('{{ obj.name }}')" href="#subscribers" data-toggle="modal" class="btn btn-info">Subscribers</a>
-                        </td>
-                        <td>
-                            <a ng-click="root.selectWrite('{{ obj.name }}')" href="#write" data-toggle="modal" class="btn btn-info">Write</a>
-                        </td>
-                        {% if obj.can_delete %}
-                        <td>
-                            <form action="{{ url_for('service.sensor_delete') }}" method="POST" onsubmit="return confirm('Are you sure you want to Delete?');">
-                            <input type="hidden" value="{{ obj.name }}" name="name">
-                            <input type="submit" value="Delete" class="btn btn-danger">
-                            </form>
-                        </td>
-                        {% endif %}
-                    </tr>
+                        <tr>
+                            <td><a onclick="window.location='graph/{{ obj.name }}';" style="cursor: pointer;" >{{ obj.name }}</a></td>
+                            <td>{{ obj.building }}</td>
+                            <td>{{ obj.source_name }}</td>
+                            <td>{{ obj.source_identifier }}</td>
+                            <td>
+                                <a ng-click="root.select('{{ obj.name }}')" href="#metadata" data-toggle="modal" class="btn btn-info">Metadata</a>
+                            </td>
+                            <td>
+                                <a ng-click="root.tags('{{ obj.name }}')" href="#tags" data-toggle="modal" class="btn btn-info">Tags</a>
+                            </td>
+                            <td>
+                                <a ng-click="root.selectSubscribers('{{ obj.name }}')" href="#subscribers" data-toggle="modal" class="btn btn-info">Subscribers</a>
+                            </td>
+                            <td>
+                                <a ng-click="root.selectWrite('{{ obj.name }}')" href="#write" data-toggle="modal" class="btn btn-info">Write</a>
+                            </td>
+                            {% if obj.can_delete %}
+                                <td>
+                                    <form action="{{ url_for('service.sensor_delete') }}" method="POST" onsubmit="return confirm('Are you sure you want to Delete?');">
+                                        <input type="hidden" value="{{ obj.name }}" name="name">
+                                        <input type="submit" value="Delete" class="btn btn-danger">
+                                    </form>
+                                </td>
+                            {% endif %}
+                        </tr>
                     {% endfor %}
-                </tbody>
-            </table>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
-</div>
 {% endblock %}
 
 {% block scripts %}
-     {{ super() }}
+    {{ super() }}
     <script type="application/javascript">
         //Javascript
         function insertParam(key, value) {
-        key = escape(key); value = escape(value);
-        var kvp = document.location.search.substr(1).split('&');
-        if (kvp == '') {
-            document.location.search = '?' + key + '=' + value;
-        }
-        else {
-                var i = kvp.length; var x; while (i--) {
-                x = kvp[i].split('=');
-                if (x[0] == key) {
-                    x[1] = value;
-                    kvp[i] = x.join('=');
-                    break;
-                }
+            key = escape(key); value = escape(value);
+            var kvp = document.location.search.substr(1).split('&');
+            if (kvp == '') {
+                document.location.search = '?' + key + '=' + value;
             }
-            if (i < 0) { kvp[kvp.length] = [key, value].join('='); }
-            document.location.search = kvp.join('&');
+            else {
+                var i = kvp.length; var x; while (i--) {
+                    x = kvp[i].split('=');
+                    if (x[0] == key) {
+                        x[1] = value;
+                        kvp[i] = x.join('=');
+                        break;
+                    }
+                }
+                if (i < 0) { kvp[kvp.length] = [key, value].join('='); }
+                document.location.search = kvp.join('&');
             }
         }
 
@@ -467,9 +466,9 @@
                     var url='/service/sensor/search';
                     window.location=url+"?q="+JSON.stringify(json);
                     /*var value=json;
-                    var form =$('<form action="' + url + '" method="post">' + '<input type="hidden" name="api_url" value=' +JSON.stringify(value)+ ' />' + '</form>');
-                    $('body').append(form);
-                    form.submit();*/
+                     var form =$('<form action="' + url + '" method="post">' + '<input type="hidden" name="api_url" value=' +JSON.stringify(value)+ ' />' + '</form>');
+                     $('body').append(form);
+                     form.submit();*/
                 }
 
             };
@@ -624,7 +623,7 @@
                 var res = $http.post('/api/sensor/'+ $scope.sensorName + '/timeseries', {'data': $scope.ts},{ headers: header });
                 res.success(function(data) {
                     if (data.success === 'True') {
-                       $.notify("Success",{ globalPosition:'top center',clickToHide: true,autoHideDelay:2000, className:'success'});
+                        $.notify("Success",{ globalPosition:'top center',clickToHide: true,autoHideDelay:2000, className:'success'});
                     } else {
                         $.notify("Ajax failed", { position:"top center",clickToHide: true,autoHideDelay:2000});
                     }
