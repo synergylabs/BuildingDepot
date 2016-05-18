@@ -4,58 +4,168 @@
 {% block title %}BuildingDepot - BuildingTemplate{% endblock %}
 
 {% block page_content %}
-<div class="row">
-    <div class="page-header">
-        <h2>BuildingTemplate <a href="#myModal" data-toggle="modal" class="btn btn-info btn-lg"><span class="glyphicon glyphicon-hand-up"></span> Add a New BuildingTemplate</a></h2>
-    </div>
-
-    <div class="modal fade" id="myModal">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Add a New BuildingTemplate</h4>
-                </div>
-                <div class="modal-body">
-                    {{ wtf.quick_form(form) }}
+    <div class="row">
+        <div class="page-header">
+            <h2>BuildingTemplate <a href="#myModal" data-toggle="modal" class="btn btn-info btn-lg"><span class="glyphicon glyphicon-hand-up"></span> Add a New BuildingTemplate</a></h2>
+        </div>
+        <div class="modal fade" id="myModal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Add a New BuildingTemplate</h4>
+                    </div>
+                    <div class="modal-body">
+                        {{ wtf.quick_form(form) }}
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="col-sm-12">
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Description</th>
-                    <th>TagTypes</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for obj in objs %}
-                <tr>
-                    <td>{{ obj.name }}</td>
-                    <td class="col-sm-4">{{ obj.description }}</td>
-                    <td>
-                        <select multiple disabled class="form-control">
-                            {% for tag_type in obj.tag_types %}
-                            <option>{{ tag_type }}</option>
-                            {% endfor %}
-                        </select>
-                    </td>
-                    {% if obj.can_delete %}
-                    <td>
-                        <form action="{{ url_for('central.buildingtemplate_delete') }}" method="POST">
-                        <input type="hidden" value="{{ obj.name }}" name="name">
-                        <input type="submit" value="Delete" class="btn btn-danger">
-                        </form>
-                    </td>
-                    {% endif %}
-                </tr>
-                {% endfor %}
-            </tbody>
+        <div ng-app="myApp" ng-controller="metadataController">
+            <div class="modal fade" id="tags">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title">Edit Assigned Tags Types for {[ BuildingName ]}</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div>
+                                <table class="table" ng-show="tags_owned.length > 0">
+                                    <thead>
+                                    <tr>
+                                        <th>Tag Type Name</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr ng-repeat="tag in tags_owned">
+                                        <td><input disabled ng-model="tags_owned[$index]" type="text" class="form-control" value="{[ tag ]}"></td>
+                                        <td><button class="close" ng-click="root.removeExistingTag($index)">&times;</button></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div>
+                                <table class="table">
+                                    <thead>
+                                    <tr>
+                                        <th>Tags</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr ng-repeat="tag in addedTags">
+                                        <td><select ng-model="addedTags[$index]" class="form-control" ng-options="name for name in names | orderBy: name"></select></td>
+                                        <td><button class="close" ng-click="root.removeTag($index)">&times;</button></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="btn-group">
+                                <button ng-click="root.addNewTag()" type="button" class="btn btn-info">Add a new Tag Type</button>
+                                <button ng-click="root.updateTags('BuildingName')" type="button" class="btn btn-warning">Update</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>TagTypes</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for obj in objs %}
+                        <tr>
+                            <td>{{ obj.name }}</td>
+                            <td class="col-sm-4">{{ obj.description }}</td>
+                            <td>
+                                <select multiple disabled class="form-control">
+                                    {% for tag_type in obj.tag_types %}
+                                        <option>{{ tag_type }}</option>
+                                    {% endfor %}
+                                </select>
+                            </td>
+                            <td>
+                                <a ng-click="root.tags('{{ obj.name }}',{{obj.tag_types}})" href="#tags" data-toggle="modal" class="btn btn-info btn-md">
+                                    <span class="glyphicon glyphicon-edit"></span> Edit TagTypes
+                                </a>
+                            </td>
+                            {% if obj.can_delete %}
+                                <td>
+                                    <form action="{{ url_for('central.buildingtemplate_delete') }}" method="POST">
+                                        <input type="hidden" value="{{ obj.name }}" name="name">
+                                        <input type="submit" value="Delete" class="btn btn-danger">
+                                    </form>
+                                </td>
+                            {% endif %}
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
 
-        </table>
     </div>
-</div>
+{% endblock %}
+{%  block scripts %}
+    {{ super() }}
+    <script>
+        var app = angular.module("myApp", []);
+        app.config(['$interpolateProvider', function($interpolateProvider) {
+            $interpolateProvider.startSymbol('{[');
+            $interpolateProvider.endSymbol(']}');
+        }]);
+        app.controller("metadataController", function($scope, $http) {
+
+            $scope.root = {};
+            $scope.root.tags =function(BuildingName,tag_types){
+                $scope.addedTags = [];
+                $scope.BuildingName = BuildingName;
+                $scope.initial_tags=tag_types;
+                $scope.tags_owned=tag_types;
+
+                var res = $http.get('/api/tagtype/list');
+                res.success(function(data){
+                    $scope.names = data.tags;
+                });
+            };
+            $scope.root.updateTags=function (name) {
+                tags = $scope.tags_owned.concat($scope.addedTags);
+                if (tags.length >0){
+                    var set ={};
+                    for (var i = 0; i < tags.length;i++ ){
+                        if (tags[i] === ''){
+                            alert("There is a name or value that is not specified");
+                            return;
+                        }
+                        if (set[tags[i]]){
+                            alert("There is a tag that is specified more than once");
+                            return;
+                        }
+                        set[tags[i]]=true;
+                    }
+                }
+                var res= $http.post('/api/buildingtemplate/'+$scope[name]+'/edit', {'data': tags});
+                res.success(function(data){
+                    alert("success");
+                    document.location='/central/buildingtemplate'
+                });
+
+            };
+            $scope.root.removeExistingTag = function(index) {
+                $scope.tags_owned.splice(index, 1);
+            };
+            $scope.root.addNewTag = function() {
+                $scope.addedTags.push('');
+            };
+            $scope.root.removeTag = function(index) {
+                $scope.addedTags.splice(index, 1);
+            };
+        });
+
+    </script>
 {% endblock %}
