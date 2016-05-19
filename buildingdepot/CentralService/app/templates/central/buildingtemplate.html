@@ -96,7 +96,7 @@
                             </td>
                             {% if obj.can_delete %}
                                 <td>
-                                    <form action="{{ url_for('central.buildingtemplate_delete') }}" method="POST">
+                                    <form action="{{ url_for('central.buildingtemplate_delete') }}" method="POST" onsubmit="return confirm('Are you sure you want to Delete?');">
                                         <input type="hidden" value="{{ obj.name }}" name="name">
                                         <input type="submit" value="Delete" class="btn btn-danger">
                                     </form>
@@ -139,11 +139,11 @@
                     var set ={};
                     for (var i = 0; i < tags.length;i++ ){
                         if (tags[i] === ''){
-                            alert("There is a name or value that is not specified");
+                            $.notify("There is a Tag Type that is not specified", { position:"top center",clickToHide: true,autoHideDelay:2000});
                             return;
                         }
                         if (set[tags[i]]){
-                            alert("There is a tag that is specified more than once");
+                            $.notify("There is a tagtype that is specified more than once", { position:"top center",clickToHide: true,autoHideDelay:2000});
                             return;
                         }
                         set[tags[i]]=true;
@@ -151,8 +151,10 @@
                 }
                 var res= $http.post('/api/buildingtemplate/'+$scope[name]+'/edit', {'data': tags});
                 res.success(function(data){
-                    alert("success");
-                    document.location='/central/buildingtemplate'
+                    $.notify("Success",{ globalPosition:'top center',clickToHide: true,autoHideDelay:2000, className:'success'});
+                    setTimeout(function() {
+                        document.location='/central/buildingtemplate'
+                        }, 335);
                 });
 
             };

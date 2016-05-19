@@ -18,7 +18,6 @@ from ..models.cs_models import *
 @api.route('/buildingtemplate/<name>/edit', methods=['POST'])
 def buildingtemplate_tag_edit(name):
     data = map(str,request.get_json()['data'])
-    print data
     buildingtemplate = BuildingTemplate.objects(name=name).first()
     if buildingtemplate.update(set__tag_types=data):
         return jsonify({'success': 'True'})
