@@ -37,7 +37,7 @@ class UserGroupForm(Form):
 class PermissionForm(Form):
     user_group = SelectField('User Group', validators=[DataRequired()])
     sensor_group = SelectField('Sensor Group', validators=[DataRequired()])
-    permission = SelectField('Building', choices=[('r', 'r'),('r/w', 'r/w'),('d/r','d/r')], validators=[DataRequired()])
+    permission = SelectField('Building', choices=[('r', 'r'),('r/w', 'r/w'),('d/r','d/r'),('r/w/p', 'r/w/p')], validators=[DataRequired()])
     submit = SubmitField('Submit')
 
 

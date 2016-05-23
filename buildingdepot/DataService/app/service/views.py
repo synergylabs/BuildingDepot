@@ -20,16 +20,14 @@ from ..models.ds_models import *
 from .forms import *
 from ..rest_api.utils import *
 from uuid import uuid4
-from .. import r, influx, oauth
+from .. import r, influx, oauth, permissions
 from werkzeug.security import gen_salt
 import sys
 
 sys.path.append('/srv/buildingdepot')
 from utils import get_user_oauth
 from ..api_0_0.resources.utils import *
-
-permissions = {"rw": "r/w", "r": "r", "dr": "d/r"}
-
+from ..api_0_0.resources.acl_cache import invalidate_permission
 
 @service.route('/sensor', methods=['GET', 'POST'])
 def sensor():
@@ -51,7 +49,7 @@ def sensor():
                source_identifier=str(form.source_identifier.data),
                building=str(form.building.data),
                owner=session['email']).save()
-        r.set(uuid,session['email'])
+        r.set('owner:{}'.format(uuid),session['email'])
         return redirect(url_for('service.sensor'))
     return render_template('service/sensor.html', objs=objs, form=form)
 
@@ -78,8 +76,8 @@ def sensor_delete():
         pipe.srem('subscribed_sensors:{}'.format(email), sensor.name)
 
     pipe.delete('sensor:{}'.format(sensor.name))
+    pipe.delete('owner:{}'.format(request.form.get('name')))
     pipe.execute()
-    r.delete(request.form.get('name'))
     #cache process done
 
     Sensor.objects(name=sensor.name).delete()
@@ -196,10 +194,14 @@ def permission():
                 form.user_group.data, form.sensor_group.data))
             return redirect(url_for('service.permission'))
         # If permission doesn't exist then create it
-        Permission(user_group=str(form.user_group.data),
-                   sensor_group=str(form.sensor_group.data),
-                   permission=form.permission.data).save()
-        r.set('permission:{}:{}'.format(form.user_group.data, form.sensor_group.data), form.permission.data)
+        if authorize_user(form.user_group.data,form.sensor_group.data,session['email']):
+            Permission(user_group=str(form.user_group.data),
+                       sensor_group=str(form.sensor_group.data),
+                       permission=str(form.permission.data)).save()
+            invalidate_permission(str(form.sensor_group.data))
+            r.set('permission:{}:{}'.format(form.user_group.data,form.sensor_group.data), form.permission.data)
+        else:
+            flash('You are not authorized to create this permission')
         return redirect(url_for('service.permission'))
     return render_template('service/permission.html', objs=objs, form=form)
 
@@ -207,8 +209,12 @@ def permission():
 @service.route('/permission_delete', methods=['POST'])
 def permission_delete():
     code = request.form.get('name').split(':-:')
-    Permission.objects(user_group=code[0], sensor_group=code[1]).delete()
-    r.delete('permission:{}:{}'.format(code[0], code[1]))
+    if authorize_user(code[0],code[1],session['email']):
+        Permission.objects(user_group=code[0], sensor_group=code[1]).delete()
+        r.delete('permission:{}:{}'.format(code[0], code[1]))
+        invalidate_permission(code[1])
+    else:
+        flash('You are not authorized to delete this permission')
     return redirect(url_for('service.permission'))
 
 
@@ -264,14 +270,14 @@ def sensors_search():
                 key_value = tag.split(":",1)
                 current_tag = {"name":key_value[0],"value":key_value[1]}
                 tag_list.append(current_tag)
-            args['tags_all'] = tag_list
+            args['tags__all'] = tag_list
         elif key == 'MetaData':
             metadata_list = []
             for meta in values:
                 key_value = tag.split(":",1)
                 current_meta = {key_value[0]:key_value[1]}
                 metdata_list.append(current_meta)
-            args['metadata_all'] = metdata_list
+            args['metadata__all'] = metdata_list
     print args
     sensors = Sensor.objects(**args)
     for sensor in sensors:

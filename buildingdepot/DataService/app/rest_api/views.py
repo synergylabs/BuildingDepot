@@ -17,16 +17,14 @@ from . import api
 from ..models.ds_models import *
 from ..service.utils import *
 from uuid import uuid4
-from .. import r, influx, oauth, exchange
+from .. import r, influx, oauth, exchange, permissions
 from werkzeug.security import gen_salt
 import sys, time, influxdb, urllib, traceback, pika
 
 sys.path.append('/srv/buildingdepot')
 from utils import get_user_oauth
 from ..api_0_0.resources.utils import *
-
-permissions = {"rw": "r/w", "r": "r", "dr": "d/r"}
-
+from ..api_0_0.resources.acl_cache import invalidate_user,invalidate_permission
 
 @api.route('/sensor/<name>', methods=['GET'])
 @api.route('/sensor', methods=['POST'])
@@ -80,7 +78,7 @@ def sensor_create(name=None):
                        source_identifier=xstr(identifier),
                        building=building,
                        owner = email).save()
-                r.set(uuid,email)
+                r.set('owner:{}'.format(uuid),email)
                 return jsonify({'success': 'True', 'uuid': uuid})
         return jsonify({'success': 'False', 'error': 'Building does not exist'})
     elif request.method == 'GET':
@@ -101,7 +99,7 @@ def sensor_create(name=None):
                         })
 
 
-@api.route('/sensor/<name>/timeseries', methods=['GET'])
+@api.route('/sensor/<name>/timeseries', methods=['GET'],endpoint="get_data")
 @oauth.require_oauth()
 @authenticate_acl('r')
 def get_data(name):
@@ -463,11 +461,10 @@ def jsonString(obj, pretty=False):
         return json.dumps(obj)
 
 
-@api.route('/sensor/<name>/tags', methods=['GET', 'POST'])
+@api.route('/sensor/<name>/tags',methods=['GET'])
 @oauth.require_oauth()
 def sensor_tags(name):
-    """Returns/Updates the list of tags that are attached to the sensor with the uuid <name>
-    For GET request:
+    """Returns the list of tags that are attached to the sensor with the uuid <name>
     Args as data:
     "name" : <sensor-uuid>
 
@@ -488,9 +485,18 @@ def sensor_tags(name):
                       .
                       .
                     ] (These are the list of tags owned by this sensor)
-    }
+    } """
+    # If request is a GET then return the list of tags
+    obj = Sensor.objects(name=name).first()
+    tags_owned = [{'name': tag.name, 'value': tag.value} for tag in obj.tags]
+    tags = get_building_tags(obj.building)
+    return jsonify({'tags': tags, 'tags_owned': tags_owned})
 
-    For POST request:
+@api.route('/sensor/<name>/tags', methods=['POST'])
+@oauth.require_oauth()
+@authenticate_acl('r/w/p')
+def sensor_tags(name):
+    """Updates the list of tags that are attached to the sensor with the uuid <name>
     Args as data:
     "name" : <sensor-uuid>
 
@@ -512,55 +518,49 @@ def sensor_tags(name):
         "success": <True or False>
     }
     """
-    if request.method == 'GET':
-        # If request is a GET then return the list of tags
-        obj = Sensor.objects(name=name).first()
-        tags_owned = [{'name': tag.name, 'value': tag.value} for tag in obj.tags]
-        tags = get_building_tags(obj.building)
-        return jsonify({'tags': tags, 'tags_owned': tags_owned})
-    else:
-        # If request is a POST then update the tags
-        tags = request.get_json()['data']
+    # If request is a POST then update the tags
+    tags = request.get_json()['data']
 
-        # cache process
-        sensor = Sensor.objects(name=name).first()
-        building = sensor.building
-        # Get old tags and new tags and find the list of tags that have to be added and deleted
-        # based on the response from get_add_delete
-        old = ['tag:{}:{}:{}'.format(building, tag.name, tag.value) for tag in sensor.tags]
-        new = ['tag:{}:{}:{}'.format(building, tag['name'], tag['value']) for tag in tags]
-        added, deleted = get_add_delete(old, new)
-        pipe = r.pipeline()
-        for tag in added:
-            pipe.sadd(tag, name)
-        for tag in deleted:
-            pipe.srem(tag, name)
-        pipe.execute()
+    # cache process
+    sensor = Sensor.objects(name=name).first()
+    building = sensor.building
+    # Get old tags and new tags and find the list of tags that have to be added and deleted
+    # based on the response from get_add_delete
+    old = ['tag:{}:{}:{}'.format(building, tag.name, tag.value) for tag in sensor.tags]
+    new = ['tag:{}:{}:{}'.format(building, tag['name'], tag['value']) for tag in tags]
+    added, deleted = get_add_delete(old, new)
+    pipe = r.pipeline()
+    for tag in added:
+        pipe.sadd(tag, name)
+    for tag in deleted:
+        pipe.srem(tag, name)
+    pipe.execute()
 
-        # cache process done, update the values in MongoDB
-        Sensor.objects(name=name).update(set__tags=tags)
+    # cache process done, update the values in MongoDB
+    Sensor.objects(name=name).update(set__tags=tags)
 
-        added = [tag.replace('tag', 'tag-sensorgroup', 1) for tag in added]
-        deleted = [tag.replace('tag', 'tag-sensorgroup', 1) for tag in deleted]
+    added = [tag.replace('tag', 'tag-sensorgroup', 1) for tag in added]
+    deleted = [tag.replace('tag', 'tag-sensorgroup', 1) for tag in deleted]
 
-        pipe = r.pipeline()
-        # Also update in the cache the sensorgroups and tags that this specific sensor is attached to
-        for key in added:
-            for sensorgroup_name in r.smembers(key):
-                sensorgroup = SensorGroup.objects(name=sensorgroup_name).first()
-                sensorgroup_tags = {'tag:{}:{}:{}'.format(building, tag.name, tag.value) for tag in sensorgroup.tags}
-                if sensorgroup_tags.issubset(new):
-                    pipe.sadd('sensorgroup:{}'.format(sensorgroup_name), sensor.name)
-                    pipe.sadd('sensor:{}'.format(sensor.name), sensorgroup_name)
+    pipe = r.pipeline()
+    # Also update in the cache the sensorgroups and tags that this specific sensor is attached to
+    for key in added:
+        for sensorgroup_name in r.smembers(key):
+            sensorgroup = SensorGroup.objects(name=sensorgroup_name).first()
+            sensorgroup_tags = {'tag:{}:{}:{}'.format(building, tag.name, tag.value) for tag in sensorgroup.tags}
+            if sensorgroup_tags.issubset(new):
+                pipe.sadd('sensorgroup:{}'.format(sensorgroup_name), sensor.name)
+                pipe.sadd('sensor:{}'.format(sensor.name), sensorgroup_name)
 
-        for key in deleted:
-            for sensorgroup_name in r.smembers(key):
-                pipe.srem('sensorgroup:{}'.format(sensorgroup_name), sensor.name)
-                pipe.srem('sensor:{}'.format(sensor.name), sensorgroup_name)
+    for key in deleted:
+        for sensorgroup_name in r.smembers(key):
+            pipe.srem('sensorgroup:{}'.format(sensorgroup_name), sensor.name)
+            pipe.srem('sensor:{}'.format(sensor.name), sensorgroup_name)
 
-        pipe.execute()
+    pipe.delete(sensor)
+    pipe.execute()
 
-        return jsonify({'success': 'True'})
+    return jsonify({'success': 'True'})
 
 
 @api.route('/sensor_group/<name>/tags', methods=['GET', 'POST'])
@@ -620,6 +620,9 @@ def sensorgroup_tags(name):
         tags = get_building_tags(obj.building)
         return jsonify({'tags': tags, 'tags_owned': tags_owned})
     else:
+        if Permission.objects(sensor_group=name).first() is not None:
+            return jsonify({'success':'False','error':"""Sensor group tags cannot be edited.
+                Already being used for permissions"""})
         tags = request.get_json()['data']
         # cache process
         sensorgroup = SensorGroup.objects(name=name).first()
@@ -643,6 +646,7 @@ def sensorgroup_tags(name):
             pipe.sadd('sensor:{}'.format(sensor_name), name)
         for sensor_name in deleted:
             pipe.srem('sensor:{}'.format(sensor_name), name)
+            pipe.delete(sensor_name)
 
         r.delete('sensorgroup:{}'.format(name))
         for item in new_sensors:
@@ -751,8 +755,10 @@ def usergroup_users(name):
             pipe = r.pipeline()
             for user in added:
                 pipe.sadd('user:{}'.format(user), user_group.name)
+                invalidate_user(name,user)
             for user in deleted:
                 pipe.srem('user:{}'.format(user), user_group.name)
+                invalidate_user(name,user)
             pipe.execute()
             # cache process done
             UserGroup.objects(name=name).update(set__users=emails)
@@ -858,6 +864,71 @@ def subscribe_sensor():
 
     return jsonify({'success': 'False', 'error': 'App id doesn\'t exist'})
 
+@api.route('/permission',methods=['GET','POST'])
+@oauth.require_oauth()
+def create_permission():
+    if request.method=='GET':
+        user_group = request.args.get('user_group')
+        sensor_group = request.args.get('sensor_group')
+        if not all([user_group,sensor_group]):
+            return jsonify({'success':'False','error':'Missing parameters'})
+        else:
+            permission = Permission.objects(user_group=user_group,sensor_group=sensor_group).first()
+            if permission is None:
+                return jsonify({'success':'False','error':'Permission doesn\'t exist'})
+            else:
+                return jsonify({'success':'True','permission':permission.permission})
+    elif request.method=='POST':
+        data = request.get_json()
+        try:
+            sensor_group = data['sensor_group']
+            user_group = data['user_group']
+            permission = data['permission']
+        except KeyError:
+            return jsonify({'success':'False','error':'Missing parameters'})
+
+        if UserGroup.objects(name=user_group).first() is None:
+            return jsonify({'success':'False','error':'User group doesn\'t exist'})
+        if SensorGroup.objects(name=sensor_group).first() is None:
+            return jsonify({'success':'False','error':'Sensor group doesn\'t exist'})
+        if permissions.get(permission) is None:
+            return jsonify({'success':'False','error':'Permission value doesn\'t exist'})
+
+        if authorize_user(user_group,sensor_group):
+            if Permission.objects(user_group=user_group,sensor_group=sensor_group).first() is not None:
+                Permission.objects(user_group=user_group,
+                    sensor_group=sensor_group).first().update(permission=permissions.get(permission))
+            else:
+                Permission(user_group=user_group,sensor_group=sensor_group,
+                    permission=permissions.get(permission)).save()
+            invalidate_permission(sensor_group)
+            r.set('permission:{}:{}'.format(user_group,sensor_group),permissions.get(permission))
+            return jsonify({'success':'True'})
+        else:
+            return jsonify({'success':'False','error':'Unauthorised sensors in sensor group'})
+
+@api.route('/permission',methods=['DELETE'])
+@oauth.require_oauth()
+def delete_permission():
+    if request.method=='DELETE':
+        user_group = request.args.get('user_group')
+        sensor_group = request.args.get('sensor_group')
+        if not all([user_group,sensor_group]):
+            return jsonify({'success':'False','error':'Missing parameters'})
+        else:
+            if authorize_user(user_group,sensor_group):
+                permission = Permission.objects(user_group = user_group,sensor_group = sensor_group)
+                if permission.first() is None:
+                    return jsonify({'success':'False','error':'Permission is not defined'})
+                else:
+                    permission.first().delete()
+                    r.delete('permission:{}:{}'.format(user_group,sensor_group))
+                    invalidate_permission(sensor_group)
+                    return jsonify({'success':'True','error':'Permission deleted'})
+            else:
+                return jsonify({'success':'False','error':"""You are not authorized to delete
+                    this permission"""})
+
 def connect_broker():
     try:
         pubsub = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
@@ -895,7 +966,6 @@ def permission_change(user_id, sensor_group, permission_value):
             permission_list.update(set__permission=permission_value)
             r.set('permission:{}:{}'.format(user_group, \
                                             sensor_group), permission_value)
-
     if updated:
         return jsonify({'success': 'True'})
     else:
