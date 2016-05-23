@@ -124,7 +124,7 @@
                         <a ng-click="root.select('{{ building_name }}', tag.name, tag.value)" href="#metadata" data-toggle="modal" class="btn btn-info">Metadata</a>
                     </td>
                     <td ng-show="tag.can_delete">
-                        <form action="{{ url_for('central.building_tags_delete', building_name=building_name) }}" method="POST">
+                        <form action="{{ url_for('central.building_tags_delete', building_name=building_name) }}" method="POST" onsubmit="return confirm('Are you sure you want to Delete?');">
                         <input type="hidden" value="{[ tag.name ]}" name="tag_name">
                         <input type="hidden" value="{[ tag.value ]}" name="tag_value">
                         <input type="submit" value="Delete" class="btn btn-danger">
@@ -164,16 +164,16 @@
                     $scope.metadata = data.data;
                 });
                 res.error(function() {
-                    alert("Ajax failed");
+                    $.notify("Ajax failed", { position:"top center",clickToHide: true,autoHideDelay:2000});
                 });
             };
             $scope.root.update = function() {
                 var res = $http.post('/central/building/'+ this.buildingName + '/tags/' + this.tagName + '/' + this.tagValue + '/metadata', {'data': $scope.metadata});
                 res.success(function(data) {
-                    confirm('Success');
+                    $.notify("Success",{ globalPosition:'top center',clickToHide: true,autoHideDelay:2000, className:'success'});
                 });
                 res.error(function() {
-                    alert("Ajax failed");
+                    $.notify("Ajax failed", { position:"top center",clickToHide: true,autoHideDelay:2000});
                 });
             };
             $scope.root.addNewTag = function() {
@@ -185,7 +185,7 @@
                     $scope.names = Object.keys($scope.pairs);
                 });
                 res.error(function() {
-                    alert("Ajax failed");
+                    $.notify("Ajax failed", { position:"top center",clickToHide: true,autoHideDelay:2000});
                 });
             };
             $scope.root.submit = function() {
@@ -193,19 +193,19 @@
                     'name': $scope.selectedName,
                     'value': $scope.value,
                     'parents': $scope.selectedParents
-                }
+                };
                 for (var i = 0; i < $scope.tags.length; i++) {
                     if ($scope.tags[i].name === $scope.selectedName && $scope.tags[i].value === $scope.value) {
-                        alert("There is already a tag with the same name and value");
+                        $.notify("There is already a tag with the same name and value", { position:"top center",clickToHide: true,autoHideDelay:2000});
                         return;
                     }
                 }
                 var res = $http.post('/central/building/'+ '{{ building_name }}' + '/add_tag', {'data': data});
                 res.success(function(data) {
-                    confirm('Success');
+                    $.notify("Success",{ globalPosition:'top center',clickToHide: true,autoHideDelay:2000, className:'success'});
                 });
                 res.error(function() {
-                    alert("Ajax failed");
+                    $.notify("Ajax failed", { position:"top center",clickToHide: true,autoHideDelay:2000});
                 });
             };
         });

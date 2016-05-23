@@ -60,7 +60,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Admins of Data Service{[ root.dataServiceName ]}</h4>
+                    <h4 class="modal-title">Admins of Data Service {[ root.dataServiceName ]}</h4>
                 </div>
                 <div class="modal-body">
                     <table class="table">
@@ -150,28 +150,28 @@
                     $scope.building_names = data.building_names;
                 });
                 res.error(function() {
-                    alert("Ajax failed");
+                    $.notify("Ajax failed", { position:"top center",clickToHide: true,autoHideDelay:2000});
                 });
             };
             $scope.root.updateBuildings = function() {
                 var set = {};
                 for (var i = 0; i < $scope.buildings.length; i++) {
                     if ($scope.buildings[i] === '') {
-                        alert('There is one building that you did not specify');
+                        $.notify("There is one building that you did not specify", { position:"top center",clickToHide: true,autoHideDelay:2000});
                         return;
                     }
                     if (set[$scope.buildings[i]]) {
-                        alert('You specify more than or two same buildings');
+                        $.notify("You specify more than or two same buildings", { position:"top center",clickToHide: true,autoHideDelay:2000});
                         return;
                     }
                     set[$scope.buildings[i]] = true;
                 }
                 var res = $http.post('/central/dataservice/'+ this.dataServiceName + '/buildings', {'data': $scope.buildings});
                 res.success(function(data) {
-                    confirm('Success');
+                    $.notify("Success",{ globalPosition:'top center',clickToHide: true,autoHideDelay:2000, className:'success'});
                 });
                 res.error(function() {
-                    alert("Ajax failed");
+                    $.notify("Ajax failed", { position:"top center",clickToHide: true,autoHideDelay:2000});
                 });
             };
 
@@ -191,28 +191,28 @@
                     $scope.user_emails = data.user_emails;
                 });
                 res.error(function() {
-                    alert("Ajax failed");
+                    $.notify("Ajax failed", { position:"top center",clickToHide: true,autoHideDelay:2000});
                 });
             };
             $scope.root.updateAdmins = function() {
                 var set = {};
                 for (var i = 0; i < $scope.admins.length; i++) {
                     if ($scope.admins[i] === '') {
-                        alert('There is one admin that you did not specify');
+                        $.notify("There is one admin that you did not specify", { position:"top center",clickToHide: true,autoHideDelay:2000});
                         return;
                     }
                     if (set[$scope.admins[i]]) {
-                        alert('You specify more than or two same admins');
+                        $.notify("You specify more than or two same admins", { position:"top center",clickToHide: true,autoHideDelay:2000});
                         return;
                     }
                     set[$scope.admins[i]] = true;
                 }
                 var res = $http.post('/central/dataservice/'+ this.dataServiceName + '/admins', {'data': $scope.admins});
                 res.success(function(data) {
-                    confirm('Success');
+                    $.notify("Success",{ globalPosition:'top center',clickToHide: true,autoHideDelay:2000, className:'success'});
                 });
                 res.error(function() {
-                    alert("Ajax failed");
+                    $.notify("Ajax failed", { position:"top center",clickToHide: true,autoHideDelay:2000});
                 });
             };
 

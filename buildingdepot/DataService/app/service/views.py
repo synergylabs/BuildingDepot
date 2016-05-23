@@ -13,7 +13,7 @@ of BD will call the sensor() function
 @license: UCSD License. See License file for details.
 """
 
-from flask import json,render_template, request
+from flask import json, render_template, request
 from flask import session, redirect, url_for, jsonify, flash
 from . import service
 from ..models.ds_models import *
@@ -23,6 +23,7 @@ from uuid import uuid4
 from .. import r, influx, oauth, permissions
 from werkzeug.security import gen_salt
 import sys
+import math
 
 sys.path.append('/srv/buildingdepot')
 from utils import get_user_oauth
@@ -37,7 +38,11 @@ def sensor():
     objs = Sensor.objects().skip(skip_size).limit(PAGE_SIZE)
     for obj in objs:
         obj.can_delete = True
-
+    total = len(Sensor.objects())
+    if (total):
+        pages = int(math.ceil(float(total) / PAGE_SIZE))
+    else:
+        pages = 0
     form = SensorForm()
     # Get the list of valid buildings for this DataService
     form.building.choices = get_building_choices(current_app.config['NAME'])
@@ -51,7 +56,8 @@ def sensor():
                owner=session['email']).save()
         r.set('owner:{}'.format(uuid),session['email'])
         return redirect(url_for('service.sensor'))
-    return render_template('service/sensor.html', objs=objs, form=form)
+    return render_template('service/sensor.html', objs=objs, form=form, total=total,
+                           pages=pages, current_page=page, pagesize=PAGE_SIZE)
 
 
 @service.route('/sensor_delete', methods=['POST'])
@@ -120,9 +126,14 @@ def oauth_gen():
                 'http://127.1:8000/authorized']),
             _default_scopes='email',
             user=request.form.get('name')).save()
-        return render_template('service/oauth_gen.html', keys=keys)
-    return render_template('service/oauth_gen.html', keys=keys)
+    clientkeys = Client.objects(user=session['email'])
+    return render_template('service/oauth_gen.html', keys=clientkeys)
 
+@service.route('/oauth_delete', methods=['POST'])
+def oauth_delete():
+    if request.method == 'POST':
+        Client.objects(client_id=request.form.get('client_id')).delete()
+        return redirect(url_for('service.oauth_gen'))
 
 @service.route('/sensorgroup_delete', methods=['POST'])
 def sensorgroup_delete():
@@ -251,11 +262,13 @@ def permission_query():
 
     return render_template('service/query.html', form=form, res=res)
 
-@service.route('/sensor/search',methods=['GET','POST'])
+
+@service.route('/sensor/search', methods=['GET', 'POST'])
 def sensors_search():
-    data = request.get_json()['data']
+    data = json.loads(request.args.get('q'))
+    print data, type(data)
     args = {}
-    for key,values in data.iteritems():
+    for key, values in data.iteritems():
         if key == 'Building':
             args['building__in'] = values
         elif key == 'SourceName':
@@ -267,27 +280,40 @@ def sensors_search():
         elif key == 'Tags':
             tag_list = []
             for tag in values:
-                key_value = tag.split(":",1)
-                current_tag = {"name":key_value[0],"value":key_value[1]}
+                key_value = tag.split(":", 1)
+                current_tag = {"name": key_value[0], "value": key_value[1]}
                 tag_list.append(current_tag)
             args['tags__all'] = tag_list
         elif key == 'MetaData':
             metadata_list = []
             for meta in values:
-                key_value = tag.split(":",1)
-                current_meta = {key_value[0]:key_value[1]}
+                key_value = tag.split(":", 1)
+                current_meta = {key_value[0]: key_value[1]}
                 metdata_list.append(current_meta)
             args['metadata__all'] = metdata_list
     print args
-    sensors = Sensor.objects(**args)
+    # Show the user PAGE_SIZE number of sensors on each page
+    page = request.args.get('page', 1, type=int)
+    skip_size = (page - 1) * PAGE_SIZE
+    sensors = Sensor.objects(**args).skip(skip_size).limit(PAGE_SIZE)
+
     for sensor in sensors:
-        print sensor.name
+        sensor.can_delete = True
+
+    total = len(Sensor.objects(**args))
+    if (total):
+        pages = int(math.ceil(float(total) / PAGE_SIZE))
+    else:
+        pages = 0
     form = SensorForm()
     # Get the list of valid buildings for this DataService
     form.building.choices = get_building_choices(current_app.config['NAME'])
-    return render_template('service/sensor.html', objs=sensors,form = form)
+    return render_template('service/sensor.html', objs=sensors, form=form, total=total,
+                           pages=pages, current_page=page, pagesize=PAGE_SIZE)
+
 
 @service.route('/graph/<name>')
+@service.route('/sensor/graph/<name>')
 def graph(name):
     objs = Sensor.objects()
     for obj in objs:

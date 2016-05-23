@@ -50,9 +50,11 @@ class Permission(Document):
     sensor_group = StringField()
     permission = StringField()
 
+
 class Application(Document):
     user = StringField()
     apps = ListField(EmbeddedDocumentField(Node))
+
 
 class Client(Document):
     client_id = StringField(required=True, unique=True)
@@ -80,5 +82,3 @@ class Client(Document):
         if self._default_scopes:
             return self._default_scopes.split()
         return []
-
-

@@ -29,9 +29,9 @@ def tagtype():
     """Returns the list of TagTypes currently present in the system and adds a new
        type if the form is submitted and succesfully validated"""
     page = request.args.get('page', 1, type=int)
-    skip_size = (page-1)*PAGE_SIZE
+    skip_size = (page - 1) * PAGE_SIZE
     objs = TagType.objects().skip(skip_size).limit(PAGE_SIZE)
-    #Can be deleted only if no child has a dependency on it
+    # Can be deleted only if no child has a dependency on it
     for obj in objs:
         if not obj.children and BuildingTemplate._get_collection().find({'tag_types': obj.name}).count() == 0:
             obj.can_delete = True
@@ -40,11 +40,11 @@ def tagtype():
     form = TagTypeForm()
     form.parents.choices = get_choices(TagType)
     if form.validate_on_submit():
-        #Create the tag
+        # Create the tag
         TagType(name=str(form.name.data),
                 description=str(form.description.data),
                 parents=form.parents.data).save()
-        #update all the parents of this tag with the dependency
+        # update all the parents of this tag with the dependency
         for parent in form.parents.data:
             collection = TagType._get_collection()
             collection.update(
@@ -62,7 +62,7 @@ def tagtype_delete():
     name = request.form.get('name')
     TagType.objects(name=name).delete()
     collection = TagType._get_collection()
-    #Remove the dependency from all the parents
+    # Remove the dependency from all the parents
     collection.update(
         {'children': name},
         {'$pull': {'children': name}},
@@ -77,14 +77,14 @@ def role():
     """Creates a new role"""
     objs = Role.objects
     for obj in objs:
-        #If there are users using this role then it cannot be deleted
+        # If there are users using this role then it cannot be deleted
         if User.objects(role=obj).count() > 0:
             obj.can_delete = False
         else:
             obj.can_delete = True
     form = RoleForm()
     if form.validate_on_submit():
-        #Create the role
+        # Create the role
         Role(name=str(form.name.data),
              description=str(form.description.data),
              permission=form.permission.data,
@@ -107,16 +107,17 @@ def role_delete():
 def buildingtemplate():
     """Create a buildingtemplate or retrieve the list of the current ones"""
     page = request.args.get('page', 1, type=int)
-    skip_size = (page-1)*PAGE_SIZE
+    skip_size = (page - 1) * PAGE_SIZE
     objs = BuildingTemplate.objects().skip(skip_size).limit(PAGE_SIZE)
-    #If there are buildings using this template then mark as cannot be deleted
+    # If there are buildings using this template then mark as cannot be deleted
     for obj in objs:
         if Building.objects(template=obj.name).count() > 0:
             obj.can_delete = False
         else:
             obj.can_delete = True
+        obj.tag_types = map(str,obj.tag_types)
     form = BuildingTemplateForm()
-    #Get list of tags that this building can use
+    # Get list of tags that this building can use
     form.tag_types.choices = get_choices(TagType)
     if form.validate_on_submit():
         BuildingTemplate(name=str(form.name.data),
@@ -139,10 +140,10 @@ def building():
     """Create a new building or retrive the list of buildings currently in
        the system"""
     page = request.args.get('page', 1, type=int)
-    skip_size = (page-1)*PAGE_SIZE
+    skip_size = (page - 1) * PAGE_SIZE
     objs = Building.objects().skip(skip_size).limit(PAGE_SIZE)
-    #If the building doesn't have any tags associated to it then mark
-    #it as can be deleted
+    # If the building doesn't have any tags associated to it then mark
+    # it as can be deleted
     for obj in objs:
         if len(obj.tags) == 0:
             obj.can_delete = True
@@ -151,7 +152,7 @@ def building():
     form = BuildingForm()
     form.template.choices = get_choices(BuildingTemplate)
     if form.validate_on_submit():
-        #Create the building
+        # Create the building
         Building(name=str(form.name.data),
                  description=str(form.description.data),
                  template=str(form.template.data)).save()
@@ -176,7 +177,7 @@ def building_metadata(name):
         metadata = [{'name': key, 'value': val} for key, val in metadata.iteritems()]
         return jsonify({'data': metadata})
     else:
-        #Update the metadata
+        # Update the metadata
         metadata = {pair['name']: pair['value'] for pair in request.get_json()['data']}
         Building.objects(name=name).update(set__metadata=metadata)
         return jsonify({'success': 'True'})
@@ -194,7 +195,7 @@ def building_tags_delete(building_name):
     """Delete specific tags associated with the building"""
     tag_name = request.form.get('tag_name')
     tag_value = request.form.get('tag_value')
-    #Update the entry in MongoDB
+    # Update the entry in MongoDB
     Building._get_collection().update(
         {'name': building_name},
         {'$pull': {'tags': {'name': tag_name, 'value': tag_value}}}
@@ -207,7 +208,7 @@ def building_tags_delete(building_name):
 def building_tags_metadata(building_name, tag_name, tag_value):
     """Retrieve or update the metadata associated with a specific tag in a building"""
     if request.method == 'GET':
-        #Retrieve the metadata associated with the tag
+        # Retrieve the metadata associated with the tag
         metadata = Building._get_collection().aggregate([
             {'$unwind': '$tags'},
             {'$match': {'name': building_name, 'tags.name': tag_name, 'tags.value': tag_value}},
@@ -216,7 +217,7 @@ def building_tags_metadata(building_name, tag_name, tag_value):
         metadata = [{'name': key, 'value': val} for key, val in metadata.iteritems()]
         return jsonify({'data': metadata})
     else:
-        #Update the metadata associated with the tag
+        # Update the metadata associated with the tag
         metadata = {pair['name']: pair['value'] for pair in request.get_json()['data']}
         collection = Building._get_collection()
         tag = collection.aggregate([
@@ -225,7 +226,7 @@ def building_tags_metadata(building_name, tag_name, tag_value):
             {'$project': {'_id': 0, 'tags': 1}}
         ])['result'][0]['tags']
         tag['metadata'] = metadata
-        #Update the values in MongoDB
+        # Update the values in MongoDB
         collection.update(
             {'name': building_name},
             {'$pull': {'tags': {'name': tag_name, 'value': tag_value}}}
@@ -243,7 +244,7 @@ def building_tags_metadata(building_name, tag_name, tag_value):
 def building_tags_ajax(building_name):
     """Retrieve or update the list of tags associated with this building"""
     if request.method == 'GET':
-        #Retrieve the template and tags associated with this building
+        # Retrieve the template and tags associated with this building
         template = Building.objects(name=building_name).first().template
         names = BuildingTemplate.objects(name=template).first().tag_types
         pairs = {name: TagType.objects(name=name).first().parents for name in names}
@@ -251,18 +252,18 @@ def building_tags_ajax(building_name):
             {'name': building_name},
             {'_id': 0, 'tags.name': 1, 'tags.value': 1, 'tags.parents': 1, 'tags.ancestors': 1}
         )[0]['tags']
-        parents = set([pair['name']+pair['value'] for tag in tags for pair in tag['parents']])
-        #Response contains parameters that define whether tag can be deleted or not and
-        #the ancestors on whom it is dependent
+        parents = set([pair['name'] + pair['value'] for tag in tags for pair in tag['parents']])
+        # Response contains parameters that define whether tag can be deleted or not and
+        # the ancestors on whom it is dependent
         for tag in tags:
-            tag['can_delete'] = tag['name']+tag['value'] not in parents
-            tag['ancestors'] = [ancestor['name']+ancestor['value'] for ancestor in tag['ancestors']]
+            tag['can_delete'] = tag['name'] + tag['value'] not in parents
+            tag['ancestors'] = [ancestor['name'] + ancestor['value'] for ancestor in tag['ancestors']]
         return jsonify({'pairs': pairs, 'tags': tags, 'graph': get_tag_descendant_pairs()})
     else:
         data = request.get_json()['data']
         collection = Building._get_collection()
         ancestors = []
-        #Check which tags this one specifies as its parents
+        # Check which tags this one specifies as its parents
         if 'parents' in data:
             data['parents'] = [{'name': parent['name'], 'value': parent['value']} for parent in data['parents']]
             for parent in data['parents']:
@@ -275,7 +276,7 @@ def building_tags_ajax(building_name):
                 )
             ancestors.extend(data['parents'])
 
-        #Form the tag to update in MongoDB
+        # Form the tag to update in MongoDB
         tag = {
             'name': data['name'],
             'value': data['value'],
@@ -287,13 +288,12 @@ def building_tags_ajax(building_name):
         if 'parents' in data:
             tag['parents'] = data['parents']
 
-        #Update tags list
+        # Update tags list
         collection.update(
             {'name': building_name},
             {'$addToSet': {'tags': tag}}
         )
         return jsonify({'success': 'True'})
-
 
 
 @central.route('/user', methods=['GET'])
@@ -310,7 +310,7 @@ def user_ajax():
         objs = User.objects
         supers, locals, defaults = [], [], []
         for obj in objs:
-            #Check type of user
+            # Check type of user
             if obj.is_super():
                 supers.append({'email': obj.email, 'name': obj.name})
             elif obj.is_local():
@@ -321,7 +321,8 @@ def user_ajax():
                     'email': obj.email,
                     'name': obj.name,
                     'pairs':
-                        [{'role': item.role, 'building': item.building, 'can_delete': item.building not in assigned_buildings} for item in obj.role_per_building],
+                        [{'role': item.role, 'building': item.building,
+                          'can_delete': item.building not in assigned_buildings} for item in obj.role_per_building],
                 })
         emails = [super['email'] for super in supers] + \
                  [local['email'] for local in locals] + \
@@ -334,7 +335,7 @@ def user_ajax():
                         'emails': emails, 'buildings': buildings, 'roles': roles})
     else:
         data = request.get_json()['data']
-        #Create the user
+        # Create the user
         User(email=data['email'],
              name=data['name'],
              password=generate_password_hash(data['password']),
@@ -358,7 +359,7 @@ def user_add_managed_buildings(email):
 def user_add_role_per_building(email):
     """Every user can have a specific role that is defined per building"""
     pairs = request.get_json()['data']
-    #Update the role in the specified building
+    # Update the role in the specified building
     User.objects(email=email).update(set__role_per_building=pairs)
     User.objects(email=email).update(set__buildings=[item['building'] for item in pairs])
     return jsonify({'success': 'True'})
@@ -372,8 +373,8 @@ def user_tags_owned(email):
         user = User.objects(email=email).first()
         buildings = user.buildings
         data = {}
-        #Iterate over each building that this user is associated with and obtain the
-        #building specific tags
+        # Iterate over each building that this user is associated with and obtain the
+        # building specific tags
         for building in buildings:
             tags = Building._get_collection().find(
                 {'name': building}, {'tags.name': 1, 'tags.value': 1, '_id': 0})[0]['tags']
@@ -384,8 +385,8 @@ def user_tags_owned(email):
                 else:
                     sub[tag['name']] = [tag['value']]
             data[building] = sub
-        #Form a list of dicts containing the building name and the tags which the user has for
-        #that building
+        # Form a list of dicts containing the building name and the tags which the user has for
+        # that building
         triples = [{'building': item.building,
                     'tags': [{'name': elem.name, 'value': elem.value} for elem in item.tags]}
                    for item in user.tags_owned]
@@ -394,7 +395,7 @@ def user_tags_owned(email):
     else:
         tags_owned = request.get_json()['data']
         print tags_owned
-        #Update the tags in MongoDB
+        # Update the tags in MongoDB
         User.objects(email=email).update(set__tags_owned=tags_owned)
         return jsonify({'success': 'True'})
 
@@ -408,7 +409,7 @@ def dataservice():
         obj.can_delete = True
     form = DataServiceForm()
     if form.validate_on_submit():
-        #Create the DataService
+        # Create the DataService
         DataService(name=str(form.name.data),
                     description=str(form.description.data),
                     host=str(form.host.data),
