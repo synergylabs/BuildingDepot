@@ -30,6 +30,8 @@ import redis
 from influxdb import InfluxDBClient
 
 
+permissions = {"rw": "r/w", "r": "r", "dr": "d/r","rwp":"r/w/p"}
+
 exchange = 'master_exchange'
 r = redis.Redis()
 influx = InfluxDBClient('localhost', 8086, 'root', 'root', 'buildingdepot')

@@ -9,8 +9,9 @@ has to the specified sensor.
 @copyright: (c) 2016 SynergyLabs
 @license: UCSD License. See License file for details.
 """
+
 from ...service.utils import validate_users, get_permission, get_admins
-from ...models.ds_models import Sensor
+from ...models.ds_models import Sensor,SensorGroup,UserGroup,Permission
 from ...oauth_bd.views import Token
 from ..errors import *
 from ... import r
@@ -19,7 +20,7 @@ import sys
 sys.path.append('/srv/buildingdepot')
 
 
-permissions_val = {"u/d":1,"r/w":2,"r":3,"d/r":4}
+permissions_val = {"u/d":1,"r/w/p":2,"r/w":3,"r":4,"d/r":5}
 
 def success():
     response = jsonify({'success': 'True'})
@@ -46,7 +47,7 @@ def validate_sensor(f):
         return f(*args, **kwargs)
     return decorated_function
 
-def authenticate_acl(read_write):
+def authenticate_acl(permission_required):
     """This is the function that defines the acl's and what level of access
        the user has to the specified sensor"""
     def authenticate_write(f):
@@ -58,57 +59,114 @@ def authenticate_acl(read_write):
             #Check what level of access this user has to the sensor
             response = permission(sensor_name)
             if response == 'd/r':
-                return jsonify({'response':'You are not authenticated to use to this sensor'})
-            elif response  == read_write or response == 'r/w':
+                return jsonify({'success':'False',
+                    'error':'You are not authenticated to use this sensor'})
+            elif response  == permission_required:
                 return f(*args,**kwargs)
-    	    elif response in ['undefined','r']:
-                return jsonify({'response':'You are not authenticated to write to this sensor'})
-    	    elif response == 'unauthorized':
-                return jsonify({'response':'Access token not valid for this id'})
+    	    elif response in ['r','r/w']:
+                return jsonify({'success':'False',
+                    'error':'You are not authenticated for this operation on the sensor'})
     	    else:
-                return jsonify({'response':'Permission not defined or sensor does not exist'})
+                if Sensor.objects(name=sensor_name).first() is None:
+                    return jsonify({'success':'False',
+                        'error':'Sensor does not exist'})
+                else:
+                    return jsonify({'success':'False','error':'Permission not defined'})
         return decorated_function
     return authenticate_write
 
-def permission(sensor_name):
+def permission(sensor_name,email=None):
 
-    headers = request.headers
-    token = headers['Authorization'].split()[1]
-    email = Token.objects(access_token=token).first().email
+    if email is None : email = get_email()
+
+    #Check if permission already cached
+    current_res = r.hget(sensor_name,email)
+    if current_res is not None:
+        return current_res
 
     sensor = Sensor.objects(name=sensor_name).first()
-    if sensor == None:
+    if sensor is None:
         return 'invalid'
 
     #if admin then give complete access
     if email in get_admins():
-        return 'r/w'
+        return 'r/w/p'
+
+    print "Admin check failed"
 
     #check if user is the sensor owner
-    if r.get(sensor_name) == email:
-        return 'r/w'
+    if r.get('owner:{}'.format(sensor_name)) == email:
+        return 'r/w/p'
+
+    print "Not owner"
 
     current_res = 'u/d'
     usergroups = r.smembers('user:{}'.format(email))
     sensorgroups = r.smembers('sensor:{}'.format(sensor_name))
     previous,current = 0,0
     #Iterate over all the usergroups within which the user is present and the
-    #sensorgroups within which the sensor is present and see if they have any
-    #permission defined between them
+    #sensorgroups within which the sensor is present and find permissions
     for usergroup in usergroups:
         for sensorgroup in sensorgroups:
             #Multiple permissions may exists for the same user and sensor relation.
             #This one chooses the most restrictive one by counting the number of tags
-            current = int(r.get('tag-count:{}'.format(sensorgroup)))
             res = r.get('permission:{}:{}'.format(usergroup, sensorgroup))
-            if current>previous and current!=0:
-                previous = current
-                if res!=None:
+            print res
+            if res!=None:
+                if permissions_val[res]>permissions_val[current_res]:
                     current_res = res
-            elif current == previous:
-                res = r.get('permission:{}:{}'.format(usergroup, sensorgroup))
-                if res!=None:
-                    print "permission is "+res
-                    if permissions_val[res]>permissions_val[current_res]:
-                        current_res = res
+    #If permission couldn't be calculated from cache go to MongoDB
+    if current_res=='u/d':
+        current_res = check_db(sensor_name,email)
+    #cache the latest permission
+    r.hset(sensor_name,email,current_res)
     return current_res
+
+def check_db(sensor,email):
+    sensor_obj = Sensor.objects(name=sensor).first()
+    args={}
+    tag_list = []
+    #Retrieve sensor tags and form search query for Sensor groups
+    for tag in sensor_obj['tags']:
+        current_tag = {"name":tag['name'],"value":tag['value']}
+        tag_list.append(current_tag)
+    args['tags__in'] = tag_list
+    sensor_groups = SensorGroup.objects(**args)
+    args={}
+    args['users__all'] = [email]
+    user_groups = UserGroup.objects(**args)
+    current_res = 'u/d'
+    #Iterate over all sensor and user group combinations and find
+    #resultant permission
+    for sensor_group in sensor_groups:
+        for user_group in user_groups:
+            permission = Permission.objects(sensor_group=sensor_group['name'],
+                user_group=user_group['name'])
+            if permission.first() is not None:
+                curr_permission = permission.first()['permission']
+                if permissions_val[curr_permission] > permissions_val[current_res]:
+                    current_res = curr_permission
+    return current_res
+
+def authorize_user(user_group,sensor_group,email=None):
+    if email is None : email = get_email()
+    sensor_group = SensorGroup.objects(name=sensor_group).first()
+    tag_list = []
+    for tag in sensor_group['tags']:
+        current_tag = {"name":tag['name'],"value":tag['value']}
+        tag_list.append(current_tag)
+    args={}
+    args['building'] = sensor_group['building']
+    args['tags__all'] = tag_list
+    sensors  = Sensor.objects(**args)
+    for sensor in sensors:
+        print sensor['name']
+        if permission(sensor['name'],email) != 'r/w/p':
+            return False
+    return True
+
+def get_email():
+    headers = request.headers
+    token = headers['Authorization'].split()[1]
+    return Token.objects(access_token=token).first().email
+
