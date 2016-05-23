@@ -287,10 +287,10 @@ def sensors_search():
         elif key == 'MetaData':
             metadata_list = []
             for meta in values:
-                key_value = tag.split(":", 1)
+                key_value = meta.split(":", 1)
                 current_meta = {key_value[0]: key_value[1]}
-                metdata_list.append(current_meta)
-            args['metadata__all'] = metdata_list
+                metadata_list.append(current_meta)
+            args['metadata__all'] = metadata_list
     print args
     # Show the user PAGE_SIZE number of sensors on each page
     page = request.args.get('page', 1, type=int)
