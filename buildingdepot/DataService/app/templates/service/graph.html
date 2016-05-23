@@ -4,7 +4,7 @@
 {% block page_content %}
     <div class="row">
         <div class="page-header">
-            <h2><a href="{{ url_for('service.sensor') }}"><span class="glyphicon glyphicon-circle-arrow-left" style="color: #33ccff;"></span></a>&nbsp;&nbsp;&nbsp;Sensor&nbsp;&nbsp;"{{ name }}" Info Page</h2>
+            <h2><a onclick="window.history.back();" style="cursor:pointer"><span class="glyphicon glyphicon-circle-arrow-left" style="color: #33ccff;"></span></a>&nbsp;&nbsp;&nbsp;Sensor&nbsp;&nbsp;"{{ name }}" Info Page</h2>
         </div>
         <div class="panel panel-default">
         <div class="panel-heading clearfix">
@@ -92,8 +92,17 @@
                     },
                     success: function( response ) {
                         try{
-                            data=response['data']['series'][0]['values'];
-                            $.notify("Time Series Data Loaded",{ globalPosition:'top center',clickToHide: true,autoHide:true, className:'success'});
+                            if(!response["data"]['series']) {
+                                $.notify("Empty Time Series Data", {
+                                    position: "top center",
+                                    clickToHide: true,
+                                    autoHide: false
+                                });
+                            }
+                            else{
+                                data=response['data']['series'][0]['values'];
+                                $.notify("Time Series Data Loaded",{ globalPosition:'top center',clickToHide: true,autoHide:true, className:'success'});
+                            }
                         }catch(err){
                             $.notify(response['response'],{ globalPosition:'top center',clickToHide: true,autoHide:true, className:'error'});
                         }
@@ -103,13 +112,13 @@
                         $.notify(" Error Loading or Empty Time Series Data", { position:"top center",clickToHide: true,autoHide:false});
                     }
                 } );
+
         if(data.length!=0){
             var div = document.getElementById('graph');
             div.innerHTML = div.innerHTML + "<h2>  &nbsp;&nbsp;&nbsp;TimeSeries DataPoints&nbsp;&nbsp;</h2>"+
                     "<h3><center>&nbsp;&nbsp;&nbsp;Present Value&nbsp;&nbsp;</center></h3> ";
             makechart(data);
         }
-
 
     </script>
 {% endblock %}

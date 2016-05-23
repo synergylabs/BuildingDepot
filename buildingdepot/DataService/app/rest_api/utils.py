@@ -11,18 +11,19 @@ this if data is not found in the cache
 @license: UCSD License. See License file for details.
 """
 
-
 from .. import svr
 from flask import current_app
 
-PAGE_SIZE = 200
+PAGE_SIZE = 100
 
 
 def get_building_choices(dataservice_name):
     return svr.get_building_choices(dataservice_name)
 
+
 def get_user_oauth(email):
     return svr.get_user_oauth(email)
+
 
 def get_building_tags(building):
     return svr.get_building_tags(building)
