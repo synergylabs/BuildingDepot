@@ -30,6 +30,7 @@ from utils import get_user_oauth
 from ..api_0_0.resources.utils import *
 from ..api_0_0.resources.acl_cache import invalidate_permission
 
+
 @service.route('/sensor', methods=['GET', 'POST'])
 def sensor():
     # Show the user PAGE_SIZE number of sensors on each page
@@ -54,7 +55,7 @@ def sensor():
                source_identifier=str(form.source_identifier.data),
                building=str(form.building.data),
                owner=session['email']).save()
-        r.set('owner:{}'.format(uuid),session['email'])
+        r.set('owner:{}'.format(uuid), session['email'])
         return redirect(url_for('service.sensor'))
     return render_template('service/sensor.html', objs=objs, form=form, total=total,
                            pages=pages, current_page=page, pagesize=PAGE_SIZE)
@@ -84,7 +85,7 @@ def sensor_delete():
     pipe.delete('sensor:{}'.format(sensor.name))
     pipe.delete('owner:{}'.format(request.form.get('name')))
     pipe.execute()
-    #cache process done
+    # cache process done
 
     Sensor.objects(name=sensor.name).delete()
     return redirect(url_for('service.sensor'))
@@ -96,7 +97,10 @@ def sensorgroup():
     skip_size = (page - 1) * PAGE_SIZE
     objs = SensorGroup.objects().skip(skip_size).limit(PAGE_SIZE)
     for obj in objs:
-        obj.can_delete = True
+        if Permission.objects(sensor_group=obj.name).count() > 0:
+            obj.can_delete = False
+        else:
+            obj.can_delete = True
 
     form = SensorGroupForm()
     # Get list of valid buildings for this DataService and create a sensorgroup
@@ -129,11 +133,13 @@ def oauth_gen():
     clientkeys = Client.objects(user=session['email'])
     return render_template('service/oauth_gen.html', keys=clientkeys)
 
+
 @service.route('/oauth_delete', methods=['POST'])
 def oauth_delete():
     if request.method == 'POST':
         Client.objects(client_id=request.form.get('client_id')).delete()
         return redirect(url_for('service.oauth_gen'))
+
 
 @service.route('/sensorgroup_delete', methods=['POST'])
 def sensorgroup_delete():
@@ -162,7 +168,10 @@ def usergroup():
     skip_size = (page - 1) * PAGE_SIZE
     objs = UserGroup.objects().skip(skip_size).limit(PAGE_SIZE)
     for obj in objs:
-        obj.can_delete = True
+        if Permission.objects(user_group=obj.name).count() > 0:
+            obj.can_delete = False
+        else:
+            obj.can_delete = True
 
     form = UserGroupForm()
     if form.validate_on_submit():
@@ -205,12 +214,12 @@ def permission():
                 form.user_group.data, form.sensor_group.data))
             return redirect(url_for('service.permission'))
         # If permission doesn't exist then create it
-        if authorize_user(form.user_group.data,form.sensor_group.data,session['email']):
+        if authorize_user(form.user_group.data, form.sensor_group.data, session['email']):
             Permission(user_group=str(form.user_group.data),
                        sensor_group=str(form.sensor_group.data),
                        permission=str(form.permission.data)).save()
             invalidate_permission(str(form.sensor_group.data))
-            r.set('permission:{}:{}'.format(form.user_group.data,form.sensor_group.data), form.permission.data)
+            r.set('permission:{}:{}'.format(form.user_group.data, form.sensor_group.data), form.permission.data)
         else:
             flash('You are not authorized to create this permission')
         return redirect(url_for('service.permission'))
@@ -220,7 +229,7 @@ def permission():
 @service.route('/permission_delete', methods=['POST'])
 def permission_delete():
     code = request.form.get('name').split(':-:')
-    if authorize_user(code[0],code[1],session['email']):
+    if authorize_user(code[0], code[1], session['email']):
         Permission.objects(user_group=code[0], sensor_group=code[1]).delete()
         r.delete('permission:{}:{}'.format(code[0], code[1]))
         invalidate_permission(code[1])

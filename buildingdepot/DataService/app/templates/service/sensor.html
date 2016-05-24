@@ -23,8 +23,10 @@
             <h2 style="display: inline-block;" id = "header">  &nbsp;&nbsp;&nbsp;Sensor&nbsp;&nbsp;<a href="#myModal" data-toggle="modal" class="btn btn-info btn-lg"><span class="glyphicon glyphicon-hand-up"></span>&nbsp;Add a New Sensor</a>
                 <a ng-click="root.filter()" href="#filter_search" data-toggle="modal" class="btn btn-info btn-lg"><span class="glyphicon glyphicon-search"></span>&nbsp;Search</a></h2>
             <ul class="pagination" id="pagination" style="float: right"></ul>
-            {% if current_page == 1 %}
+            {% if total == 0 %}
                 <div style="text-align: center">Showing 0 - {{ total }} of {{ total }} Sensors</div>
+            {% elif current_page == 1 %}
+                <div style="text-align: center">Showing 1 - {{ total }} of {{ total }} Sensors</div>
             {% elif current_page<pages %}
                 <div style="text-align: center">Showing {{ (current_page*pagesize) + 1 }} - {{ (current_page+ 1)*pagesize }} of {{ total }} Sensors</div>
             {% elif current_page==pages %}
@@ -51,7 +53,7 @@
                                     <tbody>
                                     <tr ng-repeat="pair in old_search">
                                         <td><input disabled ng-model="old_search[$index].key" type="text" class="form-control" value="{[ pair.key ]}"></td>
-                                        <td><input disabled ng-model="old_search[$index].value" type="text" class="form-control" value="{[ pair.value ]}"></td>
+                                        <td><input ng-model="old_search[$index].value" type="text" class="form-control" value="{[ pair.value ]}"></td>
                                         <td><button class="close" ng-click="root.removeOldFilter($index)">&times;</button></td>
                                     </tr>
                                     </tbody>
