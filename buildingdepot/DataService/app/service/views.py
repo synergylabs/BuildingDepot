@@ -187,8 +187,8 @@ def usergroup_delete():
     return redirect(url_for('service.usergroup'))
 
 
-@service.route('/permission', methods=['GET', 'POST'])
-def permission():
+@service.route('/permission', methods=['GET', 'POST'],endpoint = "permission")
+def permission_create():
     page = request.args.get('page', 1, type=int)
     skip_size = (page - 1) * PAGE_SIZE
     objs = Permission.objects().skip(skip_size).limit(PAGE_SIZE)
@@ -246,19 +246,7 @@ def permission_query():
             flash('Sensor {} does not exist'.format(form.sensor.data))
             return render_template('service/query.html', form=form, res=res)
 
-        usergroups = r.smembers('user:{}'.format(form.user.data))
-        sensorgroups = r.smembers('sensor:{}'.format(form.sensor.data))
-
-        for usergroup in usergroups:
-            for sensorgroup in sensorgroups:
-                res = r.get('permission:{}:{}'.format(usergroup, sensorgroup))
-                if res == 'r/w' or res == 'd/r':
-                    return render_template('service/query.html', form=form, res=res)
-        if res == 'r':
-            return render_template('service/query.html', form=form, res=res)
-
-        sensor_tags = ['{}:{}'.format(tag.name, tag.value) for tag in sensor.tags]
-        res = get_permission(sensor_tags, sensor.building, form.user.data)
+        res = permission(form.sensor.data,form.user.data)
 
     return render_template('service/query.html', form=form, res=res)
 

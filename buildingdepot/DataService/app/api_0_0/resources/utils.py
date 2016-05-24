@@ -61,7 +61,7 @@ def authenticate_acl(permission_required):
             if response == 'd/r':
                 return jsonify({'success':'False',
                     'error':'You are not authenticated to use this sensor'})
-            elif response  == permission_required:
+            elif response  == permission_required or response == 'r/w/p':
                 return f(*args,**kwargs)
     	    elif response in ['r','r/w']:
                 return jsonify({'success':'False',
@@ -88,17 +88,12 @@ def permission(sensor_name,email=None):
     if sensor is None:
         return 'invalid'
 
-    #if admin then give complete access
-    if email in get_admins():
+    #if admin or owner then give complete access
+    if r.get('owner:{}'.format(sensor_name)) == email or email in get_admins():
+        r.hset(sensor_name,email,'r/w/p')
         return 'r/w/p'
 
-    print "Admin check failed"
-
-    #check if user is the sensor owner
-    if r.get('owner:{}'.format(sensor_name)) == email:
-        return 'r/w/p'
-
-    print "Not owner"
+    print "Not owner or admin"
 
     current_res = 'u/d'
     usergroups = r.smembers('user:{}'.format(email))
@@ -112,7 +107,7 @@ def permission(sensor_name,email=None):
             #This one chooses the most restrictive one by counting the number of tags
             res = r.get('permission:{}:{}'.format(usergroup, sensorgroup))
             print res
-            if res!=None:
+            if res is not None:
                 if permissions_val[res]>permissions_val[current_res]:
                     current_res = res
     #If permission couldn't be calculated from cache go to MongoDB
@@ -130,7 +125,7 @@ def check_db(sensor,email):
     for tag in sensor_obj['tags']:
         current_tag = {"name":tag['name'],"value":tag['value']}
         tag_list.append(current_tag)
-    args['tags__in'] = tag_list
+    args['tags__all'] = tag_list
     sensor_groups = SensorGroup.objects(**args)
     args={}
     args['users__all'] = [email]
@@ -144,6 +139,7 @@ def check_db(sensor,email):
                 user_group=user_group['name'])
             if permission.first() is not None:
                 curr_permission = permission.first()['permission']
+                print "curr_permission is "+curr_permission+"Sensor group is "+sensor_group['name']+" User group is "+user_group['name']
                 if permissions_val[curr_permission] > permissions_val[current_res]:
                     current_res = curr_permission
     return current_res
