@@ -92,7 +92,14 @@
                     },
                     success: function( response ) {
                         try{
-                            if(!response["data"]['series']) {
+                            if (response["success"]==="False"){
+                                $.notify(response["error"], {
+                                    position: "top center",
+                                    clickToHide: true,
+                                    autoHide: false
+                                });
+                            }
+                            else if(!response["data"]['series']) {
                                 $.notify("Empty Time Series Data", {
                                     position: "top center",
                                     clickToHide: true,
