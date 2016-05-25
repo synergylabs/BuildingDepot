@@ -79,7 +79,7 @@
                             </div>
                             <div class="btn-group">
                                 <button ng-click="root.addNewFilter()" type="button" class="btn btn-info">Add a new Filter</button>
-                                <button ng-click="root.updateFilter()" type="button" class="btn btn-warning">Update</button>
+                                <button ng-click="root.updateFilter()" type="button" class="btn btn-warning">Update Search</button>
                             </div>
                         </div>
                     </div>
@@ -242,6 +242,7 @@
                         <th>Building</th>
                         <th>Source Name</th>
                         <th>Source Identifier</th>
+                        <th>Owner</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -251,6 +252,7 @@
                             <td>{{ obj.building }}</td>
                             <td>{{ obj.source_name }}</td>
                             <td>{{ obj.source_identifier }}</td>
+                            <td>{{ obj.owner }}</td>
                             <td>
                                 <a ng-click="root.select('{{ obj.name }}')" href="#metadata" data-toggle="modal" class="btn btn-info">Metadata</a>
                             </td>
