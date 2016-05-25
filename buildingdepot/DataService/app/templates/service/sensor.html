@@ -346,11 +346,10 @@
             $scope.root.filter = function(){
                 try {
                     var query = JSON.parse(decodeURIComponent(location.search.substring(1)).split('&')[0].split('=')[1]);
-                    console.log(query);
+
                     //convert back to angularjs format
                     var old_search = [];
                     for (var i in query) {
-                        console.log(i);
                         if (query[i].length > 0) {
                             for (var j = 0; j < query[i].length; j++) {
                                 old_search.push({
@@ -360,12 +359,7 @@
                             }
                         }
                     }
-                    console.log(old_search);
                     $scope.old_search = old_search;
-                    for (i in $scope.old_search) {
-                        console.log(typeof ($scope.old_search[i]));
-                    }
-                    console.log("helllllloooooooooo");
                 }
                 catch (err){}
             };
@@ -407,7 +401,6 @@
                             });
                             return;
                         }
-                        console.log(temp);
                         //Change Format of payload before posting
                         if (temp[i].key == 'Building') {
                             if ("Building" in json) {
@@ -464,7 +457,6 @@
                             }
                         }
                     }
-                    console.log(json);
                     var url='/service/sensor/search';
                     window.location=url+"?q="+JSON.stringify(json);
                     /*var value=json;
@@ -487,7 +479,17 @@
                 this.sensorName = sensorName;
                 var res = $http.get('/api/sensor/'+ sensorName + '/metadata',{ headers: header });
                 res.success(function(data) {
-                    $scope.metadata = data.data;
+                    if (data["success"]==="False"){
+                        $.notify(data["error"], {
+                            position: "top center",
+                            clickToHide: true,
+                            autoHide: true
+                        });
+                    }
+                    else{
+                        $scope.metadata = data.data;
+                    }
+
                 });
                 res.error(function() {
                     $.notify("Ajax failed", { position:"top center",clickToHide: true,autoHideDelay:2000});
@@ -497,7 +499,16 @@
             $scope.root.update = function() {
                 var res = $http.post('/api/sensor/'+ this.sensorName + '/metadata', {'data': $scope.metadata},{ headers: header });
                 res.success(function(data) {
-                    $.notify("Success",{ globalPosition:'top center',clickToHide: true,autoHideDelay:2000, className:'success'});
+                    if (data["success"]==="False"){
+                        $.notify(data["error"], {
+                            position: "top center",
+                            clickToHide: true,
+                            autoHideDelay:2000
+                        });
+                    }
+                    else if (data["success"]==="True"){
+                       $.notify("Success",{ globalPosition:'top center',clickToHide: true,autoHideDelay:2000, className:'success'});
+                    }
                 });
                 res.error(function() {
                     $.notify("Ajax failed", { position:"top center",clickToHide: true,autoHideDelay:2000});
@@ -512,9 +523,6 @@
                     $scope.tags = data.tags;
                     $scope.tags_owned = data.tags_owned;
                     $scope.names = Object.keys($scope.tags);
-                    for(var i in $scope.tags_owned){
-                        console.log($scope.tags_owned[i]);
-                    }
 
                 });
                 res.error(function() {
@@ -549,7 +557,16 @@
 
                 var res = $http.post('/api/sensor/'+ $scope.sensorName + '/tags', {'data': tags},{ headers: header });
                 res.success(function(data) {
-                    $.notify("Success",{ globalPosition:'top center',clickToHide: true,autoHideDelay:2000, className:'success'});
+                    if (data["success"]==="False"){
+                        $.notify(data["error"], {
+                            position: "top center",
+                            clickToHide: true,
+                            autoHideDelay:2000
+                        });
+                    }
+                    else if (data["success"]==="True"){
+                       $.notify("Success",{ globalPosition:'top center',clickToHide: true,autoHideDelay:2000, className:'success'});
+                    }
                 });
                 res.error(function() {
                     $.notify("Ajax failed", { position:"top center",clickToHide: true,autoHideDelay:2000});
