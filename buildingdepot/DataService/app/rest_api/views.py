@@ -24,7 +24,8 @@ import sys, time, influxdb, urllib, traceback, pika
 sys.path.append('/srv/buildingdepot')
 from utils import get_user_oauth
 from ..api_0_0.resources.utils import *
-from ..api_0_0.resources.acl_cache import invalidate_user,invalidate_permission
+from ..api_0_0.resources.acl_cache import invalidate_user, invalidate_permission
+
 
 @api.route('/sensor/<name>', methods=['GET'])
 @api.route('/sensor', methods=['POST'])
@@ -77,8 +78,8 @@ def sensor_create(name=None):
                        source_name=xstr(sensor_name),
                        source_identifier=xstr(identifier),
                        building=building,
-                       owner = email).save()
-                r.set('owner:{}'.format(uuid),email)
+                       owner=email).save()
+                r.set('owner:{}'.format(uuid), email)
                 return jsonify({'success': 'True', 'uuid': uuid})
         return jsonify({'success': 'False', 'error': 'Building does not exist'})
     elif request.method == 'GET':
@@ -99,7 +100,7 @@ def sensor_create(name=None):
                         })
 
 
-@api.route('/sensor/<name>/timeseries', methods=['GET'],endpoint="get_data")
+@api.route('/sensor/<name>/timeseries', methods=['GET'], endpoint="get_data")
 @oauth.require_oauth()
 @authenticate_acl('r')
 def get_data(name):
@@ -408,7 +409,7 @@ def insert_timeseries_to_bd():
         for sensor in json:
             # check a user has permission
             unauthorised_sensor = []
-            if permission(sensor['sensor_id']) == 'r/w':
+            if permission(sensor['sensor_id']) in ['r/w', 'r/w/p']:
                 for sample in sensor['samples']:
                     dic = {
                         'measurement': sensor['sensor_id'],
@@ -420,8 +421,7 @@ def insert_timeseries_to_bd():
                     }
                     points.append(dic)
                 try:
-                    channel.basic_publish(exchange=exchange, routing_key=sensor['sensor_id'], \
-                                          body=str(dic))
+                    channel.basic_publish(exchange=exchange, routing_key=sensor['sensor_id'], body=str(dic))
                 except Exception as e:
                     print "Failed to write to broker " + str(e)
             else:
@@ -461,7 +461,7 @@ def jsonString(obj, pretty=False):
         return json.dumps(obj)
 
 
-@api.route('/sensor/<name>/tags',methods=['GET'])
+@api.route('/sensor/<name>/tags', methods=['GET'])
 @oauth.require_oauth()
 def sensor_tags(name):
     """Returns the list of tags that are attached to the sensor with the uuid <name>
@@ -491,6 +491,7 @@ def sensor_tags(name):
     tags_owned = [{'name': tag.name, 'value': tag.value} for tag in obj.tags]
     tags = get_building_tags(obj.building)
     return jsonify({'tags': tags, 'tags_owned': tags_owned})
+
 
 @api.route('/sensor/<name>/tags', methods=['POST'])
 @oauth.require_oauth()
@@ -621,7 +622,7 @@ def sensorgroup_tags(name):
         return jsonify({'tags': tags, 'tags_owned': tags_owned})
     else:
         if Permission.objects(sensor_group=name).first() is not None:
-            return jsonify({'success':'False','error':"""Sensor group tags cannot be edited.
+            return jsonify({'success': 'False', 'error': """Sensor group tags cannot be edited.
                 Already being used for permissions"""})
         tags = request.get_json()['data']
         # cache process
@@ -755,10 +756,10 @@ def usergroup_users(name):
             pipe = r.pipeline()
             for user in added:
                 pipe.sadd('user:{}'.format(user), user_group.name)
-                invalidate_user(name,user)
+                invalidate_user(name, user)
             for user in deleted:
                 pipe.srem('user:{}'.format(user), user_group.name)
-                invalidate_user(name,user)
+                invalidate_user(name, user)
             pipe.execute()
             # cache process done
             UserGroup.objects(name=name).update(set__users=emails)
@@ -866,70 +867,75 @@ def subscribe_sensor():
 
     return jsonify({'success': 'False', 'error': 'App id doesn\'t exist'})
 
-@api.route('/permission',methods=['GET','POST'])
+
+@api.route('/permission', methods=['GET', 'POST'])
 @oauth.require_oauth()
 def create_permission():
-    if request.method=='GET':
+    if request.method == 'GET':
         user_group = request.args.get('user_group')
         sensor_group = request.args.get('sensor_group')
-        if not all([user_group,sensor_group]):
-            return jsonify({'success':'False','error':'Missing parameters'})
+        if not all([user_group, sensor_group]):
+            return jsonify({'success': 'False', 'error': 'Missing parameters'})
         else:
-            permission = Permission.objects(user_group=user_group,sensor_group=sensor_group).first()
+            permission = Permission.objects(user_group=user_group, sensor_group=sensor_group).first()
             if permission is None:
-                return jsonify({'success':'False','error':'Permission doesn\'t exist'})
+                return jsonify({'success': 'False', 'error': 'Permission doesn\'t exist'})
             else:
-                return jsonify({'success':'True','permission':permission.permission})
-    elif request.method=='POST':
-        data = request.get_json()
+                return jsonify({'success': 'True', 'permission': permission.permission})
+    elif request.method == 'POST':
+        data = request.get_json()['data']
         try:
             sensor_group = data['sensor_group']
             user_group = data['user_group']
             permission = data['permission']
+            print sensor_group,user_group,permission
         except KeyError:
-            return jsonify({'success':'False','error':'Missing parameters'})
+            print data
+            return jsonify({'success': 'False', 'error': 'Missing parameters'})
 
         if UserGroup.objects(name=user_group).first() is None:
-            return jsonify({'success':'False','error':'User group doesn\'t exist'})
+            return jsonify({'success': 'False', 'error': 'User group doesn\'t exist'})
         if SensorGroup.objects(name=sensor_group).first() is None:
-            return jsonify({'success':'False','error':'Sensor group doesn\'t exist'})
+            return jsonify({'success': 'False', 'error': 'Sensor group doesn\'t exist'})
         if permissions.get(permission) is None:
-            return jsonify({'success':'False','error':'Permission value doesn\'t exist'})
+            return jsonify({'success': 'False', 'error': 'Permission value doesn\'t exist'})
 
-        if authorize_user(user_group,sensor_group):
-            if Permission.objects(user_group=user_group,sensor_group=sensor_group).first() is not None:
+        if authorize_user(user_group, sensor_group):
+            if Permission.objects(user_group=user_group, sensor_group=sensor_group).first() is not None:
                 Permission.objects(user_group=user_group,
-                    sensor_group=sensor_group).first().update(permission=permissions.get(permission))
+                                   sensor_group=sensor_group).first().update(set__permission=permissions.get(permission))
             else:
-                Permission(user_group=user_group,sensor_group=sensor_group,
-                    permission=permissions.get(permission)).save()
+                Permission(user_group=user_group, sensor_group=sensor_group,
+                           permission=permissions.get(permission)).save()
             invalidate_permission(sensor_group)
-            r.set('permission:{}:{}'.format(user_group,sensor_group),permissions.get(permission))
-            return jsonify({'success':'True'})
+            r.set('permission:{}:{}'.format(user_group, sensor_group), permissions.get(permission))
+            return jsonify({'success': 'True'})
         else:
-            return jsonify({'success':'False','error':'Unauthorised sensors in sensor group'})
+            return jsonify({'success': 'False', 'error': 'Unauthorised sensors in sensor group'})
 
-@api.route('/permission',methods=['DELETE'])
+
+@api.route('/permission', methods=['DELETE'])
 @oauth.require_oauth()
 def delete_permission():
-    if request.method=='DELETE':
+    if request.method == 'DELETE':
         user_group = request.args.get('user_group')
         sensor_group = request.args.get('sensor_group')
-        if not all([user_group,sensor_group]):
-            return jsonify({'success':'False','error':'Missing parameters'})
+        if not all([user_group, sensor_group]):
+            return jsonify({'success': 'False', 'error': 'Missing parameters'})
         else:
-            if authorize_user(user_group,sensor_group):
-                permission = Permission.objects(user_group = user_group,sensor_group = sensor_group)
+            if authorize_user(user_group, sensor_group):
+                permission = Permission.objects(user_group=user_group, sensor_group=sensor_group)
                 if permission.first() is None:
-                    return jsonify({'success':'False','error':'Permission is not defined'})
+                    return jsonify({'success': 'False', 'error': 'Permission is not defined'})
                 else:
                     permission.first().delete()
-                    r.delete('permission:{}:{}'.format(user_group,sensor_group))
+                    r.delete('permission:{}:{}'.format(user_group, sensor_group))
                     invalidate_permission(sensor_group)
-                    return jsonify({'success':'True','error':'Permission deleted'})
+                    return jsonify({'success': 'True', 'error': 'Permission deleted'})
             else:
-                return jsonify({'success':'False','error':"""You are not authorized to delete
+                return jsonify({'success': 'False', 'error': """You are not authorized to delete
                     this permission"""})
+
 
 def connect_broker():
     try:

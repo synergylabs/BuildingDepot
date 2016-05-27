@@ -196,7 +196,7 @@ def usergroup_delete():
     return redirect(url_for('service.usergroup'))
 
 
-@service.route('/permission', methods=['GET', 'POST'],endpoint = "permission")
+@service.route('/permission', methods=['GET', 'POST'], endpoint="permission")
 def permission_create():
     page = request.args.get('page', 1, type=int)
     skip_size = (page - 1) * PAGE_SIZE
@@ -255,7 +255,7 @@ def permission_query():
             flash('Sensor {} does not exist'.format(form.sensor.data))
             return render_template('service/query.html', form=form, res=res)
 
-        res = permission(form.sensor.data,form.user.data)
+        res = permission(form.sensor.data, form.user.data)
 
     return render_template('service/query.html', form=form, res=res)
 
