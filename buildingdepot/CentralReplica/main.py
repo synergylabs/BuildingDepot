@@ -63,7 +63,7 @@ def get_building_tags(building):
 def validate_users(emails):
     """Check if user exists"""
     for email in emails:
-        if User.objects(email=email).first() is None:
+        if User.objects(email=email['user_id']).first() is None:
             return False
     return True
 

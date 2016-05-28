@@ -672,12 +672,15 @@ def usergroup_create():
         "error" : <If False then error will be returned>
     }
     """
-    name = request.args.get('name')
-    description = request.args.get('description')
-    if name is None:
+    try:
+        data = request.get_json()['data']
+        name = data['name']
+        description = data['description']
+    except KeyError:
         return jsonify({'success': 'False', 'error': 'Missing parameters'})
     UserGroup(name=xstr(name),
-              description=xstr(description)).save()
+              description=xstr(description),
+              owner = get_email()).save()
     return jsonify({'success': 'True'})
 
 
@@ -696,11 +699,12 @@ def sensorgroup_create():
         "error" : <If False then error will be returned>
     }
     """
-    name = request.args.get('name')
-    building = request.args.get('building')
-    description = request.args.get('description')
-
-    if not all([name, building]):
+    try:
+        data = request.get_json['data']
+        name = data['name']
+        building = data['building']
+        description = data['description']
+    except KeyError:
         return jsonify({'success': 'False', 'error': 'Missing parameters'})
 
     # Get the list of buildings and verify that the one specified in the
@@ -744,28 +748,34 @@ def usergroup_users(name):
     """
     if request.method == 'GET':
         obj = UserGroup.objects(name=name).first()
-        return jsonify({'users': obj.users})
+        return jsonify({'users':[{'user_id': user.user_id, 'manager': user.manager} for user in obj.users]})
     else:
         emails = request.get_json()['data']
+        if UserGroup.objects(name=name).first() is None:
+            return jsonify({'success':'False','error':'User group doesn\'t exist'})
         if validate_users(emails):
-            # cache process
-            user_group = UserGroup.objects(name=name).first()
-            # Recalculate the list of users that have to be added and
-            # removed from this group based on the new list received
-            added, deleted = get_add_delete(user_group.users, emails)
-            pipe = r.pipeline()
-            for user in added:
-                pipe.sadd('user:{}'.format(user), user_group.name)
-                invalidate_user(name, user)
-            for user in deleted:
-                pipe.srem('user:{}'.format(user), user_group.name)
-                invalidate_user(name, user)
-            pipe.execute()
-            # cache process done
-            UserGroup.objects(name=name).update(set__users=emails)
-            return jsonify({'success': 'True'})
-        return jsonify({'success': 'False', 'error': 'One or more users not registered'})
-
+            if authorize_addition(name,get_email()):
+                # cache process
+                user_group = UserGroup.objects(name=name).first()
+                # Recalculate the list of users that have to be added and
+                # removed from this group based on the new list received
+                added, deleted = get_add_delete(user_group.users, emails)
+                pipe = r.pipeline()
+                for user in added:
+                    pipe.sadd('user:{}'.format(user), user_group.name)
+                    invalidate_user(name,user)
+                for user in deleted:
+                    pipe.srem('user:{}'.format(user), user_group.name)
+                    invalidate_user(name,user)
+                pipe.execute()
+                # cache process done
+                UserGroup.objects(name=name).update(set__users=emails)
+                return jsonify({'success': 'True'})
+            else:
+                return jsonify({'success': 'False', 'error':
+                    'Not authorized for adding users to user group'})
+        return jsonify({'success': 'False', 'error':
+            'One or more users not registered'})
 
 @api.route('/apps', methods=['GET', 'POST'])
 @oauth.require_oauth()

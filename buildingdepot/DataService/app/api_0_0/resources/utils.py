@@ -144,9 +144,9 @@ def check_db(sensor,email):
                     current_res = curr_permission
     return current_res
 
-def authorize_user(user_group,sensor_group,email=None):
+def authorize_user(user_group,sensorgroup_name,email=None):
     if email is None : email = get_email()
-    sensor_group = SensorGroup.objects(name=sensor_group).first()
+    sensor_group = SensorGroup.objects(name=sensorgroup_name).first()
     tag_list = []
     for tag in sensor_group['tags']:
         current_tag = {"name":tag['name'],"value":tag['value']}
@@ -160,6 +160,17 @@ def authorize_user(user_group,sensor_group,email=None):
         if permission(sensor['name'],email) != 'r/w/p':
             return False
     return True
+
+def authorize_addition(usergroup_name,email):
+    user_group = UserGroup.objects(name=usergroup_name).first()
+    if user_group['owner'] == email:
+        return True
+
+    for user in user_group.users:
+        print type(user['manager'])
+        if user['user_id'] == email and user['manager']:
+            return True
+    return False
 
 def get_email():
     headers = request.headers

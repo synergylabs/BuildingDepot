@@ -17,6 +17,9 @@ class Node(EmbeddedDocument):
     name = StringField()
     value = StringField()
 
+class UserGroupNode(EmbeddedDocument):
+    user_id = StringField()
+    manager = BooleanField()
 
 class Sensor(Document):
     name = StringField(required=True, unique=True)
@@ -37,12 +40,12 @@ class SensorGroup(Document):
     building = StringField()
     tags = ListField(EmbeddedDocumentField(Node))
 
-
 class UserGroup(Document):
     name = StringField(required=True, unique=True)
     description = StringField()
+    owner = StringField()
 
-    users = ListField(StringField())
+    users = ListField(EmbeddedDocumentField(UserGroupNode))
 
 
 class Permission(Document):
