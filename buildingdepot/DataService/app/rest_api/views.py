@@ -680,7 +680,7 @@ def usergroup_create():
         return jsonify({'success': 'False', 'error': 'Missing parameters'})
     UserGroup(name=xstr(name),
               description=xstr(description),
-              owner = get_email()).save()
+              owner=get_email()).save()
     return jsonify({'success': 'True'})
 
 
@@ -748,13 +748,13 @@ def usergroup_users(name):
     """
     if request.method == 'GET':
         obj = UserGroup.objects(name=name).first()
-        return jsonify({'users':[{'user_id': user.user_id, 'manager': user.manager} for user in obj.users]})
+        return jsonify({'users': [{'user_id': user.user_id, 'manager': user.manager} for user in obj.users]})
     else:
         emails = request.get_json()['data']
         if UserGroup.objects(name=name).first() is None:
-            return jsonify({'success':'False','error':'User group doesn\'t exist'})
+            return jsonify({'success': 'False', 'error': 'User group doesn\'t exist'})
         if validate_users(emails):
-            if authorize_addition(name,get_email()):
+            if authorize_addition(name, get_email()):
                 # cache process
                 user_group = UserGroup.objects(name=name).first()
                 # Recalculate the list of users that have to be added and
@@ -763,19 +763,18 @@ def usergroup_users(name):
                 pipe = r.pipeline()
                 for user in added:
                     pipe.sadd('user:{}'.format(user), user_group.name)
-                    invalidate_user(name,user)
+                    invalidate_user(name, user)
                 for user in deleted:
                     pipe.srem('user:{}'.format(user), user_group.name)
-                    invalidate_user(name,user)
+                    invalidate_user(name, user)
                 pipe.execute()
                 # cache process done
                 UserGroup.objects(name=name).update(set__users=emails)
                 return jsonify({'success': 'True'})
             else:
-                return jsonify({'success': 'False', 'error':
-                    'Not authorized for adding users to user group'})
-        return jsonify({'success': 'False', 'error':
-            'One or more users not registered'})
+                return jsonify({'success': 'False', 'error': 'Not authorized for adding users to user group'})
+        return jsonify({'success': 'False', 'error': 'One or more users not registered'})
+
 
 @api.route('/apps', methods=['GET', 'POST'])
 @oauth.require_oauth()
@@ -898,7 +897,7 @@ def create_permission():
             sensor_group = data['sensor_group']
             user_group = data['user_group']
             permission = data['permission']
-            print sensor_group,user_group,permission
+            print sensor_group, user_group, permission
         except KeyError:
             print data
             return jsonify({'success': 'False', 'error': 'Missing parameters'})
@@ -913,7 +912,8 @@ def create_permission():
         if authorize_user(user_group, sensor_group):
             if Permission.objects(user_group=user_group, sensor_group=sensor_group).first() is not None:
                 Permission.objects(user_group=user_group,
-                                   sensor_group=sensor_group).first().update(set__permission=permissions.get(permission))
+                                   sensor_group=sensor_group).first().update(
+                    set__permission=permissions.get(permission))
             else:
                 Permission(user_group=user_group, sensor_group=sensor_group,
                            permission=permissions.get(permission)).save()

@@ -9,13 +9,11 @@ calls in order to avoid talking to the CentralService all the time.
 @license: UCSD License. See License file for details.
 """
 
-
 from SimpleXMLRPCServer import SimpleXMLRPCServer
 from SocketServer import ThreadingMixIn
 from models import *
 from mongoengine import connect
 from config import Config
-
 
 connect(Config.MONGODB_DATABASE,
         host=Config.MONGODB_HOST,
@@ -34,6 +32,7 @@ def get_user_oauth(email):
         return str(user.email)
     return None
 
+
 def get_user_by_id(uid):
     """Get the email of user from his ObjectID in MongoDB"""
     user = User.objects(id=ObjectId(str(uid))).first()
@@ -41,6 +40,7 @@ def get_user_by_id(uid):
     if user is not None:
         return str(user.email)
     return None
+
 
 def get_building_choices(dataservice_name):
     """Get the list of buildings in this DataService"""
@@ -93,11 +93,13 @@ def validate_email_password(email, password):
         return False
     return user.verify_password(password)
 
+
 def get_user(email, password):
     user = User.objects(email=email).first()
     if user is not None and user.verify_password(password):
         return True
     return False
+
 
 def get_admins(name):
     """Get the list of admins in the DataService"""
@@ -106,7 +108,8 @@ def get_admins(name):
         return []
     return list(obj.admins)
 
-#Create a local RPC server and register the functions
+
+# Create a local RPC server and register the functions
 svr = ThreadXMLRPCServer(("", 8080), allow_none=True)
 svr.register_function(get_user)
 svr.register_function(get_building_choices)

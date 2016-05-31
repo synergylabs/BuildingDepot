@@ -177,7 +177,7 @@ def usergroup():
     if form.validate_on_submit():
         UserGroup(name=str(form.name.data),
                   description=str(form.description.data),
-                  owner = get_email()).save()
+                  owner=session['email']).save()
         return redirect(url_for('service.usergroup'))
     return render_template('service/usergroup.html', objs=objs, form=form)
 
