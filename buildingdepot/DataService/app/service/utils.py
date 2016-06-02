@@ -16,8 +16,8 @@ def get_building_tags(building):
     return svr.get_building_tags(building)
 
 
-def validate_users(emails):
-    return svr.validate_users(emails)
+def validate_users(emails,list_format=False):
+    return svr.validate_users(emails,list_format)
 
 def get_permission(tags, building, user_email):
     return svr.get_permission(tags, building, user_email)

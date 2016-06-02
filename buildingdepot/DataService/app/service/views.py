@@ -181,7 +181,7 @@ def usergroup():
     if form.validate_on_submit():
         UserGroup(name=str(form.name.data),
                   description=str(form.description.data),
-                  owner=session['email']).save()
+                  owner = session['email']).save()
         return redirect(url_for('service.usergroup'))
     return render_template('service/usergroup.html', objs=objs, form=form)
 
@@ -222,15 +222,13 @@ def permission_create():
                 form.user_group.data, form.sensor_group.data))
             return redirect(url_for('service.permission'))
         # If permission doesn't exist then create it
-        if authorize_user(form.user_group.data, form.sensor_group.data, session['email']):
-            Permission(user_group=str(form.user_group.data),
-                       sensor_group=str(form.sensor_group.data),
-                       permission=str(form.permission.data),
-                       owner = session['email']).save()
-            invalidate_permission(str(form.sensor_group.data))
-            r.set('permission:{}:{}'.format(form.user_group.data, form.sensor_group.data), form.permission.data)
-        else:
-            flash('You are not authorized to create this permission')
+        Permission(user_group=str(form.user_group.data),
+                   sensor_group=str(form.sensor_group.data),
+                   permission=str(form.permission.data),
+                   owner = session['email']).save()
+        invalidate_permission(str(form.sensor_group.data))
+        r.hset('permission:{}:{}'.format(form.user_group.data,form.sensor_group.data),"permission",form.permission.data)
+        r.hset('permission:{}:{}'.format(form.user_group.data,form.sensor_group.data),"owner",session['email'])
         return redirect(url_for('service.permission'))
     return render_template('service/permission.html', objs=objs, form=form)
 
@@ -238,8 +236,9 @@ def permission_create():
 @service.route('/permission_delete', methods=['POST'])
 def permission_delete():
     code = request.form.get('name').split(':-:')
-    if authorize_user(code[0], code[1], session['email']):
-        Permission.objects(user_group=code[0], sensor_group=code[1]).delete()
+    permission = Permission.objects(user_group=code[0], sensor_group=code[1]).first()
+    if permission['owner'] == session['email']:
+        permission.delete()
         r.delete('permission:{}:{}'.format(code[0], code[1]))
         invalidate_permission(code[1])
     else:
@@ -255,7 +254,7 @@ def permission_query():
     form = PermissionQueryForm()
     res = None
     if form.validate_on_submit():
-        if not validate_users([form.user.data]):
+        if not validate_users([form.user.data],True):
             flash('User {} does not exist'.format(form.user.data))
             return render_template('service/query.html', form=form, res=res)
 
