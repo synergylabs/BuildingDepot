@@ -29,7 +29,6 @@ import redis
 
 from influxdb import InfluxDBClient
 
-
 permissions = {"rw": "r/w", "r": "r", "dr": "d/r","rwp":"r/w/p"}
 
 exchange = 'master_exchange'

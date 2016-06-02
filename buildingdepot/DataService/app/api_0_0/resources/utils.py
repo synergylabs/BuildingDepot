@@ -105,9 +105,10 @@ def permission(sensor_name,email=None):
         for sensorgroup in sensorgroups:
             #Multiple permissions may exists for the same user and sensor relation.
             #This one chooses the most restrictive one by counting the number of tags
-            res = r.get('permission:{}:{}'.format(usergroup, sensorgroup))
+            res = r.hget('permission:{}:{}'.format(usergroup, sensorgroup),"permission")
+            owner_email = r.hget('permission:{}:{}'.format(usergroup, sensorgroup),"email")
             print res
-            if res is not None:
+            if res is not None and permission(sensor_name,owner_email)=='r/w/p':
                 if permissions_val[res]>permissions_val[current_res]:
                     current_res = res
     #If permission couldn't be calculated from cache go to MongoDB

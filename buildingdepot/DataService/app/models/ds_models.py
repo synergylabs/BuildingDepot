@@ -39,6 +39,7 @@ class SensorGroup(Document):
 
     building = StringField()
     tags = ListField(EmbeddedDocumentField(Node))
+    owner = StringField()
 
 class UserGroup(Document):
     name = StringField(required=True, unique=True)
@@ -52,6 +53,7 @@ class Permission(Document):
     user_group = StringField()
     sensor_group = StringField()
     permission = StringField()
+    owner = StringField()
 
 
 class Application(Document):
