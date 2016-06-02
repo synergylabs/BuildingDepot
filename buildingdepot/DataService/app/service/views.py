@@ -108,7 +108,8 @@ def sensorgroup():
     if form.validate_on_submit():
         SensorGroup(name=str(form.name.data),
                     description=str(form.description.data),
-                    building=str(form.building.data)).save()
+                    building=str(form.building.data),
+                    owner = session['email']).save()
         return redirect(url_for('service.sensorgroup'))
     return render_template('service/sensorgroup.html', objs=objs, form=form)
 
@@ -145,20 +146,23 @@ def oauth_delete():
 def sensorgroup_delete():
     # cache process
     sensorgroup = SensorGroup.objects(name=request.form.get('name')).first()
-    pipe = r.pipeline()
+    if sensorgroup['owner'] == session['email']:
+        pipe = r.pipeline()
 
-    for sensor_name in r.smembers('sensorgroup:{}'.format(sensorgroup.name)):
-        pipe.srem('sensor:{}'.format(sensor_name), sensorgroup.name)
+        for sensor_name in r.smembers('sensorgroup:{}'.format(sensorgroup.name)):
+            pipe.srem('sensor:{}'.format(sensor_name), sensorgroup.name)
 
-    # delete sensorgroup from the cache
-    pipe.delete('sensorgroup:{}'.format(sensorgroup.name))
-    for tag in sensorgroup.tags:
-        pipe.srem('tag-sensorgroup:{}:{}:{}'.format(sensorgroup.building, tag.name, tag.value), sensorgroup.name)
-    pipe.delete('tag-count:{}'.format(sensorgroup.name))
-    pipe.execute()
-    # cache process done
+        # delete sensorgroup from the cache
+        pipe.delete('sensorgroup:{}'.format(sensorgroup.name))
+        for tag in sensorgroup.tags:
+            pipe.srem('tag-sensorgroup:{}:{}:{}'.format(sensorgroup.building, tag.name, tag.value), sensorgroup.name)
+        pipe.delete('tag-count:{}'.format(sensorgroup.name))
+        pipe.execute()
+        # cache process done
 
-    SensorGroup.objects(name=sensorgroup.name).delete()
+        SensorGroup.objects(name=sensorgroup.name).delete()
+    else:
+        flash('You are not authorized to delete this sensor group')
     return redirect(url_for('service.sensorgroup'))
 
 
@@ -177,7 +181,7 @@ def usergroup():
     if form.validate_on_submit():
         UserGroup(name=str(form.name.data),
                   description=str(form.description.data),
-                  owner = get_email()).save()
+                  owner = session['email']).save()
         return redirect(url_for('service.usergroup'))
     return render_template('service/usergroup.html', objs=objs, form=form)
 
@@ -186,14 +190,17 @@ def usergroup():
 def usergroup_delete():
     # cahce process
     name = request.form.get('name')
-    users = UserGroup.objects(name=request.form.get('name')).first().users
-    pipe = r.pipeline()
-    for user in users:
-        pipe.srem('user:{}'.format(user), name)
-    pipe.execute()
-    # cahce process done
+    if authorize_addition(name,session['email']):
+        users = UserGroup.objects(name=request.form.get('name')).first().users
+        pipe = r.pipeline()
+        for user in users:
+            pipe.srem('user:{}'.format(user), name)
+        pipe.execute()
+        # cahce process done
 
-    UserGroup.objects(name=name).delete()
+        UserGroup.objects(name=name).delete()
+    else:
+        flash('You are not authorized to delete this user group')
     return redirect(url_for('service.usergroup'))
 
 
@@ -218,7 +225,8 @@ def permission_create():
         if authorize_user(form.user_group.data, form.sensor_group.data, session['email']):
             Permission(user_group=str(form.user_group.data),
                        sensor_group=str(form.sensor_group.data),
-                       permission=str(form.permission.data)).save()
+                       permission=str(form.permission.data),
+                       owner = session['email']).save()
             invalidate_permission(str(form.sensor_group.data))
             r.set('permission:{}:{}'.format(form.user_group.data, form.sensor_group.data), form.permission.data)
         else:
