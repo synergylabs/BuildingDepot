@@ -1,0 +1,4 @@
+1) make the changes to venv so that instrumentation works
+2) if you look at the top of run_sensor_benchmark there is an array which is the command to call using apache bench (right now it's passing a json object to an endpoint to create a new sensor located in create_sensors.json -- that can be changed to anything -- and at the bottom of the script is a for loop that runs that end point for different # of requests and concurrency values. Note also you can modify the values to use oauth tokens
+3) that ^ provides you external (ab test generated) latency values
+4) then by using logsummarizer <function name> in the Instrumentation folder you can get app-provided latency values

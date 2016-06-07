@@ -30,7 +30,7 @@ logs = []
 beginningOfTime = time.time()
 
 # Location of file where the instrumentation logs will be written to
-logfile = '/srv/buildingdepot/Instrumentation/instrument.csv'
+logfile = 'instrument.csv'
 
 # Toggle for enabling/disabling instrumentation
 enable_instrumentation = True

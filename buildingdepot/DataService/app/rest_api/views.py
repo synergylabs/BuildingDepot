@@ -20,12 +20,15 @@ from uuid import uuid4
 from .. import r, influx, oauth, exchange, permissions
 from werkzeug.security import gen_salt
 import sys, time, influxdb, urllib, traceback, pika
+from helper import create_response
+from instrument import instrument
 
 sys.path.append('/srv/buildingdepot')
 from utils import get_user_oauth
 from ..api_0_0.resources.utils import *
 from ..api_0_0.resources.acl_cache import invalidate_user, invalidate_permission
 
+@instrument
 @api.route('/sensor/list', methods=['GET'])
 @oauth.require_oauth()
 def get_sensors_metadata():

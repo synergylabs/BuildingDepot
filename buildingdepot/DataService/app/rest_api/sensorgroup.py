@@ -16,7 +16,6 @@ from flask import request,jsonify,current_app
 from ..models.ds_models import SensorGroup
 from ..service.utils import get_building_choices
 from .. import r,oauth
-from ... import app
 from .helper import xstr
 import sys
 
