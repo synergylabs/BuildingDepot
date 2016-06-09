@@ -12,6 +12,7 @@ user group. This list is further used for acl's and other purposes.
 """
 from flask.views import MethodView
 from flask import request,jsonify
+from . import responses
 from ..models.ds_models import UserGroup
 from ..service.utils import validate_users
 from .helper import add_delete_users,get_email
@@ -35,7 +36,11 @@ class UserGroupUsersService(MethodView):
             }
         """
         obj = UserGroup.objects(name=name).first()
-        return jsonify({'users':[{'user_id': user.user_id, 'manager': user.manager} for user in obj.users]})
+        if obj is None:
+            return jsonify(responses.invalid_usergroup)
+        response = dict(responses.success_true)
+        response.update({'users':[{'user_id': user.user_id, 'manager': user.manager} for user in obj.users]})
+        return jsonify(response)
 
     @oauth.require_oauth()
     def post(self,name):
@@ -51,9 +56,12 @@ class UserGroupUsersService(MethodView):
                 "success" : <True or False>
             }
         """
-        emails = request.get_json()['data']
+        try:
+            emails = request.get_json()['data']
+        except:
+            return jsonify(responses.missing_data)
         if UserGroup.objects(name=name).first() is None:
-            return jsonify({'success':'False','error':'User group doesn\'t exist'})
+            return jsonify(responses.invalid_usergroup)
         if validate_users(emails):
             if authorize_addition(name,get_email()):
                 # cache process
@@ -71,9 +79,8 @@ class UserGroupUsersService(MethodView):
                 pipe.execute()
                 # cache process done
                 UserGroup.objects(name=name).update(set__users=emails)
-                return jsonify({'success': 'True'})
+                return jsonify(responses.success_true)
             else:
-                return jsonify({'success': 'False', 'error':
-                    'Not authorized for adding users to user group'})
-        return jsonify({'success': 'False', 'error':
-            'One or more users not registered'})
+                return jsonify(responses.usergroup_add_authorization)
+        return jsonify(responses.user_not_registered)
+

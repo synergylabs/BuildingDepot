@@ -14,6 +14,7 @@ the user has access to the specific sensor
 from flask import json, render_template, abort, session
 from flask import request, redirect, url_for, jsonify, flash
 from . import api
+from . import responses
 from ..models.ds_models import *
 from ..service.utils import *
 from uuid import uuid4
@@ -68,7 +69,7 @@ def get_sensors_metadata():
     """
     request_type = request.args.get('filter')
     if (request_type is None) or (len(request.args) < 2):
-        return jsonify({'success': 'False', 'error': 'Missing parameters'})
+        return jsonify(responses.missing_paramters)
 
     for key, val in request.args.iteritems():
         if key != 'filter':
@@ -78,10 +79,12 @@ def get_sensors_metadata():
 
     if request_type == "params":
         list_sensors = Sensor._get_collection().find({param: value})
-        return jsonify({'data': create_response(list_sensors)})
     elif request_type == "tags":
         list_sensors = Sensor._get_collection().find({request_type: {'name': param, 'value': value}})
-        return jsonify({'data': create_response(list_sensors)})
     elif request_type == "metadata":
         list_sensors = Sensor._get_collection().find({request_type + "." + param: value})
-        return jsonify({'data': create_response(list_sensors)})
+    response = dict(responses.success_true)
+    response.update({'data': create_response(list_sensors)})
+    return jsonify(response)
+
+

@@ -12,6 +12,7 @@ or deleting an existing one.
 
 from flask.views import MethodView
 from flask import request,jsonify
+from . import responses
 from ..models.ds_models import UserGroup
 from ..service.utils import get_building_choices
 from .. import r,oauth
@@ -38,16 +39,16 @@ class UserGroupService(MethodView):
             name = data['name']
             description = data['description']
         except KeyError:
-            return jsonify({'success': 'False', 'error': 'Missing parameters'})
+            return jsonify(responses.missing_parameters)
 
         user_group = UserGroup.objects(name=name).first()
         if user_group:
-            return jsonify({'success':'False','error':'Usergroup already exists'})
+            return jsonify(responses.usergroup_exists)
 
         UserGroup(name=xstr(name),
                   description=xstr(description),
                   owner = get_email()).save()
-        return jsonify({'success': 'True'})
+        return jsonify(responses.success_true)
 
     @oauth.require_oauth()
     def get(self,name):
@@ -64,8 +65,10 @@ class UserGroupService(MethodView):
         """
         user_group = UserGroup.objects(name=name).first()
         if user_group is None:
-            return jsonify({"success":"False","error":"Usergroup doesn't exist"})
+            return jsonify(responses.invalid_usergroup)
 
-        return jsonify({"success":"True",
-                        "name":user_group['name'],
+        response = dict(responses.success_true)
+        response.update({"name":user_group['name'],
                         "description":user_group['description']})
+        return jsonify(response)
+

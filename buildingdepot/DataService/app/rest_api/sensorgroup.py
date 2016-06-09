@@ -13,6 +13,7 @@ for acl's and other purposes.
 """
 from flask.views import MethodView
 from flask import request,jsonify,current_app
+from . import responses
 from ..models.ds_models import SensorGroup
 from ..service.utils import get_building_choices
 from .. import r,oauth
@@ -42,11 +43,11 @@ class SensorGroupService(MethodView):
             building = data['building']
             description = data['description']
         except KeyError:
-            return jsonify({'success': 'False', 'error': 'Missing parameters'})
+            return jsonify(responses.missing_parameters)
 
         sensor_group = SensorGroup.objects(name=name).first()
         if sensor_group:
-            return jsonify({'success':'False','error':'Sensorgroup already exists'})
+            return jsonify(responses.sensorgroup_exists)
 
         # Get the list of buildings and verify that the one specified in the
         # request exists
@@ -55,9 +56,9 @@ class SensorGroupService(MethodView):
             if building in item:
                 SensorGroup(name=xstr(name), building=xstr(building),
                             description=xstr(description)).save()
-                return jsonify({'success': 'True'})
+                return jsonify(responses.success_true)
 
-        return jsonify({'success': 'False', 'error': 'Building does not exist'})
+        return jsonify(responses.invalid_building)
 
     @oauth.require_oauth()
     def get(self,name):
@@ -75,9 +76,10 @@ class SensorGroupService(MethodView):
         """
         sensor_group = SensorGroup.objects(name=name).first()
         if sensor_group is None:
-            return jsonify({"success":"False","error":"Sensorgroup doesn't exist"})
+            return jsonify(responses.invalid_sensorgroup)
 
-        return jsonify({"success":"True",
-                        "name":sensor_group['name'],
+        response = dict(responses.success_true)
+        response.update({"name":sensor_group['name'],
                         "building":sensor_group['building'],
                         "description":sensor_group['description']})
+        return jsonify(response)

@@ -13,6 +13,7 @@ ensure that the cache gets updated as needed.
 
 from flask import request, jsonify
 from flask.views import MethodView
+from . import responses
 from ..models.ds_models import Sensor
 from ..service.utils import get_building_choices,current_app
 from uuid import uuid4
@@ -45,21 +46,22 @@ class SensorService(MethodView):
 
         """
         if name is None:
-            return jsonify({'success': 'False', 'error': 'Missing parameters'})
+            return jsonify(responses.missing_parameters)
         sensor = Sensor.objects(name=name).first()
         if sensor is None:
-            return jsonify({'success': 'False', 'error': 'Sensor doesn\'t exist'})
+            return jsonify(responses.invalid_uuid)
         tags_owned = [{'name': tag.name, 'value': tag.value} for tag in sensor.tags]
         metadata = Sensor._get_collection().find({'name': name}, {'metadata': 1, '_id': 0})[0]['metadata']
         metadata = [{'name': key, 'value': val} for key, val in metadata.iteritems()]
-        return jsonify({'success':'True',
-                        'building': str(sensor.building),
+        response = dict(responses.success_true)
+        response.update({'building': str(sensor.building),
                         'name': str(sensor.name),
                         'tags': tags_owned,
                         'metadata': metadata,
                         'source_identifier': str(sensor.source_identifier),
                         'source_name': str(sensor.source_name)
                         })
+        return jsonify(response)
 
     def post(self):
         """
@@ -81,7 +83,7 @@ class SensorService(MethodView):
         try:
             building = data['building']
         except KeyError:
-            return jsonify({'success': 'False', 'error': 'Missing parameters'})
+            return jsonify(responses.missing_parameters)
 
         sensor_name = data.get('name')
         identifier = data.get('identifier')
@@ -96,5 +98,8 @@ class SensorService(MethodView):
                        building=building,
                        owner=email).save()
                 r.set('owner:{}'.format(uuid), email)
-                return jsonify({'success': 'True', 'uuid': uuid})
-        return jsonify({'success': 'False', 'error': 'Building does not exist'})
+                response = dict(responses.success_true)
+                response.update({'uuid':uuid})
+                return jsonify(response)
+        return jsonify(responses.invalid_building)
+

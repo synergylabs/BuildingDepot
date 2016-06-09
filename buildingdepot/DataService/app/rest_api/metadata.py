@@ -14,6 +14,7 @@ from flask import request,jsonify
 from flask.views import MethodView
 from ..models.ds_models import Sensor
 from .. import oauth
+from . import responses
 import sys
 
 class MetaDataService(MethodView):
@@ -83,8 +84,14 @@ class MetaDataService(MethodView):
                       ]
             }
         """
-        metadata = {pair['name']: pair['value'] for pair in request.get_json()['data'] if pair['name'] != ''}
+        try:
+            data = request.get_json()['data']
+        except KeyError:
+            return jsonify(responses.missing_data)
+        metadata = {pair['name']: pair['value'] for pair in data if pair['name'] != ''}
         sensor = Sensor.objects(name=name).first()
+        if sensor is None:
+            return jsonify(responses.invalid_uuid)
         sensor.update(set__metadata=metadata)
-        return jsonify({'success': 'True'})
+        return jsonify(responses.success_true)
 

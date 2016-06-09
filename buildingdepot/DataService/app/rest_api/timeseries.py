@@ -11,6 +11,7 @@ data stores.
 """
 from flask.views import MethodView
 from flask import request, jsonify
+from . import responses
 from .. import r, influx, oauth, exchange
 from .helper import jsonString,timestamp_to_time_string
 from .helper import connect_broker
@@ -52,7 +53,7 @@ class TimeSeriesService(MethodView):
         resolution = request.args.get('resolution')
 
         if not all([start_time, end_time]):
-            return jsonify({'success': 'False', 'error': 'Missing parameters'})
+            return jsonify(responses.missing_parameters)
 
         if resolution != None:
             try:
@@ -61,11 +62,13 @@ class TimeSeriesService(MethodView):
                     + '\' and time<\'' + timestamp_to_time_string(
                         float(end_time)) + '\')' + " GROUP BY time(" + resolution + ")")
             except influxdb.exceptions.InfluxDBClientError:
-                return jsonify({'success': 'False', 'error': 'Too many points for this resolution'})
+                return jsonify(responses.resolution_high)
         else:
             data = influx.query('select * from "' + name + '" where time>\'' + timestamp_to_time_string(float(start_time)) \
                                 + '\' and time<\'' + timestamp_to_time_string(float(end_time)) + '\'')
-        return jsonify({'success': 'True', 'data': data.raw})
+            response = dict(responses.success_true)
+            response.update({'data':data.raw})
+        return jsonify(response)
 
     @oauth.require_oauth()
     def post(self):
@@ -125,19 +128,16 @@ class TimeSeriesService(MethodView):
             abort(400)
 
         result = influx.write_points(points)
-
-        dic = {}
-
         if result:
             if len(unauthorised_sensor) > 0:
-                dic['success'] = 'False'
-                dic['unauthorised_sensor'] = unauthorised_sensor
-                dic['error'] = 'Unauthorised sensors present'
+                response = dict(responses.success_false)
+                response.update({'unauthorised_sensor':unauthorised_sensor,
+                    'error':'Unauthorised sensors present'})
             else:
-                dic['success'] = 'True'
+                response = dict(responses.success_true)
         else:
-            dic['success'] = 'False'
-            dic['error'] = 'Error in writing in InfluxDB'
+            response = dict(responses.success_false)
+            response.update({'error':'Error in writing in InfluxDB'})
 
         if pubsub:
             try:
@@ -146,4 +146,5 @@ class TimeSeriesService(MethodView):
             except Exception as e:
                 print "Failed to end RabbitMQ session" + str(e)
 
-        return jsonString(dic)
+        return jsonString(response)
+

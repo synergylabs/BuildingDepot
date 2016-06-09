@@ -10,6 +10,8 @@ It handles the required CRUD operations for permissions.
 """
 
 from flask.views import MethodView
+from .helper import get_email
+from . import responses
 from flask import request,jsonify
 from ..models.ds_models import UserGroup,SensorGroup,Permission
 from .. import r,oauth,permissions
@@ -36,13 +38,15 @@ class PermissionService(MethodView):
         user_group = request.args.get('user_group')
         sensor_group = request.args.get('sensor_group')
         if not all([user_group, sensor_group]):
-            return jsonify({'success': 'False', 'error': 'Missing parameters'})
+            return jsonify(responses.missing_parameters)
         else:
             permission = Permission.objects(user_group=user_group, sensor_group=sensor_group).first()
             if permission is None:
-                return jsonify({'success': 'False', 'error': 'Permission doesn\'t exist'})
+                return jsonify(responses.no_permission)
             else:
-                return jsonify({'success': 'True', 'permission': permission.permission})
+                response = dict(success_true)
+                response['permission'] = permission.permission
+                return jsonify(response)
 
     @oauth.require_oauth()
     def post(self):
@@ -57,22 +61,23 @@ class PermissionService(MethodView):
                 "error": <details of an error if unsuccessful>
             }
         """
-        data = request.get_json()['data']
+        try:
+            data = request.get_json()['data']
+        except:
+            return jsonify(responses.missing_data)
         try:
             sensor_group = data['sensor_group']
             user_group = data['user_group']
             permission = data['permission']
-            print sensor_group,user_group,permission
         except KeyError:
-            print data
-            return jsonify({'success': 'False', 'error': 'Missing parameters'})
+            return jsonify(responses.missing_parameters)
 
         if UserGroup.objects(name=user_group).first() is None:
-            return jsonify({'success': 'False', 'error': 'User group doesn\'t exist'})
+            return jsonify(responses.no_usergroup)
         if SensorGroup.objects(name=sensor_group).first() is None:
-            return jsonify({'success': 'False', 'error': 'Sensor group doesn\'t exist'})
+            return jsonify(responses.no_sensorgroup)
         if permissions.get(permission) is None:
-            return jsonify({'success': 'False', 'error': 'Permission value doesn\'t exist'})
+            return jsonify(responses.no_permission_val)
 
         curr_permission = Permission.objects(user_group=user_group, sensor_group=sensor_group).first()
         if curr_permission is not None:
@@ -80,7 +85,7 @@ class PermissionService(MethodView):
                 Permission.objects(user_group=user_group,
                                    sensor_group=sensor_group).first().update(set__permission=permissions.get(permission))
             else:
-                return jsonify({'success':'False','error':'You are not authorized to modify this permission'})
+                return jsonify(responses.permission_authorization)
         else:
             Permission(user_group=user_group, sensor_group=sensor_group,
                        permission=permissions.get(permission),
@@ -88,7 +93,7 @@ class PermissionService(MethodView):
         invalidate_permission(sensor_group)
         r.hset('permission:{}:{}'.format(user_group, sensor_group),"permission",permissions.get(permission))
         r.hset('permission:{}:{}'.format(user_group, sensor_group),"owner",get_email())
-        return jsonify({'success': 'True'})
+        return jsonify(responses.success_true)
 
     @oauth.require_oauth()
     def delete(self):
@@ -105,17 +110,16 @@ class PermissionService(MethodView):
         user_group = request.args.get('user_group')
         sensor_group = request.args.get('sensor_group')
         if not all([user_group, sensor_group]):
-            return jsonify({'success': 'False', 'error': 'Missing parameters'})
+            return jsonify(responses.missing_parameters)
         else:
             permission = Permission.objects(user_group=user_group, sensor_group=sensor_group).first()
             if permission is None:
-                return jsonify({'success': 'False', 'error': 'Permission is not defined'})
+                return jsonify(responses.permission_not_defined)
             else:
                 if permission['owner'] == get_email():
                     permission.delete()
                     r.delete('permission:{}:{}'.format(user_group, sensor_group))
                     invalidate_permission(sensor_group)
-                    return jsonify({'success': 'True'})
+                    return jsonify(responses.success_true)
                 else:
-                    return jsonify({'success':'False','error': """You are not authorized
-                        to delete this permisson"""})
+                    return jsonify(responses.permission_del_authorization)

@@ -12,6 +12,7 @@ group.
 """
 from flask.views import MethodView
 from flask import request,jsonify
+from . import responses
 from .helper import add_delete
 from ..models.ds_models import SensorGroup,Permission
 from ..service.utils import get_building_tags
@@ -49,9 +50,13 @@ class SensorGroupTagsService(MethodView):
             }
         """
         obj = SensorGroup.objects(name=name).first()
+        if obj is None:
+            return jsonify(responses.invalid_sensorgroup)
         tags_owned = [{'name': tag.name, 'value': tag.value} for tag in obj.tags]
         tags = get_building_tags(obj.building)
-        return jsonify({'tags': tags, 'tags_owned': tags_owned})
+        response = dict(responses.success_true)
+        response.update({'tags': tags, 'tags_owned': tags_owned})
+        return jsonify(response)
 
     @oauth.require_oauth()
     def post(self,name):
@@ -77,11 +82,15 @@ class SensorGroupTagsService(MethodView):
             }
         """
         if Permission.objects(sensor_group=name).first() is not None:
-            return jsonify({'success': 'False', 'error': """Sensor group tags cannot be edited.
-                Already being used for permissions"""})
-        tags = request.get_json()['data']
+            return jsonify(responses.sensorgroup_used)
+        try:
+            tags = request.get_json()['data']
+        except KeyError:
+            return jsonify(responses.missing_data)
         # cache process
         sensorgroup = SensorGroup.objects(name=name).first()
+        if sensorgroup is None:
+            return jsonify(responses.invalid_sensorgroup)
         old = ['tag-sensorgroup:{}:{}:{}'.format(sensorgroup.building, tag.name, tag.value) for tag in sensorgroup.tags]
         new = ['tag-sensorgroup:{}:{}:{}'.format(sensorgroup.building, tag['name'], tag['value']) for tag in tags]
         added, deleted = add_delete(old, new)
@@ -111,4 +120,5 @@ class SensorGroupTagsService(MethodView):
         pipe.execute()
         # cache process done
         SensorGroup.objects(name=name).update(set__tags=tags)
-        return jsonify({'success': 'True'})
+        return jsonify(responses.success_true)
+

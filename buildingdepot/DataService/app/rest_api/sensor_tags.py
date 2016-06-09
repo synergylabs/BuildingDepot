@@ -13,6 +13,7 @@ update/remove tags from a sensor
 """
 from flask.views import MethodView
 from flask import request,jsonify
+from .import responses
 from ..models.ds_models import Sensor,SensorGroup
 from .helper import add_delete
 from ..service.utils import get_building_tags
@@ -49,9 +50,13 @@ class SensorTagsService(MethodView):
                         ] (These are the list of tags owned by this sensor)
         } """
         obj = Sensor.objects(name=name).first()
+        if obj is None:
+            return jsonify(responses.invalid_uuid)
         tags_owned = [{'name': tag.name, 'value': tag.value} for tag in obj.tags]
         tags = get_building_tags(obj.building)
-        return jsonify({'tags': tags, 'tags_owned': tags_owned})
+        response = dict(responses.success_true)
+        response.update({'tags': tags, 'tags_owned': tags_owned})
+        return jsonify(response)
 
     @oauth.require_oauth()
     @authenticate_acl('r/w/p')
@@ -82,6 +87,8 @@ class SensorTagsService(MethodView):
 
         # cache process
         sensor = Sensor.objects(name=name).first()
+        if sensor is None:
+            return jsonify(responses.invalid_uuid)
         building = sensor.building
         # Get old tags and new tags and find the list of tags that have to be added and deleted
         # based on the response from get_add_delete
@@ -119,4 +126,4 @@ class SensorTagsService(MethodView):
         pipe.delete(sensor)
         pipe.execute()
 
-        return jsonify({'success': 'True'})
+        return jsonify(responses.success_true)
