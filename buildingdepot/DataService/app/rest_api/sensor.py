@@ -79,7 +79,7 @@ class SensorService(MethodView):
             "error": <details of an error if it happends>
         }
         """
-        data = request.get_json()
+        data = request.get_json()['data']
         try:
             building = data['building']
         except KeyError:
