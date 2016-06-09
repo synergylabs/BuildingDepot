@@ -20,6 +20,7 @@ from config import config
 from mongoengine import connect
 from flask.ext.login import LoginManager
 from flask.ext.bootstrap import Bootstrap
+from flask_oauthlib.provider import OAuth2Provider
 
 login_manager = LoginManager()
 login_manager.session_protection = 'strong'
@@ -27,6 +28,7 @@ login_manager.login_view = 'auth.login'
 
 bootstrap = Bootstrap()
 
+oauth = OAuth2Provider()
 
 def create_app(config_mode):
     connect('buildingdepot')
@@ -39,6 +41,7 @@ def create_app(config_mode):
 
     login_manager.init_app(app)
     bootstrap.init_app(app)
+    oauth.init_app(app)
 
     from .main import main as main_blueprint
     app.register_blueprint(main_blueprint)
@@ -51,6 +54,9 @@ def create_app(config_mode):
 
     from .rest_api import api as api_blueprint
     app.register_blueprint(api_blueprint, url_prefix='/api')
+
+    from .oauth_bd import oauth_bd as oauth_bd_blueprint
+    app.register_blueprint(oauth_bd_blueprint, url_prefix='/oauth')
 
     return app
 

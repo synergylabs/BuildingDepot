@@ -66,9 +66,6 @@ def create_app(config_mode):
     from .service import service as service_blueprint
     app.register_blueprint(service_blueprint, url_prefix='/service')
 
-    from .oauth_bd import oauth_bd as oauth_bd_blueprint
-    app.register_blueprint(oauth_bd_blueprint, url_prefix='/oauth')
-
     from .rest_api import api as api_blueprint
     app.register_blueprint(api_blueprint, url_prefix='/api')
 

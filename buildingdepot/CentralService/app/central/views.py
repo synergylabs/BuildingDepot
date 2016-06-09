@@ -16,6 +16,7 @@ of BD will call the tagtype() function
 from flask import render_template, request, redirect, url_for, jsonify
 from . import central
 from ..models.cs_models import *
+from ..oauth_bd.views import Client
 from flask.ext.login import login_required
 from app.common import PAGE_SIZE
 from .forms import *
@@ -433,3 +434,29 @@ def dataservice_admins(name):
 def dataservice_delete():
     DataService.objects(name=request.form.get('name')).delete()
     return redirect(url_for('central.dataservice'))
+
+@central.route('/oauth_gen', methods=['GET', 'POST'])
+def oauth_gen():
+    keys = []
+    """If a post request is made then generate a client id and secret key
+       that the user can use later to generate an OAuth token"""
+    if request.method == 'POST':
+        keys.append({"client_id": gen_salt(40), "client_secret": gen_salt(50)})
+        item = Client(
+            client_id=keys[0]['client_id'],
+            client_secret=keys[0]['client_secret'],
+            _redirect_uris=' '.join([
+                'http://localhost:8000/authorized',
+                'http://127.0.0.1:8000/authorized',
+                'http://127.0.1:8000/authorized',
+                'http://127.1:8000/authorized']),
+            _default_scopes='email',
+            user=request.form.get('name')).save()
+    clientkeys = Client.objects(user=session['email'])
+    return render_template('central/oauth_gen.html', keys=clientkeys)
+
+@central.route('/oauth_delete', methods=['POST'])
+def oauth_delete():
+    if request.method == 'POST':
+        Client.objects(client_id=request.form.get('client_id')).delete()
+        return redirect(url_for('central.oauth_gen'))

@@ -20,13 +20,12 @@ from ..models.ds_models import *
 from .forms import *
 from ..rest_api.utils import *
 from uuid import uuid4
-from .. import r, influx, oauth, permissions
+from .. import r, influx, permissions
 from werkzeug.security import gen_salt
 import sys
 import math
 
 sys.path.append('/srv/buildingdepot')
-from utils import get_user_oauth
 from ..api_0_0.resources.utils import *
 from ..api_0_0.resources.acl_cache import invalidate_permission
 
@@ -112,34 +111,6 @@ def sensorgroup():
                     owner = session['email']).save()
         return redirect(url_for('service.sensorgroup'))
     return render_template('service/sensorgroup.html', objs=objs, form=form)
-
-
-@service.route('/oauth_gen', methods=['GET', 'POST'])
-def oauth_gen():
-    keys = []
-    """If a post request is made then generate a client id and secret key
-       that the user can use later to generate an OAuth token"""
-    if request.method == 'POST':
-        keys.append({"client_id": gen_salt(40), "client_secret": gen_salt(50)})
-        item = Client(
-            client_id=keys[0]['client_id'],
-            client_secret=keys[0]['client_secret'],
-            _redirect_uris=' '.join([
-                'http://localhost:8000/authorized',
-                'http://127.0.0.1:8000/authorized',
-                'http://127.0.1:8000/authorized',
-                'http://127.1:8000/authorized']),
-            _default_scopes='email',
-            user=request.form.get('name')).save()
-    clientkeys = Client.objects(user=session['email'])
-    return render_template('service/oauth_gen.html', keys=clientkeys)
-
-
-@service.route('/oauth_delete', methods=['POST'])
-def oauth_delete():
-    if request.method == 'POST':
-        Client.objects(client_id=request.form.get('client_id')).delete()
-        return redirect(url_for('service.oauth_gen'))
 
 
 @service.route('/sensorgroup_delete', methods=['POST'])

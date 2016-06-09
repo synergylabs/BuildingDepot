@@ -13,7 +13,7 @@ logging out.
 from flask import render_template, redirect, request, url_for, flash
 from . import auth
 from flask.ext.login import login_user, login_required, logout_user
-from ..models.cs_models import User, Role
+from ..models.cs_models import User
 from .forms import LoginForm, RegistrationForm
 from werkzeug.security import generate_password_hash
 
@@ -26,8 +26,7 @@ def register():
         """Create a new user"""
         User(email=form.email.data,
              name=form.name.data,
-             password=generate_password_hash(form.password.data),
-             role=Role.objects(name='default').first()).save()
+             password=generate_password_hash(form.password.data)).save()
         flash('You can now login.')
         return redirect(url_for('auth.login'))
     return render_template('auth/register.html', form=form)

@@ -10,7 +10,6 @@ token generation and verification
 """
 
 from . import oauth_bd
-from .. import svr
 from .. import oauth
 from datetime import datetime, timedelta
 from flask import Flask, current_app, Blueprint
@@ -22,8 +21,7 @@ from bson.objectid import ObjectId
 from xmlrpclib import ServerProxy
 import sys, os, binascii
 
-sys.path.append('/srv/buildingdepot/CentralReplica')
-from models import User
+from ..models.cs_models import User
 from mongoengine import *
 from mongoengine.context_managers import switch_db
 from uuid import uuid4
@@ -95,29 +93,18 @@ class Token(Document):
             return self._scopes.split()
         return []
 
-
-# RPC calls to the CentralService to get user details
 def get_user_oauth(email):
-    return svr.get_user_oauth(email)
-
-
-def get_user_by_id(uid):
-    return svr.get_user_by_id(uid)
-
+    """Check if user email exists for OAuth"""
+    user = User.objects(email=email).first()
+    if user is not None:
+        return str(user.email)
+    return None
 
 def current_user():
     if 'id' in session:
         email = session['id']
-        try:
-            return get_user_oauth(email)
-        except Exception as e:
-            return None
+        return get_user_oauth(email)
     return None
-
-
-def retrieve_user(user):
-    return get_user_oauth(user)
-
 
 @oauth_bd.route('/', methods=('GET', 'POST'))
 def home():
@@ -146,7 +133,7 @@ def client():
             'http://127.0.1:8000/authorized',
             'http://127.1:8000/authorized']),
         _default_scopes='email',
-        user=retrieve_user(user_current)).save()
+        user=get_user_oauth(user_current)).save()
     return jsonify(
         client_id=item.client_id,
         client_secret=item.client_secret
@@ -172,7 +159,7 @@ def save_grant(client_id, code, request, *args, **kwargs):
         code=code['code'],
         redirect_uri=request.redirect_uri,
         _scopes=' '.join(request.scopes),
-        user=retrieve_user(current_user()), expires=expires)
+        user=get_user_oauth(current_user()), expires=expires)
     grant.save()
     return grant
 
@@ -204,3 +191,23 @@ def save_token(token, request, *args, **kwargs):
         user=request.user,
         email=request.user).save()
     return tok
+
+@oauth_bd.route('/access_token/client_id=<client_id>/client_secret=<client_secret>', methods=['GET'])
+def get_access_token(client_id, client_secret):
+    """ Generates and returns an access token to the user if the client_id and
+        client_secret provided by them are valid"""
+    client = Client.objects(client_id=client_id, client_secret=client_secret).first()
+    if client != None:
+        # Set token expiry period and create it
+        expires = datetime.utcnow() + timedelta(seconds=expires_in)
+        tok = Token(
+            access_token=str(binascii.hexlify(os.urandom(16))),
+            refresh_token=str(binascii.hexlify(os.urandom(16))),
+            token_type='Bearer',
+            _scopes='email',
+            expires=expires,
+            client=client,
+            user=client.user,
+            email=client.user).save()
+        return jsonify({'success': 'True', 'access_token': tok.access_token})
+    return jsonify({'success': 'False', 'access_token': 'Invalid credentials'})
