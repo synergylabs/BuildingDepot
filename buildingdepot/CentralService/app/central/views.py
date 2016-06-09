@@ -43,7 +43,7 @@ def tagtype():
         # Create the tag
         TagType(name=str(form.name.data),
                 description=str(form.description.data),
-                parents=form.parents.data).save()
+                parents=[str(parent) for parent in form.parents.data]).save()
         # update all the parents of this tag with the dependency
         for parent in form.parents.data:
             collection = TagType._get_collection()
@@ -250,31 +250,16 @@ def building_tags_ajax(building_name):
         pairs = {name: TagType.objects(name=name).first().parents for name in names}
         tags = Building._get_collection().find(
             {'name': building_name},
-            {'_id': 0, 'tags.name': 1, 'tags.value': 1, 'tags.parents': 1, 'tags.ancestors': 1}
+            {'_id': 0, 'tags.name': 1, 'tags.value': 1, 'tags.parents': 1}
         )[0]['tags']
         parents = set([pair['name'] + pair['value'] for tag in tags for pair in tag['parents']])
-        # Response contains parameters that define whether tag can be deleted or not and
-        # the ancestors on whom it is dependent
+        # Response contains parameters that define whether tag can be deleted or not
         for tag in tags:
             tag['can_delete'] = tag['name'] + tag['value'] not in parents
-            tag['ancestors'] = [ancestor['name'] + ancestor['value'] for ancestor in tag['ancestors']]
         return jsonify({'pairs': pairs, 'tags': tags, 'graph': get_tag_descendant_pairs()})
     else:
         data = request.get_json()['data']
         collection = Building._get_collection()
-        ancestors = []
-        # Check which tags this one specifies as its parents
-        if 'parents' in data:
-            data['parents'] = [{'name': parent['name'], 'value': parent['value']} for parent in data['parents']]
-            for parent in data['parents']:
-                ancestors.extend(
-                    collection.aggregate([
-                        {'$unwind': '$tags'},
-                        {'$match': {'name': building_name, 'tags.name': parent['name'], 'tags.value': parent['value']}},
-                        {'$project': {'_id': 0, 'tags.ancestors': 1}}
-                    ])['result'][0]['tags']['ancestors']
-                )
-            ancestors.extend(data['parents'])
 
         # Form the tag to update in MongoDB
         tag = {
@@ -282,7 +267,6 @@ def building_tags_ajax(building_name):
             'value': data['value'],
             'metadata': {},
             'parents': [],
-            'ancestors': ancestors
         }
 
         if 'parents' in data:
@@ -438,7 +422,6 @@ def dataservice_admins(name):
     if request.method == 'GET':
         admins = DataService._get_collection().find({'name': name}, {'admins': 1, '_id': 0})[0]['admins']
         user_emails = [user.email for user in User.objects]
-        print user_emails
         return jsonify({'admins': admins, 'user_emails': user_emails})
     else:
         DataService.objects(name=name).update(set__admins=request.get_json()['data'])
