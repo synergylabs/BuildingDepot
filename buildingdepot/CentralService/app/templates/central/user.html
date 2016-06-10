@@ -6,7 +6,7 @@
 {% block page_content %}
 <div class="row" ng-app="myApp" ng-controller="metadataController">
     <div class="page-header">
-        <h2>User <a ng-init="root.addNewUser()" href="#myModal" data-toggle="modal" class="btn btn-info btn-lg"><span class="glyphicon glyphicon-hand-up"></span> Add a New User</a></h2>
+        <h2>User <a href="#myModal" data-toggle="modal" class="btn btn-info btn-lg"><span class="glyphicon glyphicon-hand-up"></span> Add a New User</a></h2>
     </div>
 
     <div class="modal fade" id="myModal">
@@ -27,9 +27,16 @@
                         </div>
 
                         <div class="form-group">
-                            <label class="col-lg-2 control-label">Name</label>
+                            <label class="col-lg-2 control-label">First Name</label>
                             <div class="col-lg-10">
-                                <input ng-model="name" required class="form-control" type="text">
+                                <input ng-model="fname" required class="form-control" type="text">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-lg-2 control-label">Last Name</label>
+                            <div class="col-lg-10">
+                                <input ng-model="lname" required class="form-control" type="text">
                             </div>
                         </div>
 
@@ -41,20 +48,8 @@
                         </div>
 
                         <div class="form-group">
-                            <label class="col-lg-2 control-label">Password</label>
-                            <div class="col-lg-10">
-                                <input ng-model="password" required class="form-control" type="password">
-                            </div>
-                        </div>
-
-                        <div>
-                            <input ng-model="showPassword" type="checkbox">
-                            Show Password: <span ng-show="showPassword">{[ password ]}</span>
-                        </div>
-
-                        <div class="form-group">
                             <div class="col-lg-12">
-                                <button class="btn btn-success pull-right" type="submit">Submit</button>
+                                <button ng-click="root.addNewUser()" class="btn btn-success pull-right" type="submit">Submit</button>
                             </div>
                         </div>
                     </form>
@@ -288,7 +283,7 @@
         }]);
         app.controller("metadataController", function($scope, $http) {
             $scope.root = {};
-            $scope.roleOptions = ['super', 'local', 'default'];
+            $scope.roleOptions = ['super', 'default'];
             $scope.selectedRole = 'default';
 
             $scope.addedBuildings = [];
@@ -418,16 +413,20 @@
             };
 
             $scope.root.addNewUser = function() {
-                var res = $http.get('/central/user/add_user');
+                console.log($scope.email);
+                console.log($scope.fname);
+                var json = {
+                        'email':$scope.email,
+                        'fname':$scope.fname,
+                        'lname':$scope.lname,
+                        'role':$scope.selectedRole
+                };
+                var res = $http.post('/central/user/add_user',{'data': json });
                 res.success(function(data) {
-                    $scope.supers = data.supers;
-                    $scope.locals = data.locals;
-                    $scope.defaults = data.defaults;
-                    $scope.emails = data.emails;
-                    $scope.allBuildings = data.buildings;
-                    $scope.defaultRoles = data.roles;
+                    alert(data);
                 });
                 res.error(function() {
+                    console.log(json);
                     alert("Ajax failed");
                 });
             };
