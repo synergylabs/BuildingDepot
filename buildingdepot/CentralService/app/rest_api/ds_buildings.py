@@ -14,9 +14,11 @@ from flask import jsonify,request
 from flask.views import MethodView
 from ..models.cs_models import Building,DataService
 from . import responses
+from .. import oauth
 
 class DataserviceBuildingsService(MethodView):
 
+    @oauth.require_oauth()
     def post(self,name):
         try:
             data = request.get_json()['data']
@@ -38,6 +40,7 @@ class DataserviceBuildingsService(MethodView):
         dataservice.update(set__buildings=buildings)
         return jsonify(responses.success_true)
 
+    @oauth.require_oauth()
     def get(self,name):
         dataservice = DataService.objects(name=name).first()
         if dataservice is None:
@@ -46,6 +49,7 @@ class DataserviceBuildingsService(MethodView):
         response.update({'buildings':dataservice.buildings})
         return jsonify(response)
 
+    @oauth.require_oauth()
     def delete(self,name):
         try:
             data = request.get_json()['data']

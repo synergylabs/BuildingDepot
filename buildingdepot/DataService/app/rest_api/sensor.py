@@ -27,6 +27,7 @@ from ..api_0_0.resources.utils import authenticate_acl
 
 class SensorService(MethodView):
 
+    @oauth.require_oauth()
     def get(self,name):
         """
         Retrieve sensor details based on uuid specified
@@ -63,6 +64,7 @@ class SensorService(MethodView):
                         })
         return jsonify(response)
 
+    @oauth.require_oauth()
     def post(self):
         """
         Creates sensor if the building specified is valid

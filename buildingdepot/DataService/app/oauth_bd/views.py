@@ -28,11 +28,7 @@ from mongoengine import *
 from mongoengine.context_managers import switch_db
 from uuid import uuid4
 
-connect('buildingdepot', host='127.0.0.1', port=27017)
-register_connection('ds', name='buildingdepot', host='127.0.0.1', port=27017)
-
 expires_in = 34560
-
 
 class Client(Document):
     client_id = StringField(required=True, unique=True)
@@ -40,6 +36,8 @@ class Client(Document):
     user = StringField()
     _redirect_uris = StringField()
     _default_scopes = StringField()
+
+    meta = {"db_alias": "bd"}
 
     @property
     def client_type(self):
@@ -70,6 +68,8 @@ class Grant(Document):
     expires = DateTimeField()
     _scopes = StringField()
 
+    meta = {"db_alias": "bd"}
+
     @property
     def scopes(self):
         if self._scopes:
@@ -87,7 +87,7 @@ class Token(Document):
     _scopes = StringField()
     email = StringField()
 
-    meta = {"db_alias": "ds"}
+    meta = {"db_alias": "bd"}
 
     @property
     def scopes(self):
@@ -179,11 +179,10 @@ def save_grant(client_id, code, request, *args, **kwargs):
 
 @oauth.tokengetter
 def load_token(access_token=None, refresh_token=None):
-    with switch_db(Token, 'ds') as tkn:
-        if access_token:
-            return tkn.objects(access_token=access_token).first()
-        elif refresh_token:
-            return tkn.objects(refresh_token=refresh_token).first()
+    if access_token:
+        return Token.objects(access_token=access_token).first()
+    elif refresh_token:
+        return Token.objects(refresh_token=refresh_token).first()
 
 
 @oauth.tokensetter

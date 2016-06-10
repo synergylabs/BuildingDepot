@@ -21,7 +21,7 @@ from flask.ext.login import login_required
 from app.common import PAGE_SIZE
 from .forms import *
 from .utils import get_choices, get_tag_descendant_pairs
-from werkzeug.security import generate_password_hash
+from werkzeug.security import generate_password_hash,gen_salt
 
 
 @central.route('/tagtype', methods=['GET', 'POST'])
@@ -452,7 +452,7 @@ def oauth_gen():
                 'http://127.1:8000/authorized']),
             _default_scopes='email',
             user=request.form.get('name')).save()
-    clientkeys = Client.objects(user=session['id'])
+    clientkeys = Client.objects(user=session['email'])
     return render_template('central/oauth_gen.html', keys=clientkeys)
 
 @central.route('/oauth_delete', methods=['POST'])

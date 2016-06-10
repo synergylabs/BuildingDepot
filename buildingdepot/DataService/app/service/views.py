@@ -21,7 +21,6 @@ from .forms import *
 from ..rest_api.utils import *
 from uuid import uuid4
 from .. import r, influx, permissions
-from werkzeug.security import gen_salt
 import sys
 import math
 

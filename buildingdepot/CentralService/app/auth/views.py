@@ -10,7 +10,8 @@ logging out.
 @license: UCSD License. See License file for details.
 """
 
-from flask import render_template, redirect, request, url_for, flash
+from flask import render_template, redirect, request
+from flask import session, url_for, flash
 from . import auth
 from flask.ext.login import login_user, login_required, logout_user
 from ..models.cs_models import User
@@ -38,6 +39,7 @@ def login():
     form = LoginForm()
     if form.validate_on_submit():
         user = User.objects(email=form.email.data).first()
+        session['email'] = form.email.data
         if user is not None and user.verify_password(form.password.data):
             login_user(user, form.remember_me.data)
             return redirect(request.args.get('next') or url_for('main.index'))

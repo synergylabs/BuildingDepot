@@ -17,9 +17,13 @@ class Node(EmbeddedDocument):
     name = StringField()
     value = StringField()
 
+    meta = {"db_alias": "ds"}
+
 class UserGroupNode(EmbeddedDocument):
     user_id = StringField()
     manager = BooleanField()
+
+    meta = {"db_alias": "ds"}
 
 class Sensor(Document):
     name = StringField(required=True, unique=True)
@@ -32,6 +36,8 @@ class Sensor(Document):
     tags = ListField(EmbeddedDocumentField(Node))
     subscribers = ListField(StringField())
 
+    meta = {"db_alias": "ds"}
+
 
 class SensorGroup(Document):
     name = StringField(required=True, unique=True)
@@ -41,12 +47,16 @@ class SensorGroup(Document):
     tags = ListField(EmbeddedDocumentField(Node))
     owner = StringField()
 
+    meta = {"db_alias": "ds"}
+
 class UserGroup(Document):
     name = StringField(required=True, unique=True)
     description = StringField()
     owner = StringField()
 
     users = ListField(EmbeddedDocumentField(UserGroupNode))
+
+    meta = {"db_alias": "ds"}
 
 
 class Permission(Document):
@@ -55,10 +65,14 @@ class Permission(Document):
     permission = StringField()
     owner = StringField()
 
+    meta = {"db_alias": "ds"}
+
 
 class Application(Document):
     user = StringField()
     apps = ListField(EmbeddedDocumentField(Node))
+
+    meta = {"db_alias": "ds"}
 
 
 class Client(Document):
@@ -67,6 +81,8 @@ class Client(Document):
     user = StringField()
     _redirect_uris = StringField()
     _default_scopes = StringField()
+
+    meta = {"db_alias": "ds"}
 
     @property
     def client_type(self):

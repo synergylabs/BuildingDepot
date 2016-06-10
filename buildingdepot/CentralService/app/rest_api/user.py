@@ -28,6 +28,9 @@ class UserService(MethodView):
         last_name = data.get('last_name')
         role = data.get('role')
 
+        if User.objects(email=email).first() is None:
+            return jsonify(responses.user_exists)
+
         if role=='super':
             if User.objects(email=get_email()).first().role == 'super':
                 self.register_user(email,'super')
@@ -43,7 +46,6 @@ class UserService(MethodView):
             first_mame=first_name,last_name=last_name,
             role=role,password=password).save()
         send_registration_email(email,password)
-        return
 
     def get(self,name):
         user = User.objects(email=get_email()).first()

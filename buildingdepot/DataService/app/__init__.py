@@ -50,10 +50,15 @@ def create_app(config_mode):
     oauth.init_app(app)
 
     config[config_mode].init_app(app)
-    connect(app.config['MONGODB_DATABASE'],
-            host=app.config['MONGODB_HOST'],
-            port=app.config['MONGODB_PORT'])
-    register_connection('bd',name='buildingdepot',host='127.0.0.1',port=27017)
+
+    register_connection(app.config['MONGODB_DS_ALIAS'],
+                    name=app.config['MONGODB_DATABASE_DS'],
+                    host=app.config['MONGODB_HOST'],
+                    port=app.config['MONGODB_PORT'])
+    register_connection(app.config['MONGODB_BD_ALIAS'],
+                    name=app.config['MONGODB_DATABASE_BD'],
+                    host=app.config['MONGODB_HOST'],
+                    port=app.config['MONGODB_PORT'])
 
     bootstrap.init_app(app)
 

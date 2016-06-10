@@ -15,11 +15,13 @@ from flask import request,jsonify
 from ..models.cs_models import TagType,BuildingTemplate
 from .helper import add_delete,gen_update
 from . import responses
+from .. import oauth
 
 class TagTypeService(MethodView):
 
     params = ['name','description','parents']
 
+    @oauth.require_oauth()
     def post(self):
         try:
             data = request.get_json()['data']
@@ -56,6 +58,7 @@ class TagTypeService(MethodView):
                 collection.update({'name': name},{'$set':gen_update(self.params,data)})
         return jsonify(responses.success_true)
 
+    @oauth.require_oauth()
     def get(self,name):
         tagtype = TagType.objects(name=name).first()
         if tagtype:
@@ -66,6 +69,7 @@ class TagTypeService(MethodView):
         else:
             return jsonify(responses.invalid_tagtype)
 
+    @oauth.require_oauth()
     def delete(self,name):
         tagtype = TagType.objects(name=name).first()
         if not tagtype:

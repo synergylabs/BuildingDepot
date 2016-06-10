@@ -16,9 +16,11 @@ from flask import request,jsonify
 #from ..central.utils import get_tag_descendant_pairs
 from ..models.cs_models import Building,BuildingTemplate,TagType
 from . import responses
+from .. import oauth
 
 class BuildingTagsService(MethodView):
 
+    @oauth.require_oauth()
     def post(self,building_name):
         try:
             data = request.get_json()['data']
@@ -69,6 +71,7 @@ class BuildingTagsService(MethodView):
                     {"$push":{"tags.$.parents":{"$each":parents}}})
         return jsonify(responses.success_true)
 
+    @oauth.require_oauth()
     def get(self,building_name):
         building = Building.objects(name=building_name).first()
         if building is None:
@@ -88,6 +91,7 @@ class BuildingTagsService(MethodView):
         response.update({'pairs': pairs, 'tags': tags})
         return jsonify(response)
 
+    @oauth.require_oauth()
     def delete(self,building_name):
         building = Building.objects(name=building_name).first()
         if building is None:

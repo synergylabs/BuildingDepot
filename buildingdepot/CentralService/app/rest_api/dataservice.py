@@ -15,12 +15,13 @@ from flask.views import MethodView
 from . import responses
 from .helper import xstr,gen_update
 from ..models.cs_models import DataService
-
+from .. import oauth
 
 class DataserviceService(MethodView):
 
     params = ['description','host','port']
 
+    @oauth.require_oauth()
     def post(self):
         try:
             data = request.get_json()['data']
@@ -43,6 +44,7 @@ class DataserviceService(MethodView):
             collection.update({'name': name},{'$set':gen_update(self.params,data)})
         return jsonify(responses.success_true)
 
+    @oauth.require_oauth()
     def get(self,name):
         dataservice = DataService.objects(name=name).first()
         if dataservice is None:
@@ -54,6 +56,7 @@ class DataserviceService(MethodView):
             'port':xstr(dataservice.port)})
         return jsonify(response)
 
+    @oauth.require_oauth()
     def delete(self,name):
         dataservice = DataService.objects(name=name).first()
         if dataservice is None:

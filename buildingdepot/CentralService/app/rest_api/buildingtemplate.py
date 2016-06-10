@@ -16,11 +16,13 @@ from flask.views import MethodView
 from . import responses
 from .helper import add_delete,gen_update
 from ..models.cs_models import TagType,BuildingTemplate,Building
+from .. import oauth
 
 class BuildingTemplateService(MethodView):
 
     params = ['name','description','tag_types']
 
+    @oauth.require_oauth()
     def post(self):
         try:
             data = request.get_json()['data']
@@ -49,6 +51,7 @@ class BuildingTemplateService(MethodView):
             collection.update({'name': name},{'$set':gen_update(self.params,data)})
         return jsonify(responses.success_true)
 
+    @oauth.require_oauth()
     def get(self,name):
         template = BuildingTemplate.objects(name=name).first()
         if template is None:
@@ -59,6 +62,7 @@ class BuildingTemplateService(MethodView):
                                     'tag_types':template['tag_types']})
         return jsonify(response)
 
+    @oauth.require_oauth()
     def delete(self,name):
         template = BuildingTemplate.objects(name=name).first()
         if template is None:
