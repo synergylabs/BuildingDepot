@@ -13,7 +13,7 @@ of BD will call the tagtype() function
 @license: UCSD License. See License file for details.
 """
 
-from flask import render_template, request, redirect, url_for, jsonify
+from flask import render_template, request, redirect, url_for, jsonify, session
 from . import central
 from ..models.cs_models import *
 from ..oauth_bd.views import Client
@@ -452,7 +452,7 @@ def oauth_gen():
                 'http://127.1:8000/authorized']),
             _default_scopes='email',
             user=request.form.get('name')).save()
-    clientkeys = Client.objects(user=session['email'])
+    clientkeys = Client.objects(user=session['id'])
     return render_template('central/oauth_gen.html', keys=clientkeys)
 
 @central.route('/oauth_delete', methods=['POST'])
