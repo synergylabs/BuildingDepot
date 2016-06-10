@@ -77,11 +77,10 @@ class TagOwned(EmbeddedDocument):
 class User(UserMixin, Document):
     email = StringField(required=True, unique=True)
     password = StringField(required=True)
-    name = StringField(required=True)
-
+    first_name = StringField(required=True)
+    last_name = StringField()
     role = StringField()
-    buildings = ListField(StringField())
-    tags_owned = ListField(EmbeddedDocumentField(TagOwned))
+    first_login = BooleanField(default=False)
 
     def get_id(self):
         return self.email

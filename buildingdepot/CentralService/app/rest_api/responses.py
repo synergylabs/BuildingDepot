@@ -30,3 +30,5 @@ invalid_dataservice = {'success':'False','error':'DataService doesn\'t exist'}
 dataservice_in_use = {'success':'False','error':'Cannot delete DataService, contains buildings.'}
 ds_invalid_building = {'success':'False','error':'One of the buildings doesn\'t exist'}
 ds_invalid_admin = {'success':'False','error':'One of the users doesn\'t exist'}
+unauthorized_user = {'sucess':'False','error':'You are not authorized to create a super user'}
+invalid_user = {'sucess':'False','error':'User doesn\'t exist'}
