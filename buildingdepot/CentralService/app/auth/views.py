@@ -21,15 +21,13 @@ from werkzeug.security import generate_password_hash
 
 @auth.route('/register', methods=['GET', 'POST'])
 def register():
-    "Register a new user"
+    """Register a new user"""
     form = RegistrationForm()
     if form.validate_on_submit():
-        """Create a new user"""
-        User(email=form.email.data,
-             name=form.name.data,
-             password=generate_password_hash(form.password.data)).save()
-        flash('You can now login.')
-        return redirect(url_for('auth.login'))
+        user = User.objects(email=session['email']).first()
+        if user.update(set__password=generate_password_hash(form.password.data), set__first_login=False):
+            flash('Your Password is successfully reset. You can now login.')
+            return redirect(url_for('auth.login'))
     return render_template('auth/register.html', form=form)
 
 
@@ -39,9 +37,13 @@ def login():
     form = LoginForm()
     if form.validate_on_submit():
         user = User.objects(email=form.email.data).first()
-        session['email'] = form.email.data
-        if user is not None and user.verify_password(form.password.data):
+        if user is not None and user.first_login and user.verify_password(form.password.data):
+            flash('You have logged in for the first time. Create a new password')
+            session['email'] = form.email.data
+            return redirect(url_for('auth.register'))
+        elif user is not None and user.verify_password(form.password.data):
             login_user(user, form.remember_me.data)
+            session['email'] = form.email.data
             return redirect(request.args.get('next') or url_for('main.index'))
         flash('Invalid email or password')
     return render_template('auth/login.html', form=form)
