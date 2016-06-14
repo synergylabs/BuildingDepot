@@ -117,7 +117,7 @@ def buildingtemplate():
             obj.can_delete = False
         else:
             obj.can_delete = True
-        obj.tag_types = map(str,obj.tag_types)
+        obj.tag_types = map(str, obj.tag_types)
     form = BuildingTemplateForm()
     # Get list of tags that this building can use
     form.tag_types.choices = get_choices(TagType)
@@ -436,6 +436,7 @@ def dataservice_delete():
     DataService.objects(name=request.form.get('name')).delete()
     return redirect(url_for('central.dataservice'))
 
+
 @central.route('/oauth_gen', methods=['GET', 'POST'])
 def oauth_gen():
     keys = []
@@ -455,6 +456,7 @@ def oauth_gen():
             user=request.form.get('name')).save()
     clientkeys = Client.objects(user=session['email'])
     return render_template('central/oauth_gen.html', keys=clientkeys)
+
 
 @central.route('/oauth_delete', methods=['POST'])
 def oauth_delete():

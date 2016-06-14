@@ -22,8 +22,9 @@ from .. import oauth
 from ..api_0_0.resources.utils import super_required
 import uuid
 
-class UserService(MethodView):
 
+class UserService(MethodView):
+    
     @oauth.require_oauth()
     def post(self):
         try:
@@ -42,7 +43,7 @@ class UserService(MethodView):
         if User.objects(email=email).first():
             return jsonify(responses.user_exists)
 
-        if role=='super':
+        if role == 'super':
             if User.objects(email=get_email()).first().role == 'super':
                 self.register_user(first_name,last_name,email,'super')
             else:
@@ -57,10 +58,10 @@ class UserService(MethodView):
             return jsonify(responses.invalid_user)
 
         response = dict(responses.success_true)
-        response.update({'email':user.email,
-                        'first_name':user.first_name,
-                        'last_name':user.last_name,
-                        'role':user.role})
+        response.update({'email': user.email,
+                         'first_name': user.first_name,
+                         'last_name': user.last_name,
+                         'role': user.role})
         return jsonify(response)
 
     @oauth.require_oauth()

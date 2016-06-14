@@ -71,13 +71,14 @@ class TagOwned(EmbeddedDocument):
     building = StringField()
     tags = ListField(EmbeddedDocumentField(Node))
 
+
 class User(UserMixin, Document):
     email = StringField(required=True, unique=True)
     password = StringField(required=True)
     first_name = StringField(required=True)
     last_name = StringField()
     role = StringField()
-    first_login = BooleanField(default=False)
+    first_login = BooleanField(default=True)
 
     def get_id(self):
         return self.email
@@ -105,7 +106,3 @@ class User(UserMixin, Document):
 
     def is_local(self):
         return self.role.type == 'local'
-
-
-
-

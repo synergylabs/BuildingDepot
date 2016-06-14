@@ -26,7 +26,6 @@ def buildingtemplate_tag_edit(name):
 
 
 @api.route('/tagtype/list', methods=['GET'])
-@api.route('/abcd')
 def api():
     # collection = TagType._get_collection().find()
     all_tags = []

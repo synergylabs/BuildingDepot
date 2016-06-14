@@ -88,6 +88,7 @@ class Token(Document):
             return self._scopes.split()
         return []
 
+
 def get_user_oauth(email):
     """Check if user email exists for OAuth"""
     user = User.objects(email=email).first()
@@ -95,11 +96,13 @@ def get_user_oauth(email):
         return str(user.email)
     return None
 
+
 def current_user():
     if 'email' in session:
         email = session['email']
         return get_user_oauth(email)
     return None
+
 
 @oauth_bd.route('/', methods=('GET', 'POST'))
 def home():
@@ -185,6 +188,7 @@ def save_token(token, request, *args, **kwargs):
         user=request.user,
         email=request.user).save()
     return tok
+
 
 @oauth_bd.route('/access_token/client_id=<client_id>/client_secret=<client_secret>', methods=['GET'])
 def get_access_token(client_id, client_secret):

@@ -53,42 +53,6 @@
                             </div>
                         </div>
                     </form>
-
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal fade" id="buildings">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Buildings managed by {[ localUser ]} </h4>
-                </div>
-                <div class="modal-body">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Building</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr ng-repeat="building in buildings">
-                                <td><input disabled ng-model="buildings[$index]" type="text" class="form-control" value="{[ building ]}"></td>
-                                <td><button class="close" ng-click="root.removeExistingBuilding($index)">&times;</button></td>
-                            </tr>
-
-                            <tr ng-repeat="building in addedBuildings">
-                                <td><select ng-model="addedBuildings[$index]" class="form-control" ng-options="building for building in allBuildings"></select></td>
-                                <td><button class="close" ng-click="root.removeAddedBuilding($index)">&times;</button></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <div class="btn-group">
-                        <button ng-click="root.addNewBuilding()" type="button" class="btn btn-info">Add a new building</button>
-                        <button ng-click="root.updateBuildings()" type="button" class="btn btn-warning">Update</button>
-                    </div>
                 </div>
             </div>
         </div>
@@ -220,31 +184,6 @@
 
     <div class="col-sm-12">
         <div class="page-header">
-            <h4><strong>Local User</strong></h4>
-        </div>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Email</th>
-                    <th>Name</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr ng-repeat="local in locals | orderBy:['email', 'name']">
-                    <td>{[ local.email ]}</td>
-                    <td>{[ local.name ]}</td>
-                    <td >
-                    <td>
-                        <a ng-click="root.selectLocal(local.email)" href="#buildings" data-toggle="modal" class="btn btn-info">Buildings</a>
-                    </td>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-
-    <div class="col-sm-12">
-        <div class="page-header">
             <h4><strong>Default User</strong></h4>
         </div>
         <table class="table">
@@ -288,33 +227,6 @@
 
             $scope.addedBuildings = [];
             $scope.addedPairs = [];
-
-            $scope.root.addNewBuilding = function() {
-                $scope.addedBuildings.push('');
-            };
-            $scope.root.removeExistingBuilding = function(index) {
-                $scope.buildings.splice(index, 1);
-            };
-            $scope.root.removeAddedBuilding = function(index) {
-                $scope.addedBuildings.splice(index, 1);
-            };
-            $scope.root.selectLocal = function(localUser) {
-                $scope.localUser = localUser;
-                for (var i = 0; i < $scope.locals.length; i++) {
-                    if ($scope.locals[i].email === localUser) {
-                        $scope.buildings =$scope.locals[i].buildings;
-                    }
-                }
-            };
-            $scope.root.updateBuildings = function() {
-                var res = $http.post('/central/user/'+ $scope.localUser + '/add_managed_buildings', {'data': $scope.buildings.concat($scope.addedBuildings)});
-                res.success(function(data) {
-                    confirm('Success');
-                });
-                res.error(function() {
-                    alert("Ajax failed");
-                });
-            };
 
             $scope.root.selectDefault = function(defaultUser) {
                 $scope.defaultUser = defaultUser;
