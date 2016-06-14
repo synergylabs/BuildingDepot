@@ -1,7 +1,7 @@
 from mongoengine import *
 import redis
 
-MONGODB_DATABASE = 'buildingdepot'
+MONGODB_DATABASE = 'dataservice'
 MONGODB_HOST = '127.0.0.1'
 MONGODB_PORT = 27017
 
@@ -71,13 +71,11 @@ class DataService(Document):
     admins = ListField(StringField())
 
 connect(MONGODB_DATABASE,host=MONGODB_HOST,port=MONGODB_PORT)
-register_connection('bd',name='buildingdepot',host='127.0.0.1',port=27017)
-
-usergroup = "Synergy"
-user_id = "tarun31@gmail.com"
-
-r = redis.Redis()
-pipe = r.pipeline()
-collection = DataService._get_collection()
-ds =  collection.find({"buildings":"Wean"})
-print ds[0]['admins']
+register_connection('ds',name='dataservice',host='127.0.0.1',port=27017)
+args = {}
+args['metadata__all'] = [{"metadata.Test":"test"}]
+#args['tags__all'] = [{"name":"Floor","value":"3"}]
+collection = Sensor._get_collection()
+#print collection.find({"$and":[{"building":"Test"}],"$or":[{"metadata.Test":"test"},{"metadata.Test1":"test1"}]}).count()
+print collection.find({"$and":[{"tags.name":"Room","tags.value":"3616"},{"tags.name":"Corridor","tags.value":"3600"},{"tags.name":"Floor","tags.value":"3"}]}).count()
+print Sensor.objects(**{"tags.name":"Floor","tags.value":"3"}).count()

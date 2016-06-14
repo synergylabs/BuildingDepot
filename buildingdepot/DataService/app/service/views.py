@@ -19,6 +19,7 @@ from . import service
 from ..models.ds_models import *
 from .forms import *
 from ..rest_api.utils import *
+from ..rest_api.helper import form_query
 from uuid import uuid4
 from .. import r, influx, permissions
 import sys
@@ -245,37 +246,31 @@ def sensors_search():
     args = {}
     for key, values in data.iteritems():
         if key == 'Building':
-            args['building__in'] = values
+            form_query('building',values,args,"$or")
         elif key == 'SourceName':
-            args['source_name__in'] = values
+            form_query('source_name',values,args,"$or")
         elif key == 'SourceIdentifier':
-            args['source_identifier__in'] = values
+            form_query('source_identifier',values,args,"$or")
         elif key == 'ID':
-            args['name__in'] = values
+            form_query('name',values,args,"$or")
         elif key == 'Tags':
-            tag_list = []
-            for tag in values:
-                key_value = tag.split(":", 1)
-                current_tag = {"name": key_value[0], "value": key_value[1]}
-                tag_list.append(current_tag)
-            args['tags__all'] = tag_list
+            form_query('tags',values,args,"$and")
         elif key == 'MetaData':
-            metadata_list = []
-            for meta in values:
-                key_value = meta.split(":", 1)
-                current_meta = {key_value[0]: key_value[1]}
-                metadata_list.append(current_meta)
-            args['metadata__all'] = metadata_list
+            form_query('metadata',values,args,"$and")
     print args
     # Show the user PAGE_SIZE number of sensors on each page
     page = request.args.get('page', 1, type=int)
     skip_size = (page - 1) * PAGE_SIZE
-    sensors = Sensor.objects(**args).skip(skip_size).limit(PAGE_SIZE)
+    collection = Sensor._get_collection().find(args)
+    sensors = collection.skip(skip_size).limit(PAGE_SIZE)
 
+    sensor_list = []
     for sensor in sensors:
+        sensor = Sensor(**sensor)
         sensor.can_delete = True
+        sensor_list.append(sensor)
 
-    total = len(Sensor.objects(**args))
+    total = collection.count()
     if (total):
         pages = int(math.ceil(float(total) / PAGE_SIZE))
     else:
@@ -283,8 +278,9 @@ def sensors_search():
     form = SensorForm()
     # Get the list of valid buildings for this DataService
     form.building.choices = get_building_choices(current_app.config['NAME'])
-    return render_template('service/sensor.html', objs=sensors, form=form, total=total,
+    return render_template('service/sensor.html', objs=sensor_list, form=form, total=total,
                            pages=pages, current_page=page, pagesize=PAGE_SIZE)
+
 
 
 @service.route('/graph/<name>')

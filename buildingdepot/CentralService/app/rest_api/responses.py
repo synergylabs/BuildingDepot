@@ -35,7 +35,6 @@ invalid_user = {'success':'False','error':'User doesn\'t exist'}
 user_exists = {'success':'False','error':'User already exists.'}
 super_user_required = {'success':'False','error':'Super user privileges required. You are not authorized for this operation'}
 acl_tag_superuser = {'success':'False','error':'Super user privileges required. You are not authorized to change the usage of this tag'}
-
 registration_email = """From: Admin <%s>
 To: %s <%s>
 Subject: Password for BuildingDepot account

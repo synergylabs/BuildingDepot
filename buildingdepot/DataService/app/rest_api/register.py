@@ -10,6 +10,7 @@ from . import usergroup
 from . import apps
 from . import app_subscription
 from . import permission
+from . import search
 from .. import oauth
 
 
@@ -50,3 +51,6 @@ def register_view(app_obj):
 
     permission_view = permission.PermissionService.as_view('permission_service')
     app_obj.add_url_rule('/api/permission',view_func=permission_view,methods=['GET','POST','DELETE'])
+
+    search_view = search.SearchService.as_view('search_service')
+    app_obj.add_url_rule('/api/search',view_func=search_view,methods=['POST'])
