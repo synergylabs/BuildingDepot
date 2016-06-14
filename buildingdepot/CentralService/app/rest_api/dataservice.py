@@ -16,12 +16,14 @@ from . import responses
 from .helper import xstr,gen_update
 from ..models.cs_models import DataService
 from .. import oauth
+from ..api_0_0.resources.utils import super_required
 
 class DataserviceService(MethodView):
 
     params = ['description','host','port']
 
     @oauth.require_oauth()
+    @super_required
     def post(self):
         try:
             data = request.get_json()['data']
@@ -57,6 +59,7 @@ class DataserviceService(MethodView):
         return jsonify(response)
 
     @oauth.require_oauth()
+    @super_required
     def delete(self,name):
         dataservice = DataService.objects(name=name).first()
         if dataservice is None:

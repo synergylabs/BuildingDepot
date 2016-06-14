@@ -13,13 +13,14 @@ parent and children tagtypes specifed for it.
 from flask.views import MethodView
 from flask import request,jsonify
 from ..models.cs_models import TagType,BuildingTemplate
-from .helper import add_delete,gen_update
+from .helper import add_delete,gen_update,get_email,check_if_super
 from . import responses
 from .. import oauth
+from ..api_0_0.resources.utils import super_required
 
 class TagTypeService(MethodView):
 
-    params = ['name','description','parents']
+    params = ['name','description','parents','acl_tag']
 
     @oauth.require_oauth()
     def post(self):
@@ -29,6 +30,7 @@ class TagTypeService(MethodView):
             return jsonify(responses.missing_data)
         parents = data.get('parents')
         name = data.get('name')
+        acl_tag = data.get('acl_tag')
         tagtype = TagType.objects(name=data.get('name')).first()
 
         if not tagtype:
@@ -38,24 +40,24 @@ class TagTypeService(MethodView):
                 for parent in parents:
                     if TagType.objects(name=parent).first() is None:
                         return jsonify(responses.invalid_parent_tags)
-            TagType(**data).save()
+            data['acl_tag'] = check_if_super(get_email())
+            TagType(**gen_update(self.params,data)).save()
             if parents:
                 self.add_children(parents,name)
         else:
-            if name and (tagtype.children or
-                BuildingTemplate._get_collection().find({'tag_types':tagtype.name}).count() != 0):
-                return jsonify(responses.tagtype_name_change_invalid)
-            else:
-                collection = TagType._get_collection()
-                if parents:
-                    added,deleted = add_delete([str(child_tag) for child_tag in tagtype['parents']],data['parents'])
-                    self.add_children(added,name)
-                    for tag in deleted:
-                        collection = TagType._get_collection()
-                        collection.update({'name': tag},
-                            {'$pull': {'children': name}},
-                            multi=True)
-                collection.update({'name': name},{'$set':gen_update(self.params,data)})
+            collection = TagType._get_collection()
+            if parents:
+                added,deleted = add_delete([str(child_tag) for child_tag in tagtype['parents']],data['parents'])
+                self.add_children(added,name)
+                for tag in deleted:
+                    collection = TagType._get_collection()
+                    collection.update({'name': tag},
+                        {'$pull': {'children': name}},
+                        multi=True)
+            user_check = check_if_super(get_email())
+            if (acl_tag is None) or (acl_tag is not None and not user_check):
+                data['acl_tag'] = user_check
+            collection.update({'name': name},{'$set':gen_update(self.params,data)})
         return jsonify(responses.success_true)
 
     @oauth.require_oauth()
@@ -70,6 +72,7 @@ class TagTypeService(MethodView):
             return jsonify(responses.invalid_tagtype)
 
     @oauth.require_oauth()
+    @super_required
     def delete(self,name):
         tagtype = TagType.objects(name=name).first()
         if not tagtype:

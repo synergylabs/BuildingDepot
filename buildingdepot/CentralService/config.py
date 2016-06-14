@@ -16,6 +16,8 @@ class Config:
     SECRET_KEY = 'This Is Secret Key. Please Make It Complicated'
     TOKEN_EXPIRATION = 3600
 
+    ADMIN_ID = 'admin@buildingdepot.org'
+
     @staticmethod
     def init_app(self):
         pass

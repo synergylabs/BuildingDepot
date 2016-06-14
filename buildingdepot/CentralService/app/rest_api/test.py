@@ -47,11 +47,8 @@ class TagInstance(EmbeddedDocument):
     value = StringField()
 
     metadata = DictField()
-
-    users = ListField(StringField())
-
     parents = ListField(EmbeddedDocumentField(Node))
-    ancestors = ListField(EmbeddedDocumentField(Node))
+    acl_tag = BooleanField()
 
 class Building(Document):
     name = StringField(required=True, unique=True)
@@ -81,17 +78,6 @@ user_id = "tarun31@gmail.com"
 
 r = redis.Redis()
 pipe = r.pipeline()
-tags_list = [{"name":"Floor","value":"3"}]
-#collection = Building._get_collection()
-#print collection.find({"tags":tags_list}).count()
-#buildings = collection.find({"tags.value": {"$all":["3","3500"]},"tags.name": {"$all":["Floor"]}})
-#buildings = collection.find({"tags":{"$in":[{"name":"Floor","value":"3"}]}})
-#buildings = collection.find({"tags.parents":{"$elemMatch":{"name":"Floor","value":"3"}}})
-#buildings = Building._get_collection().find({'tags':{"$elemMatch":{"name":"Floor","value":"4"}}})
-#print buildings.count()
-#for building in buildings:
-#	print building['name']
-#collection.update({'name':"Wean"},{'$pull':{'tags':{'name':"Floor",'value':"3"}}})
-#tag_exists = collection.update({'name':'Wean','tags':{"$elemMatch":{"name":"Floor","value":"3"}}},{"$unset":{"parents":""},"$push":{"tags.$.parents":{"$each":[{"name":"Floor","value":"6"},{"name":"Floor","value":"7"}]}}})
 collection = DataService._get_collection()
-collection.update({'name':"ds2"},{'$pullAll':{'buildings':['Wean','NSH']}})
+ds =  collection.find({"buildings":"Wean"})
+print ds[0]['admins']

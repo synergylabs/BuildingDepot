@@ -11,18 +11,21 @@ Buildings can also have metadata attached to them.
 @license: UCSD License. See License file for details.
 """
 
-from flask import jsonify,request
+from flask import jsonify,request,current_app
 from flask.views import MethodView
 from ..models.cs_models import Building,BuildingTemplate,DataService
 from . import responses
 from .helper import gen_update
 from .. import oauth
+from ..api_0_0.resources.utils import super_required
+
 
 class BuildingService(MethodView):
 
     params = ['name','template','description']
 
     @oauth.require_oauth()
+    @super_required
     def post(self):
         try:
             data = request.get_json()['data']
@@ -55,6 +58,7 @@ class BuildingService(MethodView):
         return jsonify(response)
 
     @oauth.require_oauth()
+    @super_required
     def delete(self,name):
         building = Building.objects(name=name).first()
         if building is None:

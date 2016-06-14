@@ -35,7 +35,7 @@ class TagType(Document):
 
     parents = ListField(StringField())
     children = ListField(StringField())
-
+    acl_tag = BooleanField()
 
 class BuildingTemplate(Document):
     name = StringField(required=True, unique=True)
@@ -54,9 +54,6 @@ class TagInstance(EmbeddedDocument):
     value = StringField()
 
     metadata = DictField()
-
-    users = ListField(StringField())
-
     parents = ListField(EmbeddedDocumentField(Node))
 
 

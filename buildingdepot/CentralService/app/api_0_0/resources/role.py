@@ -1,7 +1,6 @@
 from flask.ext.restful import Resource, reqparse, fields, marshal
 from flask import request, g
 from utils import super_required, success, pagination_get
-from ...models.cs_models import Role
 from .. import auth
 from ..errors import *
 

@@ -3,6 +3,9 @@ from functools import wraps
 from flask import g, jsonify
 from app.common import PAGE_SIZE
 from ..errors import not_allowed
+from ...rest_api.helper import get_email
+from ...rest_api import responses
+from ...models.cs_models import User
 from flask.ext.restful import marshal, reqparse
 
 
@@ -23,15 +26,14 @@ def is_managed_by_local(local_admin, user):
         return True
     return False
 
-
 def super_required(f):
-    @wraps(f)
     def decorated_function(*args, **kwargs):
-        if not is_super(g.user):
-            return not_allowed('Only super admin is allowed for this method')
-        return f(*args, **kwargs)
+        email = get_email()
+        user = User.objects(email=email).first()
+        if user.role != 'super':
+            return jsonify(responses.super_user_required)
+        return f(*args,**kwargs)
     return decorated_function
-
 
 def success():
     response = jsonify({'success': 'True'})
@@ -64,3 +66,5 @@ def pagination_get(document_class, res_fields, api_class):
     if len(res['data']) == PAGE_SIZE:
         res['next'] = api.url_for(api_class, _external=True, page=page+1)
     return res
+
+

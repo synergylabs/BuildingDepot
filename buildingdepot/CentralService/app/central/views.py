@@ -22,7 +22,7 @@ from app.common import PAGE_SIZE
 from .forms import *
 from .utils import get_choices, get_tag_descendant_pairs
 from werkzeug.security import generate_password_hash,gen_salt
-
+from ..rest_api.helper import check_if_super
 
 @central.route('/tagtype', methods=['GET', 'POST'])
 @login_required
@@ -44,7 +44,8 @@ def tagtype():
         # Create the tag
         TagType(name=str(form.name.data),
                 description=str(form.description.data),
-                parents=[str(parent) for parent in form.parents.data]).save()
+                parents=[str(parent) for parent in form.parents.data],
+                acl_tag = check_if_super(session['email'])).save()
         # update all the parents of this tag with the dependency
         for parent in form.parents.data:
             collection = TagType._get_collection()
@@ -267,7 +268,7 @@ def building_tags_ajax(building_name):
             'name': data['name'],
             'value': data['value'],
             'metadata': {},
-            'parents': [],
+            'parents': []
         }
 
         if 'parents' in data:

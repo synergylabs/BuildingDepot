@@ -13,10 +13,12 @@ based on, can have multiple unique values defined for them.
 
 from flask.views import MethodView
 from flask import request,jsonify
-#from ..central.utils import get_tag_descendant_pairs
-from ..models.cs_models import Building,BuildingTemplate,TagType
+from ..models.cs_models import Building,BuildingTemplate
+from ..models.cs_models import TagType,DataService,User
 from . import responses
+from .helper import get_email
 from .. import oauth
+from ..api_0_0.resources.utils import super_required
 
 class BuildingTagsService(MethodView):
 
@@ -52,7 +54,7 @@ class BuildingTagsService(MethodView):
             'name': name,
             'value': value,
             'metadata': metadata if metadata else [],
-            'parents': parents if parents else []
+            'parents': parents if parents else [],
         }
         tag_exists = collection.find({'tags':
             {"$elemMatch":{"name":name,"value":value}}})

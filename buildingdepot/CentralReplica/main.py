@@ -23,15 +23,12 @@ connect(Config.MONGODB_DATABASE,
 class ThreadXMLRPCServer(ThreadingMixIn, SimpleXMLRPCServer):
     pass
 
-
 def get_user_oauth(email):
     """Check if user email exists for OAuth"""
     user = User.objects(email=email).first()
-    res = {}
     if user is not None:
         return str(user.email)
     return None
-
 
 def get_user_by_id(uid):
     """Get the email of user from his ObjectID in MongoDB"""
@@ -54,9 +51,12 @@ def get_building_tags(building):
     res = {}
     for tag in tags:
         if tag['name'] in res:
-            res[tag['name']].append(tag['value'])
+            res[tag['name']]['values'].append(tag['value'])
         else:
-            res[tag['name']] = [tag['value']]
+            tagtype_dict = {}
+            tagtype_dict['values'] = [tag['value']]
+            tagtype_dict['acl_tag'] = TagType.objects(name=tag['name']).first().acl_tag
+            res[tag['name']] = tagtype_dict
     return res
 
 

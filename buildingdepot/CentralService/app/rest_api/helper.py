@@ -8,7 +8,12 @@ such as conversion of timestamps, strings etc.
 @copyright: (c) 2016 SynergyLabs
 @license: UCSD License. See License file for details.
 """
-from ..models.cs_models import TagType
+from flask import current_app,request
+from ..models.cs_models import TagType,DataService,User
+from ..oauth_bd.views import Token
+import smtplib
+from . import responses
+
 
 def add_delete(old,now):
     old, now = set(old), set(now)
@@ -43,3 +48,34 @@ def gen_update(params,data):
         if key in params:
             result[key] = value
     return result
+
+def send_registration_email(user_name,to_email,password):
+    sender = current_app.config['ADMIN_ID']
+    receivers = [to_email]
+
+    message = responses.registration_email%(sender,user_name,to_email,to_email,password)
+
+    try:
+       smtpObj = smtplib.SMTP('localhost')
+       smtpObj.sendmail(sender, receivers, message)
+    except SMTPException:
+       print "Failed to send registration mail to %s"%(to_email)
+
+def get_email():
+    """ Returns the email address of the user making the request
+    based on the OAuth token
+    Args as data:
+        None - Get's OAuth token from the request context
+    Returns:
+        E-mail id of the user making the request
+    """
+    headers = request.headers
+    token = headers['Authorization'].split()[1]
+    return Token.objects(access_token=token).first().email
+
+def check_if_super(email=None):
+    if email is None:
+        email = get_email()
+    if User.objects(email=email).first().role == 'super':
+        return True
+    return False

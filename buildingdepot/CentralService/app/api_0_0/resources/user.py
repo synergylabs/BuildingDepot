@@ -2,7 +2,7 @@ from flask import g, request
 from copy import deepcopy
 from flask.ext.restful import Resource, reqparse, fields, marshal
 from werkzeug.security import generate_password_hash
-from ...models.cs_models import User, Role, Building
+from ...models.cs_models import User, Building
 from .. import auth
 from ..errors import *
 from utils import *

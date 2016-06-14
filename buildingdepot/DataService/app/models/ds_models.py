@@ -73,33 +73,3 @@ class Application(Document):
     apps = ListField(EmbeddedDocumentField(Node))
 
     meta = {"db_alias": "ds"}
-
-
-class Client(Document):
-    client_id = StringField(required=True, unique=True)
-    client_secret = StringField(required=True)
-    user = StringField()
-    _redirect_uris = StringField()
-    _default_scopes = StringField()
-
-    meta = {"db_alias": "ds"}
-
-    @property
-    def client_type(self):
-        return 'public'
-
-    @property
-    def redirect_uris(self):
-        if self._redirect_uris:
-            return self._redirect_uris.split()
-        return []
-
-    @property
-    def default_redirect_uri(self):
-        return self.redirect_uris[0]
-
-    @property
-    def default_scopes(self):
-        if self._default_scopes:
-            return self._default_scopes.split()
-        return []

@@ -17,12 +17,14 @@ from . import responses
 from .helper import add_delete,gen_update
 from ..models.cs_models import TagType,BuildingTemplate,Building
 from .. import oauth
+from ..api_0_0.resources.utils import super_required
 
 class BuildingTemplateService(MethodView):
 
     params = ['name','description','tag_types']
 
     @oauth.require_oauth()
+    @super_required
     def post(self):
         try:
             data = request.get_json()['data']
@@ -63,6 +65,7 @@ class BuildingTemplateService(MethodView):
         return jsonify(response)
 
     @oauth.require_oauth()
+    @super_required
     def delete(self,name):
         template = BuildingTemplate.objects(name=name).first()
         if template is None:

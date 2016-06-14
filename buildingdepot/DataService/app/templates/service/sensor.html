@@ -658,7 +658,7 @@
         });
         app.filter('valueFilter', [function() {
             return function(input, scope, name) {
-                return scope.tags[name];
+                return scope.tags[name]["values"];
             };
         }]);
     </script>

@@ -1,5 +1,5 @@
 """
-DataService.oauth_bd.views
+CentralService.oauth_bd.views
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Contains all the class and method definitions required for the OAuth

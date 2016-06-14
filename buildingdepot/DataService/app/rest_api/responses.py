@@ -30,3 +30,6 @@ sensorgroup_used = {'success': 'False', 'error': 'Sensor group tags cannot be ed
 resolution_high = {'success': 'False', 'error': 'Too many points for this resolution'}
 usergroup_add_authorization = {'success': 'False', 'error':'Not authorized for adding users to user group'}
 user_not_registered = {'success': 'False', 'error':'One or more users not registered'}
+invalid_tagtype = {'success':'False','error':'Invalid tagtype specified'}
+invalid_tag_value = {'success':'False','error':'Invalid tag value specified'}
+invalid_tag_permission  = {'success':'False','error':'Tag value cannot be used for permissions'}

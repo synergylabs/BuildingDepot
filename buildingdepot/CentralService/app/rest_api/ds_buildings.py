@@ -15,10 +15,12 @@ from flask.views import MethodView
 from ..models.cs_models import Building,DataService
 from . import responses
 from .. import oauth
+from ..api_0_0.resources.utils import super_required
 
 class DataserviceBuildingsService(MethodView):
 
     @oauth.require_oauth()
+    @super_required
     def post(self,name):
         try:
             data = request.get_json()['data']
@@ -50,6 +52,7 @@ class DataserviceBuildingsService(MethodView):
         return jsonify(response)
 
     @oauth.require_oauth()
+    @super_required
     def delete(self,name):
         try:
             data = request.get_json()['data']

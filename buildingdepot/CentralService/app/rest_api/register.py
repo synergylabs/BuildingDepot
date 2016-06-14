@@ -5,6 +5,7 @@ from . import building_tags
 from . import dataservice
 from . import ds_buildings
 from . import ds_admins
+from . import user
 
 def register_view(app_obj):
     tagtype_view = tagtype.TagTypeService.as_view('tagtype_api')
@@ -31,3 +32,7 @@ def register_view(app_obj):
 
     ds_admins_view = ds_admins.DataserviceAdminService.as_view('ds_admins_api')
     app_obj.add_url_rule('/api/dataservice/<name>/admins',view_func=ds_admins_view,methods=['POST','GET','DELETE'])
+
+    users_view = user.UserService.as_view('users_api')
+    app_obj.add_url_rule('/api/user',view_func=users_view,methods=['POST'])
+    app_obj.add_url_rule('/api/user/<name>',view_func=users_view,methods=['GET','DELETE'])

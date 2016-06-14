@@ -87,10 +87,12 @@ class SensorGroupTagsService(MethodView):
             tags = request.get_json()['data']
         except KeyError:
             return jsonify(responses.missing_data)
-        # cache process
         sensorgroup = SensorGroup.objects(name=name).first()
         if sensorgroup is None:
             return jsonify(responses.invalid_sensorgroup)
+        validate_tags = self.check_tags(tags,sensorgroup.building)
+        if validate_tags is not None:
+            return validate_tags
         old = ['tag-sensorgroup:{}:{}:{}'.format(sensorgroup.building, tag.name, tag.value) for tag in sensorgroup.tags]
         new = ['tag-sensorgroup:{}:{}:{}'.format(sensorgroup.building, tag['name'], tag['value']) for tag in tags]
         added, deleted = add_delete(old, new)
@@ -121,4 +123,23 @@ class SensorGroupTagsService(MethodView):
         # cache process done
         SensorGroup.objects(name=name).update(set__tags=tags)
         return jsonify(responses.success_true)
+
+    def check_tags(self,tags,building):
+        building_tags = get_building_tags(building)
+        print building_tags
+        print tags
+        for tag in tags:
+            tagtype = building_tags.get(tag.get('name'))
+            print tagtype
+            if tagtype is None:
+                return jsonify(responses.invalid_tagtype)
+            print tag.get('value')
+            tag_values = tagtype.get('values')
+            if tag.get('value') not in tag_values:
+                return jsonify(responses.invalid_tag_value)
+            if tagtype.get('acl_tag') is False:
+                return jsonify(responses.invalid_tag_permission)
+        return None
+
+
 
