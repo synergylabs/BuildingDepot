@@ -91,6 +91,9 @@ function deploy_config {
 
 function install_packages {
     echo 'deb http://www.rabbitmq.com/debian/ testing main' | sudo tee /etc/apt/sources.list.d/rabbitmq.list
+    curl -sL https://repos.influxdata.com/influxdb.key | sudo apt-key add -
+    source /etc/lsb-release
+    echo "deb https://repos.influxdata.com/${DISTRIB_ID,,} ${DISTRIB_CODENAME} stable" | sudo tee /etc/apt/sources.list.d/influxdb.list
     apt-get update
     apt-get install
     apt-get -y install python-pip
@@ -101,8 +104,8 @@ function install_packages {
     apt-get install -y redis-server
     pip install --upgrade virtualenv
     apt-get install wget
-    wget http://influxdb.s3.amazonaws.com/influxdb_0.9.2_amd64.deb
-    sudo dpkg -i influxdb_0.9.2_amd64.deb
+    sudo apt-get install influxdb
+    sudo service influxdb start
     sudo apt-get install rabbitmq-server
     sudo apt-get install mailutils
     sed -i -e 's/"inet_interfaces = all/"inet_interfaces = loopback-only"/g' /etc/postfix/main.cf
