@@ -5,7 +5,8 @@ MONGODB_DATABASE = 'buildingdepot'
 MONGODB_HOST = '127.0.0.1'
 MONGODB_PORT = 27017
 
-permissions_val = {"u/d":1,"r/w/p":2,"r/w":3,"r":4,"d/r":5}
+permissions_val = {"u/d": 1, "r/w/p": 2, "r/w": 3, "r": 4, "d/r": 5}
+
 
 class Node(EmbeddedDocument):
     name = StringField()
@@ -23,6 +24,7 @@ class Sensor(Document):
     tags = ListField(EmbeddedDocumentField(Node))
     subscribers = ListField(StringField())
 
+
 class SensorGroup(Document):
     name = StringField(required=True, unique=True)
     description = StringField()
@@ -37,10 +39,12 @@ class UserGroup(Document):
 
     users = ListField(StringField())
 
+
 class Permission(Document):
     user_group = StringField()
     sensor_group = StringField()
     permission = StringField()
+
 
 class TagInstance(EmbeddedDocument):
     name = StringField()
@@ -50,6 +54,7 @@ class TagInstance(EmbeddedDocument):
     parents = ListField(EmbeddedDocumentField(Node))
     acl_tag = BooleanField()
 
+
 class Building(Document):
     name = StringField(required=True, unique=True)
     template = StringField(required=True)
@@ -58,6 +63,7 @@ class Building(Document):
     metadata = DictField()
 
     tags = ListField(EmbeddedDocumentField(TagInstance))
+
 
 class DataService(Document):
     name = StringField(required=True, unique=True)
@@ -70,8 +76,9 @@ class DataService(Document):
 
     admins = ListField(StringField())
 
-connect(MONGODB_DATABASE,host=MONGODB_HOST,port=MONGODB_PORT)
-register_connection('bd',name='buildingdepot',host='127.0.0.1',port=27017)
+
+connect(MONGODB_DATABASE, host=MONGODB_HOST, port=MONGODB_PORT)
+register_connection('bd', name='buildingdepot', host='127.0.0.1', port=27017)
 
 usergroup = "Synergy"
 user_id = "tarun31@gmail.com"
@@ -79,5 +86,5 @@ user_id = "tarun31@gmail.com"
 r = redis.Redis()
 pipe = r.pipeline()
 collection = DataService._get_collection()
-ds =  collection.find({"buildings":"Wean"})
+ds = collection.find({"buildings": "Wean"})
 print ds[0]['admins']

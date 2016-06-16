@@ -12,18 +12,18 @@ based on, can have multiple unique values defined for them.
 """
 
 from flask.views import MethodView
-from flask import request,jsonify
-from ..models.cs_models import Building,BuildingTemplate
-from ..models.cs_models import TagType,DataService,User
+from flask import request, jsonify
+from ..models.cs_models import Building, BuildingTemplate
+from ..models.cs_models import TagType, DataService, User
 from . import responses
 from .helper import get_email
 from .. import oauth
 from ..api_0_0.resources.utils import super_required
 
-class BuildingTagsService(MethodView):
 
+class BuildingTagsService(MethodView):
     @oauth.require_oauth()
-    def post(self,building_name):
+    def post(self, building_name):
         try:
             data = request.get_json()['data']
         except:
@@ -47,8 +47,8 @@ class BuildingTagsService(MethodView):
         if parents:
             search_list = []
             for element in parents:
-                search_list.append({'$elemMatch':element})
-            if collection.find({"tags":{"$all":search_list}}).count() == 0:
+                search_list.append({'$elemMatch': element})
+            if collection.find({"tags": {"$all": search_list}}).count() == 0:
                 return jsonify(responses.invalid_parents)
         tag = {
             'name': name,
@@ -57,24 +57,24 @@ class BuildingTagsService(MethodView):
             'parents': parents if parents else [],
         }
         tag_exists = collection.find({'tags':
-            {"$elemMatch":{"name":name,"value":value}}})
-        if tag_exists.count() == 0 :
+                                          {"$elemMatch": {"name": name, "value": value}}})
+        if tag_exists.count() == 0:
             collection.update(
                 {'name': building_name},
                 {'$addToSet': {'tags': tag}}
             )
         else:
             if parents:
-                collection.update({'name':building_name,
-                    'tags':{"$elemMatch":{"name":name,"value":value}}},
-                    {"$set":{"tags.$.parents":[]}})
-                collection.update({'name':building_name,
-                    'tags':{"$elemMatch":{"name":name,"value":value}}},
-                    {"$push":{"tags.$.parents":{"$each":parents}}})
+                collection.update({'name': building_name,
+                                   'tags': {"$elemMatch": {"name": name, "value": value}}},
+                                  {"$set": {"tags.$.parents": []}})
+                collection.update({'name': building_name,
+                                   'tags': {"$elemMatch": {"name": name, "value": value}}},
+                                  {"$push": {"tags.$.parents": {"$each": parents}}})
         return jsonify(responses.success_true)
 
     @oauth.require_oauth()
-    def get(self,building_name):
+    def get(self, building_name):
         building = Building.objects(name=building_name).first()
         if building is None:
             return jsonify(responses.invalid_building)
@@ -94,7 +94,7 @@ class BuildingTagsService(MethodView):
         return jsonify(response)
 
     @oauth.require_oauth()
-    def delete(self,building_name):
+    def delete(self, building_name):
         building = Building.objects(name=building_name).first()
         if building is None:
             return jsonify(responses.invalid_building)
@@ -110,25 +110,13 @@ class BuildingTagsService(MethodView):
 
         collection = Building._get_collection()
         tag_exists = collection.find({'tags':
-            {"$elemMatch":{"name":name,"value":value}}})
-        if tag_exists.count() == 0 :
+                                          {"$elemMatch": {"name": name, "value": value}}})
+        if tag_exists.count() == 0:
             return jsonify(responses.invalid_tag_value)
         tag_use = collection.find({'tags.parents':
-            {"$elemMatch":{"name":name,"value":value}}})
+                                       {"$elemMatch": {"name": name, "value": value}}})
         if tag_use.count() > 0:
             return jsonify(responses.tagtype_referenced)
-        collection.update({'name':building_name},
-            {'$pull':{'tags':{'name':name,'value':value}}})
+        collection.update({'name': building_name},
+                          {'$pull': {'tags': {'name': name, 'value': value}}})
         return jsonify(responses.success_true)
-
-
-
-
-
-
-
-
-
-
-
-

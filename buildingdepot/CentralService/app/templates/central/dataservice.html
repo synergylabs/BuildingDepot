@@ -110,7 +110,7 @@
                     </td>
                     {% if obj.can_delete %}
                     <td>
-                        <form action="{{ url_for('central.dataservice_delete') }}" method="POST">
+                        <form action="{{ url_for('central.dataservice_delete') }}" method="POST" onsubmit="return confirm('Are you sure you want to Delete?');">
                         <input type="hidden" value="{{ obj.name }}" name="name">
                         <input type="submit" value="Delete" class="btn btn-danger">
                         </form>
@@ -129,6 +129,7 @@
      {{ super() }}
      <script>
         var app = angular.module("myApp", []);
+        var header ={{ session.headers|tojson }};
         app.config(['$interpolateProvider', function($interpolateProvider) {
             $interpolateProvider.startSymbol('{[');
             $interpolateProvider.endSymbol(']}');
@@ -143,9 +144,8 @@
             };
             $scope.root.select = function(dataServiceName) {
                 this.dataServiceName = dataServiceName;
-                var res = $http.get('/central/dataservice/'+ dataServiceName + '/buildings');
+                var res = $http.get('/central/dataservice/'+ dataServiceName + '/buildings', {headers:header});
                 res.success(function(data) {
-                    console.log(data);
                     $scope.buildings = data.buildings;
                     $scope.building_names = data.building_names;
                 });
@@ -166,11 +166,20 @@
                     }
                     set[$scope.buildings[i]] = true;
                 }
-                var res = $http.post('/central/dataservice/'+ this.dataServiceName + '/buildings', {'data': $scope.buildings});
+                var res = $http.post('/api/dataservice/'+ this.dataServiceName + '/buildings', {'data':{'buildings': $scope.buildings}},{headers:header});
                 res.success(function(data) {
-                    $.notify("Success",{ globalPosition:'top center',clickToHide: true,autoHideDelay:2000, className:'success'});
+                     if (data["success"]==="False"){
+                        $.notify(data["error"], {
+                            position: "top center",
+                            clickToHide: true,
+                            autoHideDelay:4000
+                        });
+                    }
+                    else if (data["success"]==="True"){
+                       $.notify("Success",{ globalPosition:'top center',clickToHide: true,autoHideDelay:2000, className:'success'});
+                    }
                 });
-                res.error(function() {
+                res.error(function(){
                     $.notify("Ajax failed", { position:"top center",clickToHide: true,autoHideDelay:2000});
                 });
             };
@@ -186,7 +195,6 @@
                 this.dataServiceName = dataServiceName;
                 var res = $http.get('/central/dataservice/'+ dataServiceName + '/admins');
                 res.success(function(data) {
-                    console.log(data);
                     $scope.admins = data.admins;
                     $scope.user_emails = data.user_emails;
                 });
@@ -207,9 +215,19 @@
                     }
                     set[$scope.admins[i]] = true;
                 }
-                var res = $http.post('/central/dataservice/'+ this.dataServiceName + '/admins', {'data': $scope.admins});
+
+                var res = $http.post('/api/dataservice/'+ this.dataServiceName + '/admins', {'data': {'admin': $scope.admins }},{headers:header});
                 res.success(function(data) {
-                    $.notify("Success",{ globalPosition:'top center',clickToHide: true,autoHideDelay:2000, className:'success'});
+                    if (data["success"]==="False"){
+                        $.notify(data["error"], {
+                            position: "top center",
+                            clickToHide: true,
+                            autoHideDelay:4000
+                        });
+                    }
+                    else if (data["success"]==="True"){
+                       $.notify("Success",{ globalPosition:'top center',clickToHide: true,autoHideDelay:2000, className:'success'});
+                    }
                 });
                 res.error(function() {
                     $.notify("Ajax failed", { position:"top center",clickToHide: true,autoHideDelay:2000});

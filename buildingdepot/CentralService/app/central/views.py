@@ -13,16 +13,20 @@ of BD will call the tagtype() function
 @license: UCSD License. See License file for details.
 """
 
-from flask import render_template, request, redirect, url_for, jsonify, session
-from . import central
-from ..models.cs_models import *
-from ..oauth_bd.views import Client
-from flask.ext.login import login_required
+import json
+import requests
 from app.common import PAGE_SIZE
+from flask import render_template, request, redirect, url_for, jsonify, session, flash
+from flask.ext.login import login_required
+from werkzeug.security import generate_password_hash, gen_salt
+
+from . import central
 from .forms import *
 from .utils import get_choices, get_tag_descendant_pairs
-from werkzeug.security import generate_password_hash,gen_salt
+from ..models.cs_models import *
+from ..oauth_bd.views import Client
 from ..rest_api.helper import check_if_super
+
 
 @central.route('/tagtype', methods=['GET', 'POST'])
 @login_required
@@ -42,17 +46,16 @@ def tagtype():
     form.parents.choices = get_choices(TagType)
     if form.validate_on_submit():
         # Create the tag
-        TagType(name=str(form.name.data),
-                description=str(form.description.data),
-                parents=[str(parent) for parent in form.parents.data],
-                acl_tag = check_if_super(session['email'])).save()
-        # update all the parents of this tag with the dependency
-        for parent in form.parents.data:
-            collection = TagType._get_collection()
-            collection.update(
-                {'name': parent},
-                {'$addToSet': {'children': str(form.name.data)}}
-            )
+        payload = {'data': {
+            "name": str(form.name.data),
+            "description": str(form.description.data),
+            "parents": [str(parent) for parent in form.parents.data],
+            "acl_tag": check_if_super(session['email'])
+        }}
+        res = requests.post(request.url_root + "api/tagtype", data=json.dumps(payload),
+                            headers=session['headers']).json()
+        if res['success'] == 'False':
+            flash(res['error'])
         return redirect(url_for('central.tagtype'))
     return render_template('central/tagtype.html', objs=objs, form=form)
 
@@ -62,46 +65,10 @@ def tagtype():
 def tagtype_delete():
     """Deletes a tag"""
     name = request.form.get('name')
-    TagType.objects(name=name).delete()
-    collection = TagType._get_collection()
-    # Remove the dependency from all the parents
-    collection.update(
-        {'children': name},
-        {'$pull': {'children': name}},
-        multi=True
-    )
+    res = requests.delete(request.url_root + "api/tagtype/" + name, headers=session['headers']).json()
+    if res['success'] == 'False':
+        flash(res['error'])
     return redirect(url_for('central.tagtype'))
-
-
-@central.route('/role', methods=['GET', 'POST'])
-@login_required
-def role():
-    """Creates a new role"""
-    objs = Role.objects
-    for obj in objs:
-        # If there are users using this role then it cannot be deleted
-        if User.objects(role=obj).count() > 0:
-            obj.can_delete = False
-        else:
-            obj.can_delete = True
-    form = RoleForm()
-    if form.validate_on_submit():
-        # Create the role
-        Role(name=str(form.name.data),
-             description=str(form.description.data),
-             permission=form.permission.data,
-             type=form.type.data).save()
-        return redirect(url_for('central.role'))
-    return render_template('central/role.html', objs=objs, form=form)
-
-
-@central.route('/role_delete', methods=['POST'])
-@login_required
-def role_delete():
-    """Delete a role"""
-    name = request.form.get('name')
-    Role.objects(name=name).delete()
-    return redirect(url_for('central.role'))
 
 
 @central.route('/buildingtemplate', methods=['GET', 'POST'])
@@ -122,9 +89,15 @@ def buildingtemplate():
     # Get list of tags that this building can use
     form.tag_types.choices = get_choices(TagType)
     if form.validate_on_submit():
-        BuildingTemplate(name=str(form.name.data),
-                         description=str(form.description.data),
-                         tag_types=form.tag_types.data).save()
+        payload = {'data': {
+            "name": str(form.name.data),
+            "description": str(form.description.data),
+            "tag_type": form.tag_types.data
+        }}
+        res = requests.post(request.url_root + "api/template", data=json.dumps(payload),
+                            headers=session['headers']).json()
+        if res['success'] == 'False':
+            flash(res['error'])
         return redirect(url_for('central.buildingtemplate'))
     return render_template('central/buildingtemplate.html', objs=objs, form=form)
 
@@ -132,7 +105,10 @@ def buildingtemplate():
 @central.route('/buildingtemplate_delete', methods=['POST'])
 @login_required
 def buildingtemplate_delete():
-    BuildingTemplate.objects(name=request.form.get('name')).delete()
+    name = request.form.get('name')
+    res = requests.delete(request.url_root + "api/template/" + name, headers=session['headers']).json()
+    if res['success'] == 'False':
+        flash(res['error'])
     return redirect(url_for('central.buildingtemplate'))
 
 
@@ -155,9 +131,15 @@ def building():
     form.template.choices = get_choices(BuildingTemplate)
     if form.validate_on_submit():
         # Create the building
-        Building(name=str(form.name.data),
-                 description=str(form.description.data),
-                 template=str(form.template.data)).save()
+        payload = {'data': {
+            "name": str(form.name.data),
+            "description": str(form.description.data),
+            "template": form.template.data
+        }}
+        res = requests.post(request.url_root + "api/building", data=json.dumps(payload),
+                            headers=session['headers']).json()
+        if res['success'] == 'False':
+            flash(res['error'])
         return redirect(url_for('central.building'))
     return render_template('central/building.html', objs=objs, form=form)
 
@@ -165,7 +147,10 @@ def building():
 @central.route('/building_delete', methods=['POST'])
 @login_required
 def building_delete():
-    Building.objects(name=request.form.get('name')).delete()
+    name = request.form.get('name')
+    res = requests.delete(request.url_root + "api/building/" + name, headers=session['headers']).json()
+    if res['success'] == 'False':
+        flash(res['error'])
     return redirect(url_for('central.building'))
 
 
@@ -195,13 +180,14 @@ def building_tags(building_name):
 @login_required
 def building_tags_delete(building_name):
     """Delete specific tags associated with the building"""
-    tag_name = request.form.get('tag_name')
-    tag_value = request.form.get('tag_value')
-    # Update the entry in MongoDB
-    Building._get_collection().update(
-        {'name': building_name},
-        {'$pull': {'tags': {'name': tag_name, 'value': tag_value}}}
-    )
+    data = {'data': {
+        'name': request.form.get('tag_name'),
+        'value': request.form.get('tag_value')
+    }}
+    res = requests.delete(request.url_root + "api/building/" + building_name + "/tags", data=json.dumps(data),
+                          headers=session['headers']).json()
+    if res['success'] == 'False':
+        flash(res['error'])
     return redirect(url_for('central.building_tags', building_name=building_name))
 
 
@@ -288,47 +274,6 @@ def user():
     return render_template('central/user.html')
 
 
-@central.route('/user/add_user', methods=['GET', 'POST'])
-@login_required
-def user_ajax():
-    """Create a new user"""
-    if request.method == 'GET':
-        objs = User.objects
-        supers, locals, defaults = [], [], []
-        for obj in objs:
-            # Check type of user
-            if obj.is_super():
-                supers.append({'email': obj.email, 'name': obj.name})
-            elif obj.is_local():
-                locals.append({'email': obj.email, 'name': obj.name, 'buildings': obj.buildings})
-            else:
-                assigned_buildings = [item['building'] for item in obj.tags_owned]
-                defaults.append({
-                    'email': obj.email,
-                    'name': obj.name,
-                    'pairs':
-                        [{'role': item.role, 'building': item.building,
-                          'can_delete': item.building not in assigned_buildings} for item in obj.role_per_building],
-                })
-        emails = [super['email'] for super in supers] + \
-                 [local['email'] for local in locals] + \
-                 [default['email'] for default in defaults]
-        buildings = [item['name'] for item in Building._get_collection().find({}, {'_id': 0, 'name': 1})]
-
-        roles = [role.name for role in Role.objects if role.type == 'default' and role.name != 'default']
-
-        return jsonify({'supers': supers, 'locals': locals, 'defaults': defaults,
-                        'emails': emails, 'buildings': buildings, 'roles': roles})
-    else:
-        data = request.get_json()['data']
-        # Create the user
-        User(email=data['email'],
-             name=data['name'],
-             password=generate_password_hash(data['password']),
-             role=Role.objects(name=data['role']).first()).save()
-        return jsonify({'success': 'True'})
-
-
 @central.route('/user/<email>/add_managed_buildings', methods=['POST'])
 @login_required
 def user_add_managed_buildings(email):
@@ -380,7 +325,6 @@ def user_tags_owned(email):
         return jsonify({'data': data, 'triples': triples})
     else:
         tags_owned = request.get_json()['data']
-        print tags_owned
         # Update the tags in MongoDB
         User.objects(email=email).update(set__tags_owned=tags_owned)
         return jsonify({'success': 'True'})
@@ -396,10 +340,16 @@ def dataservice():
     form = DataServiceForm()
     if form.validate_on_submit():
         # Create the DataService
-        DataService(name=str(form.name.data),
-                    description=str(form.description.data),
-                    host=str(form.host.data),
-                    port=str(form.port.data)).save()
+        payload = {'data': {
+            "name": str(form.name.data),
+            "description": str(form.description.data),
+            "host": str(form.host.data),
+            "port": str(form.port.data)
+        }}
+        res = requests.post(request.url_root + "api/dataservice", data=json.dumps(payload),
+                            headers=session['headers']).json()
+        if res['success'] == 'False':
+            flash(res['error'])
         return redirect(url_for('central.dataservice'))
     return render_template('central/dataservice.html', objs=objs, form=form)
 
@@ -433,14 +383,17 @@ def dataservice_admins(name):
 @central.route('/dataservice_delete', methods=['POST'])
 @login_required
 def dataservice_delete():
-    DataService.objects(name=request.form.get('name')).delete()
+    name = request.form.get('name')
+    res = requests.delete(request.url_root + "api/dataservice/" + name, headers=session['headers']).json()
+    if res['success'] == 'False':
+        flash(res['error'])
     return redirect(url_for('central.dataservice'))
 
 
 @central.route('/oauth_gen', methods=['GET', 'POST'])
 def oauth_gen():
     keys = []
-    """If a post request is made then generate a client id and secret key
+    """If a post request is     made then generate a client id and secret key
        that the user can use later to generate an OAuth token"""
     if request.method == 'POST':
         keys.append({"client_id": gen_salt(40), "client_secret": gen_salt(50)})

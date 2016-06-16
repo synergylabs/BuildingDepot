@@ -11,17 +11,17 @@ template.
 @copyright: (c) 2016 SynergyLabs
 @license: UCSD License. See License file for details.
 """
-from flask import jsonify,request
+from flask import jsonify, request
 from flask.views import MethodView
 from . import responses
-from .helper import add_delete,gen_update
-from ..models.cs_models import TagType,BuildingTemplate,Building
+from .helper import add_delete, gen_update
+from ..models.cs_models import TagType, BuildingTemplate, Building
 from .. import oauth
 from ..api_0_0.resources.utils import super_required
 
-class BuildingTemplateService(MethodView):
 
-    params = ['name','description','tag_types']
+class BuildingTemplateService(MethodView):
+    params = ['name', 'description', 'tag_types']
 
     @oauth.require_oauth()
     @super_required
@@ -42,31 +42,31 @@ class BuildingTemplateService(MethodView):
                 return jsonify(responses.invalid_tagtypes)
 
         if template is None:
-            BuildingTemplate(**gen_update(self.params,data)).save()
+            BuildingTemplate(**gen_update(self.params, data)).save()
         else:
-            added, deleted = add_delete(template['tag_types'],tagtypes)
+            added, deleted = add_delete(template['tag_types'], tagtypes)
             collection = Building._get_collection()
             for tagtype in deleted:
-                if collection.find({"template":name,"tags.name":name}).count() > 0:
+                if collection.find({"template": name, "tags.name": name}).count() > 0:
                     return jsonify(responses.tagtype_in_use)
             collection = BuildingTemplate._get_collection()
-            collection.update({'name': name},{'$set':gen_update(self.params,data)})
+            collection.update({'name': name}, {'$set': gen_update(self.params, data)})
         return jsonify(responses.success_true)
 
     @oauth.require_oauth()
-    def get(self,name):
+    def get(self, name):
         template = BuildingTemplate.objects(name=name).first()
         if template is None:
             return jsonify(responses.invalid_template)
         response = dict(responses.success_true)
-        response.update({'name':template['name'],
-                                    'description':template['description'],
-                                    'tag_types':template['tag_types']})
+        response.update({'name': template['name'],
+                         'description': template['description'],
+                         'tag_types': template['tag_types']})
         return jsonify(response)
 
     @oauth.require_oauth()
     @super_required
-    def delete(self,name):
+    def delete(self, name):
         template = BuildingTemplate.objects(name=name).first()
         if template is None:
             return jsonify(responses.invalid_template)
@@ -76,7 +76,3 @@ class BuildingTemplateService(MethodView):
 
         template.delete()
         return jsonify(responses.success_true)
-
-
-
-

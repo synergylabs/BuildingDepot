@@ -10,18 +10,18 @@ present in each dataservice.
 @license: UCSD License. See License file for details.
 """
 
-from flask import jsonify,request
+from flask import jsonify, request
 from flask.views import MethodView
-from ..models.cs_models import Building,DataService
+from ..models.cs_models import Building, DataService
 from . import responses
 from .. import oauth
 from ..api_0_0.resources.utils import super_required
 
-class DataserviceBuildingsService(MethodView):
 
+class DataserviceBuildingsService(MethodView):
     @oauth.require_oauth()
     @super_required
-    def post(self,name):
+    def post(self, name):
         try:
             data = request.get_json()['data']
         except KeyError:
@@ -43,17 +43,17 @@ class DataserviceBuildingsService(MethodView):
         return jsonify(responses.success_true)
 
     @oauth.require_oauth()
-    def get(self,name):
+    def get(self, name):
         dataservice = DataService.objects(name=name).first()
         if dataservice is None:
             return jsonify(responses.invalid_dataservice)
         response = dict(responses.success_true)
-        response.update({'buildings':dataservice.buildings})
+        response.update({'buildings': dataservice.buildings})
         return jsonify(response)
 
     @oauth.require_oauth()
     @super_required
-    def delete(self,name):
+    def delete(self, name):
         try:
             data = request.get_json()['data']
         except KeyError:
@@ -68,6 +68,6 @@ class DataserviceBuildingsService(MethodView):
             return jsonify(responses.missing_parameters)
 
         collection = DataService._get_collection()
-        collection.update({'name':name},
-                        {'$pullAll': {'buildings':buildings}})
+        collection.update({'name': name},
+                          {'$pullAll': {'buildings': buildings}})
         return jsonify(responses.success_true)

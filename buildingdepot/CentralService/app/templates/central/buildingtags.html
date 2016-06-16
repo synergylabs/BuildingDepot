@@ -142,6 +142,7 @@
      {{ super() }}
      <script>
         var app = angular.module("myApp", []);
+        var header ={{ session.headers|tojson }};
         app.config(['$interpolateProvider', function($interpolateProvider) {
             $interpolateProvider.startSymbol('{[');
             $interpolateProvider.endSymbol(']}');
@@ -200,9 +201,20 @@
                         return;
                     }
                 }
-                var res = $http.post('/central/building/'+ '{{ building_name }}' + '/add_tag', {'data': data});
+                console.log(data);
+                var res = $http.post('/api/building/'+ '{{ building_name }}' + '/tags', {'data': data},{headers:header});
                 res.success(function(data) {
-                    $.notify("Success",{ globalPosition:'top center',clickToHide: true,autoHideDelay:2000, className:'success'});
+                    if (data["success"]==="False"){
+                        $.notify(data["error"], {
+                            position: "top center",
+                            clickToHide: true,
+                            autoHideDelay:4000
+                        });
+                    }
+                    else if (data["success"]==="True"){
+                       $.notify("Success",{  globalPosition:'top center',clickToHide: true,autoHideDelay:2000, className:'success'});
+                        location.reload();
+                    }
                 });
                 res.error(function() {
                     $.notify("Ajax failed", { position:"top center",clickToHide: true,autoHideDelay:2000});

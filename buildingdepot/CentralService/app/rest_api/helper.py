@@ -58,7 +58,7 @@ def send_registration_email(user_name,to_email,password):
     try:
        smtpObj = smtplib.SMTP('localhost')
        smtpObj.sendmail(sender, receivers, message)
-    except SMTPException:
+    except smtplib.SMTPException:
        print "Failed to send registration mail to %s"%(to_email)
 
 def get_email():

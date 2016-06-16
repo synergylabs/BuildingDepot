@@ -216,6 +216,7 @@
      {{ super() }}
      <script>
         var app = angular.module("myApp", []);
+        var header ={{ session.headers|tojson }};
         app.config(['$interpolateProvider', function($interpolateProvider) {
             $interpolateProvider.startSymbol('{[');
             $interpolateProvider.endSymbol(']}');
@@ -325,17 +326,25 @@
             };
 
             $scope.root.addNewUser = function() {
-                console.log($scope.email);
-                console.log($scope.fname);
                 var json = {
                         'email':$scope.email,
-                        'fname':$scope.fname,
-                        'lname':$scope.lname,
+                        'first_name':$scope.fname,
+                        'last_name':$scope.lname,
                         'role':$scope.selectedRole
                 };
-                var res = $http.post('/central/user/add_user',{'data': json });
+                console.log(header);
+                var res = $http.post('/api/user',{'data': json },{headers:header});
                 res.success(function(data) {
-                    alert(data);
+                    if (data["success"]==="False"){
+                        $.notify(data["error"], {
+                            position: "top center",
+                            clickToHide: true,
+                            autoHideDelay:4000
+                        });
+                    }
+                    else if (data["success"]==="True"){
+                       $.notify("Success",{  globalPosition:'top center',clickToHide: true,autoHideDelay:2000, className:'success'});
+                    }
                 });
                 res.error(function() {
                     console.log(json);
