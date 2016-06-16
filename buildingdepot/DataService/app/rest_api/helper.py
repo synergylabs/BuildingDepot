@@ -123,3 +123,23 @@ def add_delete_users(old, now):
 def add_delete(old,now):
     old, now = set(old), set(now)
     return now - old, old - now
+
+def form_query(param,values,args,operation):
+    res = []
+    if param == 'tags':
+        for tag in values:
+            key_value = tag.split(":", 1)
+            current_tag = {"tags.name": key_value[0], "tags.value": key_value[1]}
+            res.append(current_tag)
+    elif param == 'metadata':
+        for meta in values:
+            key_value = meta.split(":", 1)
+            current_meta = {"metadata."+key_value[0]: key_value[1]}
+            res.append(current_meta)
+    else:
+        for value in values:
+            res.append({param:value})
+    if args.get(operation) is None:
+        args[operation] = res
+    else:
+        args[operation] = args.get(operation)+res

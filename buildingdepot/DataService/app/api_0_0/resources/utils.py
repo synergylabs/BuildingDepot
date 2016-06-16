@@ -58,20 +58,17 @@ def authenticate_acl(permission_required):
                 sensor_name = request.get_json()['sensor_id']
             #Check what level of access this user has to the sensor
             response = permission(sensor_name)
-            if response == 'd/r':
-                return jsonify({'success':'False',
-                    'error':'You are not authenticated to use this sensor'})
-            elif response  == permission_required or response == 'r/w/p':
-                return f(*args,**kwargs)
-    	    elif response in ['r','r/w']:
-                return jsonify({'success':'False',
-                    'error':'You are not authenticated for this operation on the sensor'})
-    	    else:
+            if response == 'u/d':
                 if Sensor.objects(name=sensor_name).first() is None:
                     return jsonify({'success':'False',
                         'error':'Sensor does not exist'})
                 else:
                     return jsonify({'success':'False','error':'Permission not defined'})
+            elif permissions_val[response] <= permissions_val[permission_required]:
+                return f(*args,**kwargs)
+    	    else:
+                return jsonify({'success':'False',
+                    'error':'You are not authenticated for this operation on the sensor'})
         return decorated_function
     return authenticate_write
 

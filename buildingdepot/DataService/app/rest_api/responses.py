@@ -33,3 +33,4 @@ user_not_registered = {'success': 'False', 'error':'One or more users not regist
 invalid_tagtype = {'success':'False','error':'Invalid tagtype specified'}
 invalid_tag_value = {'success':'False','error':'Invalid tag value specified'}
 invalid_tag_permission  = {'success':'False','error':'Tag value cannot be used for permissions'}
+no_search_parameters = {'success':'False','error':'No search parameters specified'}
