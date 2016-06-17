@@ -33,7 +33,7 @@ oauth = OAuth2Provider()
 def create_app(config_mode):
     connect('buildingdepot')
     app = Flask(__name__)
-    app.config.from_object(config[config_mode])
+    app.config.from_envvar('CS_SETTINGS')
     config[config_mode].init_app(app)
     connect(app.config['MONGODB_DATABASE'],
             host=app.config['MONGODB_HOST'],

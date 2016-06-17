@@ -44,7 +44,7 @@ class BuildingTagsService(MethodView):
         collection = Building._get_collection()
         metadata = data.get('metadata')
         parents = data.get('parents')
-        if parents:
+        if parents and len(parents)!=0:
             search_list = []
             for element in parents:
                 search_list.append({'$elemMatch': element})
