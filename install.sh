@@ -12,6 +12,9 @@ if [[ $UID -ne 0 ]]; then
     exit 1
 fi
 
+BD=/srv/buildingdepot/
+pushd $(pwd)
+
 cp configs/nginx.conf /etc/nginx/nginx.conf
 
 mkdir -p /srv/buildingdepot
@@ -130,6 +133,65 @@ function setup_venv {
     cd -
 }
 
+function setup_gmail {
+    echo "Please register an app in your Google API manager, generate an OAuth token and refresh token"
+    echo "For more details refer to this url: https://github.com/google/gmail-oauth2-tools/wiki/OAuth2DotPyRunThrough"
+    echo "Please enter your Gmail id"
+    read email_id
+    echo "Please enter your client id"
+    read client_id
+    echo "Please enter your client secret"
+    read client_secret
+    echo "Please enter access token"
+    read access_token
+    echo "Please enter refresh token"
+    read refresh_token
+    echo "EMAIL = 'GMAIL'" >> $BD/CentralService/cs_config
+    echo "EMAIL_ID = '$email_id'" >> $BD/CentralService/cs_config
+    echo "ACCESS_TOKEN = '$access_token'" >> $BD/CentralService/cs_config
+    echo "REFRESH_TOKEN = '$refresh_token'" >> $BD/CentralService/cs_config
+    echo "CLIENT_ID = '$client_id'" >> $BD/CentralService/cs_config
+    echo "CLIENT_SECRET = '$client_secret'" >> $BD/CentralService/cs_config
+}
+
+function setup_email {
+    echo "BuildingDepot requires a Mail Transfer Agent. Would you like to install one or use your gmail account?"
+    echo "Note: If you use GMail, it is advised to create a new account for this purpose."
+    echo "Enter Y to install an MTA and N to use your GMail account."
+    read response
+    if [ "$response" == "Y" ]; then
+        sudo apt-get install mailutils
+        sed -i -e 's/"inet_interfaces = all/"inet_interfaces = loopback-only"/g' /etc/postfix/main.cf
+        service postfix restart
+        while true; do
+            echo "Please enter email address to send test mail:"
+            read email_id
+            n=$(od -An -N2 -i /dev/random)
+            echo $n | mail -s "Test email from BuildingDepot" $email_id
+            echo "Please enter the number you received in the mail"
+            read input
+            if [ $input == $n ]; then
+                echo "EMAIL= 'LOCAL'" >> $BD/CentralService/cs_config
+                break
+            else
+                echo "Verification failed. Enter R to retry, Y to use GMail"
+                read response
+                if [ "$response" == "R" ]; then
+                    continue
+                elif [ "$response" == 'Y' ]; then
+                    setup_gmail
+                    break
+                else
+                    echo "Invalid input! Exiting!"
+                    exit
+                fi
+            fi
+        done
+    else
+        setup_gmail
+    fi
+}
+
 deploy_config
 install_packages
 if [ "$DEPLOY_CS" = true ]; then
@@ -154,6 +216,9 @@ if [ "$DEPLOY_TOGETHER" = true ]; then
 fi
 
 rm -rf configs
+
+popd
+setup_email
 
 curl -G http://localhost:8086/query --data-urlencode "q=CREATE DATABASE buildingdepot"
 echo -e "\nInstallation Finished..\n"
