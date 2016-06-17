@@ -92,7 +92,7 @@ def buildingtemplate():
         payload = {'data': {
             "name": str(form.name.data),
             "description": str(form.description.data),
-            "tag_type": form.tag_types.data
+            "tag_types": form.tag_types.data
         }}
         res = requests.post(request.url_root + "api/template", data=json.dumps(payload),
                             headers=session['headers']).json()
@@ -154,6 +154,7 @@ def building_delete():
     return redirect(url_for('central.building'))
 
 
+# api
 @central.route('/building/<name>/metadata', methods=['GET', 'POST'])
 @login_required
 def building_metadata(name):
@@ -191,109 +192,12 @@ def building_tags_delete(building_name):
     return redirect(url_for('central.building_tags', building_name=building_name))
 
 
-@central.route('/building/<building_name>/tags/<tag_name>/<tag_value>/metadata', methods=['GET', 'POST'])
-@login_required
-def building_tags_metadata(building_name, tag_name, tag_value):
-    """Retrieve or update the metadata associated with a specific tag in a building"""
-    if request.method == 'GET':
-        # Retrieve the metadata associated with the tag
-        metadata = Building._get_collection().aggregate([
-            {'$unwind': '$tags'},
-            {'$match': {'name': building_name, 'tags.name': tag_name, 'tags.value': tag_value}},
-            {'$project': {'_id': 0, 'tags.metadata': 1}}
-        ])['result'][0]['tags']['metadata']
-        metadata = [{'name': key, 'value': val} for key, val in metadata.iteritems()]
-        return jsonify({'data': metadata})
-    else:
-        # Update the metadata associated with the tag
-        metadata = {pair['name']: pair['value'] for pair in request.get_json()['data']}
-        collection = Building._get_collection()
-        tag = collection.aggregate([
-            {'$unwind': '$tags'},
-            {'$match': {'name': building_name, 'tags.name': tag_name, 'tags.value': tag_value}},
-            {'$project': {'_id': 0, 'tags': 1}}
-        ])['result'][0]['tags']
-        tag['metadata'] = metadata
-        # Update the values in MongoDB
-        collection.update(
-            {'name': building_name},
-            {'$pull': {'tags': {'name': tag_name, 'value': tag_value}}}
-        )
-        collection.update(
-            {'name': building_name},
-            {'$addToSet': {'tags': tag}}
-        )
-        return jsonify({'success': 'True'})
-
-
-# ajax for adding a new tag for a building
-@central.route('/building/<building_name>/add_tag', methods=['GET', 'POST'])
-@login_required
-def building_tags_ajax(building_name):
-    """Retrieve or update the list of tags associated with this building"""
-    if request.method == 'GET':
-        # Retrieve the template and tags associated with this building
-        template = Building.objects(name=building_name).first().template
-        names = BuildingTemplate.objects(name=template).first().tag_types
-        pairs = {name: TagType.objects(name=name).first().parents for name in names}
-        tags = Building._get_collection().find(
-            {'name': building_name},
-            {'_id': 0, 'tags.name': 1, 'tags.value': 1, 'tags.parents': 1}
-        )[0]['tags']
-        parents = set([pair['name'] + pair['value'] for tag in tags for pair in tag['parents']])
-        # Response contains parameters that define whether tag can be deleted or not
-        for tag in tags:
-            tag['can_delete'] = tag['name'] + tag['value'] not in parents
-        return jsonify({'pairs': pairs, 'tags': tags, 'graph': get_tag_descendant_pairs()})
-    else:
-        data = request.get_json()['data']
-        collection = Building._get_collection()
-
-        # Form the tag to update in MongoDB
-        tag = {
-            'name': data['name'],
-            'value': data['value'],
-            'metadata': {},
-            'parents': []
-        }
-
-        if 'parents' in data:
-            tag['parents'] = data['parents']
-
-        # Update tags list
-        collection.update(
-            {'name': building_name},
-            {'$addToSet': {'tags': tag}}
-        )
-        return jsonify({'success': 'True'})
-
-
 @central.route('/user', methods=['GET'])
 @login_required
 def user():
-    return render_template('central/user.html')
-
-
-@central.route('/user/<email>/add_managed_buildings', methods=['POST'])
-@login_required
-def user_add_managed_buildings(email):
-    """Add this user to the list of buildings sent in the request"""
-    buildings = set(request.get_json()['data'])
-    if '' in buildings:
-        buildings.remove('')
-    User.objects(email=email).update(set__buildings=buildings)
-    return jsonify({'success': 'True'})
-
-
-@central.route('/user/<email>/add_role_per_building', methods=['POST'])
-@login_required
-def user_add_role_per_building(email):
-    """Every user can have a specific role that is defined per building"""
-    pairs = request.get_json()['data']
-    # Update the role in the specified building
-    User.objects(email=email).update(set__role_per_building=pairs)
-    User.objects(email=email).update(set__buildings=[item['building'] for item in pairs])
-    return jsonify({'success': 'True'})
+    default = User.objects(role='default')
+    super = User.objects(role='super')
+    return render_template('central/user.html', super_user=super, default=default)
 
 
 @central.route('/user/<email>/tags_owned', methods=['GET', 'POST'])

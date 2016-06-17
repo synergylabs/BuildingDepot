@@ -76,7 +76,7 @@ def token_gen(client_id, client_secret):
         for t in toks:
             t.delete()
         # Set token expiry period and create it
-        expires_in = 34560
+        expires_in = 864000
         expires = datetime.utcnow() + timedelta(seconds=expires_in)
         tok = Token(
             access_token=str(binascii.hexlify(os.urandom(16))),
