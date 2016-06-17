@@ -11,12 +11,11 @@ will have to be changed on first login.
 @license: UCSD License. See License file for details.
 """
 
-from .helper import send_registration_email
-from flask import request, jsonify
+from flask import request, jsonify, current_app
 from flask.views import MethodView
 from werkzeug.security import generate_password_hash
 from ..models.cs_models import User
-from .helper import get_email
+from .helper import get_email,send_mail_gmail,send_local_smtp
 from . import responses
 from .. import oauth
 from ..api_0_0.resources.utils import super_required
@@ -74,7 +73,14 @@ class UserService(MethodView):
 
     def register_user(self, first_name, last_name, email, role):
         password = str(uuid.uuid4())
+        print "Creating user"
         User(email=email, first_name=first_name,
              last_name=last_name, role=role,
              password=generate_password_hash(password)).save()
-        send_registration_email(first_name + " " + last_name, email, password)
+        print "Registered user"
+        if current_app.config['EMAIL'] == 'GMAIL':
+            print "GMAIL"
+            send_mail_gmail(first_name + " " + last_name, email, password)
+        elif current_app.config['EMAIL'] == 'LOCAL':
+            print "LOCAL"
+            send_local_smtp(first_name + " " + last_name, email, password)

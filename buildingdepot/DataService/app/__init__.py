@@ -42,8 +42,7 @@ oauth = OAuth2Provider()
 
 def create_app(config_mode):
     app = Flask(__name__)
-    app.config.from_object(config[config_mode])
-
+    app.config.from_envvar('DS_SETTINGS')
     app.debug = True
     app.secret_key = 'secret'
 

@@ -18,7 +18,7 @@ from datetime import datetime, timedelta
 from flask.ext.login import login_user, login_required, logout_user
 from .forms import LoginForm, RegistrationForm
 from ..models.cs_models import *
-from werkzeug.security import generate_password_hash
+from werkzeug.security import generate_password_hash,gen_salt
 
 
 
