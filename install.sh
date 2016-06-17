@@ -93,6 +93,8 @@ function deploy_config {
 }
 
 function install_packages {
+    apt-get install curl
+    apt-get install apt-transport-https
     echo 'deb http://www.rabbitmq.com/debian/ testing main' | sudo tee /etc/apt/sources.list.d/rabbitmq.list
     curl -sL https://repos.influxdata.com/influxdb.key | sudo apt-key add -
     source /etc/lsb-release
@@ -110,7 +112,6 @@ function install_packages {
     sudo apt-get install influxdb
     sudo service influxdb start
     sudo apt-get install rabbitmq-server
-    sudo apt-get install mailutils
     sed -i -e 's/"inet_interfaces = all/"inet_interfaces = loopback-only"/g' /etc/postfix/main.cf
     service postfix restart
 }
