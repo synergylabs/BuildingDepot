@@ -138,11 +138,12 @@
                 });
             };
             $scope.root.submit = function() {
-                $scope.temp=$scope.selectedParents;
-                for(var i=0;i<$scope.temp.length;i++)
-                {
-                    delete $scope.temp[i].parents;
-                    delete $scope.temp[i].can_delete;
+                if ($scope.selectedParents!= undefined) {
+                    $scope.temp = $scope.selectedParents;
+                    for (var i = 0; i < $scope.temp.length; i++) {
+                        delete $scope.temp[i].parents;
+                        delete $scope.temp[i].can_delete;
+                    }
                 }
                 var data = {
                     'name': $scope.selectedName,

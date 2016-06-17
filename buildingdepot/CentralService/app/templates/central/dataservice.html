@@ -216,7 +216,7 @@
                     set[$scope.admins[i]] = true;
                 }
 
-                var res = $http.post('/api/dataservice/'+ this.dataServiceName + '/admins', {'data': {'admin': $scope.admins }},{headers:header});
+                var res = $http.post('/api/dataservice/'+ this.dataServiceName + '/admins', {'data': {'admins': $scope.admins }},{headers:header});
                 res.success(function(data) {
                     if (data["success"]==="False"){
                         $.notify(data["error"], {
