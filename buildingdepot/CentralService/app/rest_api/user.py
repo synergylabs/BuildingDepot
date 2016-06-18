@@ -34,9 +34,8 @@ class UserService(MethodView):
         first_name = data.get('first_name')
         last_name = data.get('last_name')
         role = data.get('role')
-
         if not all((email, first_name, last_name, role)):
-            return jsonify(responses.missing_paramters)
+            return jsonify(responses.missing_parameters)
 
         if User.objects(email=email).first():
             return jsonify(responses.user_exists)
