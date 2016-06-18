@@ -44,6 +44,7 @@ class UserService(MethodView):
         if role == 'super':
             if User.objects(email=get_email()).first().role == 'super':
                 self.register_user(first_name, last_name, email, 'super')
+                return jsonify(responses.success_true)
             else:
                 return jsonify(responses.unauthorized_user)
         self.register_user(first_name, last_name, email, 'default')
