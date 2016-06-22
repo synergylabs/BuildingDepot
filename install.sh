@@ -70,7 +70,7 @@ function joint_deployment_fix {
     echo "Do you have a SSL certificate and key that you would like to use? Please enter [y/n]"
     read response
     #If user already has certificate
-    if [ "$response" == "y" ]; then
+    if [ "$response" == "Y" || "$response" == "y" ]; then
             echo "Please enter the path to the certificate:"
             read cert_path
             sed -i "s|<cert_path>|$cert_path|g" /srv/buildingdepot/configs/together_ssl.conf
@@ -160,7 +160,7 @@ function setup_email {
     echo "Note: If you use GMail, it is advised to create a new account for this purpose."
     echo "Enter Y to install an MTA and N to use your GMail account."
     read response
-    if [ "$response" == "Y" ]; then
+    if [ "$response" == "Y" || "$response" == "y" ]; then
         sudo apt-get install mailutils
         sed -i -e 's/"inet_interfaces = all/"inet_interfaces = loopback-only"/g' /etc/postfix/main.cf
         service postfix restart
@@ -178,9 +178,9 @@ function setup_email {
             else
                 echo "Verification failed. Enter R to retry, Y to use GMail"
                 read response
-                if [ "$response" == "R" ]; then
+                if [ "$response" == "R" || "$response" == "r" ]; then
                     continue
-                elif [ "$response" == 'Y' ]; then
+                elif [ "$response" == 'Y' || "$response" == 'y' ]; then
                     setup_gmail
                     break
                 else
