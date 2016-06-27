@@ -160,7 +160,7 @@ function setup_email {
     echo "Note: If you use GMail, it is advised to create a new account for this purpose."
     echo "Enter Y to install an MTA and N to use your GMail account."
     read response
-    if [ "$response" == "Y" ] || ["$response" == "y" ]; then
+    if [ "$response" == "Y" ] || [ "$response" == "y" ]; then
         sudo apt-get install mailutils
         sed -i -e 's/"inet_interfaces = all/"inet_interfaces = loopback-only"/g' /etc/postfix/main.cf
         service postfix restart
