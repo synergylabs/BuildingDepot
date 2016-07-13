@@ -13,20 +13,24 @@ of BD will call the tagtype() function
 @license: UCSD License. See License file for details.
 """
 
-import json
-import requests
+import json,requests,math
 from app.common import PAGE_SIZE
+from uuid import uuid4
 from flask import render_template, request, redirect, url_for, jsonify, session, flash
 from flask.ext.login import login_required
 from werkzeug.security import generate_password_hash, gen_salt
 
+from .. import r
 from . import central
 from .forms import *
-from .utils import get_choices, get_tag_descendant_pairs
+from ..rpc import defs
 from ..models.cs_models import *
+from .utils import get_choices, get_tag_descendant_pairs
 from ..oauth_bd.views import Client
-from ..rest_api.helper import check_if_super
-
+from ..rest_api.helper import check_if_super,get_building_choices
+from ..rest_api.helper import validate_users,form_query
+from ..auth.access_control import authorize_addition,permission
+from ..auth.acl_cache import invalidate_permission
 
 @central.route('/tagtype', methods=['GET', 'POST'])
 @login_required
@@ -320,3 +324,223 @@ def oauth_delete():
     if request.method == 'POST':
         Client.objects(client_id=request.form.get('client_id')).delete()
         return redirect(url_for('central.oauth_gen'))
+
+@central.route('/sensor', methods=['GET', 'POST'])
+def sensor():
+    # Show the user PAGE_SIZE number of sensors on each page
+    page = request.args.get('page', 1, type=int)
+    skip_size = (page - 1) * PAGE_SIZE
+    objs = Sensor.objects().skip(skip_size).limit(PAGE_SIZE)
+    for obj in objs:
+        obj.can_delete = True
+    total = len(Sensor.objects())
+    if (total):
+        pages = int(math.ceil(float(total) / PAGE_SIZE))
+    else:
+        pages = 0
+    form = SensorForm()
+    # Get the list of valid buildings for this DataService
+    form.building.choices = get_building_choices()
+    # Create a Sensor
+    if form.validate_on_submit():
+        uuid = str(uuid4())
+        if defs.create_sensor(uuid,session['email'],form.building.data):
+            Sensor(name=uuid,
+                   source_name=str(form.source_name.data),
+                   source_identifier=str(form.source_identifier.data),
+                   building=str(form.building.data),
+                   owner=session['email']).save()
+            r.set('owner:{}'.format(uuid), session['email'])
+            return redirect(url_for('central.sensor'))
+        else:
+            flash('Unable to communicate with the DataService')
+    return render_template('central/sensor.html', objs=objs, form=form, total=total,
+                           pages=pages, current_page=page, pagesize=PAGE_SIZE)
+
+
+@central.route('/sensor_delete', methods=['POST'])
+def sensor_delete():
+    sensor = Sensor.objects(name=request.form.get('name')).first()
+    # cache process
+    if defs.delete_sensor(request.form.get('name')):
+        r.delete('sensor:{}'.format(sensor.name))
+        r.delete('owner:{}'.format(sensor.name))
+        # cache process done
+        Sensor.objects(name=sensor.name).delete()
+    else:
+        flash('Unable to communicate with the DataService')
+    return redirect(url_for('central.sensor'))
+
+@central.route('/sensorgroup', methods=['GET', 'POST'])
+def sensorgroup():
+    page = request.args.get('page', 1, type=int)
+    skip_size = (page - 1) * PAGE_SIZE
+    objs = SensorGroup.objects().skip(skip_size).limit(PAGE_SIZE)
+    for obj in objs:
+        if Permission.objects(sensor_group=obj.name).count() > 0:
+            obj.can_delete = False
+        else:
+            obj.can_delete = True
+    form = SensorGroupForm()
+    # Get list of valid buildings for this DataService and create a sensorgroup
+    form.building.choices = get_building_choices()
+    print "Got building choices"
+    if form.validate_on_submit():
+        SensorGroup(name=str(form.name.data),
+                    description=str(form.description.data),
+                    building=str(form.building.data),
+                    owner = session['email']).save()
+        return redirect(url_for('central.sensorgroup'))
+    return render_template('central/sensorgroup.html', objs=objs, form=form)
+
+@central.route('/sensorgroup_delete', methods=['POST'])
+def sensorgroup_delete():
+    # cache process
+    sensorgroup = SensorGroup.objects(name=request.form.get('name')).first()
+    if sensorgroup['owner'] == session['email']:
+        if defs.invalidate_permission(request.form.get('name')):
+            SensorGroup.objects(name=sensorgroup.name).delete()
+        else:
+            flash('Unable to communicate with the DataService')
+    else:
+        flash('You are not authorized to delete this sensor group')
+    return redirect(url_for('central.sensorgroup'))
+
+@central.route('/usergroup', methods=['GET', 'POST'])
+def usergroup():
+    page = request.args.get('page', 1, type=int)
+    skip_size = (page - 1) * PAGE_SIZE
+    objs = UserGroup.objects().skip(skip_size).limit(PAGE_SIZE)
+    for obj in objs:
+        if Permission.objects(user_group=obj.name).count() > 0:
+            obj.can_delete = False
+        else:
+            obj.can_delete = True
+
+    form = UserGroupForm()
+    if form.validate_on_submit():
+        UserGroup(name=str(form.name.data),
+                  description=str(form.description.data),
+                  owner = session['email']).save()
+        return redirect(url_for('central.usergroup'))
+    return render_template('central/usergroup.html', objs=objs, form=form)
+
+@central.route('/usergroup_delete', methods=['POST'])
+def usergroup_delete():
+    # cahce process
+    name = request.form.get('name')
+    if authorize_addition(name,session['email']):
+        UserGroup.objects(name=name).delete()
+    else:
+        flash('You are not authorized to delete this user group')
+    return redirect(url_for('central.usergroup'))
+
+@central.route('/permission', methods=['GET', 'POST'], endpoint="permission")
+def permission_create():
+    page = request.args.get('page', 1, type=int)
+    skip_size = (page - 1) * PAGE_SIZE
+    objs = Permission.objects().skip(skip_size).limit(PAGE_SIZE)
+    for obj in objs:
+        obj.can_delete = True
+
+    form = PermissionForm()
+    form.user_group.choices = sorted([(obj.name, obj.name) for obj in UserGroup.objects])
+    form.sensor_group.choices = sorted([(obj.name, obj.name) for obj in SensorGroup.objects])
+    if form.validate_on_submit():
+        # Doesn't allow duplicate permissions
+        if Permission.objects(user_group=form.user_group.data, sensor_group=form.sensor_group.data).first() is not None:
+            flash('There is already permission pair {} - {} specified'.format(
+                form.user_group.data, form.sensor_group.data))
+            return redirect(url_for('central.permission'))
+        if defs.create_permission(form.user_group.data,form.sensor_group.data,session['email'],form.permission.data):
+            # If permission doesn't exist then create it
+            Permission(user_group=str(form.user_group.data),
+                       sensor_group=str(form.sensor_group.data),
+                       permission=str(form.permission.data),
+                       owner = session['email']).save()
+            invalidate_permission(str(form.sensor_group.data))
+            r.hset('permission:{}:{}'.format(form.user_group.data,form.sensor_group.data),"permission",form.permission.data)
+            r.hset('permission:{}:{}'.format(form.user_group.data,form.sensor_group.data),"owner",session['email'])
+        else:
+            flash('Unable to communicate with the DataService')
+        return redirect(url_for('central.permission'))
+    return render_template('central/permission.html', objs=objs, form=form)
+
+
+@central.route('/permission_delete', methods=['POST'])
+def permission_delete():
+    code = request.form.get('name').split(':-:')
+    permission = Permission.objects(user_group=code[0], sensor_group=code[1]).first()
+    if permission['owner'] == session['email']:
+        if defs.delete_permission(code[0],code[1]):
+            permission.delete()
+            r.delete('permission:{}:{}'.format(code[0], code[1]))
+            invalidate_permission(code[1])
+        else:
+            flash('Unable to communicate with the DataService')
+    else:
+        flash('You are not authorized to delete this permission')
+    return redirect(url_for('central.permission'))
+
+@central.route('/permission_query', methods=['GET', 'POST'])
+def permission_query():
+    """ Input taken from the user is their email and the sensor id they want to
+        check the permission for. The result returned is what type of access
+        permission the user has to that specific sensor """
+    form = PermissionQueryForm()
+    res = None
+    if form.validate_on_submit():
+        if not validate_users([form.user.data],True):
+            flash('User {} does not exist'.format(form.user.data))
+            return render_template('central/query.html', form=form, res=res)
+
+        sensor = Sensor.objects(name=form.sensor.data).first()
+        if sensor is None:
+            flash('Sensor {} does not exist'.format(form.sensor.data))
+            return render_template('central/query.html', form=form, res=res)
+
+        res = permission(form.sensor.data, form.user.data)
+
+    return render_template('central/query.html', form=form, res=res)
+
+@central.route('/sensor/search', methods=['GET', 'POST'])
+def sensors_search():
+    data = json.loads(request.args.get('q'))
+    args = {}
+    for key, values in data.iteritems():
+        if key == 'Building':
+            form_query('building',values,args,"$or")
+        elif key == 'SourceName':
+            form_query('source_name',values,args,"$or")
+        elif key == 'SourceIdentifier':
+            form_query('source_identifier',values,args,"$or")
+        elif key == 'ID':
+            form_query('name',values,args,"$or")
+        elif key == 'Tags':
+            form_query('tags',values,args,"$and")
+        elif key == 'MetaData':
+            form_query('metadata',values,args,"$and")
+    print args
+    # Show the user PAGE_SIZE number of sensors on each page
+    page = request.args.get('page', 1, type=int)
+    skip_size = (page - 1) * PAGE_SIZE
+    collection = Sensor._get_collection().find(args)
+    sensors = collection.skip(skip_size).limit(PAGE_SIZE)
+
+    sensor_list = []
+    for sensor in sensors:
+        sensor = Sensor(**sensor)
+        sensor.can_delete = True
+        sensor_list.append(sensor)
+
+    total = collection.count()
+    if (total):
+        pages = int(math.ceil(float(total) / PAGE_SIZE))
+    else:
+        pages = 0
+    form = SensorForm()
+    # Get the list of valid buildings for this DataService
+    form.building.choices = get_building_choices()
+    return render_template('central/sensor.html', objs=sensor_list, form=form, total=total,
+                           pages=pages, current_page=page, pagesize=PAGE_SIZE)
+

@@ -22,7 +22,7 @@ class DataService(Document):
     description = StringField()
 
     host = StringField(required=True)
-    port = IntField(required=True)
+    port = StringField(required=True)
 
     buildings = ListField(StringField())
 
@@ -106,3 +106,42 @@ class User(UserMixin, Document):
 
     def is_local(self):
         return self.role.type == 'local'
+
+
+class UserGroupNode(EmbeddedDocument):
+    user_id = StringField()
+    manager = BooleanField()
+
+class Sensor(Document):
+    name = StringField(required=True, unique=True)
+    source_name = StringField()
+    source_identifier = StringField()
+    owner = StringField()
+
+    metadata = DictField()
+    building = StringField()
+    tags = ListField(EmbeddedDocumentField(Node))
+    subscribers = ListField(StringField())
+
+
+class SensorGroup(Document):
+    name = StringField(required=True, unique=True)
+    description = StringField()
+
+    building = StringField()
+    tags = ListField(EmbeddedDocumentField(Node))
+    owner = StringField()
+
+class UserGroup(Document):
+    name = StringField(required=True, unique=True)
+    description = StringField()
+    owner = StringField()
+
+    users = ListField(EmbeddedDocumentField(UserGroupNode))
+
+
+class Permission(Document):
+    user_group = StringField()
+    sensor_group = StringField()
+    permission = StringField()
+    owner = StringField()

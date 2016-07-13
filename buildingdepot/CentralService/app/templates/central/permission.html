@@ -1,0 +1,136 @@
+{% extends "index.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}BuildingDepot - Permission{% endblock %}
+
+{% block page_content %}
+    <div class="row">
+        <div class="page-header">
+            <h2>Permission <a href="#myModal" data-toggle="modal" class="btn btn-info btn-lg"><span class="glyphicon glyphicon-hand-up"></span> Add a New Permission Pair</a></h2>
+        </div>
+
+        <div class="modal fade" id="myModal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Add a New Permission Pair</h4>
+                    </div>
+                    <div class="modal-body">
+                        {{ wtf.quick_form(form) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div ng-app="myApp" ng-controller="metadataController">
+            <div class="modal fade" id="permission_edit">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title">Edit Permission for {[user_group]} and {[sensor_group]}</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div>
+                                <table class="table">
+                                    <thead>
+                                    <tr>
+                                        <th>Permissions</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <td><select ng-model="current_permission" class="form-control" ng-options="permission for permission in permission_set | orderBy: permission"></select></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="btn-group">
+                                <button ng-click="root.updatePermission('user_group','sensor_group')" type="button" class="btn btn-warning">Update</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <div class="col-sm-12">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>User Group</th>
+                            <th>Sensor Group</th>
+                            <th>Permission</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for obj in objs %}
+                            <tr>
+                                <td>{{ obj.user_group }}</td>
+                                <td>{{ obj.sensor_group }}</td>
+                                <td>{{ obj.permission }}</td>
+                                <td>
+                                    <a ng-click="root.permission('{{ obj.user_group }}','{{ obj.sensor_group }}','{{ obj.permission }}')" href="#permission_edit" data-toggle="modal" class="btn btn-info btn-md">
+                                        <span class="glyphicon glyphicon-edit"></span> Edit Permission
+                                    </a>
+                                </td>
+                                {% if obj.can_delete %}
+                                    <td>
+                                        <form action="{{ url_for('central.permission_delete') }}" method="POST" onsubmit="return confirm('Are you sure you want to Delete?');">
+                                            <input type="hidden" value="{{ obj.user_group + ':-:' + obj.sensor_group }}" name="name">
+                                            <input type="submit" value="Delete" class="btn btn-danger">
+                                        </form>
+                                    </td>
+                                {% endif %}
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block scripts %}
+    {{ super() }}
+    <script>
+        var app = angular.module("myApp", []);
+        var access_token=document.cookie.replace(/(?:(?:^|.*;\s*)access_token\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+        var header ={'Authorization': 'bearer ' + access_token};
+        app.config(['$interpolateProvider', function($interpolateProvider) {
+            $interpolateProvider.startSymbol('{[');
+            $interpolateProvider.endSymbol(']}');
+        }]);
+        app.controller("metadataController", function($scope, $http) {
+            $scope.root = {};
+            $scope.permission_set=['r','r/w','r/w/p','d/r'];
+            $scope.root.permission = function(user_group, sensor_group, current_permission){
+                $scope.user_group=user_group;
+                $scope.sensor_group=sensor_group;
+                $scope.current_permission=current_permission;
+            };
+            $scope.root.updatePermission=function(user_group,sensor_group){
+                var re =new RegExp('/','g');
+                var newPermission={'sensor_group':$scope[sensor_group],'user_group':$scope[user_group],'permission':$scope.current_permission.replace(re,'')};
+                var res= $http.post('/api/permission', {'data': newPermission }, { headers: header });
+                res.success(function(data){
+
+                    if (data["success"]==="False"){
+                        $.notify(data["error"], {
+                            position: "top center",
+                            clickToHide: true,
+                            autoHideDelay:2000
+                        });
+                    }
+                    else if (data["success"]==="True"){
+                       $.notify("Success",{ globalPosition:'top center',clickToHide: true,autoHideDelay:2000, className:'success'});
+                        setTimeout(function() {
+                        document.location='/service/permission'
+                        }, 335);
+                    }
+                });
+            };
+        });
+    </script>
+{% endblock %}

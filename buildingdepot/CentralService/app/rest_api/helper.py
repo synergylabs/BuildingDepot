@@ -10,6 +10,7 @@ such as conversion of timestamps, strings etc.
 """
 from flask import current_app,request
 from ..models.cs_models import TagType,DataService,User
+from ..models.cs_models import Building,SensorGroup,Sensor
 from ..oauth_bd.views import Token
 import smtplib,requests,base64
 from . import responses
@@ -131,3 +132,122 @@ def check_if_super(email=None):
     if User.objects(email=email).first().role == 'super':
         return True
     return False
+
+def get_building_choices():
+    """Get the list of buildings in this DataService"""
+    dataservices = DataService.objects()
+    buildings_list = []
+    for dataservice in dataservices:
+        for building in dataservice.buildings:
+            print building
+            if building not in buildings_list:
+                buildings_list.append(building)
+    return zip(buildings_list,buildings_list)
+
+def get_building_tags(building):
+    """Get all the tags that this building has associated with it"""
+    tags = Building._get_collection().find({'name': building}, {'tags.name': 1, 'tags.value': 1, '_id': 0})[0]['tags']
+    res = {}
+    for tag in tags:
+        if tag['name'] in res:
+            res[tag['name']]['values'].append(tag['value'])
+        else:
+            tagtype_dict = {}
+            tagtype_dict['values'] = [tag['value']]
+            tagtype_dict['acl_tag'] = TagType.objects(name=tag['name']).first().acl_tag
+            res[tag['name']] = tagtype_dict
+    return res
+
+def form_query(param,values,args,operation):
+    res = []
+    if param == 'tags':
+        for tag in values:
+            key_value = tag.split(":", 1)
+            current_tag = {"tags.name": key_value[0], "tags.value": key_value[1]}
+            res.append(current_tag)
+    elif param == 'metadata':
+        for meta in values:
+            key_value = meta.split(":", 1)
+            current_meta = {"metadata."+key_value[0]: key_value[1]}
+            res.append(current_meta)
+    else:
+        for value in values:
+            res.append({param:value})
+    if args.get(operation) is None:
+        args[operation] = res
+    else:
+        args[operation] = args.get(operation)+res
+
+def create_json(sensor):
+    """Simple function that creates a json object to return for each sensor
+    Args as data:
+        sensor object retrieved from MongoDB
+    Returns:
+        {
+            Formatted sensor object as below
+        }
+    """
+    json_object = {'building': sensor.get('building'),
+                   'name': sensor.get('name'),
+                   'tags': sensor.get('tags'),
+                   'metadata': sensor.get('metadata'),
+                   'source_identifier': sensor.get('source_identifier'),
+                   'source_name': sensor.get('source_name')
+                   }
+    return json_object
+
+def create_response(sensors):
+    """Iterates over the list and generates a json response of sensors list
+    Args as data:
+        list of sensor retrieved from MongoDB
+    Returns:
+        {
+            List of formatted sensor objects
+        }
+    """
+    sensor_list = []
+    for sensor in sensors:
+        json_temp = create_json(sensor)
+        sensor_list.append(json_temp)
+    return sensor_list
+
+def validate_users(emails,list_format=False):
+    """Check if user exists"""
+    for email in emails:
+        if not list_format:
+            if User.objects(email=email['user_id']).first() is None:
+                return False
+        else:
+            if User.objects(email=email).first() is None:
+                return False
+    return True
+
+def get_admins(name):
+    """Get the list of admins in the DataService"""
+    obj = DataService.objects(name=name).first()
+    if obj is None:
+        return []
+    return list(obj.admins)
+
+def add_delete_users(old, now):
+    user_old,user_new = [],[]
+    for user in old:
+        user_old.append(user['user_id'])
+    for user in now:
+        user_new.append(user['user_id'])
+    old, now = set(user_old), set(user_new)
+    return now - old, old - now
+
+def get_ds(sensor,building=None):
+    args = {}
+    args['buildings__all'] = [building if building else Sensor.objects(name=sensor).first().building]
+    dataservices = DataService.objects(**args)
+    return dataservices.first().name
+
+def get_sg_ds(sensor_group):
+    args = {}
+    sg = SensorGroup.objects(name=sensor_group).first()
+    args['buildings__all'] = [sg.building]
+    dataservices = DataService.objects(**args)
+    return dataservices.first().name
+

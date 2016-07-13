@@ -19,7 +19,6 @@ from flask import request
 import sys
 sys.path.append('/srv/buildingdepot')
 
-
 permissions_val = {"u/d":1,"r/w/p":2,"r/w":3,"r":4,"d/r":5}
 
 def success():
@@ -137,7 +136,6 @@ def check_db(sensor,email):
                 user_group=user_group['name'])
             if permission.first() is not None:
                 curr_permission = permission.first()['permission']
-                print "curr_permission is "+curr_permission+"Sensor group is "+sensor_group['name']+" User group is "+user_group['name']
                 if permissions_val[curr_permission] > permissions_val[current_res]:
                     current_res = curr_permission
     return current_res

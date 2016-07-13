@@ -21,14 +21,21 @@ from mongoengine import connect
 from flask.ext.login import LoginManager
 from flask.ext.bootstrap import Bootstrap
 from flask_oauthlib.provider import OAuth2Provider
+from xmlrpclib import ServerProxy
+import redis
+
+
+permissions = {"rw": "r/w", "r": "r", "dr": "d/r","rwp":"r/w/p"}
 
 login_manager = LoginManager()
 login_manager.session_protection = 'strong'
 login_manager.login_view = 'auth.login'
 
 bootstrap = Bootstrap()
-
 oauth = OAuth2Provider()
+svr = ServerProxy("http://localhost:8080")
+r = redis.Redis()
+
 
 def create_app(config_mode):
     connect('buildingdepot')

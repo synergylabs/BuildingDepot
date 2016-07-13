@@ -125,6 +125,26 @@ class User(Document):
     def is_local(self):
         return self.role.type == 'local'
 
+class Sensor(Document):
+    name = StringField(required=True, unique=True)
+    source_name = StringField()
+    source_identifier = StringField()
+    owner = StringField()
+
+    metadata = DictField()
+    building = StringField()
+    tags = ListField(EmbeddedDocumentField(Node))
+    subscribers = ListField(StringField())
+
+
+class SensorGroup(Document):
+    name = StringField(required=True, unique=True)
+    description = StringField()
+
+    building = StringField()
+    tags = ListField(EmbeddedDocumentField(Node))
+    owner = StringField()
+
 
 
 

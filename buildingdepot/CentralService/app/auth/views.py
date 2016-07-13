@@ -12,7 +12,7 @@ logging out.
 
 import sys, os, binascii
 from flask import render_template, redirect, request
-from flask import session, url_for, flash
+from flask import session, url_for, flash, make_response
 from . import auth
 from datetime import datetime, timedelta
 from flask.ext.login import login_user, login_required, logout_user
@@ -136,7 +136,10 @@ def login():
             session['email'] = form.email.data
             session['token'] = token
             session['headers'] = {'Authorization': 'Bearer ' + session['token'], 'Content-Type': 'application/json'}
-            return redirect(request.args.get('next') or url_for('main.index'))
+            resp = make_response(redirect(url_for('central.sensor')))
+            resp.set_cookie('access_token', value=token)
+            return resp
+            #return redirect(request.args.get('next') or url_for('main.index'))
         flash('Invalid email or password')
     return render_template('auth/login.html', form=form)
 

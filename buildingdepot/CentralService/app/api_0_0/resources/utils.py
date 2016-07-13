@@ -26,15 +26,6 @@ def is_managed_by_local(local_admin, user):
         return True
     return False
 
-def super_required(f):
-    def decorated_function(*args, **kwargs):
-        email = get_email()
-        user = User.objects(email=email).first()
-        if user.role != 'super':
-            return jsonify(responses.super_user_required)
-        return f(*args,**kwargs)
-    return decorated_function
-
 def success():
     response = jsonify({'success': 'True'})
     response.status_code = 200

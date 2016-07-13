@@ -1,0 +1,168 @@
+{% extends "index.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}BuildingDepot - User Group{% endblock %}
+
+{% block page_content %}
+<div class="row">
+    <div class="page-header">
+        <h2>User Group <a href="#myModal" data-toggle="modal" class="btn btn-info btn-lg"><span class="glyphicon glyphicon-hand-up"></span> Add a New User Group</a></h2>
+    </div>
+
+    <div class="modal fade" id="myModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Add a New User Group</h4>
+                </div>
+                <div class="modal-body">
+                    {{ wtf.quick_form(form) }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div ng-app="myApp" ng-controller="metadataController">
+        <div class="modal fade" id="users">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Assigned Users for User Group {[ userGroupName ]} </h4>
+                    </div>
+                    <div class="modal-body">
+                        <div>
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>User Email</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="email in emails">
+                                        <td><input disabled ng-model="emails[$index].user_id" type="text" class="form-control" value="{[ email.user_id ]}"></td>
+                                        <td><input ng-model="emails[$index].manager" type="checkbox" class="form-control" value="{[email.manager]}"></td>
+                                        <td><button class="close" ng-click="root.removeExistingUser($index)">&times;</button></td>
+                                    </tr>
+                                    <tr ng-repeat="user in addedUsers">
+                                        <td><input ng-model="addedUsers[$index].user_id" type="text" class="form-control" value="{[ user.user_id]}"></td>
+                                        <td><input ng-model="addedUsers[$index].manager" type="checkbox" class="form-control" value="{[user.manager]}"></td>
+                                        <td><button class="close" ng-click="root.removeUser($index)">&times;</button></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="btn-group">
+                            <button ng-click="root.addNewUser()" type="button" class="btn btn-info">Add a new user</button>
+                            <button ng-click="root.updateUsers()" type="button" class="btn btn-warning">Update</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-12">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for obj in objs %}
+                    <tr>
+                        <td>{{ obj.name }}</td>
+                        <td>{{ obj.description }}</td>
+                        <td>
+                            <a ng-click="root.users('{{ obj.name }}')" href="#users" data-toggle="modal" class="btn btn-info">Users</a>
+                        </td>
+                        {% if obj.can_delete %}
+                        <td>
+                            <form action="{{ url_for('central.usergroup_delete') }}" method="POST" onsubmit="return confirm('Are you sure you want to Delete?');">
+                            <input type="hidden" value="{{ obj.name }}" name="name">
+                            <input type="submit" value="Delete" class="btn btn-danger">
+                            </form>
+                        </td>
+                        {% endif %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+     {{ super() }}
+     <script>
+        var app = angular.module("myApp", []);
+	    var access_token=document.cookie.replace(/(?:(?:^|.*;\s*)access_token\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+        var header ={'Authorization': 'bearer ' + access_token};
+        app.config(['$interpolateProvider', function($interpolateProvider) {
+            $interpolateProvider.startSymbol('{[');
+            $interpolateProvider.endSymbol(']}');
+        }]);
+        app.controller("metadataController", function($scope, $http) {
+            $scope.root = {};
+            $scope.root.users = function(userGroupName) {
+                $scope.addedUsers = [];
+                $scope.userGroupName = userGroupName;
+                var res = $http.get('/api/user_group/' + userGroupName + '/users',{ headers: header });
+                res.success(function(data) {
+                    $scope.emails = data.users;
+                });
+                res.error(function() {
+                    $.notify("Ajax failed", { position:"top center",clickToHide: true,autoHideDelay:2000});
+                });
+            };
+            $scope.root.addNewUser = function() {
+                $scope.addedUsers.push({'user_id':'', 'manager':Boolean(0)});
+            };
+            $scope.root.removeExistingUser = function(index) {
+                $scope.emails.splice(index, 1);
+            };
+            $scope.root.removeUser = function(index) {
+                $scope.addedUsers.splice(index, 1);
+            };
+            $scope.root.updateUsers = function() {
+                users = $scope.emails.concat($scope.addedUsers);
+                if (users.length > 0) {
+                    var set = {};
+                    for (var i = 0; i < users.length; i++) {
+                        if (users[i].user_id === '') {
+                            $.notify("There is an email that is not specified", { position:"top center",clickToHide: true,autoHideDelay:2000});
+                            return;
+                        }
+                        if (set[users[i].user_id]) {
+                            $.notify("There is a email that is specified more than once", { position:"top center",clickToHide: true,autoHideDelay:2000});
+                            return;
+                        }
+                        set[users[i].user_id] = true;
+                    }
+                }
+                var res = $http.post('/api/user_group/'+ $scope.userGroupName + '/users', {'data': users},{ headers: header });
+                res.success(function(data) {
+                        if (data["success"]==="False"){
+                            $.notify(data["error"], {
+                                position: "top center",
+                                clickToHide: true,
+                                autoHideDelay:2000
+                            });
+                        }
+                        else if (data["success"]==="True"){
+                            $.notify("Success",{ globalPosition:'top center',clickToHide: true,autoHideDelay:2000, className:'success'});
+                        }
+                });
+                res.error(function() {
+                        $.notify("Ajax failed", { position:"top center",clickToHide: true,autoHideDelay:2000});
+                });
+            };
+        });
+    </script>
+{% endblock %}

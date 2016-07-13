@@ -1,3 +1,4 @@
+DEBUG = True
 MONGODB_DATABASE_DS = 'dataservice'
 MONGODB_DATABASE_BD = 'buildingdepot'
 MONGODB_DS_ALIAS = 'ds'
