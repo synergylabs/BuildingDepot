@@ -28,7 +28,7 @@
     <link rel="prev" title="Central Service" href="centralservice.html" />
    
   
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
   </head>
   <body role="document">  
@@ -43,23 +43,7 @@
 <p>The DataService is the service with which users will be interacting directly most of the time. It&#8217;s within the DataService that all the data related to sensors and the timeseries data of each sensor resides. All the access control related functionality is defined and enforced within the DataService. OAuth access tokens which are required by every query that is sent to BuildingDepot are also generated via the DataService. A brief explanation will be provided here of each of the options available in the DataService.</p>
 <div class="section" id="sensor">
 <h2>Sensor<a class="headerlink" href="#sensor" title="Permalink to this headline">¶</a></h2>
-<p>Individual sensor points are defined here. After adding a sensor a UUID is generated which will be the unqiue identifier used in all further transactions with BuildingDepot whether it be reading a datapoint from a sensor or posting a bunch of datapoints to a sensor. Each sensor can also have a set of tags attached to it that not only help in categorising them in a meaningful way but also are critical for defining the access control lists later on. The option to attach metadata that is specific to this sensor is also provided. Sensors can be searched for using either the tags or metadata as a filter.</p>
-</div>
-<div class="section" id="sensor-group">
-<h2>Sensor Group<a class="headerlink" href="#sensor-group" title="Permalink to this headline">¶</a></h2>
-<p>Sensor groups are as the name suggests a set of sensors that have been grouped together on the basis of the tags that the user selected while creating the group. While creating a Sensor groups each individual sensor that the user wants to put in the group do not have to be manuall addded. Simply selecting the tag will automatically add at the backend all the sensors containing that tag into this group.</p>
-</div>
-<div class="section" id="user-group">
-<h2>User Group<a class="headerlink" href="#user-group" title="Permalink to this headline">¶</a></h2>
-<p>Similar to Sensor groups, User groups are a list of users that have been categorised into one group. Groups are created using the user email id that was used during registration.</p>
-</div>
-<div class="section" id="permission">
-<h2>Permission<a class="headerlink" href="#permission" title="Permalink to this headline">¶</a></h2>
-<p>In the permissions section Sensor groups and User groups come together to form the access control lists. Here we select a User Group and a Sensor Group and a permission value with which we want to associate these both. There are three levels of permission defined in BuildingDepot which are &#8216;d/r&#8217; (deny read) ,&#8217;r&#8217; (read) and &#8216;r/w&#8217; (read write). If there are multiple permissison mappings between a user and a sensor then the one that is most restrictive is chosen.</p>
-</div>
-<div class="section" id="oauth">
-<h2>OAuth<a class="headerlink" href="#oauth" title="Permalink to this headline">¶</a></h2>
-<p>To generate an OAuth token a client id and client secret key are required. These are generated within the DataService by the user through the GUI. These values will be valid until the user regenerates them for that certain account. The process to generate an OAuth token after these values have been obtained is defined in the REST API Documentation.</p>
+<p>Individual sensor points are defined here. After adding a sensor a UUID is generated which will be the unique identifier used in all further transactions with BuildingDepot whether it be reading a datapoint from a sensor or posting a bunch of datapoints to a sensor. Each sensor can also have a set of tags attached to it that not only help in categorising them in a meaningful way but also are critical for defining the access control lists later on. The option to attach metadata that is specific to this sensor is also provided. Sensors can be searched for using either the tags or metadata as a filter.</p>
 </div>
 </div>
 
@@ -73,10 +57,6 @@
   <ul>
 <li><a class="reference internal" href="#">Data Service</a><ul>
 <li><a class="reference internal" href="#sensor">Sensor</a></li>
-<li><a class="reference internal" href="#sensor-group">Sensor Group</a></li>
-<li><a class="reference internal" href="#user-group">User Group</a></li>
-<li><a class="reference internal" href="#permission">Permission</a></li>
-<li><a class="reference internal" href="#oauth">OAuth</a></li>
 </ul>
 </li>
 </ul>
@@ -117,8 +97,8 @@
       &copy;2015, Synergy Labs.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.1</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.6</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.7</a>
       
       |
       <a href="_sources/dataservice.txt"

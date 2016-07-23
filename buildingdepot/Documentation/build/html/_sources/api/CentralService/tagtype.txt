@@ -1,27 +1,25 @@
-.. DataService API Documentation
+.. CentralService API Documentation
 
 
-Tags
-####
+TagType
+#######
 
-Tags can be added to and removed from any sensor using the following requests. Any sensor within a certain building can have tags attached to it that are specifically available for that building only.
+Tag Type are used to describe the structure and domains of buildings and help in categorising sensors that can be easily allocated in groups to different users. TagType can be defined in the CentralService at http://www.example.com:81/central/tagtype. TagsTypes have a hierarchical structure i.e. a tag can have both parent tags and children tags. They play a very crucial role within BuildingDepot in defining permissions that restrict access to sensors based on the permissions a user has. Also, A building template is supported by a group of tag types allocated to it.
 
-Add Tags
-********
+Add TagType
+***********
 
-This request adds the key-value pairs sent, to the tags of the sensor specified by the uuid. The key-value pairs have to be sent along in a list as specified below
+This request creates a new TagType in BuildingDepot which will be used in the Building template to define the structure of the Buildings.
 
-Note: The list of tags sent in this request will overwrite the previous list
+.. http:post:: /api/tagtype
 
-.. http:post:: /api/sensor/<name>/tags
-
-   :param string sensor_uuid: UUID associated with Sensor
    :JSON Parameters:
-      * **data** `(list)` -- Contains the list of tag key-value pairs
-          * **name** `(string)` -- Name of the tag point
-          * **value** `(string)` -- Value of the tag point
+      * **data** `(list)` -- Contains the information of the tag type to be created.
+          * **name** `(string)` -- Name of the Tag Type
+          * **description** `(string)` `(optional)` -- Description of the Tag Type
+          * **Parents** `(string)` `(optional)` --
    :returns:
-      * **success** `(string)` -- Returns 'True' if data is posted succesfully otherwise 'False'
+      * **success** `(array)` -- Returns 'True' if data is posted succesfully otherwise 'False'
    :status 200: Success
    :status 401: Unauthorized Credentials (See :ref:`HTTP 401 <HTTP 401>`)
 
@@ -61,7 +59,7 @@ Note: The list of tags sent in this request will overwrite the previous list
 
 
 Read Tags
-**********
+*********
 
 This request retrieves two lists of key-value pairs, one list contains the array of eligible tags that can be attached to this sensor and the other list contains the array of tags that are currently attached to this sensor.
 

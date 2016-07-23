@@ -4,7 +4,7 @@
 Sensor
 ######
 
-The Sensor collection manages Sensors for Locations associated with the DataService.
+The Sensor collection manages Sensors for Locations associated with the CentralService.Sensors can be defined in the CentralService at http://www.example.com:81/central/sensor.
 Sensor access is restricted to :ref:`Users <CentralS-Users>` or :ref:`Admins <DataS-Admins>` with
 Permissions for the Sensor and to the `Admin` who owns the Sensor.
 
@@ -12,7 +12,7 @@ Permissions for the Sensor and to the `Admin` who owns the Sensor.
 
 List Sensors by Tags or Metadata
 ********************************
-Retreives a list of Sensors accessible to the User initiating the request filtered on the basis of the tags specified by the user
+Retrieves a list of Sensors accessible to the User initiating the request filtered on the basis of the tags specified by the user
 
 .. http:get:: /api/sensor/list?filter=<filter_type>&param=value
 
@@ -133,7 +133,7 @@ Retrieves all the details of the sensor based on the uuid specified
    :param string name: Name of the sensor
 
    :returns:
-      * **success** `(string)` -- Returns 'True' if data is retrieved succesfully otherwise 'False'
+      * **success** `(string)` -- Returns 'True' if data is retrieved successfully otherwise 'False'
       * **building** `(string)` -- Building in which the sensor is located
       * **name** `(string)` -- Name of the sensor
       * **tags** '(list)' -- List of tags owned by the sensor
@@ -201,6 +201,7 @@ BuildingDepot restricts access to sensors to users on three levels. A user can h
    * **Read**
    * **Read/Write**
    * **Deny Read**
+   * **Read/Write/Permission**
 
 As the names suggest a user with read access to a sensor will be able to read all the datapoints of the sensors. A user with Read/Write access will be able to both read and write (if supported by the sensor) to the sensors. With Deny Read a user will not be able to read any datapoints of the sensor.
 

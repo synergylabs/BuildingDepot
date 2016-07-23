@@ -1,0 +1,38 @@
+.. DataService API Documentation
+
+OAuth
+#####
+
+Every query to BuildingDepot has to be authenticated by an access token. The client id and secret key required to generate the access token can be obtained after logging into the DataService. After these have been obtained the access token can be genereated by using the following request. 
+
+
+Generating access tokens
+************************
+
+Generate an access token using the client id and secret key obtained from the Dataservice. Each access token is valid for 24 hours from the time of generation.
+
+.. http:get:: /oauth/access_token/client_id=<client_id>/client_secret=<client_secret>
+	
+	:returns:
+	   * **access token**
+
+.. compound::
+
+   **Example request**:
+
+   .. sourcecode:: http
+
+      GET /oauth/access_token/client_id=BOCWEJSnwJ8UJ4mfPiP8CqCX0QGHink6PFbmTnx0/
+      client_secret=1gk1pBQHiK6vHQULOndEucULq0Tf5H9vKjAUbIBVX0qMjsC9uQ HTTP/1.1
+      Accept: application/json; charset=utf-8
+
+   **Example response**:
+
+   .. sourcecode:: http
+   
+      HTTP/1.1 200 OK
+      Content-Type: application/json
+      
+      {
+        "access_token": "528d58481bc728a5eb57e73a49ba4539"
+      }

@@ -4,7 +4,7 @@
 Usergroups
 ##########
 
-Usergroups are as the name suggests a group of users formed using the id's with which they are registered in BuildingDepot. Usergroups when combined with SensorGroups help in bringing about the Access Control functions that BuildingDepot provides.
+Usergroups are as the name suggests a group of users formed using the id's with which they are registered in BuildingDepot. Usergroups when combined with SensorGroups help in bringing about the Access Control functions that BuildingDepot provides.UserGroups can be defined in the CentralService at http://www.example.com:81/central/usergroup.
 
 Create UserGroup
 ******************

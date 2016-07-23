@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Tags &mdash; BuildingDepot 3.0 documentation</title>
+    <title>TagType &mdash; BuildingDepot 3.0 documentation</title>
     
     <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
@@ -24,9 +24,9 @@
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
     <link rel="top" title="BuildingDepot 3.0 documentation" href="../../index.html" />
-    <link rel="up" title="REST API’s" href="index.html" />
-    <link rel="next" title="Usergroups" href="usergroup.html" />
-    <link rel="prev" title="Metadata" href="metadata.html" />
+    <link rel="up" title="CentalService APIs" href="index.html" />
+    <link rel="next" title="Sensor" href="sensor.html" />
+    <link rel="prev" title="OAuth" href="oauth.html" />
    
   
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
@@ -39,32 +39,27 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="tags">
-<h1>Tags<a class="headerlink" href="#tags" title="Permalink to this headline">¶</a></h1>
-<p>Tags can be added to and removed from any sensor using the following requests. Any sensor within a certain building can have tags attached to it that are specifically available for that building only.</p>
-<div class="section" id="add-tags">
-<h2>Add Tags<a class="headerlink" href="#add-tags" title="Permalink to this headline">¶</a></h2>
-<p>This request adds the key-value pairs sent, to the tags of the sensor specified by the uuid. The key-value pairs have to be sent along in a list as specified below</p>
-<p>Note: The list of tags sent in this request will overwrite the previous list</p>
+  <div class="section" id="tagtype">
+<h1>TagType<a class="headerlink" href="#tagtype" title="Permalink to this headline">¶</a></h1>
+<p>Tag Type are used to describe the structure and domains of buildings and help in categorising sensors that can be easily allocated in groups to different users. TagType can be defined in the CentralService at <a class="reference external" href="http://www.example.com:81/central/tagtype">http://www.example.com:81/central/tagtype</a>. TagsTypes have a hierarchical structure i.e. a tag can have both parent tags and children tags. They play a very crucial role within BuildingDepot in defining permissions that restrict access to sensors based on the permissions a user has. Also, A building template is supported by a group of tag types allocated to it.</p>
+<div class="section" id="add-tagtype">
+<h2>Add TagType<a class="headerlink" href="#add-tagtype" title="Permalink to this headline">¶</a></h2>
+<p>This request creates a new TagType in BuildingDepot which will be used in the Building template to define the structure of the Buildings.</p>
 <dl class="post">
-<dt id="post--api-sensor--name--tags">
-<code class="descname">POST </code><code class="descname">/api/sensor/&lt;name&gt;/tags</code><a class="headerlink" href="#post--api-sensor--name--tags" title="Permalink to this definition">¶</a></dt>
+<dt id="post--api-tagtype">
+<code class="descname">POST </code><code class="descname">/api/tagtype</code><a class="headerlink" href="#post--api-tagtype" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>sensor_uuid</strong> (<em>string</em>) &#8211; UUID associated with Sensor</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name" colspan="2">JSON Parameters:</th></tr>
-<tr class="field-even field"><td>&nbsp;</td><td class="field-body"><ul class="first">
+<tr class="field-odd field"><th class="field-name" colspan="2">JSON Parameters:</th></tr>
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body"><ul class="first">
 <li><dl class="first docutils">
-<dt><strong>data</strong> <cite>(list)</cite> &#8211; Contains the list of tag key-value pairs</dt>
+<dt><strong>data</strong> <cite>(list)</cite> &#8211; Contains the information of the tag type to be created.</dt>
 <dd><ul class="first last simple">
-<li><strong>name</strong> <cite>(string)</cite> &#8211; Name of the tag point</li>
-<li><strong>value</strong> <cite>(string)</cite> &#8211; Value of the tag point</li>
+<li><strong>name</strong> <cite>(string)</cite> &#8211; Name of the Tag Type</li>
+<li><strong>description</strong> <cite>(string)</cite> <cite>(optional)</cite> &#8211; Description of the Tag Type</li>
+<li><strong>Parents</strong> <cite>(string)</cite> <cite>(optional)</cite> &#8211;</li>
 </ul>
 </dd>
 </dl>
@@ -72,12 +67,12 @@
 </ul>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><ul class="first simple">
-<li><strong>success</strong> <cite>(string)</cite> &#8211; Returns &#8216;True&#8217; if data is posted succesfully otherwise &#8216;False&#8217;</li>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><ul class="first simple">
+<li><strong>success</strong> <cite>(array)</cite> &#8211; Returns &#8216;True&#8217; if data is posted succesfully otherwise &#8216;False&#8217;</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
+<tr class="field-odd field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
 <li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> &#8211; Success</li>
 <li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a> &#8211; Unauthorized Credentials (See <span class="xref std std-ref">HTTP 401</span>)</li>
 </ul>
@@ -217,8 +212,8 @@ Accept: application/json; charset=utf-8
         <div class="sphinxsidebarwrapper">
   <h3><a href="../../index.html">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">Tags</a><ul>
-<li><a class="reference internal" href="#add-tags">Add Tags</a></li>
+<li><a class="reference internal" href="#">TagType</a><ul>
+<li><a class="reference internal" href="#add-tagtype">Add TagType</a></li>
 <li><a class="reference internal" href="#read-tags">Read Tags</a></li>
 </ul>
 </li>
@@ -227,9 +222,9 @@ Accept: application/json; charset=utf-8
 <h3>Related Topics</h3>
 <ul>
   <li><a href="../../index.html">Documentation overview</a><ul>
-  <li><a href="index.html">REST API&#8217;s</a><ul>
-      <li>Previous: <a href="metadata.html" title="previous chapter">Metadata</a></li>
-      <li>Next: <a href="usergroup.html" title="next chapter">Usergroups</a></li>
+  <li><a href="index.html">CentalService APIs</a><ul>
+      <li>Previous: <a href="oauth.html" title="previous chapter">OAuth</a></li>
+      <li>Next: <a href="sensor.html" title="next chapter">Sensor</a></li>
   </ul></li>
   </ul></li>
 </ul>
@@ -237,7 +232,7 @@ Accept: application/json; charset=utf-8
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
-      <li><a href="../../_sources/api/DataService/tags.txt"
+      <li><a href="../../_sources/api/CentralService/tagtype.txt"
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
@@ -266,7 +261,7 @@ Accept: application/json; charset=utf-8
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.7</a>
       
       |
-      <a href="../../_sources/api/DataService/tags.txt"
+      <a href="../../_sources/api/CentralService/tagtype.txt"
           rel="nofollow">Page source</a>
     </div>
 

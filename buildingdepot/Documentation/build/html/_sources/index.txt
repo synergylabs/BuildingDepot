@@ -56,16 +56,17 @@ Install
    install.rst
 
 Getting Started
-################
+###############
 
 The `Getting started <http://cmu.buildingdepot.org/getting_started.pdf>`_ document will help you guide through the initial setup after installing BuildingDepot
 
 API Documentation
-######################
+#################
 
 .. toctree::
    :maxdepth: 1
 
+   api/CentralService/index.rst
    api/DataService/index.rst
 
 .. may be needed for html generation

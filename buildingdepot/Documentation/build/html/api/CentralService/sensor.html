@@ -24,9 +24,9 @@
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
     <link rel="top" title="BuildingDepot 3.0 documentation" href="../../index.html" />
-    <link rel="up" title="REST API’s" href="index.html" />
-    <link rel="next" title="Timeseries" href="sensordata.html" />
-    <link rel="prev" title="REST API’s" href="index.html" />
+    <link rel="up" title="CentalService APIs" href="index.html" />
+    <link rel="next" title="SensorGroups" href="sensorgroup.html" />
+    <link rel="prev" title="TagType" href="tagtype.html" />
    
   
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
@@ -41,12 +41,12 @@
             
   <div class="section" id="sensor">
 <h1>Sensor<a class="headerlink" href="#sensor" title="Permalink to this headline">¶</a></h1>
-<p>The Sensor collection manages Sensors for Locations associated with the DataService.
+<p>The Sensor collection manages Sensors for Locations associated with the CentralService.Sensors can be defined in the CentralService at <a class="reference external" href="http://www.example.com:81/central/sensor">http://www.example.com:81/central/sensor</a>.
 Sensor access is restricted to <span class="xref std std-ref">Users</span> or <span class="xref std std-ref">Admins</span> with
 Permissions for the Sensor and to the <cite>Admin</cite> who owns the Sensor.</p>
 <div class="section" id="list-sensors-by-tags-or-metadata">
 <span id="datas-list-sensors"></span><h2>List Sensors by Tags or Metadata<a class="headerlink" href="#list-sensors-by-tags-or-metadata" title="Permalink to this headline">¶</a></h2>
-<p>Retreives a list of Sensors accessible to the User initiating the request filtered on the basis of the tags specified by the user</p>
+<p>Retrieves a list of Sensors accessible to the User initiating the request filtered on the basis of the tags specified by the user</p>
 <dl class="get">
 <dt id="get--api-sensor-list?filter=-filter_type-&amp;param=value">
 <code class="descname">GET </code><code class="descname">/api/sensor/list?filter=&lt;filter_type&gt;&amp;param=value</code><a class="headerlink" href="#get--api-sensor-list?filter=-filter_type-&param=value" title="Permalink to this definition">¶</a></dt>
@@ -206,7 +206,7 @@ Content-Type: application/json
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><ul class="first simple">
-<li><strong>success</strong> <cite>(string)</cite> &#8211; Returns &#8216;True&#8217; if data is retrieved succesfully otherwise &#8216;False&#8217;</li>
+<li><strong>success</strong> <cite>(string)</cite> &#8211; Returns &#8216;True&#8217; if data is retrieved successfully otherwise &#8216;False&#8217;</li>
 <li><strong>building</strong> <cite>(string)</cite> &#8211; Building in which the sensor is located</li>
 <li><strong>name</strong> <cite>(string)</cite> &#8211; Name of the sensor</li>
 <li><strong>tags</strong> &#8216;(list)&#8217; &#8211; List of tags owned by the sensor</li>
@@ -279,6 +279,7 @@ Accept: application/json; charset=utf-8
 <li><strong>Read</strong></li>
 <li><strong>Read/Write</strong></li>
 <li><strong>Deny Read</strong></li>
+<li><strong>Read/Write/Permission</strong></li>
 </ul>
 </dd>
 </dl>
@@ -309,9 +310,9 @@ Accept: application/json; charset=utf-8
 <h3>Related Topics</h3>
 <ul>
   <li><a href="../../index.html">Documentation overview</a><ul>
-  <li><a href="index.html">REST API&#8217;s</a><ul>
-      <li>Previous: <a href="index.html" title="previous chapter">REST API&#8217;s</a></li>
-      <li>Next: <a href="sensordata.html" title="next chapter">Timeseries</a></li>
+  <li><a href="index.html">CentalService APIs</a><ul>
+      <li>Previous: <a href="tagtype.html" title="previous chapter">TagType</a></li>
+      <li>Next: <a href="sensorgroup.html" title="next chapter">SensorGroups</a></li>
   </ul></li>
   </ul></li>
 </ul>
@@ -319,7 +320,7 @@ Accept: application/json; charset=utf-8
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
-      <li><a href="../../_sources/api/DataService/sensor.txt"
+      <li><a href="../../_sources/api/CentralService/sensor.txt"
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
@@ -348,7 +349,7 @@ Accept: application/json; charset=utf-8
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.7</a>
       
       |
-      <a href="../../_sources/api/DataService/sensor.txt"
+      <a href="../../_sources/api/CentralService/sensor.txt"
           rel="nofollow">Page source</a>
     </div>
 
