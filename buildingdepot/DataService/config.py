@@ -13,8 +13,6 @@ registered in the CentralService with the name "ds1".
 class Config:
     MONGODB_DATABASE_DS = 'dataservice'
     MONGODB_DATABASE_BD = 'buildingdepot'
-    MONGODB_DS_ALIAS = 'ds'
-    MONGODB_BD_ALIAS = 'bd'
     MONGODB_HOST = '127.0.0.1'
     MONGODB_PORT = 27017
 

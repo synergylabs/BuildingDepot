@@ -28,7 +28,6 @@ class Client(Document):
     _redirect_uris = StringField()
     _default_scopes = StringField()
 
-    meta = {"db_alias": "bd"}
 
     @property
     def client_type(self):
@@ -50,6 +49,7 @@ class Client(Document):
             return self._default_scopes.split()
         return []
 
+
 class Token(Document):
     client = ReferenceField(Client)
     user = StringField()
@@ -60,7 +60,6 @@ class Token(Document):
     _scopes = StringField()
     email = StringField()
 
-    meta = {"db_alias": "bd"}
 
     @property
     def scopes(self):

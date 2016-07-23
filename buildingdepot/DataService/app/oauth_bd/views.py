@@ -36,8 +36,6 @@ class Client(Document):
     _redirect_uris = StringField()
     _default_scopes = StringField()
 
-    meta = {"db_alias": "bd"}
-
     @property
     def client_type(self):
         return 'public'
@@ -67,8 +65,6 @@ class Grant(Document):
     expires = DateTimeField()
     _scopes = StringField()
 
-    meta = {"db_alias": "bd"}
-
     @property
     def scopes(self):
         if self._scopes:
@@ -86,19 +82,19 @@ class Token(Document):
     _scopes = StringField()
     email = StringField()
 
-    meta = {"db_alias": "bd"}
-
     @property
     def scopes(self):
         if self._scopes:
             return self._scopes.split()
         return []
 
+
 def current_user():
     if 'email' in session:
         email = session['email']
         return get_user_oauth(email)
     return None
+
 
 @oauth_bd.route('/', methods=('GET', 'POST'))
 def home():
@@ -184,6 +180,7 @@ def save_token(token, request, *args, **kwargs):
         user=request.user,
         email=request.user).save()
     return tok
+
 
 @oauth_bd.route('/access_token/client_id=<client_id>/client_secret=<client_secret>', methods=['GET'])
 def get_access_token(client_id, client_secret):
