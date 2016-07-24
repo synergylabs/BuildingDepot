@@ -11,6 +11,7 @@ such as conversion of timestamps, strings etc.
 
 from flask import request
 from ..oauth_bd.views import Token
+from ..models.ds_models import Building,TagType
 import time,json,pika
 
 def get_email():
@@ -143,3 +144,17 @@ def form_query(param,values,args,operation):
         args[operation] = res
     else:
         args[operation] = args.get(operation)+res
+
+def get_building_tags(building):
+    """Get all the tags that this building has associated with it"""
+    tags = Building._get_collection().find({'name': building}, {'tags.name': 1, 'tags.value': 1, '_id': 0})[0]['tags']
+    res = {}
+    for tag in tags:
+        if tag['name'] in res:
+            res[tag['name']]['values'].append(tag['value'])
+        else:
+            tagtype_dict = {}
+            tagtype_dict['values'] = [tag['value']]
+            tagtype_dict['acl_tag'] = TagType.objects(name=tag['name']).first().acl_tag
+            res[tag['name']] = tagtype_dict
+    return res

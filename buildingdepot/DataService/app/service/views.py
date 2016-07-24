@@ -19,7 +19,8 @@ from . import service
 from ..models.ds_models import *
 from .forms import *
 from ..rest_api.utils import *
-from ..rest_api.helper import form_query
+from ..rest_api.helper import form_query,get_building_tags
+from ..rest_api import responses
 from uuid import uuid4
 from .. import r, influx, permissions
 import sys
@@ -85,7 +86,14 @@ def sensors_search():
     return render_template('service/sensor.html', objs=sensor_list, total=total,
                            pages=pages, current_page=page, pagesize=PAGE_SIZE)
 
-
+@service.route('/sensor/<name>/tags')
+def get_sensor_tags(name):
+    obj = Sensor.objects(name=name).first()
+    tags_owned = [{'name': tag.name, 'value': tag.value} for tag in obj.tags]
+    tags = get_building_tags(obj.building)
+    response = dict(responses.success_true)
+    response.update({'tags': tags, 'tags_owned': tags_owned})
+    return jsonify(response)
 
 @service.route('/graph/<name>')
 @service.route('/sensor/graph/<name>')
@@ -100,3 +108,4 @@ def graph(name):
     obj = Sensor.objects(name=name).first()
     tags_owned = [{'name': tag.name, 'value': tag.value} for tag in obj.tags]
     return render_template('service/graph.html', name=name, obj=temp, metadata=metadata, tags=tags_owned)
+

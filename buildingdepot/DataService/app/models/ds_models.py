@@ -56,3 +56,23 @@ class Permission(Document):
 class Application(Document):
     user = StringField()
     apps = ListField(EmbeddedDocumentField(Node))
+
+class TagType(Document):
+    name = StringField(required=True, unique=True)
+    description = StringField()
+    parents = ListField(StringField())
+    children = ListField(StringField())
+    acl_tag = BooleanField()
+
+class TagInstance(EmbeddedDocument):
+    name = StringField()
+    value = StringField()
+    metadata = DictField()
+    parents = ListField(EmbeddedDocumentField(Node))
+
+class Building(Document):
+    name = StringField(required=True, unique=True)
+    template = StringField(required=True)
+    description = StringField()
+    metadata = DictField()
+    tags = ListField(EmbeddedDocumentField(TagInstance))

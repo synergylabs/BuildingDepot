@@ -509,7 +509,7 @@
             $scope.root.tags = function(sensorName) {
                 $scope.addedTags = [];
                 $scope.sensorName = sensorName;
-                var res = $http.get('/api/sensor/' + sensorName + '/tags',{ headers: header });
+                var res = $http.get('/service/sensor/' + sensorName + '/tags',{ headers: header });
                 res.success(function(data) {
                     $scope.tags = data.tags;
                     $scope.tags_owned = data.tags_owned;
@@ -546,7 +546,7 @@
                     }
                 }
 
-                var res = $http.post('/api/sensor/'+ $scope.sensorName + '/tags', {'data': tags},{ headers: header });
+                var res = $http.post('/service/sensor/'+ $scope.sensorName + '/tags', {'data': tags},{ headers: header });
                 res.success(function(data) {
                     if (data["success"]==="False"){
                         $.notify(data["error"], {
