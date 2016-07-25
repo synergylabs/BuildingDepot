@@ -172,8 +172,8 @@ function setup_email {
             echo "Please enter the number you received in the mail"
             read input
             if [ $input == $n ]; then
-                echo "EMAIL= 'LOCAL'" >> $BD/CentralService/cs_config
-		echo "EMAIL_ID= 'admin@buildingdepot.org'" >> $BD/CentralService/cs_config 
+                echo "EMAIL = 'LOCAL'" >> $BD/CentralService/cs_config
+		echo "EMAIL_ID = 'admin@buildingdepot.org'" >> $BD/CentralService/cs_config 
                 break
             else
                 echo "Verification failed. Enter R to retry, Y to use GMail"
