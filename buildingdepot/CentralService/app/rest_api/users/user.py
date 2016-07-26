@@ -77,9 +77,7 @@ class UserService(MethodView):
              last_name=last_name, role=role,
              password=generate_password_hash(password)).save()
         print "Registered user"
-        if current_app.config['EMAIL'] == 'GMAIL':
-            print "GMAIL"
+        if str(current_app.config['EMAIL']) == 'GMAIL':
             send_mail_gmail(first_name + " " + last_name, email, password)
-        elif current_app.config['EMAIL'] == 'LOCAL':
-            print "LOCAL"
+        elif str(current_app.config['EMAIL']) == 'LOCAL':
             send_local_smtp(first_name + " " + last_name, email, password)
