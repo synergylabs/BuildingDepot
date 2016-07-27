@@ -226,3 +226,5 @@ curl -G http://localhost:8086/query --data-urlencode "q=CREATE DATABASE building
 echo -e "\nInstallation Finished..\n"
 /srv/buildingdepot/venv/bin/python2.7 setup_bd.py
 echo -e "Created a super user with following credentials. Please login and change password immediately \n user id : admin@buildingdepot.org \n password: admin"
+
+supervisorctl restart cs
