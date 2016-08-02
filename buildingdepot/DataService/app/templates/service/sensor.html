@@ -4,21 +4,12 @@
 {% block title %}BuildingDepot - Sensor{% endblock %}
 
 {% block page_content %}
-
-    <div class="modal fade" id="myModal">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Add a New Sensor</h4>
-                </div>
-            </div>
-        </div>
-    </div>
     <div class="row" ng-app="myApp" ng-controller="metadataController">
         <div class="page-header">
-            <h2 style="display: inline-block;" id = "header">  &nbsp;&nbsp;&nbsp;Sensor&nbsp;&nbsp;<a href="#myModal" data-toggle="modal" class="btn btn-info btn-lg"><span class="glyphicon glyphicon-hand-up"></span>&nbsp;Add a New Sensor</a>
-                <a ng-click="root.filter()" href="#filter_search" data-toggle="modal" class="btn btn-info btn-lg"><span class="glyphicon glyphicon-search"></span>&nbsp;Search</a></h2>
+            <h2 style="display: inline-block;" id = "header">  &nbsp;&nbsp;&nbsp;Sensor&nbsp;&nbsp;
+                <a ng-click="root.filter()" href="#filter_search" data-toggle="modal" class="btn btn-info btn-lg"><span class="glyphicon glyphicon-search"></span>&nbsp;Search
+                </a>
+            </h2>
             <ul class="pagination" id="pagination" style="float: right"></ul>
             {% if total == 0 %}
                 <div style="text-align: center">Showing 0 - {{ total }} of {{ total }} Sensors</div>
@@ -82,39 +73,6 @@
                     </div>
                 </div>
             </div>
-
-            <div class="modal fade" id="metadata">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button class="close" data-dismiss="modal">&times;</button>
-                            <h4 class="modal-title">Metadata of Sensor {[ root.sensorName ]}</h4>
-                        </div>
-                        <div class="modal-body">
-                            <table class="table">
-                                <thead>
-                                <tr>
-                                    <th>Name</th>
-                                    <th>Value</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr ng-repeat="pair in metadata">
-                                    <td><input ng-model="metadata[$index].name" type="text" class="form-control" value="{[ pair.name ]}"></td>
-                                    <td><input ng-model="metadata[$index].value" type="text" class="form-control" value="{[ pair.value ]}"></td>
-                                    <td><button class="close" ng-click="root.removeName($index)">&times;</button></td>
-                                </tr>
-                                </tbody>
-                            </table>
-                            <div class="btn-group">
-                                <button ng-click="root.addNewPair()" type="button" class="btn btn-info">Add a new pair</button>
-                                <button ng-click="root.update()" type="button" class="btn btn-warning">Update</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
             <div class="modal fade" id="tags">
                 <div class="modal-dialog">
                     <div class="modal-content">
@@ -135,102 +93,14 @@
                                     <tr ng-repeat="tag in tags_owned">
                                         <td><input disabled ng-model="tags_owned[$index].name" type="text" class="form-control" value="{[ tag.name ]}"></td>
                                         <td><input disabled ng-model="tags_owned[$index].value" type="text" class="form-control" value="{[ tag.value ]}"></td>
-                                        <td><button class="close" ng-click="root.removeExistingTag($index)">&times;</button></td>
                                     </tr>
                                     </tbody>
                                 </table>
                             </div>
-
-                            <div>
-                                <table class="table">
-                                    <thead>
-                                    <tr>
-                                        <th>Name</th>
-                                        <th>Value</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <tr ng-repeat="tag in addedTags">
-                                        <td><select ng-model="addedTags[$index].name" class="form-control" ng-options="name for name in names | orderBy: name"></select></td>
-                                        <td><select ng-model="addedTags[$index].value" class="form-control" ng-options="value for value in values | valueFilter: this: addedTags[$index].name | orderBy: value"></select></td>
-                                        <td><button class="close" ng-click="root.removeTag($index)">&times;</button></td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-
-
-                            <div class="btn-group">
-                                <button ng-click="root.addNewTag()" type="button" class="btn btn-info">Add a new tag</button>
-                                <button ng-click="root.updateTags()" type="button" class="btn btn-warning">Update</button>
-                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-
-            <div class="modal fade" id="subscribers">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button class="close" data-dismiss="modal">&times;</button>
-                            <h4 class="modal-title">Subscribers for Sensor {[ sensorName ]}</h4>
-                        </div>
-                        <div class="modal-body">
-                            <table class="table">
-                                <thead>
-                                <tr>
-                                    <th>User Email</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr ng-repeat="subscriber in subscribers">
-                                    <td><input ng-model="subscribers[$index].email" type="text" class="form-control" value="{[ subscriber ]}"></td>
-                                    <td><button class="close" ng-click="root.removeSubscriber($index)">&times;</button></td>
-                                </tr>
-                                </tbody>
-                            </table>
-                            <div class="btn-group">
-                                <button ng-click="root.addNewSubscriber()" type="button" class="btn btn-info">Add a new subscriber</button>
-                                <button ng-click="root.updateSubscribers()" type="button" class="btn btn-warning">Update</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="modal fade" id="write">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button class="close" data-dismiss="modal">&times;</button>
-                            <h4 class="modal-title">Time Series Data of Sensor {[ sensorName ]}</h4>
-                        </div>
-                        <div class="modal-body">
-                            <table class="table">
-                                <thead>
-                                <tr>
-                                    <th>Unix Timestamp</th>
-                                    <th>Value</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr ng-repeat="pair in ts">
-                                    <td><input ng-model="ts[$index].time" type="text" class="form-control" value="{[ pair.time ]}"></td>
-                                    <td><input ng-model="ts[$index].value" type="text" class="form-control" value="{[ pair.value ]}"></td>
-                                    <td><button class="close" ng-click="root.removeTS($index)">&times;</button></td>
-                                </tr>
-                                </tbody>
-                            </table>
-                            <div class="btn-group">
-                                <button ng-click="root.addNewTS()" type="button" class="btn btn-info">Add a new pair</button>
-                                <button ng-click="root.updateWrite()" type="button" class="btn btn-warning">Update</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
             <div class="col-sm-12">
                 <table class="table">
                     <thead>
@@ -251,16 +121,7 @@
                             <td>{{ obj.source_identifier }}</td>
                             <td>{{ obj.owner }}</td>
                             <td>
-                                <a ng-click="root.select('{{ obj.name }}')" href="#metadata" data-toggle="modal" class="btn btn-info">Metadata</a>
-                            </td>
-                            <td>
                                 <a ng-click="root.tags('{{ obj.name }}')" href="#tags" data-toggle="modal" class="btn btn-info">Tags</a>
-                            </td>
-                            <td>
-                                <a ng-click="root.selectSubscribers('{{ obj.name }}')" href="#subscribers" data-toggle="modal" class="btn btn-info">Subscribers</a>
-                            </td>
-                            <td>
-                                <a ng-click="root.selectWrite('{{ obj.name }}')" href="#write" data-toggle="modal" class="btn btn-info">Write</a>
                             </td>
                         </tr>
                     {% endfor %}
@@ -328,12 +189,6 @@
             $scope.filter_search = [];
             $scope.filter_search.push({'key': '', 'value': ''});
             $scope.filter_strings = ["ID","Building","SourceName","SourceIdentifier","MetaData","Tags"];
-            $scope.root.addNewFilter = function () {
-                $scope.filter_search.push({'key': '', 'value': ''});
-            };
-            $scope.root.removeFilter = function(index) {
-                $scope.filter_search.splice(index, 1);
-            };
             $scope.root.filter = function(){
                 try {
                     var query = JSON.parse(decodeURIComponent(location.search.substring(1)).split('&')[0].split('=')[1]);
@@ -358,7 +213,9 @@
             $scope.root.removeOldFilter = function(index) {
                 $scope.old_search.splice(index, 1);
             };
-
+            $scope.root.removeFilter = function(index) {
+                $scope.filter_search.splice(index, 1);
+            };
             $scope.root.updateFilter=function(){
                 if($scope.old_search)
                     var temp =$scope.filter_search.concat($scope.old_search);
@@ -458,192 +315,21 @@
 
             };
 
-            $scope.root.addNewPair = function() {
-
-                $scope.metadata.push({'name': '', 'value': ''});
-            };
-            $scope.root.removeName = function(index) {
-                $scope.metadata.splice(index, 1);
-            };
-
-            $scope.root.select = function(sensorName) {
-                this.sensorName = sensorName;
-                var res = $http.get('/api/sensor/'+ sensorName + '/metadata',{ headers: header });
-                res.success(function(data) {
-                    if (data["success"]==="False"){
-                        $.notify(data["error"], {
-                            position: "top center",
-                            clickToHide: true,
-                            autoHide: true
-                        });
-                    }
-                    else{
-                        $scope.metadata = data.data;
-                    }
-
-                });
-                res.error(function() {
-                    $.notify("Ajax failed", { position:"top center",clickToHide: true,autoHideDelay:2000});
-                });
-            };
-
-            $scope.root.update = function() {
-                var res = $http.post('/api/sensor/'+ this.sensorName + '/metadata', {'data': $scope.metadata},{ headers: header });
-                res.success(function(data) {
-                    if (data["success"]==="False"){
-                        $.notify(data["error"], {
-                            position: "top center",
-                            clickToHide: true,
-                            autoHideDelay:2000
-                        });
-                    }
-                    else if (data["success"]==="True"){
-                       $.notify("Success",{ globalPosition:'top center',clickToHide: true,autoHideDelay:2000, className:'success'});
-                    }
-                });
-                res.error(function() {
-                    $.notify("Ajax failed", { position:"top center",clickToHide: true,autoHideDelay:2000});
-                });
-            };
-
             $scope.root.tags = function(sensorName) {
                 $scope.addedTags = [];
                 $scope.sensorName = sensorName;
-                var res = $http.get('/api/sensor/' + sensorName + '/tags',{ headers: header });
+                var res = $http.get(location.protocol+'//'+location.hostname+':81/api/sensor/' + sensorName + '/tags',{ headers: header });
                 res.success(function(data) {
                     $scope.tags = data.tags;
                     $scope.tags_owned = data.tags_owned;
                     $scope.names = Object.keys($scope.tags);
 
                 });
-                res.error(function() {
+                res.error(function(data) {
+                    console.log(data);
                     $.notify("Ajax failed", { position:"top center",clickToHide: true,autoHideDelay:2000});
                 });
             };
-            $scope.root.addNewTag = function() {
-                $scope.addedTags.push({'name': '', 'value': ''});
-            };
-            $scope.root.removeExistingTag = function(index) {
-                $scope.tags_owned.splice(index, 1);
-            };
-            $scope.root.removeTag = function(index) {
-                $scope.addedTags.splice(index, 1);
-            };
-            $scope.root.updateTags = function() {
-                tags = $scope.tags_owned.concat($scope.addedTags);
-                if (tags.length > 0) {
-                    var set = {};
-                    for (var i = 0; i < tags.length; i++) {
-                        if (tags[i].name === '' || tags[i].value === '') {
-                            $.notify("There is a name or value that is not specified", { position:"top center",clickToHide: true,autoHideDelay:2000});
-                            return;
-                        }
-                        if (set[tags[i].name+tags[i].value]) {
-                            $.notify("There is a tag that is specified more than once", { position:"top center",clickToHide: true,autoHideDelay:2000});
-                            return;
-                        }
-                        set[tags[i].name+tags[i].value] = true;
-                    }
-                }
-
-                var res = $http.post('/api/sensor/'+ $scope.sensorName + '/tags', {'data': tags},{ headers: header });
-                res.success(function(data) {
-                    if (data["success"]==="False"){
-                        $.notify(data["error"], {
-                            position: "top center",
-                            clickToHide: true,
-                            autoHideDelay:2000
-                        });
-                    }
-                    else if (data["success"]==="True"){
-                       $.notify("Success",{ globalPosition:'top center',clickToHide: true,autoHideDelay:2000, className:'success'});
-                    }
-                });
-                res.error(function() {
-                    $.notify("Ajax failed", { position:"top center",clickToHide: true,autoHideDelay:2000});
-                });
-            };
-
-            $scope.root.addNewSubscriber = function() {
-                $scope.subscribers.push({'email': ''});
-            };
-            $scope.root.removeSubscriber = function(index) {
-                $scope.subscribers.splice(index, 1);
-            };
-            $scope.root.selectSubscribers = function(sensorName) {
-                $scope.sensorName = sensorName;
-                var res = $http.get('/api/sensor/'+ sensorName + '/subscribers',{ headers: header });
-                res.success(function(data) {
-                    $scope.subscribers = data.subscribers;
-                });
-                res.error(function() {
-                    $.notify("Ajax failed", { position:"top center",clickToHide: true,autoHideDelay:2000});
-                });
-            };
-            $scope.root.updateSubscribers = function() {
-                var set = {};
-                for (var i = 0; i < $scope.subscribers.length; i++) {
-                    if ($scope.subscribers[i].email === '') {
-                        $.notify("There is one subscriber that you did not specify", { position:"top center",clickToHide: true,autoHideDelay:2000});
-                        return;
-                    }
-                    if (set[$scope.subscribers[i].email]) {
-                        $.notify("You specify more than or two same subscribers", { position:"top center",clickToHide: true,autoHideDelay:2000});
-                        return;
-                    }
-                    set[$scope.subscribers[i].email] = true;
-                }
-                var res = $http.post('/api/sensor/'+ $scope.sensorName + '/subscribers', {'data': $scope.subscribers}, { headers: header });
-                res.success(function(data) {
-                    if (data.success === 'True') {
-                        $.notify("Success",{ globalPosition:'top center',clickToHide: true,autoHideDelay:2000, className:'success'});
-                    } else {
-                        $.notify("There is one or more emails that are not in the database", { position:"top center",clickToHide: true,autoHideDelay:2000});
-                    }
-
-                });
-                res.error(function() {
-                    $.notify("Ajax failed", { position:"top center",clickToHide: true,autoHideDelay:2000});
-                });
-            };
-
-            $scope.root.addNewTS = function() {
-                $scope.ts.push({'time': '', 'value': ''});
-            };
-            $scope.root.removeTS = function(index) {
-                $scope.ts.splice(index, 1);
-            };
-            $scope.root.selectWrite = function(sensorName) {
-                $scope.sensorName = sensorName;
-                $scope.ts = [];
-            };
-            $scope.root.updateWrite = function() {
-                var set = {};
-                for (var i = 0; i < $scope.ts.length; i++) {
-                    if ($scope.ts[i].time === '' || $scope.ts[i].value === '') {
-                        $.notify("There is one pair that you did not specify the time or value", { position:"top center",clickToHide: true,autoHideDelay:2000});
-                        return;
-                    }
-                    if (set[$scope.ts[i].time]) {
-                        $.notify("You specify more than or two same time stamps", { position:"top center",clickToHide: true,autoHideDelay:2000});
-                        return;
-                    }
-                    set[$scope.ts[i].time] = true;
-                }
-                var res = $http.post('/api/sensor/'+ $scope.sensorName + '/timeseries', {'data': $scope.ts},{ headers: header });
-                res.success(function(data) {
-                    if (data.success === 'True') {
-                        $.notify("Success",{ globalPosition:'top center',clickToHide: true,autoHideDelay:2000, className:'success'});
-                    } else {
-                        $.notify("Ajax failed", { position:"top center",clickToHide: true,autoHideDelay:2000});
-                    }
-
-                });
-                res.error(function() {
-                    $.notify("Ajax failed", { position:"top center",clickToHide: true,autoHideDelay:2000});
-                });
-            };
-
         });
         app.filter('valueFilter', [function() {
             return function(input, scope, name) {

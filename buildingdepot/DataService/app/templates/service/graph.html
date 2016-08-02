@@ -79,9 +79,12 @@
             }
         }
         var uuid="{{ name }}";
-        var start_time=Date.now()/1000-94694376996;
-        var end_time=Date.now()/1000;
+        var end_time= new Date();
+        var start_time=new Date();
+        start_time=Math.round(start_time.setYear(end_time.getFullYear()-2)/1000);
+        var end_time=Math.round(end_time/1000);
         url='/api/sensor/' +uuid+ '/timeseries?start_time='+start_time+'&end_time='+end_time;
+        console.log(url);
         var data='';
         $.ajax( {
                     url:url,
@@ -115,7 +118,8 @@
                         }
 
                     },
-                    error:function(){
+                    error:function(err){
+                        console.log(err);
                         $.notify(" Error Loading or Empty Time Series Data", { position:"top center",clickToHide: true,autoHide:false});
                     }
                 } );

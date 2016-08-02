@@ -20,8 +20,6 @@ from ..models.ds_models import *
 from .forms import *
 from ..rest_api.utils import *
 from ..rest_api.helper import form_query
-from uuid import uuid4
-from .. import r, influx, permissions
 import sys
 import math
 
@@ -46,6 +44,7 @@ def sensor():
     return render_template('service/sensor.html', objs=objs, total=total,
                            pages=pages, current_page=page, pagesize=PAGE_SIZE)
 
+
 @service.route('/sensor/search', methods=['GET', 'POST'])
 def sensors_search():
     data = json.loads(request.args.get('q'))
@@ -53,17 +52,17 @@ def sensors_search():
     args = {}
     for key, values in data.iteritems():
         if key == 'Building':
-            form_query('building',values,args,"$or")
+            form_query('building', values, args, "$or")
         elif key == 'SourceName':
-            form_query('source_name',values,args,"$or")
+            form_query('source_name', values, args, "$or")
         elif key == 'SourceIdentifier':
-            form_query('source_identifier',values,args,"$or")
+            form_query('source_identifier', values, args, "$or")
         elif key == 'ID':
-            form_query('name',values,args,"$or")
+            form_query('name', values, args, "$or")
         elif key == 'Tags':
-            form_query('tags',values,args,"$and")
+            form_query('tags', values, args, "$and")
         elif key == 'MetaData':
-            form_query('metadata',values,args,"$and")
+            form_query('metadata', values, args, "$and")
     print args
     # Show the user PAGE_SIZE number of sensors on each page
     page = request.args.get('page', 1, type=int)
@@ -84,7 +83,6 @@ def sensors_search():
         pages = 0
     return render_template('service/sensor.html', objs=sensor_list, total=total,
                            pages=pages, current_page=page, pagesize=PAGE_SIZE)
-
 
 
 @service.route('/graph/<name>')
