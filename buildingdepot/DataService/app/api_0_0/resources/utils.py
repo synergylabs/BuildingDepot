@@ -84,7 +84,6 @@ def authenticate_acl(permission_required):
 
 def permission(sensor_name, email=None):
     if email is None: email = get_email()
-
     # Check if permission already cached
     current_res = r.hget(sensor_name, email)
     if current_res is not None:
@@ -94,8 +93,8 @@ def permission(sensor_name, email=None):
     if sensor is None:
         return 'invalid'
 
-    # if admin or owner then give complete access
-    if r.get('owner:{}'.format(sensor_name)) == email or email in get_admins():
+    # if admin or owner then give complete access or email in get_admins()
+    if r.get('owner:{}'.format(sensor_name)) == email:
         r.hset(sensor_name, email, 'r/w/p')
         return 'r/w/p'
 

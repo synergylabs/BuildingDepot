@@ -22,8 +22,10 @@ connect(Config.MONGODB_DATABASE,
 
 r = redis.Redis()
 
+
 class ThreadXMLRPCServer(ThreadingMixIn, SimpleXMLRPCServer):
     pass
+
 
 def get_user(email, password):
     user = User.objects(email=email).first()
@@ -31,29 +33,35 @@ def get_user(email, password):
         return True
     return False
 
-def create_sensor(sensor_id,email):
+
+def create_sensor(sensor_id, email):
     print "Create sensor"
     r.set('owner:{}'.format(sensor_id), email)
+
 
 def invalidate_sensor(sensor_id):
     print "Invaidate sensor"
     r.delete('sensor:{}'.format(sensor_id))
+
 
 def delete_sensor(sensor_id):
     print "delete sensor"
     r.delete('sensor:{}'.format(sensor_id))
     r.delete('owner:{}'.format(sensor_id))
 
-def create_permission(user_group,sensor_group,email,permission):
+
+def create_permission(user_group, sensor_group, email, permission):
     print "create permission"
     invalidate_permission(sensor_group)
-    r.hset('permission:{}:{}'.format(user_group, sensor_group),"permission",permission)
-    r.hset('permission:{}:{}'.format(user_group, sensor_group),"owner",email)
+    r.hset('permission:{}:{}'.format(user_group, sensor_group), "permission", permission)
+    r.hset('permission:{}:{}'.format(user_group, sensor_group), "owner", email)
 
-def delete_permission(user_group,sensor_group):
+
+def delete_permission(user_group, sensor_group):
     print "delete permission"
     invalidate_permission(sensor_group)
     r.delete('permission:{}:{}'.format(user_group, sensor_group))
+
 
 def invalidate_permission(sensorgroup):
     """ Takes the name of a sensor group and invalidates all the sensors
@@ -66,7 +74,8 @@ def invalidate_permission(sensorgroup):
         pipe.delete(sensor.get('name'))
     pipe.execute()
 
-def invalidate_user(usergroup,email):
+
+def invalidate_user(usergroup, email):
     """Takes the id of the user that made the request and invalidates
        all the entries for this user (in redis) in every sensor in the
        sensor_group"""
@@ -77,8 +86,9 @@ def invalidate_user(usergroup,email):
         sg_tags = SensorGroup.objects(name=permission['sensor_group']).first()['tags']
         collection = Sensor._get_collection().find(form_query(sg_tags))
         for sensor in collection:
-            pipe.hdel(sensor.get('name',email))
+            pipe.hdel(sensor.get('name', email))
         pipe.execute()
+
 
 def form_query(values):
     res = []
@@ -88,6 +98,16 @@ def form_query(values):
         res.append(current_tag)
     args["$and"] = res
     return args
+
+
+def get_admins(name):
+    """Get the list of admins in the DataService"""
+    print "rpcssssssssss", name
+    obj = DataService.objects(name=name).first()
+    if obj is None:
+        return []
+    return list(obj.admins)
+
 
 # Create a local RPC server and register the functions
 svr = ThreadXMLRPCServer(("", 8080), allow_none=True)

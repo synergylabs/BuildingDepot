@@ -20,7 +20,7 @@ registered as blueprints.
 
 from flask import Flask
 from config import config
-from mongoengine import connect,register_connection
+from mongoengine import connect, register_connection
 from flask.ext.bootstrap import Bootstrap
 from xmlrpclib import ServerProxy
 from flask_oauthlib.provider import OAuth2Provider
@@ -29,7 +29,7 @@ import redis
 
 from influxdb import InfluxDBClient
 
-permissions = {"rw": "r/w", "r": "r", "dr": "d/r","rwp":"r/w/p"}
+permissions = {"rw": "r/w", "r": "r", "dr": "d/r", "rwp": "r/w/p"}
 
 exchange = 'master_exchange'
 r = redis.Redis()
@@ -39,6 +39,7 @@ bootstrap = Bootstrap()
 svr = ServerProxy("http://localhost:8080")
 
 oauth = OAuth2Provider()
+
 
 def create_app(config_mode):
     app = Flask(__name__)
@@ -51,8 +52,8 @@ def create_app(config_mode):
     config[config_mode].init_app(app)
 
     connect(app.config['MONGODB_DATABASE_BD'],
-        host=app.config['MONGODB_HOST'],
-        port=app.config['MONGODB_PORT'])
+            host=app.config['MONGODB_HOST'],
+            port=app.config['MONGODB_PORT'])
 
     bootstrap.init_app(app)
 
