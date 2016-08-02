@@ -172,7 +172,7 @@
                 </div>
             </div>
 
-            <div class="modal fade" id="subscribers">
+            <!--<div class="modal fade" id="subscribers">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -200,7 +200,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div>-->
 
             <div class="modal fade" id="write">
                 <div class="modal-dialog">
@@ -248,7 +248,7 @@
                     <tbody>
                     {% for obj in objs %}
                         <tr>
-                            <td><a onclick="window.location='graph/{{ obj.name }}';" style="cursor: pointer;" >{{ obj.name }}</a></td>
+                            <td>{{ obj.name }}</td>
                             <td>{{ obj.building }}</td>
                             <td>{{ obj.source_name }}</td>
                             <td>{{ obj.source_identifier }}</td>
@@ -259,12 +259,12 @@
                             <td>
                                 <a ng-click="root.tags('{{ obj.name }}')" href="#tags" data-toggle="modal" class="btn btn-info">Tags</a>
                             </td>
-                            <td>
+                            <!--<td>
                                 <a ng-click="root.selectSubscribers('{{ obj.name }}')" href="#subscribers" data-toggle="modal" class="btn btn-info">Subscribers</a>
                             </td>
                             <td>
                                 <a ng-click="root.selectWrite('{{ obj.name }}')" href="#write" data-toggle="modal" class="btn btn-info">Write</a>
-                            </td>
+                            </td>-->
                             {% if obj.can_delete %}
                                 <td>
                                     <form action="{{ url_for('central.sensor_delete') }}" method="POST" onsubmit="return confirm('Are you sure you want to Delete?');">
@@ -575,7 +575,7 @@
                 });
             };
 
-            $scope.root.addNewSubscriber = function() {
+            /*$scope.root.addNewSubscriber = function() {
                 $scope.subscribers.push({'email': ''});
             };
             $scope.root.removeSubscriber = function(index) {
@@ -653,7 +653,7 @@
                 res.error(function() {
                     $.notify("Ajax failed", { position:"top center",clickToHide: true,autoHideDelay:2000});
                 });
-            };
+            };*/
 
         });
         app.filter('valueFilter', [function() {

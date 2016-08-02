@@ -265,11 +265,13 @@
                     }
                     else if (data["success"]==="True"){
                        $.notify("Success",{  globalPosition:'top center',clickToHide: true,autoHideDelay:2000, className:'success'});
+                        setTimeout(function() {location.reload();}, 335);
                     }
                 });
-                res.error(function() {
-                    console.log(json);
-                    alert("Ajax failed");
+                res.error(function(err) {
+                    console.log(err);
+                    $.notify("Ajax failed", { position:"top center",clickToHide: true,autoHideDelay:2000});
+                    setTimeout(function() {location.reload();}, 335);
                 });
             };
         });
