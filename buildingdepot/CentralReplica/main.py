@@ -102,7 +102,6 @@ def form_query(values):
 
 def get_admins(name):
     """Get the list of admins in the DataService"""
-    print "rpcssssssssss", name
     obj = DataService.objects(name=name).first()
     if obj is None:
         return []
@@ -119,4 +118,5 @@ svr.register_function(create_permission)
 svr.register_function(delete_permission)
 svr.register_function(invalidate_permission)
 svr.register_function(invalidate_user)
+svr.register_function(get_admins)
 svr.serve_forever()
