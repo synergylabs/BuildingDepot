@@ -52,8 +52,10 @@ def delete_permission(user_group, sensor_group):
 def invalidate_permission(sensor_group):
     svr = get_remote(get_sg_ds(sensor_group))
     try:
+        print "Invalidating permission"
         svr.invalidate_permission(sensor_group)
     except Exception as e:
+        print e
         return False
     return True
 
