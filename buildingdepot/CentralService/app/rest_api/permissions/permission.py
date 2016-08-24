@@ -42,7 +42,7 @@ class PermissionService(MethodView):
             if permission is None:
                 return jsonify(responses.no_permission)
             else:
-                response = dict(success_true)
+                response = dict(responses.success_true)
                 response['permission'] = permission.permission
                 return jsonify(response)
 
