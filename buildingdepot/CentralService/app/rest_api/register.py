@@ -33,7 +33,7 @@ def register_view(app_obj):
     #post creates an new sensor group
     app_obj.add_url_rule('/api/sensor_group',view_func=sensorgroup_view,methods=['POST'])
     #get a list of sensors in a specified sensor group
-    app_obj.add_url_rule('/api/sensor_group/<name>',view_func=sensorgroup_view,methods=['GET'])
+    app_obj.add_url_rule('/api/sensor_group/<name>',view_func=sensorgroup_view,methods=['GET', 'DELETE'])
     #delete sensor_group? remove sensor_group?
 
     sgtags_view = sg_tags.SensorGroupTagsService.as_view('sgtags_api')

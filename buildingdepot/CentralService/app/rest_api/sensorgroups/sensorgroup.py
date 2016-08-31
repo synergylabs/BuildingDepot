@@ -81,3 +81,23 @@ class SensorGroupService(MethodView):
                         "building":sensor_group['building'],
                         "description":sensor_group['description']})
         return jsonify(response)
+
+    @oauth.require_oauth()
+    def delete(self,name):
+        """
+        Args as data:
+            name = <name of sensor group>
+        Returns (JSON):
+            {
+                "success" : <True or False>
+                "error" : <If False then error will be returned
+            }
+        """
+        sensor_group = SensorGroup.objects(name=name).first()
+        if sensor_group is None:
+            return jsonify(responses.invalid_sensorgroup)
+
+	SensorGroup.objects(name=name).delete()
+
+        response = dict(responses.success_true)
+        return jsonify(response)
