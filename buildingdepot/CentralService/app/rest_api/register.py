@@ -10,7 +10,7 @@ def register_view(app_obj):
     sensor_view = sensor.SensorService.as_view('sensor_api')
 
     #get sensor by name
-    app_obj.add_url_rule('/api/sensor/<name>',view_func=sensor_view,methods=['GET'])
+    app_obj.add_url_rule('/api/sensor/<name>',view_func=sensor_view,methods=['GET', 'DELETE'])
     #create a new sensor
     app_obj.add_url_rule('/api/sensor',view_func=sensor_view,methods=['POST'])
 

@@ -30,7 +30,7 @@ class SensorService(MethodView):
         Retrieve sensor details based on uuid specified
 
         Args as data:
-        name : <name of sensor>
+        name : uuid
 
         Returns (JSON):
         {
@@ -104,4 +104,32 @@ class SensorService(MethodView):
             else:
                 return jsonify(responses.ds_error)
         return jsonify(responses.invalid_building)
+
+    @oauth.require_oauth()
+    def delete(self,name):
+        """
+	delete sensor
+
+        Args as data:
+        name : uuid
+
+        Returns (JSON) :
+        {
+            "success": <True or False>
+            "uuid" : <uuid of sensor if created>
+            "error": <details of an error if it happends>
+        }
+        """
+        if name is None:
+            return jsonify(responses.missing_parameters)
+        sensor = Sensor.objects(name=name).first()
+        if sensor is None:
+            return jsonify(responses.invalid_uuid)
+
+	Sensor.objects(name=name).delete()
+
+	#TODO Do we need to clean up tags, metadata, users, etc?
+
+        response = dict(responses.success_true)
+        return jsonify(response)
 
