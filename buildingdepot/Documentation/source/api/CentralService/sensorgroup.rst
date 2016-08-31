@@ -1,4 +1,4 @@
-.. DataService API Documentation
+.. CentralService API Documentation
 
 
 SensorGroups
@@ -7,7 +7,7 @@ SensorGroups
 SensorGroups are a virtual collection of sensors that are created based on the tags that are specified. The list of sensors that belong to a SensorGroup can be changed by modifying the tags attached to this SensorGroup. All sensors having the current tags will fall under this SensorGroup automatically for any subsequent operations.SensorGroups can be defined in the CentralService at http://www.example.com:81/central/sensorgroup.
 
 Create SensorGroup
-*******************
+******************
 
 This request creates a new SensorGroup with the name and description in the building specified by the user.
 
@@ -61,7 +61,7 @@ This request creates a new SensorGroup with the name and description in the buil
       }
 
 Add tags to SensorGroup
-************************
+***********************
 
 This request adds the tags specified in the request to the SensorGroup
 

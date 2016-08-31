@@ -48,4 +48,4 @@ Similar to Sensor groups, User groups are a list of users that have been categor
 Permission
 **********
 
-In the permissions section Sensor groups and User groups come together to form the access control lists. Here we select a User Group and a Sensor Group and a permission value with which we want to associate these both. There are three levels of permission defined in BuildingDepot which are 'd/r' (deny read) ,'r' (read) and 'r/w' (read write). If there are multiple permission mappings between a user and a sensor then the one that is most restrictive is chosen.
+In the permissions section Sensor groups and User groups come together to form the access control lists. Here we select a User Group and a Sensor Group and a permission value with which we want to associate these both. There are three levels of permission defined in BuildingDepot which are 'd/r' (deny read) ,'r' (read), 'r/w' (read write) and 'r/w/p' (read write permission). If there are multiple permission mappings between a user and a sensor then the one that is most restrictive is chosen.

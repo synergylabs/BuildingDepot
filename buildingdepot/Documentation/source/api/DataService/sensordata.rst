@@ -11,7 +11,7 @@ Permissions for the Sensor and to the `Admin` who owns the Sensor.
 .. _DataS List Sensors:
 
 Put Timeseries Datapoints
-************
+*************************
 
 This stores datapoints in the timeseries of the specified Sensorpoint.
 

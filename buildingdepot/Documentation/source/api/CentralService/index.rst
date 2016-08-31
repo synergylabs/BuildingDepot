@@ -30,11 +30,17 @@ This OAuth token will have to be sent in the headers of all the requests made to
    :maxdepth: 2
 
    tagtype.rst
-   subscriber.rst
+   buildingtemplate.rst
+   building.rst
+   dataservice.rst
    sensor.rst
+   metadata.rst
    sensorgroup.rst
    usergroup.rst
-   metadata.rst
+   permission.rst
+   user.rst
+
+
 
 .. may be needed for html generation
 .. * :ref:`genindex`

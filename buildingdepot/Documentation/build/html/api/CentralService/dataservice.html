@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Usergroups &mdash; BuildingDepot 3.0 documentation</title>
+    <title>DataService &mdash; BuildingDepot 3.0 documentation</title>
     
     <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
@@ -25,8 +25,8 @@
     <script type="text/javascript" src="../../_static/doctools.js"></script>
     <link rel="top" title="BuildingDepot 3.0 documentation" href="../../index.html" />
     <link rel="up" title="CentralService APIs" href="index.html" />
-    <link rel="next" title="Permission" href="permission.html" />
-    <link rel="prev" title="SensorGroups" href="sensorgroup.html" />
+    <link rel="next" title="Sensor" href="sensor.html" />
+    <link rel="prev" title="Buildings" href="building.html" />
    
   
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
@@ -39,27 +39,30 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="usergroups">
-<h1>Usergroups<a class="headerlink" href="#usergroups" title="Permalink to this headline">¶</a></h1>
-<p>Usergroups are as the name suggests a group of users formed using the id&#8217;s with which they are registered in BuildingDepot. Usergroups when combined with SensorGroups help in bringing about the Access Control functions that BuildingDepot provides.UserGroups can be defined in the CentralService at <a class="reference external" href="http://www.example.com:81/central/usergroup">http://www.example.com:81/central/usergroup</a>.</p>
-<div class="section" id="create-usergroup">
-<h2>Create UserGroup<a class="headerlink" href="#create-usergroup" title="Permalink to this headline">¶</a></h2>
-<p>This request creates a new UserGroup with the name and description as specified by the user.</p>
+  <div class="section" id="dataservice">
+<h1>DataService<a class="headerlink" href="#dataservice" title="Permalink to this headline">¶</a></h1>
+<p>The DataService is where all the data related to sensors and the timeseries data of each sensor resides. All the access control related functionality is defined at centralservice is also enforced within the DataService.  A new DataService can be defined in the CentralService at <a class="reference external" href="http://www.example.com:81/central/dataservice">http://www.example.com:81/central/dataservice</a>.</p>
+<div class="section" id="create-a-new-dataservice">
+<h2>Create a new DataService<a class="headerlink" href="#create-a-new-dataservice" title="Permalink to this headline">¶</a></h2>
+<p>This request creates a new DataService with description,host and port where the datservice will function.</p>
 <dl class="post">
-<dt id="post--api-user_group">
-<code class="descname">POST </code><code class="descname">/api/user_group</code><a class="headerlink" href="#post--api-user_group" title="Permalink to this definition">¶</a></dt>
+<dt id="post--api-dataservice">
+<code class="descname">POST </code><code class="descname">/api/dataservice</code><a class="headerlink" href="#post--api-dataservice" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>name</strong> (<em>string</em>) &#8211; Name of UserGroup</li>
-<li><strong>description (optional)</strong> (<em>string</em>) &#8211; Descrption for UserGroup</li>
+<tr class="field-odd field"><th class="field-name" colspan="2">JSON Parameters:</th></tr>
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body"><ul class="first simple">
+<li><strong>name</strong> (<em>string</em>) &#8211; Name of the DataService</li>
+<li><strong>description</strong> (<em>string</em>) &#8211; Description for the DataService</li>
+<li><strong>host</strong> (<em>string</em>) &#8211; HostName of the device where the Dataservice is to be installed</li>
+<li><strong>port</strong> (<em>string</em>) &#8211; Port number of the device where the Dataservice is to be installed</li>
 </ul>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><ul class="first simple">
-<li><strong>success</strong> <cite>(string)</cite> &#8211; Returns &#8216;True&#8217; if data is posted succesfully otherwise &#8216;False&#8217;</li>
+<li><strong>success</strong> <cite>(string)</cite> &#8211; Returns &#8216;True&#8217; if data is posted successfully otherwise &#8216;False&#8217;</li>
 <li><strong>error</strong> <cite>(string)</cite> &#8211; An additional value that will be present only if the request fails specifying the cause for failure</li>
 </ul>
 </td>
@@ -76,15 +79,19 @@
 
 <div class="compound">
 <p class="compound-first"><strong>Example request</strong>:</p>
-<div class="compound-middle highlight-http"><div class="highlight"><pre>POST /api/user_group
+<div class="compound-middle highlight-http"><div class="highlight"><pre>POST /api/dataservice
 
 {
-  &quot;name&quot;: &quot;Test User Group&quot;,
-  &quot;description&quot;: &quot;Description for User Group&quot;
+  &quot;data&quot;:{
+      &quot;name&quot;: &quot;ds3&quot;
+      &quot;description&quot;:&quot;Test_ds3&quot;,
+      &quot;host&quot;:&quot;127.0.0.3&quot;,
+      &quot;port&quot;:&quot;83&quot;
+  }
 }
 </pre></div>
 </div>
-<p class="compound-middle"><strong>Example response</strong> (for succcess):</p>
+<p class="compound-middle"><strong>Example response</strong> (for success):</p>
 <div class="compound-middle highlight-http"><div class="highlight"><pre><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
@@ -99,101 +106,38 @@
 
 <span class="p">{</span>
   <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;False&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;No Name&quot;</span>
+  <span class="nt">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot; Missing parameters&quot;</span>
 <span class="p">}</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="section" id="add-users-to-usergroup">
-<h2>Add users to UserGroup<a class="headerlink" href="#add-users-to-usergroup" title="Permalink to this headline">¶</a></h2>
-<p>This request adds the users specified in the request to the usergroup</p>
-<p>Note: The list of user id&#8217;s sent in this request will overwrite the previous list</p>
-<dl class="post">
-<dt id="post--api-user_group--name--users">
-<code class="descname">POST </code><code class="descname">/api/user_group/&lt;name&gt;/users</code><a class="headerlink" href="#post--api-user_group--name--users" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>name</strong> (<em>string</em>) &#8211; Name of UserGroup</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name" colspan="2">JSON Parameters:</th></tr>
-<tr class="field-even field"><td>&nbsp;</td><td class="field-body"><ul class="first simple">
-<li><strong>data</strong> <cite>(list)</cite> &#8211; List of user ID&#8217;s</li>
-</ul>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><ul class="first simple">
-<li><strong>success</strong> <cite>(string)</cite> &#8211; Returns &#8216;True&#8217; if data is posted succesfully otherwise &#8216;False&#8217;</li>
-<li><strong>error</strong> <cite>(string)</cite> &#8211; An additional value that will be present only if the request fails specifying the cause for failure</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
-<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> &#8211; Success</li>
-<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a> &#8211; Unauthorized Credentials (See <span class="xref std std-ref">HTTP 401</span>)</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<div class="compound">
-<p class="compound-first"><strong>Example request</strong>:</p>
-<div class="compound-middle highlight-http"><div class="highlight"><pre> POST /api/user_group/Test/users
- Accept: application/json; charset=utf-8
-
- {
-   &quot;data&quot;:[
-            &quot;synergy@gmail.com&quot;,
-            &quot;test@gmail.com&quot;
-          ]
-}
-</pre></div>
-</div>
-<p class="compound-middle"><strong>Example response</strong> (for succcess):</p>
-<div class="compound-middle highlight-http"><div class="highlight"><pre><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
-<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
-
-<span class="p">{</span>
-  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;True&quot;</span>
-<span class="p">}</span>
-</pre></div>
-</div>
-<p class="compound-middle"><strong>Example response</strong> (for failure):</p>
-<div class="compound-last highlight-http"><div class="highlight"><pre><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
-<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
 <span class="p">{</span>
   <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;False&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;One or more users not registered&quot;</span>
+  <span class="nt">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot; Missing data&quot;</span>
 <span class="p">}</span>
 </pre></div>
 </div>
 </div>
 </div>
-<div class="section" id="get-list-of-users-in-usergroup">
-<h2>Get list of users in UserGroup<a class="headerlink" href="#get-list-of-users-in-usergroup" title="Permalink to this headline">¶</a></h2>
-<p>This request retrieves the list of users that are in the specified UserGroup</p>
+<div class="section" id="get-dataservice-details">
+<h2>Get DataService Details<a class="headerlink" href="#get-dataservice-details" title="Permalink to this headline">¶</a></h2>
+<p>This request retrieves name, description, hostname and port to used in the dataservice specified in the request.</p>
 <dl class="get">
-<dt id="get--api-user_group--name--users">
-<code class="descname">GET </code><code class="descname">/api/user_group/&lt;name&gt;/users</code><a class="headerlink" href="#get--api-user_group--name--users" title="Permalink to this definition">¶</a></dt>
+<dt id="get--api-dataservice--name-">
+<code class="descname">GET </code><code class="descname">/api/dataservice/&lt;name&gt;</code><a class="headerlink" href="#get--api-dataservice--name-" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>name</strong> (<em>string</em>) &#8211; Name of user group (compulsory)</li>
+<li><strong>name</strong> (<em>string</em>) &#8211; Name of the DataService</li>
 </ul>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><ul class="first simple">
-<li><strong>users</strong> <cite>(list)</cite> &#8211; Contains the list of users in this UserGroup</li>
+<li><strong>success</strong> <cite>(string)</cite> &#8211; Returns &#8216;True&#8217; if data is retrieved successfully otherwise &#8216;False&#8217;</li>
+<li><strong>name</strong> <cite>(string)</cite> &#8211; Name of the DataService</li>
+<li><strong>description</strong> <cite>(string)</cite> &#8211; Description for the DataService</li>
+<li><strong>host</strong> <cite>(string)</cite> &#8211;  HostName of the device where the Dataservice is installed</li>
+<li><strong>port</strong> <cite>(string)</cite> &#8211;  Port number of the device where the Dataservice is installed</li>
 </ul>
 </td>
 </tr>
@@ -209,19 +153,88 @@
 
 <div class="compound">
 <p class="compound-first"><strong>Example request</strong>:</p>
-<div class="compound-middle highlight-http"><div class="highlight"><pre>GET /api/user_group/Test/users
+<div class="compound-middle highlight-http"><div class="highlight"><pre>GET /api/dataservice/ds3
+
 Accept: application/json; charset=utf-8
 </pre></div>
 </div>
 <p class="compound-middle"><strong>Example response</strong>:</p>
+<div class="compound-middle highlight-http"><div class="highlight"><pre>  HTTP/1.1 200 OK
+  Content-Type: application/json
+
+  {   &quot;success&quot;: &quot;True&quot;,
+        &quot;name&quot;: &quot;ds3&quot;
+        &quot;description&quot;:&quot;Test_ds3&quot;,
+        &quot;host&quot;:&quot;127.0.0.3&quot;,
+        &quot;port&quot;:&quot;83&quot;
+  }
+
+**Example response** (for failure):
+</pre></div>
+</div>
 <div class="compound-last highlight-http"><div class="highlight"><pre><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
 <span class="p">{</span>
-  <span class="nt">&quot;users&quot;</span><span class="p">:</span> <span class="p">[</span>
-             <span class="s2">&quot;synergy@gmail.com&quot;</span><span class="p">,</span>
-             <span class="s2">&quot;test@gmail.com&quot;</span><span class="p">,</span>
-           <span class="p">]</span>
+  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;False&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot; DataService does not exist&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="delete-dataservice">
+<h2>Delete DataService<a class="headerlink" href="#delete-dataservice" title="Permalink to this headline">¶</a></h2>
+<p>This request deletes the requested Dataservice from Building Depot.</p>
+<dl class="delete">
+<dt id="delete--api-dataservice--name-">
+<code class="descname">DELETE </code><code class="descname">/api/dataservice/&lt;name&gt;</code><a class="headerlink" href="#delete--api-dataservice--name-" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>name</strong> (<em>string</em>) &#8211; Name of the DataService</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><ul class="first simple">
+<li><strong>success</strong> <cite>(string)</cite> &#8211; Returns &#8216;True&#8217; if the DataService is successfully deleted otherwise &#8216;False&#8217;</li>
+</ul>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> &#8211; Success</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a> &#8211; Unauthorized Credentials (See <span class="xref std std-ref">HTTP 401</span>)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="compound">
+<p class="compound-first"><strong>Example request</strong>:</p>
+<div class="compound-middle highlight-http"><div class="highlight"><pre>DELETE /api/dataservice/ds3
+Accept: application/json; charset=utf-8
+</pre></div>
+</div>
+<p class="compound-middle"><strong>Example response</strong>:</p>
+<div class="compound-middle highlight-http"><div class="highlight"><pre><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+
+<span class="p">{</span>
+  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;True&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p class="compound-middle"><strong>Example response</strong> (for failure):</p>
+<div class="compound-last highlight-http"><div class="highlight"><pre><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+
+<span class="p">{</span>
+  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;False&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot; Dataservice does not exist&quot;</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -237,10 +250,10 @@ Accept: application/json; charset=utf-8
         <div class="sphinxsidebarwrapper">
   <h3><a href="../../index.html">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">Usergroups</a><ul>
-<li><a class="reference internal" href="#create-usergroup">Create UserGroup</a></li>
-<li><a class="reference internal" href="#add-users-to-usergroup">Add users to UserGroup</a></li>
-<li><a class="reference internal" href="#get-list-of-users-in-usergroup">Get list of users in UserGroup</a></li>
+<li><a class="reference internal" href="#">DataService</a><ul>
+<li><a class="reference internal" href="#create-a-new-dataservice">Create a new DataService</a></li>
+<li><a class="reference internal" href="#get-dataservice-details">Get DataService Details</a></li>
+<li><a class="reference internal" href="#delete-dataservice">Delete DataService</a></li>
 </ul>
 </li>
 </ul>
@@ -249,8 +262,8 @@ Accept: application/json; charset=utf-8
 <ul>
   <li><a href="../../index.html">Documentation overview</a><ul>
   <li><a href="index.html">CentralService APIs</a><ul>
-      <li>Previous: <a href="sensorgroup.html" title="previous chapter">SensorGroups</a></li>
-      <li>Next: <a href="permission.html" title="next chapter">Permission</a></li>
+      <li>Previous: <a href="building.html" title="previous chapter">Buildings</a></li>
+      <li>Next: <a href="sensor.html" title="next chapter">Sensor</a></li>
   </ul></li>
   </ul></li>
 </ul>
@@ -258,7 +271,7 @@ Accept: application/json; charset=utf-8
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
-      <li><a href="../../_sources/api/CentralService/usergroup.txt"
+      <li><a href="../../_sources/api/CentralService/dataservice.txt"
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
@@ -287,7 +300,7 @@ Accept: application/json; charset=utf-8
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.7</a>
       
       |
-      <a href="../../_sources/api/CentralService/usergroup.txt"
+      <a href="../../_sources/api/CentralService/dataservice.txt"
           rel="nofollow">Page source</a>
     </div>
 

@@ -1,4 +1,4 @@
-.. DataService API Documentation
+.. CentralService API Documentation
 
 
 Metadata

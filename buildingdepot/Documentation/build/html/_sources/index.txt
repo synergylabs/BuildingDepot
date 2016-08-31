@@ -58,7 +58,7 @@ Install
 Getting Started
 ###############
 
-The `Getting started <http://cmu.buildingdepot.org/getting_started.pdf>`_ document will help you guide through the initial setup after installing BuildingDepot
+The `Getting started <https://docs.google.com/a/eng.ucsd.edu/document/d/1XESPZSIt0lIMrCbVb-Uoopa-_t0yNx6uo-d2IBZGLyk/edit?usp=sharing>`_ document will help you guide through the initial setup after installing BuildingDepot.
 
 API Documentation
 #################

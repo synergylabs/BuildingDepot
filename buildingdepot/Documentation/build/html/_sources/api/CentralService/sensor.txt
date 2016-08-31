@@ -1,4 +1,4 @@
-.. DataService API Documentation
+.. CentralService API Documentation
 
 
 Sensor
@@ -182,6 +182,69 @@ Retrieves all the details of the sensor based on the uuid specified
           ]
     }
 
+Search Sensors
+**************
+
+The Search API is used search sensors based on uuid,source_name,source_identifier, building, Tag and MetaData. Multiple search queries can be sent in a single request.
+
+.. http:get:: /api/search
+
+:JSON Parameters:
+  * **data** `(dictionary)` -- Contains the list of Search Query key-value pairs
+      * **ID** `(string)` -- UUID of the Sensor
+      * **Building** `(string)` -- Building in which the sensor is located
+      * **Tags** '(dictionary)' -- List of tags owned by the sensor. The are given as key,value pairs.
+      * **Metadata** '(dictionary)' -- List of metadata owned by the sensor.The are given as key,value pairs.
+      * **Source_Identifier** '(dictionary)' -- Source identifier of the sensor
+      * **Source_Name** '(dictionary)' -- Source name of the sensor
+
+.. compound::
+
+   **Example request**:
+
+   .. sourcecode:: http
+
+      POST /api/search
+
+      {
+        "data":{
+            "ID":"6cf53d24-e3a3-41bd-b2b5-8f109694f628",
+            "Building":"NSH"
+            "Tags":{"floor":'1'}
+        }
+      }
+
+   **Example response** (for success):
+
+   .. sourcecode:: http
+
+      HTTP/1.1 200 OK
+      Content-Type: application/json
+
+      {
+          "success": "True",
+          "building": "NSH",
+          "metadata": [],
+          "name": "6cf53d24-e3a3-41bd-b2b5-8f109694f628",
+          "source_identifier": "Sensor Tag",
+          "source_name": "Test Sensor",
+          "tags": [
+              "name": "Floor",
+              "value": "1"
+          ]
+      }
+
+   **Example response** (for failure):
+
+   .. sourcecode:: http
+
+      HTTP/1.1 200 OK
+      Content-Type: application/json
+
+      {
+        "success": "False",
+        "error": " Sensor does not exist"
+      }
 
 Delete a Sensor
 ***************
