@@ -30,7 +30,7 @@ class SensorService(MethodView):
         Retrieve sensor details based on uuid specified
 
         Args as data:
-        name : uuid
+        name : <sensor uuid>
 
         Returns (JSON):
         {
@@ -111,7 +111,7 @@ class SensorService(MethodView):
 	delete sensor
 
         Args as data:
-        name : uuid
+        name : <sensor uuid>
 
         Returns (JSON) :
         {
