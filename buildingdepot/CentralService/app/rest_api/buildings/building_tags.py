@@ -51,8 +51,8 @@ class BuildingTagsService(MethodView):
             if collection.find({"tags": {"$all": search_list}}).count() == 0:
                 return jsonify(responses.invalid_parents)
         tag = {
-            'name': name,
-            'value': value,
+            'name': str(name),
+            'value': str(value),
             'metadata': metadata if metadata else [],
             'parents': parents if parents else [],
         }
