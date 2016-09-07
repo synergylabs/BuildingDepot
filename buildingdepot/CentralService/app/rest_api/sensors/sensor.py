@@ -11,21 +11,19 @@ ensure that the cache gets updated as needed.
 @license: UCSD License. See License file for details.
 """
 
-import sys
 from flask import request, jsonify
 from flask.views import MethodView
 from .. import responses
 from ...models.cs_models import Sensor
 from uuid import uuid4
-from ... import r,oauth
-from ..helper import get_email,xstr,get_building_choices
-from ...auth.access_control import authenticate_acl
+from ... import r, oauth
+from ..helper import get_email, xstr, get_building_choices
 from ...rpc import defs
 
-class SensorService(MethodView):
 
+class SensorService(MethodView):
     @oauth.require_oauth()
-    def get(self,name):
+    def get(self, name):
         """
         Retrieve sensor details based on uuid specified
 
@@ -53,12 +51,12 @@ class SensorService(MethodView):
         metadata = [{'name': key, 'value': val} for key, val in metadata.iteritems()]
         response = dict(responses.success_true)
         response.update({'building': str(sensor.building),
-                        'name': str(sensor.name),
-                        'tags': tags_owned,
-                        'metadata': metadata,
-                        'source_identifier': str(sensor.source_identifier),
-                        'source_name': str(sensor.source_name)
-                        })
+                         'name': str(sensor.name),
+                         'tags': tags_owned,
+                         'metadata': metadata,
+                         'source_identifier': str(sensor.source_identifier),
+                         'source_name': str(sensor.source_name)
+                         })
         return jsonify(response)
 
     @oauth.require_oauth()
@@ -88,10 +86,9 @@ class SensorService(MethodView):
         identifier = data.get('identifier')
         email = get_email()
 
-
-        if building in get_building_choices():
+        if building in get_building_choices("rest_api"):
             uuid = str(uuid4())
-            if defs.create_sensor(uuid,email,building):
+            if defs.create_sensor(uuid, email, building):
                 Sensor(name=uuid,
                        source_name=xstr(sensor_name),
                        source_identifier=xstr(identifier),
@@ -99,9 +96,8 @@ class SensorService(MethodView):
                        owner=email).save()
                 r.set('owner:{}'.format(uuid), email)
                 response = dict(responses.success_true)
-                response.update({'uuid':uuid})
+                response.update({'uuid': uuid})
                 return jsonify(response)
             else:
                 return jsonify(responses.ds_error)
         return jsonify(responses.invalid_building)
-
