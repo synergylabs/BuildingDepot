@@ -4,12 +4,13 @@
 {% block head %}
     {{ super() }}
     <link href="{{ url_for('static', filename='custom_style.css') }}" rel="stylesheet">
+
 {% endblock %}
 
 {% block navbar %}
 <div class="navbar navbar-default navbar-fixed-top">
     <div class="container">
-        <a class="navbar-brand" href="{{ url_for('main.index') }}">BuildingDepot</a>
+        <a class="navbar-brand" href="{{ url_for('service.sensor') }}">BuildingDepot</a>
         <div>
             {% if 'email' in session %}
             <ul class="nav navbar-nav">
@@ -20,27 +21,13 @@
                         <li>
                             <a href="{{ url_for('service.sensor') }}">Sensor</a>
                         </li>
-                        <li>
-                            <a href="{{ url_for('service.sensorgroup') }}">Sensor Group</a>
-                        </li>
-                        <li>
-                            <a href="{{ url_for('service.usergroup') }}">User Group</a>
-                        </li>
-                        <li>
-                            <a href="{{ url_for('service.permission') }}">Permission</a>
-                        </li>
-                        <li>
-                            <a href="{{ url_for('service.permission_query') }}">Permission Query</a>
-                        </li>
-			            <li>
-                            <a href="{{ url_for('service.oauth_gen') }}">OAuth</a>
-                        </li>
                     </ul><!-- end dropdown-menu -->
                 </li>
             </ul>
             {% endif %}
             <ul class="nav navbar-nav pull-right">
                 {% if 'email' in session %}
+                <li><a href="#">{{ session['email'] }}</a> </li>
                 <li><a href="{{ url_for('auth.logout') }}">Sign Out</a></li>
                 {% else %}
                 <li><a href="{{ url_for('auth.login') }}">Sign In</a></li>
@@ -67,4 +54,5 @@
 {% block scripts %}
     {{ super() }}
     <script src="{{ url_for('static', filename='angular.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='notify.js') }}"></script>
 {% endblock %}

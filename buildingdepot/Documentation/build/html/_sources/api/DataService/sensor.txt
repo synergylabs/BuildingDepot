@@ -23,7 +23,7 @@ Retreives a list of Sensors accessible to the User initiating the request filter
    :param string param: Name of the filter on the basis of which filtering of the sensors is to be done
    :param string value: Value of the filter on the basis of which filtering of the sensors is to be done
    :returns:
-      * **sensors** `(list)` -- List of Sensors (See `View Sensor`_)
+      * **sensors** `(list)` -- List of Sensors
    :status 200: Success
    :status 401: Unauthorized Credentials (See :ref:`HTTP 401 <HTTP 401>`)
 
@@ -84,11 +84,11 @@ Create a Sensor
 
 Creates a new Sensor point in BuildingDepot and returns the UUID.
 
-.. http:post:: /api/sensor?name=<Name>&identifier=<Identifier>&building=<building>
+.. http:post:: /api/sensor
 
-   :param string name: Name of the sensor
-   :param string identifier: Identifier that user would like to be associated with the Sensor point
-   :param string building: Building in which sensor is located
+   :json string name: Name of the sensor
+   :json string identifier: An identifier that will be associated with the sensor
+   :json string building: Building in which the sensor is located
 
    :returns:
       * **success** `(string)` -- Returns 'True' if data is posted succesfully otherwise 'False'
@@ -102,8 +102,14 @@ Creates a new Sensor point in BuildingDepot and returns the UUID.
 
    .. sourcecode:: http
 
-      POST /api/sensor?id=test_sensor&identifier=Temp_Sensor&building=NSH HTTP/1.1
+      POST /api/sensor HTTP/1.1
       Accept: application/json; charset=utf-8
+
+      {
+        "name":"Test Sensor",
+        "identifier":"Sensor Tag",
+        "building":"NSH"
+      }
 
    **Example response**:
 
@@ -122,7 +128,7 @@ Get Sensor details
 
 Retrieves all the details of the sensor based on the uuid specified
 
-.. http:post:: /api/sensor/<name>
+.. http:get:: /api/sensor/<name>
 
    :param string name: Name of the sensor
 
@@ -143,7 +149,7 @@ Retrieves all the details of the sensor based on the uuid specified
 
    .. sourcecode:: http
 
-      POST /api/sensor/86ac8207-6372-46a5-ba0b-6b392dbff645
+      GET /api/sensor/86ac8207-6372-46a5-ba0b-6b392dbff645
       Accept: application/json; charset=utf-8
 
    **Example response**:

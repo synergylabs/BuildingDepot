@@ -11,11 +11,12 @@ Create SensorGroup
 
 This request creates a new SensorGroup with the name and description in the building specified by the user.
 
-.. http:post:: /api/sensor_group?name=<Name>&building=<Building>
+.. http:post:: /api/sensor_group
 
-   :param string name: Name of SensorGroup
-   :param string building: Name of building in which the SensorGroup is to be created
-   :param string description (optional): Descrption for SensorGroup
+   :json string name: Name of the sensor group
+   :json string building: Building to which this sensor group belongs
+   :json string description: Description for the sensor group
+
    :returns:
       * **success** `(string)` -- Returns 'True' if data is posted succesfully otherwise 'False'
       * **error** `(string)` -- An additional value that will be present only if the request fails specifying the cause for failure
@@ -28,7 +29,13 @@ This request creates a new SensorGroup with the name and description in the buil
 
    .. sourcecode:: http
 
-      POST /api/sensor_group?name=test_group&building=NSH
+      POST /api/sensor_group
+
+      {
+        "name":"Test Sensor Group",
+        "building":"NSH",
+        "description":"Description for Sensor Group"
+      }
 
    **Example response** (for succcess):
 
@@ -60,7 +67,7 @@ This request adds the tags specified in the request to the SensorGroup
 
 Note: The list of tags sent in this request will overwrite the previous list.
 
-.. http:post:: /api/sensorgroup/<name>/tags
+.. http:post:: /api/sensor_group/<name>/tags
 
    :param string name: Name of SensorGroup
    :JSON Parameters:
@@ -78,7 +85,7 @@ Note: The list of tags sent in this request will overwrite the previous list.
 
    .. sourcecode:: http
 
-      POST /api/sensorgroup/test/tags
+      POST /api/sensor_group/test/tags
       Accept: application/json; charset=utf-8
 
 
@@ -112,7 +119,7 @@ Get list of tags in SensorGroup
 
 This request retrieves two lists of key-value pairs, one list contains the array of eligible tags that can be attached to this SensorGroup and the other list contains the array of tags that are currently attached to this SensorGroup.
 
-.. http:get:: /api/sensorgroup/<name>/tags
+.. http:get:: /api/sensor_group/<name>/tags
 
    :param string name: Name of SensorGroup (compulsory)
    :returns:
@@ -133,7 +140,7 @@ This request retrieves two lists of key-value pairs, one list contains the array
 
    .. sourcecode:: http
 
-      GET /api/SensorGroup/test/tags
+      GET /api/sensor_group/test/tags
       Accept: application/json; charset=utf-8
 
    **Example response**:

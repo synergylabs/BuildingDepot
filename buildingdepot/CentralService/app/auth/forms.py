@@ -23,8 +23,6 @@ class LoginForm(Form):
 
 
 class RegistrationForm(Form):
-    email = StringField('Email', validators=[DataRequired(), Email()])
-    name = StringField('Name', validators=[DataRequired(), Length(1, 64)])
     password = PasswordField('Password',
                              validators=[DataRequired(), EqualTo('password2', message='Passwords must match')])
     password2 = PasswordField('Confirm password', validators=[DataRequired()])

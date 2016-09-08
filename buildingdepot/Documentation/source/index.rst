@@ -1,13 +1,13 @@
 .. BuildingDepot documentation master file.
 
-===================
-Building Depot v3.1
-===================
+=====================
+Building Depot v3.2.5
+=====================
 
 Overview
 ########
 
-This is the official documentaion of BuildingDepot v3.0. BuildingDepot is essentialy an Extensible and Distributed Architecture for Sensor Data Storage, Access and Sharing.
+This is the official documentaion of BuildingDepot v3.2.5. BuildingDepot is essentialy an Extensible and Distributed Architecture for Sensor Data Storage, Access and Sharing.
 
 
 Building Depot has two essential components a Central Service and a Data
@@ -55,12 +55,18 @@ Install
 
    install.rst
 
+Getting Started
+###############
+
+The `Getting started <https://docs.google.com/a/eng.ucsd.edu/document/d/1XESPZSIt0lIMrCbVb-Uoopa-_t0yNx6uo-d2IBZGLyk/edit?usp=sharing>`_ document will help you guide through the initial setup after installing BuildingDepot.
+
 API Documentation
-######################
+#################
 
 .. toctree::
    :maxdepth: 1
 
+   api/CentralService/index.rst
    api/DataService/index.rst
 
 .. may be needed for html generation

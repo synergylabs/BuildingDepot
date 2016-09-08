@@ -1,0 +1,135 @@
+{% extends "index.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% block title %}BuildingDepot - Sensor - {name}{% endblock %}
+{% block page_content %}
+    <div class="row">
+        <div class="page-header">
+            <h2><a onclick="window.history.back();" style="cursor:pointer"><span class="glyphicon glyphicon-circle-arrow-left" style="color: #33ccff;"></span></a>&nbsp;&nbsp;&nbsp;Sensor&nbsp;&nbsp;"{{ name }}" Info Page</h2>
+        </div>
+        <div class="panel panel-default">
+        <div class="panel-heading clearfix">
+            <h2 class="panel-title"><strong>Info</strong></h2>
+        </div>
+        <table class="table info" id="tab">
+            <tr>
+                <th class="col-md-2 col-lg-2">UUID</th>
+                <td>{{ name }}</td>
+            </tr>
+            <tr>
+                <th>Building</th>
+                <td>{{ obj.building }}</td>
+            </tr>
+            <tr>
+                <th>Source Name</th>
+                <td>{{ obj.source_name }}</td>
+            </tr>
+            <tr>
+                <th>Source Identifier</th>
+                <td>{{ obj.source_identifier }}</td>
+            </tr>
+        </table>
+        </div>
+        <br>
+        <div id="graph"></div>
+        <div id="chartdiv" style="width:100%;height:500px;"></div>
+    <br>
+    <br>
+
+    </div>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+    <script src="{{ url_for('static', filename='amcharts/amcharts.js') }}"></script>
+    <script src="{{ url_for('static', filename='amcharts/serial.js') }}"></script>
+    <script src="{{ url_for('static', filename="amcharts/themes/light.js")}}"></script>
+    <script src="{{ url_for('static', filename='amcharts/amstock.js') }}"></script>
+
+    <script src="{{ url_for('static', filename='graph.js') }}" type="application/javascript"></script>
+    <script type="text/javascript">
+        var access_token=document.cookie.replace(/(?:(?:^|.*;\s*)access_token\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+        var header ={'Authorization': 'bearer ' + access_token};
+        var metadata ={{ metadata|tojson }};
+        if(metadata.length>0) {
+            var table = document.getElementById("tab");
+            var row = table.insertRow();
+            row.insertCell(0).innerHTML = "<b> MetaData: </b>";
+            row.insertCell(1).innerHTML = "";
+            for (var i = 0; i < metadata.length; i++) {
+                row = table.insertRow();
+                var cell1 = row.insertCell(0);
+                var cell2 = row.insertCell(1);
+                cell1.innerHTML = "&nbsp&nbsp<b>" + metadata[i].name + "</b>";
+                cell2.innerHTML = "<td>" + metadata[i].value + "</td>";
+            }
+        }
+
+        var tags ={{ tags|tojson }};
+        if(tags.length>0) {
+            table = document.getElementById("tab");
+            row = table.insertRow();
+            row.insertCell(0).innerHTML = "<b> Tags: </b>";
+            row.insertCell(1).innerHTML = "";
+            for (i=0;i<tags.length;i++) {
+                row = table.insertRow();
+                cell1 = row.insertCell(0);
+                cell2 = row.insertCell(1);
+                cell1.innerHTML = "&nbsp&nbsp<b>"+tags[i].name+"</b>";
+                cell2.innerHTML = "<td>"+tags[i].value+"</td>";
+            }
+        }
+        var uuid="{{ name }}";
+        var end_time= new Date();
+        var start_time=new Date();
+        start_time=Math.round(start_time.setYear(end_time.getFullYear()-2)/1000);
+        var end_time=Math.round(end_time/1000);
+        url='/api/sensor/' +uuid+ '/timeseries?start_time='+start_time+'&end_time='+end_time;
+        console.log(url);
+        var data='';
+        $.ajax( {
+                    url:url,
+                    async:false,
+                    type: 'GET',
+                    beforeSend : function( xhr ) {
+                        xhr.setRequestHeader( "Authorization", "bearer " + access_token );
+                    },
+                    success: function( response ) {
+                        try{
+                            if (response["success"]==="False"){
+                                $.notify(response["error"], {
+                                    position: "top center",
+                                    clickToHide: true,
+                                    autoHide: false
+                                });
+                            }
+                            else if(!response["data"]['series']) {
+                                $.notify("Empty Time Series Data", {
+                                    position: "top center",
+                                    clickToHide: true,
+                                    autoHide: false
+                                });
+                            }
+                            else{
+                                data=response['data']['series'][0]['values'];
+                                $.notify("Time Series Data Loaded",{ globalPosition:'top center',clickToHide: true,autoHide:true, className:'success'});
+                            }
+                        }catch(err){
+                            $.notify(response['response'],{ globalPosition:'top center',clickToHide: true,autoHide:true, className:'error'});
+                        }
+
+                    },
+                    error:function(err){
+                        console.log(err);
+                        $.notify(" Error Loading or Empty Time Series Data", { position:"top center",clickToHide: true,autoHide:false});
+                    }
+                } );
+
+        if(data.length!=0){
+            var div = document.getElementById('graph');
+            div.innerHTML = div.innerHTML + "<h2>  &nbsp;&nbsp;&nbsp;TimeSeries DataPoints&nbsp;&nbsp;</h2>"+
+                    "<h3><center>&nbsp;&nbsp;&nbsp;Present Value&nbsp;&nbsp;</center></h3> ";
+            makechart(data);
+        }
+
+    </script>
+{% endblock %}

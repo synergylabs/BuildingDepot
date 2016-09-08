@@ -17,17 +17,20 @@ class Node(EmbeddedDocument):
     name = StringField()
     value = StringField()
 
+class UserGroupNode(EmbeddedDocument):
+    user_id = StringField()
+    manager = BooleanField()
 
 class Sensor(Document):
     name = StringField(required=True, unique=True)
     source_name = StringField()
     source_identifier = StringField()
+    owner = StringField()
 
     metadata = DictField()
     building = StringField()
     tags = ListField(EmbeddedDocumentField(Node))
     subscribers = ListField(StringField())
-
 
 class SensorGroup(Document):
     name = StringField(required=True, unique=True)
@@ -35,49 +38,41 @@ class SensorGroup(Document):
 
     building = StringField()
     tags = ListField(EmbeddedDocumentField(Node))
-
+    owner = StringField()
 
 class UserGroup(Document):
     name = StringField(required=True, unique=True)
     description = StringField()
+    owner = StringField()
 
-    users = ListField(StringField())
-
+    users = ListField(EmbeddedDocumentField(UserGroupNode))
 
 class Permission(Document):
     user_group = StringField()
     sensor_group = StringField()
     permission = StringField()
+    owner = StringField()
 
 class Application(Document):
     user = StringField()
-    applications = ListField(StringField())
+    apps = ListField(EmbeddedDocumentField(Node))
 
-class Client(Document):
-    client_id = StringField(required=True, unique=True)
-    client_secret = StringField(required=True)
-    user = StringField()
-    _redirect_uris = StringField()
-    _default_scopes = StringField()
+class TagType(Document):
+    name = StringField(required=True, unique=True)
+    description = StringField()
+    parents = ListField(StringField())
+    children = ListField(StringField())
+    acl_tag = BooleanField()
 
-    @property
-    def client_type(self):
-        return 'public'
+class TagInstance(EmbeddedDocument):
+    name = StringField()
+    value = StringField()
+    metadata = DictField()
+    parents = ListField(EmbeddedDocumentField(Node))
 
-    @property
-    def redirect_uris(self):
-        if self._redirect_uris:
-            return self._redirect_uris.split()
-        return []
-
-    @property
-    def default_redirect_uri(self):
-        return self.redirect_uris[0]
-
-    @property
-    def default_scopes(self):
-        if self._default_scopes:
-            return self._default_scopes.split()
-        return []
-
-
+class Building(Document):
+    name = StringField(required=True, unique=True)
+    template = StringField(required=True)
+    description = StringField()
+    metadata = DictField()
+    tags = ListField(EmbeddedDocumentField(TagInstance))

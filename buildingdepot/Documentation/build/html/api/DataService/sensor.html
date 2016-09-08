@@ -29,7 +29,7 @@
     <link rel="prev" title="REST API’s" href="index.html" />
    
   
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
   </head>
   <body role="document">  
@@ -71,7 +71,7 @@ Permissions for the Sensor and to the <cite>Admin</cite> who owns the Sensor.</p
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><ul class="first simple">
-<li><strong>sensors</strong> <cite>(list)</cite> &#8211; List of Sensors (See <a href="#id1"><span class="problematic" id="id2">`View Sensor`_</span></a>)</li>
+<li><strong>sensors</strong> <cite>(list)</cite> &#8211; List of Sensors</li>
 </ul>
 </td>
 </tr>
@@ -136,16 +136,17 @@ Content-Type: application/json
 <h2>Create a Sensor<a class="headerlink" href="#create-a-sensor" title="Permalink to this headline">¶</a></h2>
 <p>Creates a new Sensor point in BuildingDepot and returns the UUID.</p>
 <dl class="post">
-<dt id="post--api-sensor?name=-Name-&amp;identifier=-Identifier-&amp;building=-building-">
-<code class="descname">POST </code><code class="descname">/api/sensor?name=&lt;Name&gt;&amp;identifier=&lt;Identifier&gt;&amp;building=&lt;building&gt;</code><a class="headerlink" href="#post--api-sensor?name=-Name-&identifier=-Identifier-&building=-building-" title="Permalink to this definition">¶</a></dt>
+<dt id="post--api-sensor">
+<code class="descname">POST </code><code class="descname">/api/sensor</code><a class="headerlink" href="#post--api-sensor" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<tr class="field-odd field"><th class="field-name" colspan="2">JSON Parameters:</th></tr>
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body"><ul class="first simple">
 <li><strong>name</strong> (<em>string</em>) &#8211; Name of the sensor</li>
-<li><strong>identifier</strong> (<em>string</em>) &#8211; Identifier that user would like to be associated with the Sensor point</li>
-<li><strong>building</strong> (<em>string</em>) &#8211; Building in which sensor is located</li>
+<li><strong>identifier</strong> (<em>string</em>) &#8211; An identifier that will be associated with the sensor</li>
+<li><strong>building</strong> (<em>string</em>) &#8211; Building in which the sensor is located</li>
 </ul>
 </td>
 </tr>
@@ -167,8 +168,14 @@ Content-Type: application/json
 
 <div class="compound">
 <p class="compound-first"><strong>Example request</strong>:</p>
-<div class="compound-middle highlight-http"><div class="highlight"><pre><span class="nf">POST</span> <span class="nn">/api/sensor?id=test_sensor&amp;identifier=Temp_Sensor&amp;building=NSH</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<div class="compound-middle highlight-http"><div class="highlight"><pre><span class="nf">POST</span> <span class="nn">/api/sensor</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
 <span class="na">Accept</span><span class="o">:</span> <span class="l">application/json; charset=utf-8</span>
+
+<span class="p">{</span>
+  <span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;Test Sensor&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;identifier&quot;</span><span class="p">:</span><span class="s2">&quot;Sensor Tag&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;building&quot;</span><span class="p">:</span><span class="s2">&quot;NSH&quot;</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 <p class="compound-middle"><strong>Example response</strong>:</p>
@@ -186,9 +193,9 @@ Content-Type: application/json
 <div class="section" id="get-sensor-details">
 <h2>Get Sensor details<a class="headerlink" href="#get-sensor-details" title="Permalink to this headline">¶</a></h2>
 <p>Retrieves all the details of the sensor based on the uuid specified</p>
-<dl class="post">
-<dt id="post--api-sensor--name-">
-<code class="descname">POST </code><code class="descname">/api/sensor/&lt;name&gt;</code><a class="headerlink" href="#post--api-sensor--name-" title="Permalink to this definition">¶</a></dt>
+<dl class="get">
+<dt id="get--api-sensor--name-">
+<code class="descname">GET </code><code class="descname">/api/sensor/&lt;name&gt;</code><a class="headerlink" href="#get--api-sensor--name-" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -221,7 +228,7 @@ Content-Type: application/json
 
 <div class="compound">
 <p class="compound-first"><strong>Example request</strong>:</p>
-<div class="compound-middle highlight-http"><div class="highlight"><pre>POST /api/sensor/86ac8207-6372-46a5-ba0b-6b392dbff645
+<div class="compound-middle highlight-http"><div class="highlight"><pre>GET /api/sensor/86ac8207-6372-46a5-ba0b-6b392dbff645
 Accept: application/json; charset=utf-8
 </pre></div>
 </div>
@@ -337,8 +344,8 @@ Accept: application/json; charset=utf-8
       &copy;2015, Synergy Labs.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.1</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.6</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.7</a>
       
       |
       <a href="../../_sources/api/DataService/sensor.txt"

@@ -33,12 +33,28 @@
                             <a href="{{ url_for('central.dataservice') }}">Data Services</a>
                         </li>
 
-                        <li class="divider"></li>
-
-                        <li class="dropdown-header">More</li>
+                        <li>
+                            <a href="{{ url_for('central.sensor') }}">Sensor</a>
+                        </li>
 
                         <li>
-                            <a href="{{ url_for('central.role') }}">Role</a>
+                            <a href="{{ url_for('central.sensorgroup') }}">Sensor Group</a>
+                        </li>
+
+                        <li>
+                            <a href="{{ url_for('central.usergroup') }}">User Group</a>
+                        </li>
+
+                        <li>
+                            <a href="{{ url_for('central.permission') }}">Permission</a>
+                        </li>
+
+                        <li>
+                            <a href="{{ url_for('central.permission_query') }}">Permission Query</a>
+                        </li>
+
+                        <li>
+                            <a href="{{ url_for('central.oauth_gen') }}">Oauth</a>
                         </li>
 
                         <li>
@@ -50,10 +66,10 @@
             {% endif %}
             <ul class="nav navbar-nav pull-right">
                 {% if current_user.is_authenticated() %}
-                <li><a href="{{ url_for('auth.logout') }}">Sign Out</a></li>
+                    <li><a href="#">{{ session['email'] }}</a> </li>
+                    <li><a href="{{ url_for('auth.logout') }}">Sign Out</a></li>
                 {% else %}
-                <li><a href="{{ url_for('auth.register') }}" class="btn btn-info btn-lg"><strong>Sign Up</strong></a></li>
-                <li><a href="{{ url_for('auth.login') }}">Sign In</a></li>
+                    <li><a href="{{ url_for('auth.login') }}">Sign In</a></li>
                 {% endif %}
             </ul>
         </div>
@@ -77,4 +93,5 @@
 {% block scripts %}
     {{ super() }}
     <script src="{{ url_for('static', filename='angular.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='notify.js') }}"></script>
 {% endblock %}

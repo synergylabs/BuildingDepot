@@ -29,7 +29,7 @@
     <link rel="prev" title="Tags" href="tags.html" />
    
   
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
   </head>
   <body role="document">  
@@ -46,8 +46,8 @@
 <h2>Create UserGroup<a class="headerlink" href="#create-usergroup" title="Permalink to this headline">¶</a></h2>
 <p>This request creates a new UserGroup with the name and description as specified by the user.</p>
 <dl class="post">
-<dt id="post--api-usergroup?name=-Name-">
-<code class="descname">POST </code><code class="descname">/api/usergroup?name=&lt;Name&gt;</code><a class="headerlink" href="#post--api-usergroup?name=-Name-" title="Permalink to this definition">¶</a></dt>
+<dt id="post--api-user_group">
+<code class="descname">POST </code><code class="descname">/api/user_group</code><a class="headerlink" href="#post--api-user_group" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -76,7 +76,12 @@
 
 <div class="compound">
 <p class="compound-first"><strong>Example request</strong>:</p>
-<div class="compound-middle highlight-http"><div class="highlight"><pre>POST /api/usergroup
+<div class="compound-middle highlight-http"><div class="highlight"><pre>POST /api/user_group
+
+{
+  &quot;name&quot;: &quot;Test User Group&quot;,
+  &quot;description&quot;: &quot;Description for User Group&quot;
+}
 </pre></div>
 </div>
 <p class="compound-middle"><strong>Example response</strong> (for succcess):</p>
@@ -105,8 +110,8 @@
 <p>This request adds the users specified in the request to the usergroup</p>
 <p>Note: The list of user id&#8217;s sent in this request will overwrite the previous list</p>
 <dl class="post">
-<dt id="post--api-usergroup--name--users">
-<code class="descname">POST </code><code class="descname">/api/usergroup/&lt;name&gt;/users</code><a class="headerlink" href="#post--api-usergroup--name--users" title="Permalink to this definition">¶</a></dt>
+<dt id="post--api-user_group--name--users">
+<code class="descname">POST </code><code class="descname">/api/user_group/&lt;name&gt;/users</code><a class="headerlink" href="#post--api-user_group--name--users" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -140,7 +145,7 @@
 
 <div class="compound">
 <p class="compound-first"><strong>Example request</strong>:</p>
-<div class="compound-middle highlight-http"><div class="highlight"><pre> POST /api/usergroup/Test/users
+<div class="compound-middle highlight-http"><div class="highlight"><pre> POST /api/user_group/Test/users
  Accept: application/json; charset=utf-8
 
  {
@@ -176,8 +181,8 @@
 <h2>Get list of users in UserGroup<a class="headerlink" href="#get-list-of-users-in-usergroup" title="Permalink to this headline">¶</a></h2>
 <p>This request retrieves the list of users that are in the specified UserGroup</p>
 <dl class="get">
-<dt id="get--api-usergroup--name--users">
-<code class="descname">GET </code><code class="descname">/api/usergroup/&lt;name&gt;/users</code><a class="headerlink" href="#get--api-usergroup--name--users" title="Permalink to this definition">¶</a></dt>
+<dt id="get--api-user_group--name--users">
+<code class="descname">GET </code><code class="descname">/api/user_group/&lt;name&gt;/users</code><a class="headerlink" href="#get--api-user_group--name--users" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -204,7 +209,7 @@
 
 <div class="compound">
 <p class="compound-first"><strong>Example request</strong>:</p>
-<div class="compound-middle highlight-http"><div class="highlight"><pre>GET /api/usergroup/Test/users
+<div class="compound-middle highlight-http"><div class="highlight"><pre>GET /api/user_group/Test/users
 Accept: application/json; charset=utf-8
 </pre></div>
 </div>
@@ -278,8 +283,8 @@ Accept: application/json; charset=utf-8
       &copy;2015, Synergy Labs.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.1</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.6</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.7</a>
       
       |
       <a href="../../_sources/api/DataService/usergroup.txt"

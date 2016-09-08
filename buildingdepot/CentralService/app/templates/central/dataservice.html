@@ -60,7 +60,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Admins of Data Service{[ root.dataServiceName ]}</h4>
+                    <h4 class="modal-title">Admins of Data Service {[ root.dataServiceName ]}</h4>
                 </div>
                 <div class="modal-body">
                     <table class="table">
@@ -110,7 +110,7 @@
                     </td>
                     {% if obj.can_delete %}
                     <td>
-                        <form action="{{ url_for('central.dataservice_delete') }}" method="POST">
+                        <form action="{{ url_for('central.dataservice_delete') }}" method="POST" onsubmit="return confirm('Are you sure you want to Delete?');">
                         <input type="hidden" value="{{ obj.name }}" name="name">
                         <input type="submit" value="Delete" class="btn btn-danger">
                         </form>
@@ -129,6 +129,7 @@
      {{ super() }}
      <script>
         var app = angular.module("myApp", []);
+        var header ={{ session.headers|tojson }};
         app.config(['$interpolateProvider', function($interpolateProvider) {
             $interpolateProvider.startSymbol('{[');
             $interpolateProvider.endSymbol(']}');
@@ -143,35 +144,43 @@
             };
             $scope.root.select = function(dataServiceName) {
                 this.dataServiceName = dataServiceName;
-                var res = $http.get('/central/dataservice/'+ dataServiceName + '/buildings');
+                var res = $http.get('/central/dataservice/'+ dataServiceName + '/buildings', {headers:header});
                 res.success(function(data) {
-                    console.log(data);
                     $scope.buildings = data.buildings;
                     $scope.building_names = data.building_names;
                 });
                 res.error(function() {
-                    alert("Ajax failed");
+                    $.notify("Ajax failed", { position:"top center",clickToHide: true,autoHideDelay:2000});
                 });
             };
             $scope.root.updateBuildings = function() {
                 var set = {};
                 for (var i = 0; i < $scope.buildings.length; i++) {
                     if ($scope.buildings[i] === '') {
-                        alert('There is one building that you did not specify');
+                        $.notify("There is one building that you did not specify", { position:"top center",clickToHide: true,autoHideDelay:2000});
                         return;
                     }
                     if (set[$scope.buildings[i]]) {
-                        alert('You specify more than or two same buildings');
+                        $.notify("You specify more than or two same buildings", { position:"top center",clickToHide: true,autoHideDelay:2000});
                         return;
                     }
                     set[$scope.buildings[i]] = true;
                 }
-                var res = $http.post('/central/dataservice/'+ this.dataServiceName + '/buildings', {'data': $scope.buildings});
+                var res = $http.post('/api/dataservice/'+ this.dataServiceName + '/buildings', {'data':{'buildings': $scope.buildings}},{headers:header});
                 res.success(function(data) {
-                    confirm('Success');
+                     if (data["success"]==="False"){
+                        $.notify(data["error"], {
+                            position: "top center",
+                            clickToHide: true,
+                            autoHideDelay:4000
+                        });
+                    }
+                    else if (data["success"]==="True"){
+                       $.notify("Success",{ globalPosition:'top center',clickToHide: true,autoHideDelay:2000, className:'success'});
+                    }
                 });
-                res.error(function() {
-                    alert("Ajax failed");
+                res.error(function(){
+                    $.notify("Ajax failed", { position:"top center",clickToHide: true,autoHideDelay:2000});
                 });
             };
 
@@ -186,33 +195,42 @@
                 this.dataServiceName = dataServiceName;
                 var res = $http.get('/central/dataservice/'+ dataServiceName + '/admins');
                 res.success(function(data) {
-                    console.log(data);
                     $scope.admins = data.admins;
                     $scope.user_emails = data.user_emails;
                 });
                 res.error(function() {
-                    alert("Ajax failed");
+                    $.notify("Ajax failed", { position:"top center",clickToHide: true,autoHideDelay:2000});
                 });
             };
             $scope.root.updateAdmins = function() {
                 var set = {};
                 for (var i = 0; i < $scope.admins.length; i++) {
                     if ($scope.admins[i] === '') {
-                        alert('There is one admin that you did not specify');
+                        $.notify("There is one admin that you did not specify", { position:"top center",clickToHide: true,autoHideDelay:2000});
                         return;
                     }
                     if (set[$scope.admins[i]]) {
-                        alert('You specify more than or two same admins');
+                        $.notify("You specify more than or two same admins", { position:"top center",clickToHide: true,autoHideDelay:2000});
                         return;
                     }
                     set[$scope.admins[i]] = true;
                 }
-                var res = $http.post('/central/dataservice/'+ this.dataServiceName + '/admins', {'data': $scope.admins});
+
+                var res = $http.post('/api/dataservice/'+ this.dataServiceName + '/admins', {'data': {'admins': $scope.admins }},{headers:header});
                 res.success(function(data) {
-                    confirm('Success');
+                    if (data["success"]==="False"){
+                        $.notify(data["error"], {
+                            position: "top center",
+                            clickToHide: true,
+                            autoHideDelay:4000
+                        });
+                    }
+                    else if (data["success"]==="True"){
+                       $.notify("Success",{ globalPosition:'top center',clickToHide: true,autoHideDelay:2000, className:'success'});
+                    }
                 });
                 res.error(function() {
-                    alert("Ajax failed");
+                    $.notify("Ajax failed", { position:"top center",clickToHide: true,autoHideDelay:2000});
                 });
             };
 

@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Building Depot v3.1 &mdash; BuildingDepot 3.1 documentation</title>
+    <title>Building Depot v3.2.5 &mdash; BuildingDepot 3.2.5 documentation</title>
     
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '3.1',
+        VERSION:     '3.2.5',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,11 +23,11 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="BuildingDepot 3.1 documentation" href="#" />
-    <link rel="next" title="CentralService" href="centralservice.html" />
+    <link rel="top" title="BuildingDepot 3.2.5 documentation" href="#" />
+    <link rel="next" title="Central Service" href="centralservice.html" />
    
   
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
   </head>
   <body role="document">  
@@ -37,12 +37,12 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="building-depot-v3-1">
-<h1>Building Depot v3.1<a class="headerlink" href="#building-depot-v3-1" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="building-depot-v3-2-5">
+<h1>Building Depot v3.2.5<a class="headerlink" href="#building-depot-v3-2-5" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="overview">
 <h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
-<p>This is the official documentaion of BuildingDepot v3.1. BuildingDepot is essentialy an Extensible and Distributed Architecture for Sensor Data Storage, Access and Sharing.</p>
-<p>Building Depot has two essential components a CentralService and a Data
+<p>This is the official documentaion of BuildingDepot v3.2.5. BuildingDepot is essentialy an Extensible and Distributed Architecture for Sensor Data Storage, Access and Sharing.</p>
+<p>Building Depot has two essential components a Central Service and a Data
 Service :</p>
 <p>CentralService - The central metadata repository for Building Depot. Information regarding buildings, users, sensors, etc. is stored here.</p>
 <p>DataService - The repository that stores sensor data. Exposes a RESTful API for retrieving data and inserting data into the system.</p>
@@ -53,11 +53,16 @@ Service :</p>
 <p>Read more about the <span class="xref std std-ref">CentralService</span></p>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="centralservice.html">CentralService</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="centralservice.html">Central Service</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="centralservice.html#oauth">OAuth</a></li>
 <li class="toctree-l2"><a class="reference internal" href="centralservice.html#tagtype">TagType</a></li>
 <li class="toctree-l2"><a class="reference internal" href="centralservice.html#buildingtemplate">BuildingTemplate</a></li>
 <li class="toctree-l2"><a class="reference internal" href="centralservice.html#building">Building</a></li>
-<li class="toctree-l2"><a class="reference internal" href="centralservice.html#data-services">DataServices</a></li>
+<li class="toctree-l2"><a class="reference internal" href="centralservice.html#data-services">Data Services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="centralservice.html#sensor">Sensor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="centralservice.html#sensor-group">Sensor Group</a></li>
+<li class="toctree-l2"><a class="reference internal" href="centralservice.html#user-group">User Group</a></li>
+<li class="toctree-l2"><a class="reference internal" href="centralservice.html#permission">Permission</a></li>
 </ul>
 </li>
 </ul>
@@ -70,10 +75,6 @@ Service :</p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="dataservice.html">DataService</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="dataservice.html#sensor">Sensor</a></li>
-<li class="toctree-l2"><a class="reference internal" href="dataservice.html#sensor-group">Sensor Group</a></li>
-<li class="toctree-l2"><a class="reference internal" href="dataservice.html#user-group">User Group</a></li>
-<li class="toctree-l2"><a class="reference internal" href="dataservice.html#permission">Permission</a></li>
-<li class="toctree-l2"><a class="reference internal" href="dataservice.html#oauth">OAuth</a></li>
 </ul>
 </li>
 </ul>
@@ -93,11 +94,16 @@ Service :</p>
 </ul>
 </div>
 </div>
+<div class="section" id="getting-started">
+<h2>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h2>
+<p>The <a class="reference external" href="https://docs.google.com/a/eng.ucsd.edu/document/d/1XESPZSIt0lIMrCbVb-Uoopa-_t0yNx6uo-d2IBZGLyk/edit?usp=sharing">Getting started</a> document will help you guide through the initial setup after installing BuildingDepot.</p>
+</div>
 <div class="section" id="api-documentation">
 <h2>API Documentation<a class="headerlink" href="#api-documentation" title="Permalink to this headline">¶</a></h2>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="api/DataService/index.html">REST API&#8217;s</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/CentralService/index.html">CentralService APIs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/DataService/index.html">DataService APIs</a></li>
 </ul>
 </div>
 </div>
@@ -111,7 +117,7 @@ Service :</p>
         <div class="sphinxsidebarwrapper">
   <h3><a href="#">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">Building Depot v3.1</a><ul>
+<li><a class="reference internal" href="#">Building Depot v3.2.5</a><ul>
 <li><a class="reference internal" href="#overview">Overview</a><ul>
 <li><a class="reference internal" href="#centralservice">CentralService</a></li>
 <li><a class="reference internal" href="#dataservice">DataService</a></li>
@@ -119,6 +125,7 @@ Service :</p>
 </li>
 <li><a class="reference internal" href="#download">Download</a></li>
 <li><a class="reference internal" href="#install">Install</a></li>
+<li><a class="reference internal" href="#getting-started">Getting Started</a></li>
 <li><a class="reference internal" href="#api-documentation">API Documentation</a></li>
 </ul>
 </li>
@@ -156,11 +163,11 @@ Service :</p>
       <div class="clearer"></div>
     </div>
     <div class="footer">
-      &copy;2015, Synergy Labs.
+      &copy;2016, Synergy Labs.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.1</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.6</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.7</a>
       
       |
       <a href="_sources/index.txt"

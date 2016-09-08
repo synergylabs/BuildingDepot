@@ -81,7 +81,7 @@
                     </td>
                     {% if obj.can_delete %}
                     <td>
-                        <form action="{{ url_for('central.building_delete') }}" method="POST">
+                        <form action="{{ url_for('central.building_delete') }}" method="POST" onsubmit="return confirm('Are you sure you want to Delete?');">
                         <input type="hidden" value="{{ obj.name }}" name="name">
                         <input type="submit" value="Delete" class="btn btn-danger">
                         </form>
@@ -120,16 +120,16 @@
                     $scope.metadata = data.data;
                 });
                 res.error(function() {
-                    alert("Ajax failed");
+                    $.notify("Ajax failed", { position:"top center",clickToHide: true,autoHideDelay:2000});
                 });
             };
             $scope.root.update = function() {
                 var res = $http.post('/central/building/'+ this.buildingName + '/metadata', {'data': $scope.metadata});
                 res.success(function(data) {
-                    confirm('Success');
+                    $.notify("Success",{ globalPosition:'top center',clickToHide: true,autoHideDelay:2000, className:'success'});
                 });
                 res.error(function() {
-                    alert("Ajax failed");
+                    $.notify("Ajax failed", { position:"top center",clickToHide: true,autoHideDelay:2000});
                 });
             };
         });

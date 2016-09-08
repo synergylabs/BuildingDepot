@@ -34,4 +34,3 @@ def get_tag_descendant_pairs():
     res = {name: get_all_descendants(name) for name in graph}
     return res
 
-

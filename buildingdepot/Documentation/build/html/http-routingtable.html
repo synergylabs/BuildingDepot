@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>HTTP Routing Table &mdash; BuildingDepot 3.0 documentation</title>
+    <title>HTTP Routing Table &mdash; BuildingDepot 3.2.5 documentation</title>
     
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '3.0',
+        VERSION:     '3.2.5',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,11 +23,11 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="BuildingDepot 3.0 documentation" href="index.html" />
+    <link rel="top" title="BuildingDepot 3.2.5 documentation" href="index.html" />
 
    
   
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
 
     <script type="text/javascript">
@@ -48,7 +48,8 @@
 
    <div class="modindex-jumpbox">
    <a href="#cap-/api"><strong>/api</strong></a> | 
-   <a href="#cap-/oauth"><strong>/oauth</strong></a>
+   <a href="#cap-/oauth"><strong>/oauth</strong></a> | 
+   <a href="#cap-/sensor"><strong>/sensor</strong></a>
    </div>
 
    <table class="indextable modindextable" cellspacing="0" cellpadding="2">
@@ -58,82 +59,152 @@
      <tr>
        <td></td>
        <td>
-       <a href="api/DataService/sensordata.html#get--api-data-id=-name--email=-email--interval=-interval--"><code class="xref">GET /api/data/id=&lt;name&gt;/email=&lt;email&gt;/interval=&lt;interval&gt;/</code></a></td><td>
+       <a href="api/CentralService/building.html#get--api-building--name-"><code class="xref">GET /api/building/&lt;name&gt;</code></a></td><td>
        <em></em></td></tr>
      <tr>
        <td></td>
        <td>
-       <a href="api/DataService/sensordata.html#get--api-data-id=-name--email=-email--interval=-interval--resolution=-resolution-"><code class="xref">GET /api/data/id=&lt;name&gt;/email=&lt;email&gt;/interval=&lt;interval&gt;/resolution=&lt;resolution&gt;</code></a></td><td>
+       <a href="api/CentralService/dataservice.html#get--api-dataservice--name-"><code class="xref">GET /api/dataservice/&lt;name&gt;</code></a></td><td>
        <em></em></td></tr>
      <tr>
        <td></td>
        <td>
-       <a href="api/DataService/metadata.html#get--api-sensor--name--metadata"><code class="xref">GET /api/sensor/&lt;name&gt;/metadata</code></a></td><td>
+       <a href="api/CentralService/permission.html#get--api-permission?user_group=-user_group-&sensor_group=-sensor_group-"><code class="xref">GET /api/permission?user_group=&lt;user_group&gt;&amp;sensor_group=&lt;sensor_group&gt;</code></a></td><td>
        <em></em></td></tr>
      <tr>
        <td></td>
        <td>
-       <a href="api/DataService/tags.html#get--api-sensor--name--tags"><code class="xref">GET /api/sensor/&lt;name&gt;/tags</code></a></td><td>
+       <a href="api/CentralService/sensor.html#get--api-search"><code class="xref">GET /api/search</code></a></td><td>
        <em></em></td></tr>
      <tr>
        <td></td>
        <td>
-       <a href="api/DataService/sensor.html#get--api-sensor-list?filter=-filter_type-&param=value"><code class="xref">GET /api/sensor/list?filter=&lt;filter_type&gt;&amp;param=value</code></a></td><td>
+       <a href="api/CentralService/sensor.html#get--api-sensor--name-"><code class="xref">GET /api/sensor/&lt;name&gt;</code></a></td><td>
        <em></em></td></tr>
      <tr>
        <td></td>
        <td>
-       <a href="api/DataService/sensorgroup.html#get--api-sensorgroup--name--tags"><code class="xref">GET /api/sensorgroup/&lt;name&gt;/tags</code></a></td><td>
+       <a href="api/CentralService/metadata.html#get--api-sensor--name--metadata"><code class="xref">GET /api/sensor/&lt;name&gt;/metadata</code></a></td><td>
        <em></em></td></tr>
      <tr>
        <td></td>
        <td>
-       <a href="api/DataService/usergroup.html#get--api-usergroup--name--users"><code class="xref">GET /api/usergroup/&lt;name&gt;/users</code></a></td><td>
+       <a href="api/CentralService/tagtype.html#get--api-sensor--name--tags"><code class="xref">GET /api/sensor/&lt;name&gt;/tags</code></a></td><td>
        <em></em></td></tr>
      <tr>
        <td></td>
        <td>
-       <a href="api/DataService/sensordata.html#post--api-data-id=-name--email=-email--timeseries"><code class="xref">POST /api/data/id=&lt;name&gt;/email=&lt;email&gt;/timeseries</code></a></td><td>
+       <a href="api/CentralService/sensor.html#get--api-sensor-list?filter=-filter_type-&param=value"><code class="xref">GET /api/sensor/list?filter=&lt;filter_type&gt;&amp;param=value</code></a></td><td>
        <em></em></td></tr>
      <tr>
        <td></td>
        <td>
-       <a href="api/DataService/sensor.html#post--api-sensor--name-"><code class="xref">POST /api/sensor/&lt;name&gt;</code></a></td><td>
+       <a href="api/CentralService/sensorgroup.html#get--api-sensor_group--name--tags"><code class="xref">GET /api/sensor_group/&lt;name&gt;/tags</code></a></td><td>
        <em></em></td></tr>
      <tr>
        <td></td>
        <td>
-       <a href="api/DataService/metadata.html#post--api-sensor--name--metadata"><code class="xref">POST /api/sensor/&lt;name&gt;/metadata</code></a></td><td>
+       <a href="api/CentralService/buildingtemplate.html#get--api-template--name-"><code class="xref">GET /api/template/&lt;name&gt;</code></a></td><td>
        <em></em></td></tr>
      <tr>
        <td></td>
        <td>
-       <a href="api/DataService/tags.html#post--api-sensor--name--tags"><code class="xref">POST /api/sensor/&lt;name&gt;/tags</code></a></td><td>
+       <a href="api/CentralService/user.html#get--api-user--email-"><code class="xref">GET /api/user/&lt;email&gt;</code></a></td><td>
        <em></em></td></tr>
      <tr>
        <td></td>
        <td>
-       <a href="api/DataService/sensor.html#post--api-sensor?name=-Name-&identifier=-Identifier-&building=-building-"><code class="xref">POST /api/sensor?name=&lt;Name&gt;&amp;identifier=&lt;Identifier&gt;&amp;building=&lt;building&gt;</code></a></td><td>
+       <a href="api/CentralService/usergroup.html#get--api-user_group--name--users"><code class="xref">GET /api/user_group/&lt;name&gt;/users</code></a></td><td>
        <em></em></td></tr>
      <tr>
        <td></td>
        <td>
-       <a href="api/DataService/sensorgroup.html#post--api-sensor_group?name=-Name-&building=-Building-"><code class="xref">POST /api/sensor_group?name=&lt;Name&gt;&amp;building=&lt;Building&gt;</code></a></td><td>
+       <a href="api/CentralService/building.html#post--api-building"><code class="xref">POST /api/building</code></a></td><td>
        <em></em></td></tr>
      <tr>
        <td></td>
        <td>
-       <a href="api/DataService/sensorgroup.html#post--api-sensorgroup--name--tags"><code class="xref">POST /api/sensorgroup/&lt;name&gt;/tags</code></a></td><td>
+       <a href="api/CentralService/dataservice.html#post--api-dataservice"><code class="xref">POST /api/dataservice</code></a></td><td>
        <em></em></td></tr>
      <tr>
        <td></td>
        <td>
-       <a href="api/DataService/usergroup.html#post--api-usergroup--name--users"><code class="xref">POST /api/usergroup/&lt;name&gt;/users</code></a></td><td>
+       <a href="api/CentralService/permission.html#post--api-permission"><code class="xref">POST /api/permission</code></a></td><td>
        <em></em></td></tr>
      <tr>
        <td></td>
        <td>
-       <a href="api/DataService/usergroup.html#post--api-usergroup?name=-Name-"><code class="xref">POST /api/usergroup?name=&lt;Name&gt;</code></a></td><td>
+       <a href="api/CentralService/sensor.html#post--api-sensor"><code class="xref">POST /api/sensor</code></a></td><td>
+       <em></em></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="api/CentralService/metadata.html#post--api-sensor--name--metadata"><code class="xref">POST /api/sensor/&lt;name&gt;/metadata</code></a></td><td>
+       <em></em></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="api/DataService/sensordata.html#post--api-sensor-timeseries"><code class="xref">POST /api/sensor/timeseries</code></a></td><td>
+       <em></em></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="api/CentralService/sensorgroup.html#post--api-sensor_group"><code class="xref">POST /api/sensor_group</code></a></td><td>
+       <em></em></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="api/CentralService/sensorgroup.html#post--api-sensor_group--name--tags"><code class="xref">POST /api/sensor_group/&lt;name&gt;/tags</code></a></td><td>
+       <em></em></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="api/CentralService/tagtype.html#post--api-tagtype"><code class="xref">POST /api/tagtype</code></a></td><td>
+       <em></em></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="api/CentralService/buildingtemplate.html#post--api-template"><code class="xref">POST /api/template</code></a></td><td>
+       <em></em></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="api/CentralService/user.html#post--api-user"><code class="xref">POST /api/user</code></a></td><td>
+       <em></em></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="api/CentralService/usergroup.html#post--api-user_group"><code class="xref">POST /api/user_group</code></a></td><td>
+       <em></em></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="api/CentralService/usergroup.html#post--api-user_group--name--users"><code class="xref">POST /api/user_group/&lt;name&gt;/users</code></a></td><td>
+       <em></em></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="api/CentralService/building.html#delete--api-building--name-"><code class="xref">DELETE /api/building/&lt;name&gt;</code></a></td><td>
+       <em></em></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="api/CentralService/dataservice.html#delete--api-dataservice--name-"><code class="xref">DELETE /api/dataservice/&lt;name&gt;</code></a></td><td>
+       <em></em></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="api/CentralService/permission.html#delete--api-permission?user_group=-user_group-&sensor_group=-sensor_group-"><code class="xref">DELETE /api/permission?user_group=&lt;user_group&gt;&amp;sensor_group=&lt;sensor_group&gt;</code></a></td><td>
+       <em></em></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="api/CentralService/buildingtemplate.html#delete--api-template--name-"><code class="xref">DELETE /api/template/&lt;name&gt;</code></a></td><td>
+       <em></em></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="api/CentralService/user.html#delete--api-user--email-"><code class="xref">DELETE /api/user/&lt;email&gt;</code></a></td><td>
        <em></em></td></tr>
      <tr class="pcap"><td></td><td>&nbsp;</td><td></td></tr>
      <tr class="cap" id="cap-/oauth"><td></td><td>
@@ -141,7 +212,15 @@
      <tr>
        <td></td>
        <td>
-       <a href="api/DataService/oauth.html#get--oauth-access_token-client_id=-client_id--client_secret=-client_secret-"><code class="xref">GET /oauth/access_token/client_id=&lt;client_id&gt;/client_secret=&lt;client_secret&gt;</code></a></td><td>
+       <a href="api/CentralService/oauth.html#get--oauth-access_token-client_id=-client_id--client_secret=-client_secret-"><code class="xref">GET /oauth/access_token/client_id=&lt;client_id&gt;/client_secret=&lt;client_secret&gt;</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="pcap"><td></td><td>&nbsp;</td><td></td></tr>
+     <tr class="cap" id="cap-/sensor"><td></td><td>
+       <strong>/sensor</strong></td><td></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="api/DataService/sensordata.html#get--sensor--sensor-uuid--timeseries?start_time=-start_timestamp-&end_time=-end_timestamp-&resolution=-resolution_units-"><code class="xref">GET /sensor/&lt;sensor-uuid&gt;/timeseries?start_time=&lt;start_timestamp&gt;&amp;end_time=&lt;end_timestamp&gt;&amp;resolution=&lt;resolution_units&gt;</code></a></td><td>
        <em></em></td></tr>
    </table>
 
@@ -175,11 +254,11 @@
       <div class="clearer"></div>
     </div>
     <div class="footer">
-      &copy;2015, Synergy Labs.
+      &copy;2016, Synergy Labs.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.1</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.6</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.7</a>
       
     </div>
 

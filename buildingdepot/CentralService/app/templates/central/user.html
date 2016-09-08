@@ -6,7 +6,7 @@
 {% block page_content %}
 <div class="row" ng-app="myApp" ng-controller="metadataController">
     <div class="page-header">
-        <h2>User <a ng-init="root.addNewUser()" href="#myModal" data-toggle="modal" class="btn btn-info btn-lg"><span class="glyphicon glyphicon-hand-up"></span> Add a New User</a></h2>
+        <h2>User <a href="#myModal" data-toggle="modal" class="btn btn-info btn-lg"><span class="glyphicon glyphicon-hand-up"></span> Add a New User</a></h2>
     </div>
 
     <div class="modal fade" id="myModal">
@@ -27,9 +27,16 @@
                         </div>
 
                         <div class="form-group">
-                            <label class="col-lg-2 control-label">Name</label>
+                            <label class="col-lg-2 control-label">First Name</label>
                             <div class="col-lg-10">
-                                <input ng-model="name" required class="form-control" type="text">
+                                <input ng-model="fname" required class="form-control" type="text">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-lg-2 control-label">Last Name</label>
+                            <div class="col-lg-10">
+                                <input ng-model="lname" required class="form-control" type="text">
                             </div>
                         </div>
 
@@ -41,97 +48,11 @@
                         </div>
 
                         <div class="form-group">
-                            <label class="col-lg-2 control-label">Password</label>
-                            <div class="col-lg-10">
-                                <input ng-model="password" required class="form-control" type="password">
-                            </div>
-                        </div>
-
-                        <div>
-                            <input ng-model="showPassword" type="checkbox">
-                            Show Password: <span ng-show="showPassword">{[ password ]}</span>
-                        </div>
-
-                        <div class="form-group">
                             <div class="col-lg-12">
-                                <button class="btn btn-success pull-right" type="submit">Submit</button>
+                                <button ng-click="root.addNewUser()" class="btn btn-success pull-right" type="submit">Submit</button>
                             </div>
                         </div>
                     </form>
-
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal fade" id="buildings">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Buildings managed by {[ localUser ]} </h4>
-                </div>
-                <div class="modal-body">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Building</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr ng-repeat="building in buildings">
-                                <td><input disabled ng-model="buildings[$index]" type="text" class="form-control" value="{[ building ]}"></td>
-                                <td><button class="close" ng-click="root.removeExistingBuilding($index)">&times;</button></td>
-                            </tr>
-
-                            <tr ng-repeat="building in addedBuildings">
-                                <td><select ng-model="addedBuildings[$index]" class="form-control" ng-options="building for building in allBuildings"></select></td>
-                                <td><button class="close" ng-click="root.removeAddedBuilding($index)">&times;</button></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <div class="btn-group">
-                        <button ng-click="root.addNewBuilding()" type="button" class="btn btn-info">Add a new building</button>
-                        <button ng-click="root.updateBuildings()" type="button" class="btn btn-warning">Update</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal fade" id="rolePerBuilding">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Role per Building for {[ defaultUser ]} </h4>
-                </div>
-                <div class="modal-body">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Building</th>
-                                <th>Role</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr ng-repeat="pair in pairs">
-                                <td><input disabled ng-model="pairs[$index].building" type="text" class="form-control" value="{[ pair.building ]}"></td>
-                                <td><input disabled ng-model="pairs[$index].role" type="text" class="form-control" value="{[ pair.role ]}"></td>
-                                <td><button ng-show="pairs[$index]['can_delete']" class="close" ng-click="root.removeExistingPair($index)">&times;</button></td>
-                            </tr>
-
-                            <tr ng-repeat="pair in addedPairs">
-                                <td><select ng-model="addedPairs[$index].building" class="form-control" ng-options="building for building in allBuildings"></select></td>
-                                <td><select ng-model="addedPairs[$index].role" class="form-control" ng-options="role for role in defaultRoles"></select></td>
-                                <td><button class="close" ng-click="root.removeAddedPair($index)">&times;</button></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <div class="btn-group">
-                        <button ng-click="root.addNewPair()" type="button" class="btn btn-info">Add a new pair</button>
-                        <button ng-click="root.updatePairs()" type="button" class="btn btn-warning">Update</button>
-                    </div>
                 </div>
             </div>
         </div>
@@ -211,39 +132,18 @@
             <thead>
                 <tr>
                     <th>Email</th>
-                    <th>Name</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
                 </tr>
             </thead>
             <tbody>
-                <tr ng-repeat="super in supers | orderBy:['email', 'name']">
-                    <td>{[ super.email ]}</td>
-                    <td>{[ super.name ]}</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-
-    <div class="col-sm-12">
-        <div class="page-header">
-            <h4><strong>Local User</strong></h4>
-        </div>
-        <table class="table">
-            <thead>
+            {% for user in super_user %}
                 <tr>
-                    <th>Email</th>
-                    <th>Name</th>
+                    <td>{{ user.email  }}</td>
+                    <td>{{ user.first_name }}</td>
+                    <td>{{ user.last_name }}</td>
                 </tr>
-            </thead>
-            <tbody>
-                <tr ng-repeat="local in locals | orderBy:['email', 'name']">
-                    <td>{[ local.email ]}</td>
-                    <td>{[ local.name ]}</td>
-                    <td >
-                    <td>
-                        <a ng-click="root.selectLocal(local.email)" href="#buildings" data-toggle="modal" class="btn btn-info">Buildings</a>
-                    </td>
-                    </td>
-                </tr>
+            {% endfor %}
             </tbody>
         </table>
     </div>
@@ -256,20 +156,18 @@
             <thead>
                 <tr>
                     <th>Email</th>
-                    <th>Name</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
                 </tr>
             </thead>
             <tbody>
-                <tr ng-repeat="default in defaults | orderBy:['email', 'name']">
-                    <td>{[ default.email ]}</td>
-                    <td>{[ default.name ]}</td>
-                    <td>
-                        <a ng-click="root.selectDefault(default.email)" href="#rolePerBuilding" data-toggle="modal" class="btn btn-info">Role Per Building</a>
-                    </td>
-                    <td >
-                        <a ng-click="root.tags(default.email)" href="#tags" data-toggle="modal" class="btn btn-info">Assigned Tags</a>
-                    </td>
+            {% for user in default %}
+                <tr>
+                    <td>{{ user.email  }}</td>
+                    <td>{{ user.first_name }}</td>
+                    <td>{{ user.last_name }}</td>
                 </tr>
+            {% endfor %}
             </tbody>
         </table>
     </div>
@@ -282,84 +180,15 @@
      {{ super() }}
      <script>
         var app = angular.module("myApp", []);
+        var header ={{ session.headers|tojson }};
         app.config(['$interpolateProvider', function($interpolateProvider) {
             $interpolateProvider.startSymbol('{[');
             $interpolateProvider.endSymbol(']}');
         }]);
         app.controller("metadataController", function($scope, $http) {
             $scope.root = {};
-            $scope.roleOptions = ['super', 'local', 'default'];
+            $scope.roleOptions = ['super', 'default'];
             $scope.selectedRole = 'default';
-
-            $scope.addedBuildings = [];
-            $scope.addedPairs = [];
-
-            $scope.root.addNewBuilding = function() {
-                $scope.addedBuildings.push('');
-            };
-            $scope.root.removeExistingBuilding = function(index) {
-                $scope.buildings.splice(index, 1);
-            };
-            $scope.root.removeAddedBuilding = function(index) {
-                $scope.addedBuildings.splice(index, 1);
-            };
-            $scope.root.selectLocal = function(localUser) {
-                $scope.localUser = localUser;
-                for (var i = 0; i < $scope.locals.length; i++) {
-                    if ($scope.locals[i].email === localUser) {
-                        $scope.buildings =$scope.locals[i].buildings;
-                    }
-                }
-            };
-            $scope.root.updateBuildings = function() {
-                var res = $http.post('/central/user/'+ $scope.localUser + '/add_managed_buildings', {'data': $scope.buildings.concat($scope.addedBuildings)});
-                res.success(function(data) {
-                    confirm('Success');
-                });
-                res.error(function() {
-                    alert("Ajax failed");
-                });
-            };
-
-            $scope.root.selectDefault = function(defaultUser) {
-                $scope.defaultUser = defaultUser;
-                for (var i = 0; i < $scope.defaults.length; i++) {
-                    if ($scope.defaults[i].email === defaultUser) {
-                        $scope.pairs =$scope.defaults[i].pairs;
-                    }
-                }
-            };
-            $scope.root.removeExistingPair = function(index) {
-                $scope.pairs.splice(index, 1);
-            };
-            $scope.root.removeAddedPair = function(index) {
-                $scope.addedPairs.splice(index, 1);
-            };
-            $scope.root.addNewPair = function() {
-                $scope.addedPairs.push({'building': '', 'role': ''});
-            };
-            $scope.root.updatePairs = function() {
-                var pairs = $scope.pairs.concat($scope.addedPairs);
-                var set = {};
-                for (var i = 0; i < pairs.length; i++) {
-                    if (pairs[i].building === '' || pairs[i].role === '') {
-                        alert('There is a building or a role that is not specified');
-                        return;
-                    }
-                    if (set[pairs[i].building]) {
-                        alert('Building ' + pairs[i].building + ' is specified multiple times');
-                        return;
-                    }
-                    set[pairs[i].building] = true;
-                }
-                var res = $http.post('/central/user/'+ $scope.defaultUser + '/add_role_per_building', {'data': pairs});
-                res.success(function(data) {
-                    confirm('Success');
-                });
-                res.error(function() {
-                    alert("Ajax failed");
-                });
-            };
 
             $scope.root.tags = function(defaultUser) {
                 $scope.defaultUser = defaultUser;
@@ -418,17 +247,31 @@
             };
 
             $scope.root.addNewUser = function() {
-                var res = $http.get('/central/user/add_user');
+                var json = {
+                        'email':$scope.email,
+                        'first_name':$scope.fname,
+                        'last_name':$scope.lname,
+                        'role':$scope.selectedRole
+                };
+                console.log(header);
+                var res = $http.post('/api/user',{'data': json },{headers:header});
                 res.success(function(data) {
-                    $scope.supers = data.supers;
-                    $scope.locals = data.locals;
-                    $scope.defaults = data.defaults;
-                    $scope.emails = data.emails;
-                    $scope.allBuildings = data.buildings;
-                    $scope.defaultRoles = data.roles;
+                    if (data["success"]==="False"){
+                        $.notify(data["error"], {
+                            position: "top center",
+                            clickToHide: true,
+                            autoHideDelay:4000
+                        });
+                    }
+                    else if (data["success"]==="True"){
+                       $.notify("Success",{  globalPosition:'top center',clickToHide: true,autoHideDelay:2000, className:'success'});
+                        setTimeout(function() {location.reload();}, 335);
+                    }
                 });
-                res.error(function() {
-                    alert("Ajax failed");
+                res.error(function(err) {
+                    console.log(err);
+                    $.notify("Ajax failed", { position:"top center",clickToHide: true,autoHideDelay:2000});
+                    setTimeout(function() {location.reload();}, 335);
                 });
             };
         });

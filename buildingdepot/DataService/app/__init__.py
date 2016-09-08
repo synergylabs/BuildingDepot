@@ -20,15 +20,16 @@ registered as blueprints.
 
 from flask import Flask
 from config import config
-from mongoengine import connect,register_connection
+from mongoengine import connect, register_connection
 from flask.ext.bootstrap import Bootstrap
 from xmlrpclib import ServerProxy
 from flask_oauthlib.provider import OAuth2Provider
 
 import redis
-import pika
 
 from influxdb import InfluxDBClient
+
+permissions = {"rw": "r/w", "r": "r", "dr": "d/r", "rwp": "r/w/p"}
 
 exchange = 'master_exchange'
 r = redis.Redis()
@@ -39,29 +40,20 @@ svr = ServerProxy("http://localhost:8080")
 
 oauth = OAuth2Provider()
 
-pubsub = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
-channel = pubsub.channel()
-channel.exchange_declare(exchange=exchange,type='direct')
 
 def create_app(config_mode):
     app = Flask(__name__)
-    app.config.from_object(config[config_mode])
-
+    app.config.from_envvar('DS_SETTINGS')
     app.debug = True
     app.secret_key = 'secret'
 
     oauth.init_app(app)
 
     config[config_mode].init_app(app)
-    connect(app.config['MONGODB_DATABASE'],
+
+    connect(app.config['MONGODB_DATABASE_BD'],
             host=app.config['MONGODB_HOST'],
             port=app.config['MONGODB_PORT'])
-    register_connection('bd',name='buildingdepot',host='127.0.0.1',port=27017)
-
-    #create a connection to the pub/sub broker and establish the master exchange
-    connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
-    channel = connection.channel()
-    channel.exchange_declare(exchange='master_exchange',type='direct')
 
     bootstrap.init_app(app)
 
@@ -73,9 +65,6 @@ def create_app(config_mode):
 
     from .service import service as service_blueprint
     app.register_blueprint(service_blueprint, url_prefix='/service')
-
-    from .oauth_bd import oauth_bd as oauth_bd_blueprint
-    app.register_blueprint(oauth_bd_blueprint, url_prefix='/oauth')
 
     from .rest_api import api as api_blueprint
     app.register_blueprint(api_blueprint, url_prefix='/api')

@@ -11,19 +11,24 @@ Permissions for the Sensor and to the `Admin` who owns the Sensor.
 .. _DataS List Sensors:
 
 Put Timeseries Datapoints
-************
+*************************
 
 This stores datapoints in the timeseries of the specified Sensorpoint.
 
 The first datapoint that is posted to the uuid defines the datatype for all further timeseries datapoints e.g. if the first datapoint posted to a certain uuid is a int then all further datapoints have to be ints.
 
 
-.. http:post:: /api/data/id=<name>/email=<email>/timeseries
+.. http:post:: /api/sensor/timeseries
 
-   :param string sensor_uuid: UUID associated with Sensor
-   :json list data: A dictionary of the datapoints that need to be posted for this sensor uuid
-   :json string value_type: A string that describes what the type of the datapoint e.g. temperature
-                            or humidity
+   Within a singe POST request data can be posted to multiple sensor points. The format for each sensor point in the list should be as follows.
+
+   :json string sensor_id: UUID of the sensor to which data has to be posted
+   :json list samples: A list of the data points that have to be added to the time-series of the sensor point given by sensor_id. Each item in the list has to be of the following format:
+        {
+            "time": A unix timestamp of a sampling,
+
+            "value": A sensor value
+        }
    :returns:
       * **success** `(string)` -- Returns 'True' if data is posted succesfully otherwise 'False'
    :status 200: Success
@@ -35,23 +40,37 @@ The first datapoint that is posted to the uuid defines the datatype for all furt
 
    .. sourcecode:: http
 
-      POST /api/data/id=26da099a-3fe0-4966-b068-14f51bcedb6e/timeseries
-      email=test@gmail.com/timeseries HTTP/1.1
+      POST /api/sensor/timeseries HTTP/1.1
       Accept: application/json; charset=utf-8
 
-      {
-        "data":[
-                {
-                  "value":24.56,
-                  "time":1225865462
-                },
-                {
-                  "value":23.12,
-                  "time":1225865500
-                }
-               ],
-        "value_type":"Temperature"
-      }
+      [
+        {
+          "sensor_id":"a5d6277e-4b51-4056-b9fd-0a6505b4f5a6",
+          "samples":[
+                  {
+                    "value":24.56,
+                    "time":1225865462
+                  },
+                  {
+                    "value":23.12,
+                    "time":1225865500
+                  }
+                 ]
+        },
+        {
+          "sensor_id":"cee06227-72e5-49d2-94f1-20c501ca2afa",
+          "samples":[
+                  {
+                    "value":24.56,
+                    "time":1225865462
+                  },
+                  {
+                    "value":23.12,
+                    "time":1225865500
+                  }
+                 ]
+        }
+      ]
 
    **Example response**:
 
@@ -69,13 +88,14 @@ Read Timeseries Datapoints
 
 This retreives a list of datapoints for the timeseries of the specified Sensorpoint
 
-.. http:get:: /api/data/id=<name>/email=<email>/interval=<interval>/
-              /api/data/id=<name>/email=<email>/interval=<interval>/resolution=<resolution>
+.. http:get:: /sensor/<sensor-uuid>/timeseries?start_time=<start_timestamp>&end_time=<end_timestamp>&resolution=<resolution_units>
 
-   :param string id: UUID associated with Sensor (compulsory)
-   :param string interval: The time interval over which data is required with respect to current time (compulsory)
-   :param string resolution: The resolution of the data required. If not specified will retrieve all the datapoints over the specified interval. (optional)
+   :param string sensor-uuid: UUID associated with Sensor (compulsory)
+   :param integer start_time: The starting point of time from which the timeseries data of this sensor point is desired. Has to be a UNIX timestamp. (compulsory)
+   :param integer end_time: The ending point of time till which the timeseries data of this sensor point is desired. Has to be a UNIX timestamp.(compulsory)
+   :param string resolution: The resolution of the data required. If not specified will retrieve all the datapoints over the specified interval. Has to be specified in the format time units as an integer + unit identifier e.g. 10s,1m,1h etc. (optional)
    :returns:
+      * **success** `(string)` -- Returns 'True' if data is retrieved succesfully otherwise 'False'
       * **data** `(struct)` -- Contains the series
           * **series** `(list)` -- Contains the timeseries data, uuid of the sensor and the column names for the timeseries data
           * **columns** `(list)` -- Contains the names of the columns of the data that is present in the timeseries
@@ -92,8 +112,7 @@ Note: Both interval and resolution are specified with the time value appended by
 
    .. sourcecode:: http
 
-      GET /api/data/id=26da099a-3fe0-4966-b068-14f51bcedb6e/
-      email=test@gmail.com/interval=10s HTTP/1.1
+      GET /sensor/<sensor-uuid>/timeseries?start_time=1234567&end_time=1237567&resolution=10s HTTP/1.1
       Accept: application/json; charset=utf-8
 
    **Example response**:
@@ -104,12 +123,13 @@ Note: Both interval and resolution are specified with the time value appended by
       Content-Type: application/json
 
       {
+        "success":"True",
         "data": {
           "series": [
             {
               "columns": [
                 "time",
-                "timestamp",
+                "inserted_at",
                 "value"
               ],
               "name": "35b137b2-c7c6-4608-8489-1c3f0ee7e2d5",

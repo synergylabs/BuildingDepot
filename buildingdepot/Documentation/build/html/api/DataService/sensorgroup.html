@@ -29,7 +29,7 @@
     <link rel="prev" title="Usergroups" href="usergroup.html" />
    
   
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
   </head>
   <body role="document">  
@@ -46,16 +46,17 @@
 <h2>Create SensorGroup<a class="headerlink" href="#create-sensorgroup" title="Permalink to this headline">¶</a></h2>
 <p>This request creates a new SensorGroup with the name and description in the building specified by the user.</p>
 <dl class="post">
-<dt id="post--api-sensor_group?name=-Name-&amp;building=-Building-">
-<code class="descname">POST </code><code class="descname">/api/sensor_group?name=&lt;Name&gt;&amp;building=&lt;Building&gt;</code><a class="headerlink" href="#post--api-sensor_group?name=-Name-&building=-Building-" title="Permalink to this definition">¶</a></dt>
+<dt id="post--api-sensor_group">
+<code class="descname">POST </code><code class="descname">/api/sensor_group</code><a class="headerlink" href="#post--api-sensor_group" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>name</strong> (<em>string</em>) &#8211; Name of SensorGroup</li>
-<li><strong>building</strong> (<em>string</em>) &#8211; Name of building in which the SensorGroup is to be created</li>
-<li><strong>description (optional)</strong> (<em>string</em>) &#8211; Descrption for SensorGroup</li>
+<tr class="field-odd field"><th class="field-name" colspan="2">JSON Parameters:</th></tr>
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body"><ul class="first simple">
+<li><strong>name</strong> (<em>string</em>) &#8211; Name of the sensor group</li>
+<li><strong>building</strong> (<em>string</em>) &#8211; Building to which this sensor group belongs</li>
+<li><strong>description</strong> (<em>string</em>) &#8211; Description for the sensor group</li>
 </ul>
 </td>
 </tr>
@@ -77,7 +78,13 @@
 
 <div class="compound">
 <p class="compound-first"><strong>Example request</strong>:</p>
-<div class="compound-middle highlight-http"><div class="highlight"><pre>POST /api/sensor_group?name=test_group&amp;building=NSH
+<div class="compound-middle highlight-http"><div class="highlight"><pre>POST /api/sensor_group
+
+{
+  &quot;name&quot;:&quot;Test Sensor Group&quot;,
+  &quot;building&quot;:&quot;NSH&quot;,
+  &quot;description&quot;:&quot;Description for Sensor Group&quot;
+}
 </pre></div>
 </div>
 <p class="compound-middle"><strong>Example response</strong> (for succcess):</p>
@@ -106,8 +113,8 @@
 <p>This request adds the tags specified in the request to the SensorGroup</p>
 <p>Note: The list of tags sent in this request will overwrite the previous list.</p>
 <dl class="post">
-<dt id="post--api-sensorgroup--name--tags">
-<code class="descname">POST </code><code class="descname">/api/sensorgroup/&lt;name&gt;/tags</code><a class="headerlink" href="#post--api-sensorgroup--name--tags" title="Permalink to this definition">¶</a></dt>
+<dt id="post--api-sensor_group--name--tags">
+<code class="descname">POST </code><code class="descname">/api/sensor_group/&lt;name&gt;/tags</code><a class="headerlink" href="#post--api-sensor_group--name--tags" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -148,7 +155,7 @@
 
 <div class="compound">
 <p class="compound-first"><strong>Example request</strong>:</p>
-<div class="compound-middle highlight-http"><div class="highlight"><pre>POST /api/sensorgroup/test/tags
+<div class="compound-middle highlight-http"><div class="highlight"><pre>POST /api/sensor_group/test/tags
 Accept: application/json; charset=utf-8
 
 
@@ -181,8 +188,8 @@ Accept: application/json; charset=utf-8
 <h2>Get list of tags in SensorGroup<a class="headerlink" href="#get-list-of-tags-in-sensorgroup" title="Permalink to this headline">¶</a></h2>
 <p>This request retrieves two lists of key-value pairs, one list contains the array of eligible tags that can be attached to this SensorGroup and the other list contains the array of tags that are currently attached to this SensorGroup.</p>
 <dl class="get">
-<dt id="get--api-sensorgroup--name--tags">
-<code class="descname">GET </code><code class="descname">/api/sensorgroup/&lt;name&gt;/tags</code><a class="headerlink" href="#get--api-sensorgroup--name--tags" title="Permalink to this definition">¶</a></dt>
+<dt id="get--api-sensor_group--name--tags">
+<code class="descname">GET </code><code class="descname">/api/sensor_group/&lt;name&gt;/tags</code><a class="headerlink" href="#get--api-sensor_group--name--tags" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -226,7 +233,7 @@ Accept: application/json; charset=utf-8
 
 <div class="compound">
 <p class="compound-first"><strong>Example request</strong>:</p>
-<div class="compound-middle highlight-http"><div class="highlight"><pre>GET /api/SensorGroup/test/tags
+<div class="compound-middle highlight-http"><div class="highlight"><pre>GET /api/sensor_group/test/tags
 Accept: application/json; charset=utf-8
 </pre></div>
 </div>
@@ -323,8 +330,8 @@ Accept: application/json; charset=utf-8
       &copy;2015, Synergy Labs.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.1</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.6</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.7</a>
       
       |
       <a href="../../_sources/api/DataService/sensorgroup.txt"
