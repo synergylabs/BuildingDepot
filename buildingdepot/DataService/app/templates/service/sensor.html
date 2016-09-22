@@ -13,12 +13,14 @@
             <ul class="pagination" id="pagination" style="float: right"></ul>
             {% if total == 0 %}
                 <div style="text-align: center">Showing 0 - {{ total }} of {{ total }} Sensors</div>
-            {% elif current_page == 1 %}
+            {% elif current_page == 1 and total < pagesize %}
                 <div style="text-align: center">Showing 1 - {{ total }} of {{ total }} Sensors</div>
+            {% elif current_page == 1 and total >= pagesize %}
+                <div style="text-align: center">Showing 1 - {{ pagesize }} of {{ total }} Sensors</div>
             {% elif current_page<pages %}
-                <div style="text-align: center">Showing {{ (current_page*pagesize) + 1 }} - {{ (current_page+ 1)*pagesize }} of {{ total }} Sensors</div>
+                <div style="text-align: center">Showing {{ ((current_page-1)*pagesize) + 1 }} - {{ (current_page)*pagesize }} of {{ total }} Sensors</div>
             {% elif current_page==pages %}
-                <div style="text-align: center">Showing {{(current_page*pagesize) + 1}} - {{ total }} of {{ total }} Sensors</div>
+                <div style="text-align: center">Showing {{((current_page-1)*pagesize) + 1}} - {{ total }} of {{ total }} Sensors</div>
             {% endif %}
         </div>
         <div>
@@ -191,7 +193,7 @@
             $scope.filter_strings = ["ID","Building","SourceName","SourceIdentifier","MetaData","Tags"];
             $scope.root.filter = function(){
                 try {
-                    var query = JSON.parse(decodeURIComponent(location.search.substring(1)).split('&')[0].split('=')[1]);
+                    var query = JSON.parse(decodeURIComponent(location.search.substring(1)).split('=')[1]);
 
                     //convert back to angularjs format
                     var old_search = [];
@@ -249,14 +251,14 @@
                             });
                             return;
                         }
-                        //Change Format of payload before posting
+                         //Change Format of payload before posting
                         if (temp[i].key == 'Building') {
                             if ("Building" in json) {
-                                json["Building"].push(temp[i].value);
+                                json["Building"].push(temp[i].value.replace('&','%26'));
                             }
                             else {
                                 json["Building"] = [];
-                                json["Building"].push(temp[i].value);
+                                json["Building"].push(temp[i].value.replace('&','%26'));
                             }
                         }
                         else if (temp[i].key == 'ID') {
@@ -270,38 +272,38 @@
                         }
                         else if (temp[i].key == 'MetaData') {
                             if ("MetaData" in json) {
-                                json["MetaData"].push(temp[i].value);
+                                json["MetaData"].push(temp[i].value.replace('&','%26'));
                             }
                             else {
                                 json["MetaData"] = [];
-                                json["MetaData"].push(temp[i].value);
+                                json["MetaData"].push(temp[i].value.replace('&','%26'));
                             }
                         }
                         else if (temp[i].key == 'SourceIdentifier') {
                             if ("SourceIdentifier" in json) {
-                                json["SourceIdentifier"].push(temp[i].value);
+                                json["SourceIdentifier"].push(temp[i].value.replace('&','%26'));
                             }
                             else {
                                 json["SourceIdentifier"] = [];
-                                json["SourceIdentifier"].push(temp[i].value);
+                                json["SourceIdentifier"].push(temp[i].value.replace('&','%26'));
                             }
                         }
                         else if (temp[i].key == 'SourceName') {
                             if ("SourceName" in json) {
-                                json["SourceName"].push(temp[i].value);
+                                json["SourceName"].push(temp[i].value.replace('&','%26'));
                             }
                             else {
                                 json["SourceName"] = [];
-                                json["SourceName"].push(temp[i].value);
+                                json["SourceName"].push(temp[i].value.replace('&','%26'));
                             }
                         }
                         else if (temp[i].key == 'Tags') {
                             if ("Tags" in json) {
-                                json["Tags"].push(temp[i].value);
+                                json["Tags"].push(temp[i].value.replace('&','%26'));
                             }
                             else {
                                 json["Tags"] = [];
-                                json["Tags"].push(temp[i].value);
+                                json["Tags"].push(temp[i].value.replace('&','%26'));
                             }
                         }
                     }
