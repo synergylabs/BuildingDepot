@@ -135,7 +135,7 @@ def check_db(sensor, email):
     args['tags__all'] = tag_list
     sensor_groups = SensorGroup.objects(**args)
     args = {}
-    args['users__all'] = [email]
+    args['users__user_id'] = email
     user_groups = UserGroup.objects(**args)
     current_res = 'u/d'
     # Iterate over all sensor and user group combinations and find

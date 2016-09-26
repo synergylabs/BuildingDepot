@@ -29,7 +29,5 @@ def validate_email_password(email, password):
 
 
 def get_admins():
-    print "yolllooo",current_app.config['NAME']
     print svr.get_admins(current_app.config['NAME'])
-    return True
-    #return svr.get_admins(current_app.config['NAME'])
+    return svr.get_admins(current_app.config['NAME'])
