@@ -299,6 +299,7 @@ def dataservice_delete():
 
 
 @central.route('/oauth_gen', methods=['GET', 'POST'])
+@login_required
 def oauth_gen():
     keys = []
     """If a post request is     made then generate a client id and secret key
@@ -320,12 +321,14 @@ def oauth_gen():
 
 
 @central.route('/oauth_delete', methods=['POST'])
+@login_required
 def oauth_delete():
     if request.method == 'POST':
         Client.objects(client_id=request.form.get('client_id')).delete()
         return redirect(url_for('central.oauth_gen'))
 
 @central.route('/sensor', methods=['GET', 'POST'])
+@login_required
 def sensor():
     # Show the user PAGE_SIZE number of sensors on each page
     page = request.args.get('page', 1, type=int)
@@ -359,6 +362,7 @@ def sensor():
 
 
 @central.route('/sensor_delete', methods=['POST'])
+@login_required
 def sensor_delete():
     sensor = Sensor.objects(name=request.form.get('name')).first()
     # cache process
@@ -372,6 +376,7 @@ def sensor_delete():
     return redirect(url_for('central.sensor'))
 
 @central.route('/sensorgroup', methods=['GET', 'POST'])
+@login_required
 def sensorgroup():
     page = request.args.get('page', 1, type=int)
     skip_size = (page - 1) * PAGE_SIZE
@@ -394,6 +399,7 @@ def sensorgroup():
     return render_template('central/sensorgroup.html', objs=objs, form=form)
 
 @central.route('/sensorgroup_delete', methods=['POST'])
+@login_required
 def sensorgroup_delete():
     # cache process
     sensorgroup = SensorGroup.objects(name=request.form.get('name')).first()
@@ -407,6 +413,7 @@ def sensorgroup_delete():
     return redirect(url_for('central.sensorgroup'))
 
 @central.route('/usergroup', methods=['GET', 'POST'])
+@login_required
 def usergroup():
     page = request.args.get('page', 1, type=int)
     skip_size = (page - 1) * PAGE_SIZE
@@ -426,6 +433,7 @@ def usergroup():
     return render_template('central/usergroup.html', objs=objs, form=form)
 
 @central.route('/usergroup_delete', methods=['POST'])
+@login_required
 def usergroup_delete():
     # cahce process
     name = request.form.get('name')
@@ -436,6 +444,7 @@ def usergroup_delete():
     return redirect(url_for('central.usergroup'))
 
 @central.route('/permission', methods=['GET', 'POST'], endpoint="permission")
+@login_required
 def permission_create():
     page = request.args.get('page', 1, type=int)
     skip_size = (page - 1) * PAGE_SIZE
@@ -468,6 +477,7 @@ def permission_create():
 
 
 @central.route('/permission_delete', methods=['POST'])
+@login_required
 def permission_delete():
     code = request.form.get('name').split(':-:')
     permission = Permission.objects(user_group=code[0], sensor_group=code[1]).first()
@@ -483,6 +493,7 @@ def permission_delete():
     return redirect(url_for('central.permission'))
 
 @central.route('/permission_query', methods=['GET', 'POST'])
+@login_required
 def permission_query():
     """ Input taken from the user is their email and the sensor id they want to
         check the permission for. The result returned is what type of access
@@ -504,6 +515,7 @@ def permission_query():
     return render_template('central/query.html', form=form, res=res)
 
 @central.route('/sensor/search', methods=['GET', 'POST'])
+@login_required
 def sensors_search():
     data = json.loads(request.args.get('q'))
     args = {}
