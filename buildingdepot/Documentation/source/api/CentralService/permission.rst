@@ -19,13 +19,14 @@ This request creates a new Permission link between a UserGroup and a SensorGroup
       * **user_group** `(string)` -- Name of the user_group
       * **permission** `(string)` -- Permission level
               * **r** `(string)` -- Read - Will give read only access to the sensors
-              * **r/w** `(string)` -- Read-Write - Will give read and write access to the sensors
-              * **d/r** `(string)` -- Deny-read - Will deny any access to the sensors
-              * **r/w/p** `(string)` -- Read-Write-Permission - Highest level of permission that can be assigned. Will give read and write access to the sensors. In addition to this the user will be able to add/remove tags from the sensor.
+              * **rw** `(string)` -- Read-Write - Will give read and write access to the sensors
+              * **dr** `(string)` -- Deny-read - Will deny any access to the sensors
+              * **rwp** `(string)` -- Read-Write-Permission - Highest level of permission that can be assigned. Will give read and write access to the sensors. In addition to this the user will be able to add/remove tags from the sensor.
 
    :returns:
       * **success** `(string)` -- Returns 'True' if data is posted successfully otherwise 'False'
       * **error** `(string)` -- An additional value that will be present only if the request fails specifying the cause for failure
+
    :status 200: Success
    :status 401: Unauthorized Credentials (See :ref:`HTTP 401 <HTTP 401>`)
 
@@ -101,7 +102,7 @@ This request retrieves Permission level assigned for existing SensorGroup and Us
 
    .. sourcecode:: http
 
-      GET /api/permission?user_group="Test User Group"&sensor_group="Test Sensor Group"
+      GET /api/permission?user_group=Test User Group&sensor_group=Test Sensor Group
       Accept: application/json; charset=utf-8
 
    **Example response**:
@@ -150,7 +151,7 @@ This request deletes the permission link between the UserGroup and SensorGroup
 
    .. sourcecode:: http
 
-      DELETE /api/permission?user_group="Test User Group"&sensor_group="Test Sensor Group"
+      DELETE /api/permission?user_group=Test User Group&sensor_group=Test Sensor Group
       Accept: application/json; charset=utf-8
 
    **Example response**:

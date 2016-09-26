@@ -44,94 +44,6 @@
 <p>The Sensor collection manages Sensors for Locations associated with the CentralService.Sensors can be defined in the CentralService at <a class="reference external" href="http://www.example.com:81/central/sensor">http://www.example.com:81/central/sensor</a>.
 Sensor access is restricted to <span class="xref std std-ref">Users</span> or <span class="xref std std-ref">Admins</span> with
 Permissions for the Sensor and to the <cite>Admin</cite> who owns the Sensor.</p>
-<div class="section" id="list-sensors-by-tags-or-metadata">
-<span id="datas-list-sensors"></span><h2>List Sensors by Tags or Metadata<a class="headerlink" href="#list-sensors-by-tags-or-metadata" title="Permalink to this headline">¶</a></h2>
-<p>Retrieves a list of Sensors accessible to the User initiating the request filtered on the basis of the tags specified by the user</p>
-<dl class="get">
-<dt id="get--api-sensor-list?filter=-filter_type-&amp;param=value">
-<code class="descname">GET </code><code class="descname">/api/sensor/list?filter=&lt;filter_type&gt;&amp;param=value</code><a class="headerlink" href="#get--api-sensor-list?filter=-filter_type-&param=value" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>filter</strong> (<em>string</em>) &#8211; <dl class="docutils">
-<dt>Type of filter that has to be applied on the sensor list. Valid values are:</dt>
-<dd><ul class="first last">
-<li>&#8220;tags&#8221;</li>
-<li>&#8220;metadata&#8221;</li>
-</ul>
-</dd>
-</dl>
-<p>Note: url has to be encoded if it contains characters such as &#8221;:&#8221;</p>
-</li>
-<li><strong>param</strong> (<em>string</em>) &#8211; Name of the filter on the basis of which filtering of the sensors is to be done</li>
-<li><strong>value</strong> (<em>string</em>) &#8211; Value of the filter on the basis of which filtering of the sensors is to be done</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><ul class="first simple">
-<li><strong>sensors</strong> <cite>(list)</cite> &#8211; List of Sensors</li>
-</ul>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
-<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> &#8211; Success</li>
-<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a> &#8211; Unauthorized Credentials (See <span class="xref std std-ref">HTTP 401</span>)</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Example request</strong>:</p>
-<div class="highlight-http"><div class="highlight"><pre><span class="nf">GET</span> <span class="nn">/api/sensor/list?filter=tags&amp;Floor=3600</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
-<span class="na">Accept</span><span class="o">:</span> <span class="l">application/json; charset=utf-8</span>
-</pre></div>
-</div>
-<p><strong>Example response</strong>:</p>
-<div class="highlight-http"><div class="highlight"><pre>HTTP/1.1 200 OK
-Content-Type: application/json
-
-{
-  &quot;data&quot;: {
-    &quot;sensor_1&quot;: {
-      &quot;building&quot;: &quot;NSH&quot;,
-      &quot;metadata&quot;: {
-           &quot;Type&quot;: &quot;Temperature&quot;
-      },
-      &quot;name&quot;: &quot;26da099a-3fe0-4966-b068-14f51bcedb6e&quot;,
-      &quot;source_identifier&quot;: &quot;SensorTag&quot;,
-      &quot;source_name&quot;: &quot;Sensor Tag 1&quot;,
-      &quot;tags&quot;: [
-         {
-           &quot;name&quot;: &quot;Floor&quot;,
-           &quot;value&quot;: &quot;1&quot;
-         }
-      ]
-    },
-    &quot;sensor_2&quot;: {
-      &quot;building&quot;: &quot;NSH&quot;,
-      &quot;metadata&quot;: {},
-      &quot;name&quot;: &quot;3a99ca8f-b8c1-4489-b448-d463f0852208&quot;,
-      &quot;source_identifier&quot;: &quot;SensorTag&quot;,
-      &quot;source_name&quot;: &quot;Sensor Tag 1&quot;,
-      &quot;tags&quot;: [
-         {
-           &quot;name&quot;: &quot;Floor&quot;,
-           &quot;value&quot;: &quot;1&quot;
-         },
-         {
-           &quot;name&quot;: &quot;Room&quot;,
-           &quot;value&quot;: &quot;3600&quot;
-         }
-    }
-  }
-}
-</pre></div>
-</div>
-</dd></dl>
-
-</div>
 <div class="section" id="create-a-sensor">
 <h2>Create a Sensor<a class="headerlink" href="#create-a-sensor" title="Permalink to this headline">¶</a></h2>
 <p>Creates a new Sensor point in BuildingDepot and returns the UUID.</p>
@@ -265,9 +177,9 @@ Accept: application/json; charset=utf-8
 <div class="section" id="search-sensors">
 <h2>Search Sensors<a class="headerlink" href="#search-sensors" title="Permalink to this headline">¶</a></h2>
 <p>The Search API is used search sensors based on uuid,source_name,source_identifier, building, Tag and MetaData. Multiple search queries can be sent in a single request.</p>
-<dl class="get">
-<dt id="get--api-search">
-<code class="descname">GET </code><code class="descname">/api/search</code><a class="headerlink" href="#get--api-search" title="Permalink to this definition">¶</a></dt>
+<dl class="post">
+<dt id="post--api-search">
+<code class="descname">POST </code><code class="descname">/api/search</code><a class="headerlink" href="#post--api-search" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <table class="docutils field-list" frame="void" rules="none">
@@ -302,7 +214,7 @@ Accept: application/json; charset=utf-8
   &quot;data&quot;:{
       &quot;ID&quot;:&quot;6cf53d24-e3a3-41bd-b2b5-8f109694f628&quot;,
       &quot;Building&quot;:&quot;NSH&quot;
-      &quot;Tags&quot;:{&quot;floor&quot;:&#39;1&#39;}
+      &quot;Tags&quot;:[&quot;floor:1&quot;]
   }
 }
 </pre></div>
@@ -373,7 +285,6 @@ Content-Type: application/json
   <h3><a href="../../index.html">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">Sensor</a><ul>
-<li><a class="reference internal" href="#list-sensors-by-tags-or-metadata">List Sensors by Tags or Metadata</a></li>
 <li><a class="reference internal" href="#create-a-sensor">Create a Sensor</a></li>
 <li><a class="reference internal" href="#get-sensor-details">Get Sensor details</a></li>
 <li><a class="reference internal" href="#search-sensors">Search Sensors</a></li>

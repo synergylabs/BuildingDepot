@@ -67,9 +67,9 @@
 <dt><strong>permission</strong> <cite>(string)</cite> &#8211; Permission level</dt>
 <dd><ul class="first last simple">
 <li><strong>r</strong> <cite>(string)</cite> &#8211; Read - Will give read only access to the sensors</li>
-<li><strong>r/w</strong> <cite>(string)</cite> &#8211; Read-Write - Will give read and write access to the sensors</li>
-<li><strong>d/r</strong> <cite>(string)</cite> &#8211; Deny-read - Will deny any access to the sensors</li>
-<li><strong>r/w/p</strong> <cite>(string)</cite> &#8211; Read-Write-Permission - Highest level of permission that can be assigned. Will give read and write access to the sensors. In addition to this the user will be able to add/remove tags from the sensor.</li>
+<li><strong>rw</strong> <cite>(string)</cite> &#8211; Read-Write - Will give read and write access to the sensors</li>
+<li><strong>dr</strong> <cite>(string)</cite> &#8211; Deny-read - Will deny any access to the sensors</li>
+<li><strong>rwp</strong> <cite>(string)</cite> &#8211; Read-Write-Permission - Highest level of permission that can be assigned. Will give read and write access to the sensors. In addition to this the user will be able to add/remove tags from the sensor.</li>
 </ul>
 </dd>
 </dl>
@@ -181,7 +181,7 @@
 
 <div class="compound">
 <p class="compound-first"><strong>Example request</strong>:</p>
-<div class="compound-middle highlight-http"><div class="highlight"><pre>GET /api/permission?user_group=&quot;Test User Group&quot;&amp;sensor_group=&quot;Test Sensor Group&quot;
+<div class="compound-middle highlight-http"><div class="highlight"><pre>GET /api/permission?user_group=Test User Group&amp;sensor_group=Test Sensor Group
 Accept: application/json; charset=utf-8
 </pre></div>
 </div>
@@ -240,7 +240,7 @@ Accept: application/json; charset=utf-8
 
 <div class="compound">
 <p class="compound-first"><strong>Example request</strong>:</p>
-<div class="compound-middle highlight-http"><div class="highlight"><pre>DELETE /api/permission?user_group=&quot;Test User Group&quot;&amp;sensor_group=&quot;Test Sensor Group&quot;
+<div class="compound-middle highlight-http"><div class="highlight"><pre>DELETE /api/permission?user_group=Test User Group&amp;sensor_group=Test Sensor Group
 Accept: application/json; charset=utf-8
 </pre></div>
 </div>

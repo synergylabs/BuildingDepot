@@ -43,8 +43,8 @@
 <p>The Sensor collection manages Sensors for Locations associated with the DataService.
 Sensor access is restricted to <span class="xref std std-ref">Users</span> or <span class="xref std std-ref">Admins</span> with
 Permissions for the Sensor and to the <cite>Admin</cite> who owns the Sensor.</p>
-<div class="section" id="put-timeseries-datapoints">
-<span id="datas-list-sensors"></span><h2>Put Timeseries Datapoints<a class="headerlink" href="#put-timeseries-datapoints" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="post-timeseries-datapoints">
+<span id="datas-list-sensors"></span><h2>Post Timeseries Datapoints<a class="headerlink" href="#post-timeseries-datapoints" title="Permalink to this headline">¶</a></h2>
 <p>This stores datapoints in the timeseries of the specified Sensorpoint.</p>
 <p>The first datapoint that is posted to the uuid defines the datatype for all further timeseries datapoints e.g. if the first datapoint posted to a certain uuid is a int then all further datapoints have to be ints.</p>
 <dl class="post">
@@ -177,7 +177,7 @@ Permissions for the Sensor and to the <cite>Admin</cite> who owns the Sensor.</p
 <p>Note: Both interval and resolution are specified with the time value appended by the type of the value e.g. 10s for 10 seconds or 10m for 10 minutes.</p>
 <div class="compound">
 <p class="compound-first"><strong>Example request</strong>:</p>
-<div class="compound-middle highlight-http"><div class="highlight"><pre><span class="nf">GET</span> <span class="nn">/sensor/&lt;sensor-uuid&gt;/timeseries?start_time=1234567&amp;end_time=1237567&amp;resolution=10s</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<div class="compound-middle highlight-http"><div class="highlight"><pre><span class="nf">GET</span> <span class="nn">/sensor/&lt;sensor-uuid&gt;/timeseries?start_time=1445535722&amp;end_time=1445789516&amp;resolution=10s</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
 <span class="na">Accept</span><span class="o">:</span> <span class="l">application/json; charset=utf-8</span>
 </pre></div>
 </div>
@@ -232,7 +232,7 @@ Permissions for the Sensor and to the <cite>Admin</cite> who owns the Sensor.</p
   <h3><a href="../../index.html">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">Timeseries</a><ul>
-<li><a class="reference internal" href="#put-timeseries-datapoints">Put Timeseries Datapoints</a></li>
+<li><a class="reference internal" href="#post-timeseries-datapoints">Post Timeseries Datapoints</a></li>
 <li><a class="reference internal" href="#read-timeseries-datapoints">Read Timeseries Datapoints</a></li>
 </ul>
 </li>

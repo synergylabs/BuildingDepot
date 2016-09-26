@@ -2,7 +2,7 @@
 
 
 Timeseries
-######
+##########
 
 The Sensor collection manages Sensors for Locations associated with the DataService.
 Sensor access is restricted to :ref:`Users <CentralS-Users>` or :ref:`Admins <DataS-Admins>` with
@@ -10,8 +10,8 @@ Permissions for the Sensor and to the `Admin` who owns the Sensor.
 
 .. _DataS List Sensors:
 
-Put Timeseries Datapoints
-*************************
+Post Timeseries Datapoints
+**************************
 
 This stores datapoints in the timeseries of the specified Sensorpoint.
 
@@ -84,7 +84,7 @@ The first datapoint that is posted to the uuid defines the datatype for all furt
       }
 
 Read Timeseries Datapoints
-************
+**************************
 
 This retreives a list of datapoints for the timeseries of the specified Sensorpoint
 
@@ -112,7 +112,7 @@ Note: Both interval and resolution are specified with the time value appended by
 
    .. sourcecode:: http
 
-      GET /sensor/<sensor-uuid>/timeseries?start_time=1234567&end_time=1237567&resolution=10s HTTP/1.1
+      GET /sensor/<sensor-uuid>/timeseries?start_time=1445535722&end_time=1445789516&resolution=10s HTTP/1.1
       Accept: application/json; charset=utf-8
 
    **Example response**:
