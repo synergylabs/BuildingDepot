@@ -13,7 +13,7 @@ a sensor contains such as Tags,Building,Source identifier,uuid etc.
 from flask import request,jsonify
 from flask.views import MethodView
 from .. import responses
-from ...models.cs_models import Sensor
+from ...models.cs_models import Sensor, BrickType
 from ..helper import form_query,create_response
 from ... import oauth
 
@@ -27,8 +27,56 @@ class SearchService(MethodView):
             return jsonify(responses.missing_data)
 
         args = {}
+	tempargs={}
         for key, values in data.iteritems():
-            if key == 'Building':
+	    Special = key[length(key)-1]
+	    if Special in ['*', '+', '-']:
+		newkey = key[:length(key)-1]
+		if newkey = 'Type':
+			form_query('Enttype', values, args, "$or")
+			if Special == '*' or Special == '+':
+				#Traverse Upwards
+				loopvar = 1
+				tempvalues = [values]
+				newTemp = []
+				while loopvar=1:
+					loopvar = 0
+					for singleValue in tempvalues:
+						form_query("subClass", singleValue, tempargs,"$or")
+						newCollect = BrickType._get_collection().find(tempargs)
+						tempargs = []
+						for newValue in newCollect:
+							newName = newValue.get('name')
+							form_query('Enttype', newName, args, "$or")
+							newTemp.append(newName)
+							loopvar = 1
+						tempvalues = newTemp
+						newTemp = []					
+					
+			if Special == '*' or Special =='-':
+				#Traverse Downwards
+				loopvar = 1
+				tempvalues = [values]
+				newTemp = []
+				while loopvar=1:
+					loopvar = 0
+					for singleValue in tempvalues:
+						form_query("superClass", singleValue, tempargs,"$or")
+						newCollect = BrickType._get_collection().find(tempargs)
+						tempargs = []
+						for newValue in newCollect:
+							newName = newValue.get('name')
+							form_query('Enttype', newName, args, "$or")
+							newTemp.append(newName)
+							loopvar = 1
+						tempvalues = newTemp
+						newTemp = []			
+			
+		else:
+		  	return jsonify(responses.no_search_parameters) 
+            elif key == 'Type':
+		form_query('Enttype', values, args, "$or")
+	    elif key == 'Building':
                 form_query('building',values,args,"$or")
             elif key == 'SourceName':
                 form_query('source_name',values,args,"$or")

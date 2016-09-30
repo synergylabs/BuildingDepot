@@ -51,9 +51,9 @@ class SensorTagsService(MethodView):
         if obj is None:
             return jsonify(responses.invalid_uuid)
         tags_owned = [{'name': tag.name, 'value': tag.value} for tag in obj.tags]
-        tags = get_building_tags(obj.building)
+        tags = get_building_tags(obj.building) #NEEDS TO BE CHANGED
         response = dict(responses.success_true)
-        response.update({'tags': tags, 'tags_owned': tags_owned})
+        response.update({'tags': tags, 'tags_owned': tags_owned}) #NEEDS TO BE CHANGED
         return jsonify(response)
 
     @oauth.require_oauth()
@@ -87,6 +87,7 @@ class SensorTagsService(MethodView):
             if sensor is None:
                 return jsonify(responses.invalid_uuid)
             Sensor.objects(name=name).update(set__tags=tags)
+	.update(set__EntType = val
             r.delete(name)
         else:
             return jsonify(responses.ds_error)
