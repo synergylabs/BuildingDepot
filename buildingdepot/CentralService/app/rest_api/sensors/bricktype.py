@@ -50,9 +50,9 @@ class BrickTypeService(MethodView):
 	EquivData = [{value} for value in btype.equivalentClass]	
         response = dict(responses.success_true)
         response.update({'name': str(btype.name),
-                        'subClass', Subdata,
+                        'subClass': Subdata,
                         'SuperClass': Superdata,
-			'equivalentClass' EquivData
+			'equivalentClass': EquivData
                         })
         return jsonify(response)
 

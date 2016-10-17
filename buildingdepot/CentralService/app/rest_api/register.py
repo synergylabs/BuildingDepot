@@ -3,7 +3,7 @@ from .dataservices import dataservice, ds_buildings, ds_admins
 from .users import user
 from .sensorgroups import sensorgroup, sg_tags
 from .usergroups import ug_users, usergroup
-from .sensors import sensor, search, sensor_tags, metadata
+from .sensors import sensor, search, bricktype, sensor_tags, metadata
 from .permissions import permission
 
 
@@ -23,6 +23,10 @@ def register_view(app_obj):
     # get gets a sensor's tags
     # post changes/adds to a sensor's tags
     app_obj.add_url_rule('/api/sensor/<name>/tags', view_func=sensortags_view, methods=['GET', 'POST'])
+
+    brick_view = bricktype.BrickTypeService.as_view('bricktype_api')
+    add_obj.add_url_rule('/api/bricktype', view_func=brick_view, methods=['POST'])
+    add_obj.add_url_rule('/api/<name>/bricktype', view_func=brick_view, methods=['GET'])
 
     sensorgroup_view = sensorgroup.SensorGroupService.as_view('sensorgroup_api')
     # post creates an new sensor group
