@@ -49,7 +49,7 @@ class SensorGroupService(MethodView):
 
         # Get the list of buildings and verify that the one specified in the
         # request exists
-        buildings_list = get_building_choices()
+        buildings_list = get_building_choices('rest_api')
         for item in buildings_list:
             if building in item:
                 SensorGroup(name=xstr(name), building=xstr(building),
