@@ -96,7 +96,7 @@ class BrickTypeService(MethodView):
 	aImports = data.get('Imports')
 	aComment = data.get('Comment')
 	aisHierarchical = data.get('isHierarchical')
-
+	building = "Doom"
         if building in get_building_choices():
             Extrauuid = str(uuid4()) #
 	    uuid = Brickname #

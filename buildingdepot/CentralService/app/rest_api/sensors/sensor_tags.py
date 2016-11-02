@@ -87,7 +87,6 @@ class SensorTagsService(MethodView):
             if sensor is None:
                 return jsonify(responses.invalid_uuid)
             Sensor.objects(name=name).update(set__tags=tags)
-	.update(set__EntType = val
             r.delete(name)
         else:
             return jsonify(responses.ds_error)

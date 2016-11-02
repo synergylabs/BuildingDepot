@@ -25,8 +25,8 @@ def register_view(app_obj):
     app_obj.add_url_rule('/api/sensor/<name>/tags', view_func=sensortags_view, methods=['GET', 'POST'])
 
     brick_view = bricktype.BrickTypeService.as_view('bricktype_api')
-    add_obj.add_url_rule('/api/bricktype', view_func=brick_view, methods=['POST'])
-    add_obj.add_url_rule('/api/<name>/bricktype', view_func=brick_view, methods=['GET'])
+    app_obj.add_url_rule('/api/bricktype', view_func=brick_view, methods=['POST'])
+    app_obj.add_url_rule('/api/<name>/bricktype', view_func=brick_view, methods=['GET'])
 
     sensorgroup_view = sensorgroup.SensorGroupService.as_view('sensorgroup_api')
     # post creates an new sensor group

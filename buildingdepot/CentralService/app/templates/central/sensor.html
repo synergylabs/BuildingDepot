@@ -246,6 +246,7 @@
                         <th>Source Name</th>
                         <th>Source Identifier</th>
                         <th>Owner</th>
+			<th><OntologyTpe></th>
                     </tr>
                     </thead>
                     <tbody>
@@ -256,6 +257,7 @@
                             <td>{{ obj.source_name }}</td>
                             <td>{{ obj.source_identifier }}</td>
                             <td>{{ obj.owner }}</td>
+			    <td>{{ obj.Enttype}}</td>
                             <td>
                                 <a ng-click="root.select('{{ obj.name }}')" href="#metadata" data-toggle="modal" class="btn btn-info">Metadata</a>
                             </td>

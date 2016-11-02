@@ -55,17 +55,17 @@ def sensors_search():
     args = {}
     for key, values in data.iteritems(): # BIG CHANGES
               for key, values in data.iteritems():
-	    Special = key[length(key)-1]
-	    if Special in ['*', '+', '-']:
+		    Special = key[length(key)-1]
+	      if Special in ['*', '+', '-']:
 		newkey = key[:length(key)-1]
-		if newkey = 'Type':
+		if newkey == 'Type':
 			form_query('Enttype', values, args, "$or")
 			if Special == '*' or Special == '+':
 				#Traverse Upwards
 				loopvar = 1
 				tempvalues = [values]
 				newTemp = []
-				while loopvar=1:
+				while loopvar==1:
 					loopvar = 0
 					for singleValue in tempvalues:
 						form_query("subClass", singleValue, tempargs,"$or")
@@ -84,7 +84,7 @@ def sensors_search():
 				loopvar = 1
 				tempvalues = [values]
 				newTemp = []
-				while loopvar=1:
+				while loopvar==1:
 					loopvar = 0
 					for singleValue in tempvalues:
 						form_query("superClass", singleValue, tempargs,"$or")
@@ -100,19 +100,19 @@ def sensors_search():
 			
 		else:
 		  	return jsonify(responses.no_search_parameters) 
-            elif key == 'Type':
+              elif key == 'Type':
 		form_query('Enttype', values, args, "$or")
-	    elif key == 'Building':
+	      elif key == 'Building':
                 form_query('building',values,args,"$or")
-            elif key == 'SourceName':
+              elif key == 'SourceName':
                 form_query('source_name',values,args,"$or")
-            elif key == 'SourceIdentifier':
+              elif key == 'SourceIdentifier':
                 form_query('source_identifier',values,args,"$or")
-            elif key == 'ID':
+              elif key == 'ID':
                 form_query('name',values,args,"$or")
-            elif key == 'Tags':
+              elif key == 'Tags':
                 form_query('tags',values,args,"$and")
-            elif key == 'MetaData':
+              elif key == 'MetaData':
                 form_query('metadata',values,args,"$and")    
     print args
     # Show the user PAGE_SIZE number of sensors on each page
