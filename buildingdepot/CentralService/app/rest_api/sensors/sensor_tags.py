@@ -49,9 +49,12 @@ class SensorTagsService(MethodView):
         } """
         obj = Sensor.objects(name=name).first()
         if obj is None:
+	    print "I happen"
             return jsonify(responses.invalid_uuid)
-        tags_owned = [{'name': tag.name, 'value': tag.value} for tag in obj.tags]
-        tags = get_building_tags(obj.building) #NEEDS TO BE CHANGED
+	tags_owned = [{'name': tag.name, 'value': tag.value} for tag in obj.tags]
+        print len(tags_owned), "length"
+	print tags_owned
+	tags = get_building_tags(obj.building) #NEEDS TO BE CHANGED
         response = dict(responses.success_true)
         response.update({'tags': tags, 'tags_owned': tags_owned}) #NEEDS TO BE CHANGED
         return jsonify(response)
@@ -81,12 +84,20 @@ class SensorTagsService(MethodView):
             "success": <True or False>
         }
         """
-        tags = request.get_json()['data']
-        sensor = Sensor.objects(name=name).first()
+	print name
+        NewTags = request.get_json()['data']
+        print NewTags,type(NewTags)
+	sensor = Sensor.objects(name=name).first()
+	tags_owned = [{'name': tag.name, 'value': tag.value} for tag in sensor.tags]
+	for tag in NewTags:
+		tags_owned.append(tag)
         if defs.invalidate_sensor(name):
             if sensor is None:
                 return jsonify(responses.invalid_uuid)
-            Sensor.objects(name=name).update(set__tags=tags)
+#	    NewList = []
+#	    for key in tags.keys():
+#		NewList.append(str(key)+":"+str(tags[key]))
+            Sensor.objects(name=name).update(set__tags=tags_owned)
             r.delete(name)
         else:
             return jsonify(responses.ds_error)

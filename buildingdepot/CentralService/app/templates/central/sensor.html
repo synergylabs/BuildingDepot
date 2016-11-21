@@ -246,7 +246,7 @@
                         <th>Source Name</th>
                         <th>Source Identifier</th>
                         <th>Owner</th>
-			<th><OntologyTpe></th>
+			<th>OntologyType</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -343,7 +343,7 @@
             $scope.root = {};
             $scope.filter_search = [];
             $scope.filter_search.push({'key': '', 'value': ''});
-            $scope.filter_strings = ["ID","Building","SourceName","SourceIdentifier","MetaData","Tags"];
+            $scope.filter_strings = ["ID","Building","SourceName","SourceIdentifier","Type","MetaData","Tags"];
             $scope.root.addNewFilter = function () {
                 $scope.filter_search.push({'key': '', 'value': ''});
             };
@@ -427,6 +427,15 @@
                                 json["ID"].push(temp[i].value);
                             }
                         }
+			else if (temp[i].key=='Type'){
+				if("Type" in json){
+					json["Type"].push(temp[i].value);
+				}
+				else{
+					json["Type"] = [];
+					json["Type"].push(temp[i].value);
+				}
+			}	
                         else if (temp[i].key == 'MetaData') {
                             if ("MetaData" in json) {
                                 json["MetaData"].push(temp[i].value.replace('&','%26'));

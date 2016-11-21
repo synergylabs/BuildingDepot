@@ -133,7 +133,7 @@ def check_if_super(email=None):
         return True
     return False
 
-def get_building_choices():
+def get_building_choices(call_type=None):
     """Get the list of buildings in this DataService"""
     dataservices = DataService.objects()
     buildings_list = []
@@ -142,7 +142,10 @@ def get_building_choices():
             print building
             if building not in buildings_list:
                 buildings_list.append(building)
-    return zip(buildings_list,buildings_list)
+    if not call_type:
+		return zip(buildings_list, buildings_list)
+    else:
+    	return buildings_list
 
 def get_building_tags(building):
     """Get all the tags that this building has associated with it"""
@@ -160,6 +163,7 @@ def get_building_tags(building):
 
 def form_query(param,values,args,operation):
     res = []
+    #print args, "IS ARGS"
     if param == 'tags':
         for tag in values:
             key_value = tag.split(":", 1)
@@ -243,7 +247,9 @@ def add_delete_users(old, now):
 def get_ds(sensor,building=None):
     args = {}
     args['buildings__all'] = [building if building else Sensor.objects(name=sensor).first().building]
+    print args, 'First'
     dataservices = DataService.objects(**args)
+    print dataservices, 'Second'
     return dataservices.first().name
 
 def get_sg_ds(sensor_group):

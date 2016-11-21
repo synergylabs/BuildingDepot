@@ -93,22 +93,26 @@ class SensorService(MethodView):
 	    sensortype = data['type'] #
 	except KeyError: #
 		sensortype = "BasicBD" #
-
-        if building in get_building_choices():
-            Extrauuid = str(uuid4()) #
-	    uuid = str(sensortype+":"+sensorname) #
-            if defs.create_sensor(uuid,email,building):
-                Sensor(name=uuid,
-                       source_name=xstr(sensorname),
+       # building = get_building_choices()[0]
+#	print building
+#	print get_building_choices("rest_api")
+	if building in get_building_choices("rest_api"):
+        	Extrauuid = str(uuid4()) #
+		uuid = str(sensortype+":"+sensorname) #
+        	if defs.create_sensor(uuid,email,building):
+                   Sensor(name=uuid,
+                       source_name=xstr(identifier),
                        source_identifier=xstr(identifier),
                        building=building,
                        owner=email,
-		       Enttype = str(senstortype)).save() #
-                r.set('owner:{}'.format(uuid), email)
-                response = dict(responses.success_true)
-                response.update({'uuid':uuid})
-                return jsonify(response)
-            else:
-                return jsonify(responses.ds_error)
-        return jsonify(responses.invalid_building)
+		       Enttype = str(sensortype)).save() #
+                   r.set('owner:{}'.format(uuid), email)
+                   response = dict(responses.success_true)
+                   response.update({'uuid':uuid})
+                   return jsonify(response)
+        	else:
+		   print "Fail1"
+                   return jsonify(responses.ds_error)
+        print "fail 2"
+	return jsonify(responses.invalid_building)
 

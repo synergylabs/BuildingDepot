@@ -55,9 +55,9 @@ def sensors_search():
     args = {}
     for key, values in data.iteritems(): # BIG CHANGES
               for key, values in data.iteritems():
-		    Special = key[length(key)-1]
+		    Special = key[len(key)-1]
 	      if Special in ['*', '+', '-']:
-		newkey = key[:length(key)-1]
+		newkey = key[len(key)-1]
 		if newkey == 'Type':
 			form_query('Enttype', values, args, "$or")
 			if Special == '*' or Special == '+':

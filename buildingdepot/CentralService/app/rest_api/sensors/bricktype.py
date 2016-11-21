@@ -49,11 +49,14 @@ class BrickTypeService(MethodView):
 	Superdata = [{value} for value in btype.SuperClass]
 	EquivData = [{value} for value in btype.equivalentClass]	
         response = dict(responses.success_true)
+	print "a"
         response.update({'name': str(btype.name),
-                        'subClass': Subdata,
-                        'SuperClass': Superdata,
-			'equivalentClass': EquivData
+                        'subClass': 'a',
+                        'SuperClass': 'b',
+			'equivalentClass': 'c'
                         })
+	print "b"
+	print response
         return jsonify(response)
 
     @oauth.require_oauth()
@@ -97,15 +100,18 @@ class BrickTypeService(MethodView):
 	aComment = data.get('Comment')
 	aisHierarchical = data.get('isHierarchical')
 	building = "Doom"
-        if building in get_building_choices():
+	print get_building_choices()
+        if building in get_building_choices()[0]:
+	    print get_building_choices()
             Extrauuid = str(uuid4()) #
 	    uuid = Brickname #
             if defs.create_sensor(uuid,email,building):
+		print "happy"
                 BrickType(name=uuid,
 		       subClass = subclasses,
 		       SuperClass = superClass,
 		       equivalentClass = equivClass,
-		       domain = Domain,
+		       Domain = domain,
 		       Type = aType,
 		       InverseOf = aInverseOf,
 		       OnProperty=aOnProperty,
@@ -121,8 +127,8 @@ class BrickTypeService(MethodView):
                 r.set('owner:{}'.format(uuid), email)
                 response = dict(responses.success_true)
                 response.update({'uuid':uuid})
-                return jsonify(response)
+                return jsonify("bi")
             else:
-                return jsonify(responses.ds_error)
-        return jsonify(responses.invalid_building)
+                return jsonify("ai")
+        return jsonify(get_building_choices())
 
