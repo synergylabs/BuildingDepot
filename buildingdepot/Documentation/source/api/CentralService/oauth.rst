@@ -1,9 +1,9 @@
-.. DataService API Documentation
+.. CentralService API Documentation
 
 OAuth
 #####
 
-Every query to BuildingDepot has to be authenticated by an access token. The client id and secret key required to generate the access token can be obtained after logging into the DataService. After these have been obtained the access token can be genereated by using the following request. 
+Every query to BuildingDepot has to be authenticated by an access token. The client id and secret key required to generate the access token can be obtained after logging into the CentralService. After these have been obtained the access token can be genereated by using the following request. 
 
 
 Generating access tokens
