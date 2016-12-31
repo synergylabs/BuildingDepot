@@ -23,7 +23,7 @@ class SearchService(MethodView):
     def post(self):
         try:
             data = request.get_json()['data']
-        except KeyError:
+        except (KeyError, TypeError):
             return jsonify(responses.missing_data)
 
         args = {}
