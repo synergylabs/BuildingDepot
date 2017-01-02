@@ -186,8 +186,11 @@ def form_query(param, values, args, operation):
             current_meta = {"metadata." + key_value[0]: key_value[1]}
             res.append(current_meta)
     else:
-        for value in values:
-            res.append({param: value})
+        if isinstance(values, basestring):
+            res.append({param: values})
+        else:
+            for value in values:
+                res.append({param: value})
     if args.get(operation) is None:
         args[operation] = res
     else:
