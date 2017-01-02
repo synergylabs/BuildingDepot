@@ -79,7 +79,7 @@ class SensorService(MethodView):
         data = request.get_json()['data']
         try:
             building = data['building']
-        except (KeyError, TypeError):
+        except KeyError:
             return jsonify(responses.missing_parameters)
 
         sensor_name = data.get('name')
