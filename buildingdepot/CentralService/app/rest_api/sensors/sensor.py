@@ -111,8 +111,6 @@ class SensorService(MethodView):
                    response.update({'uuid':uuid})
                    return jsonify(response)
         	else:
-		   print "Fail1"
                    return jsonify(responses.ds_error)
-        print "fail 2"
 	return jsonify(responses.invalid_building)
 

@@ -618,7 +618,9 @@ def sensors_search():
             elif key == 'ID':
                 form_query('name',values,args,"$or")
             elif key == 'Tags':
+		print values, "NOW"
                 form_query('tags',values,args,"$and")
+		print args, "AFTER"
             elif key == 'MetaData':
                 form_query('metadata',values,args,"$and")
     #for key, values in data.iteritems():

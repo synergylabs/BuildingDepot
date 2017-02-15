@@ -24,6 +24,7 @@ class SearchService(MethodView):
         try:
             data = request.get_json()['data']
         except KeyError:
+	    print "UhOh"
             return jsonify(responses.missing_data)
 
         args = {}
@@ -117,13 +118,15 @@ class SearchService(MethodView):
             elif key == 'ID':
                 form_query('name',values,args,"$or")
             elif key == 'Tags':
+		print values, "NOW"
                 form_query('tags',values,args,"$and")
+		print args, "AFTER"
             elif key == 'MetaData':
                 form_query('metadata',values,args,"$and")
         if not args:
             return jsonify(responses.no_search_parameters)
         collection = Sensor._get_collection().find(args)
-
+	print "COLLECTION", collection
         response = dict(responses.success_true)
         response.update({"result":create_response(collection)})
         return jsonify(response)
