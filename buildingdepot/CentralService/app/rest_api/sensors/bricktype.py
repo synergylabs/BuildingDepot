@@ -55,8 +55,6 @@ class BrickTypeService(MethodView):
                         'SuperClass': 'b',
 			'equivalentClass': 'c'
                         })
-	print "b"
-	print response
         return jsonify(response)
 
     @oauth.require_oauth()
@@ -79,35 +77,93 @@ class BrickTypeService(MethodView):
 	    Brickname = data['name'] #
         except KeyError:
             return jsonify(responses.missing_parameters)
-
       #  sensor_name = data.get('name') #
         email = get_email()
-	
-	subclasses = data.get('subClass')
-	superClass= data.get('superClass')
-	equivClass = data.get('equivalentClass')
-	domain = data.get('Domain')
-	aType = data.get('Type')
-	aInverseOf=data.get('InverseOf')
-	aOnProperty = data.get('onproperty')
-	aRange = data.get('Range')
-	aSubPropertyOf = data.get('subpropertyOf')
-	aSuperPropertyOf= data.get('SuperPropertyOf')
-	aSomeValuesFrom = data.get('SomeValuesFrom')
-	aUsesTag = data.get('UsesTag')
-	aLabel = data.get('UsesTag')
-	aImports = data.get('Imports')
-	aComment = data.get('Comment')
-	aisHierarchical = data.get('isHierarchical')
-	building = "Doom"
-	print get_building_choices()
-        if building in get_building_choices()[0]:
-	    print get_building_choices()
-            Extrauuid = str(uuid4()) #
-	    uuid = Brickname #
-            if defs.create_sensor(uuid,email,building):
-		print "happy"
-                BrickType(name=uuid,
+	subclasses = []
+	superClass = []
+	equivClass = []
+	domain = []
+	aType = []
+	aInverseOf = []
+	aOnProperty = []
+	aRange = []
+	aSubPropertyOf = []
+	aSuperPropertyOf = []
+	aSomeValuesFrom = []
+	aUsesTag = []
+	aLabel = []
+	aComment = []
+	aisHierarchical = []
+	try:	
+		subclasses = data.get('subClass')
+	except KeyError:
+		subclasses = []
+	try:
+		superClass= data.get('superClass')
+	except KeyError:
+		superClass = []
+	try:
+		equivClass = data.get('equivalentClass')
+	except KeyError:
+		equivClass = []
+	try:
+		domain = data.get('Domain')
+	except KeyError:
+		domain = []
+	try:
+		aType = data.get('Type')
+	except KeyError:
+		aType = []
+	try:
+		aInverseOf=data.get('InverseOf')
+	except KeyError:
+		aInverseOf = []
+	try:
+		aOnProperty = data.get('onproperty')
+	except KeyError:
+		 aOnProperty = []
+	try:		
+		aRange = data.get('Range')
+	except KeyError:
+		aRange = []
+	try:	
+		aSubPropertyOf = data.get('subpropertyOf')
+	except KeyError:
+		aSubPropertyOf = []
+	try:
+		aSuperPropertyOf= data.get('SuperPropertyOf')
+	except KeyError:
+		aSuperPropertyOf = []
+	try:
+		aSomeValuesFrom = data.get('SomeValuesFrom')
+	except KeyError:
+		aSomeValuesFrom = []
+	try:
+		aUsesTag = data.get('UsesTag')
+	except KeyError:
+		aUsesTag = []
+	try:
+		aLabel = data.get('UsesTag')
+	except KeyError:
+		aLabel = []
+	try:
+		aImports = data.get('Imports')
+	except KeyError:
+		aImports =[]
+	try:
+		aComment = data.get('Comment')
+	except KeyError:
+		aComment = []
+	try:
+		aisHierarchical = data.get('isHierarchical')
+	except KeyError:
+		aisHierarchical = []
+	#building = "Doom"
+        #if building in get_building_choices()[0]:
+         #   Extrauuid = str(uuid4()) #
+	  #  uuid = Brickname #
+           # if defs.create_sensor(uuid,email,building):
+        BrickType(name=Brickname,
 		       subClass = subclasses,
 		       SuperClass = superClass,
 		       equivalentClass = equivClass,
@@ -124,11 +180,8 @@ class BrickTypeService(MethodView):
 		       Imports = aImports,
 		       Comment = aComment,
 		       isHierarchical = aisHierarchical).save()
-                r.set('owner:{}'.format(uuid), email)
-                response = dict(responses.success_true)
-                response.update({'uuid':uuid})
-                return jsonify("bi")
-            else:
-                return jsonify("ai")
-        return jsonify(get_building_choices())
+        r.set('owner:{}'.format(Brickname), email)
+        response = dict(responses.success_true)
+        response.update({'name':Brickname})
+        return jsonify(response)
 

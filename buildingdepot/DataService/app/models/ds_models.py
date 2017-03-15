@@ -27,7 +27,8 @@ class Sensor(Document):
     source_identifier = StringField()
     owner = StringField()
     Enttype = StringField() #
-
+    timeseries = StringField()
+   
     metadata = DictField()
     building = StringField()
     tags = ListField(EmbeddedDocumentField(Node))

@@ -99,9 +99,11 @@ class SensorTagsService(MethodView):
         for tag in NewTags:
 	 Recursedict[name].append(tag)
 	 print tag, "here"
-     
+        completed = list()
         while(len(Recursedict.keys())>0):
 	 name = Recursedict.keys()[0]
+	 completed.append(name)
+	 
 	 print name, "NAME IS HERE"
          sensor = Sensor.objects(name=name).first()
 	 #Brick Code Added Below
@@ -126,12 +128,22 @@ class SensorTagsService(MethodView):
  	# sensor = Sensor.objects(name=name).first()
  	 tags_owned = [{'name': tag.name, 'value': tag.value} for tag in sensor.tags]
 	# tags_owned = []
+	 checker = 0
+	 counter = 0
+	 length = len(tags_owned)
 	 for tag in NewTags:
 		print tag['name'], tag['value'], "tags"
 		if tag not in tags_owned:
-			tags_owned.append(tag)
+			checker = 1
+			if(tag['value'] != name):
+				tags_owned.append(tag)
 		else:
+			counter +=1
 			print tag, "HERE WE GO"
+	 if(checker == 0):
+		if(counter <= length):
+			tags_owned = NewTags
+
          if defs.invalidate_sensor(name):
             if sensor is None:
                 return jsonify(responses.invalid_uuid)
@@ -147,19 +159,13 @@ class SensorTagsService(MethodView):
 			tempsense = Sensor.objects(name=tag['value']).first()
 			#print 'name is', tag['value']
 			if tempsense:
-		  		for oldtag in tempsense.tags:
-					if(oldtag.name == tag['name']):
-							#print oldtag.name, tag['name'], "NEW Name"
-							#print oldtag.value, tag['value'], "New Value"
-							check = 0
-							for agag in tags_owned:
-								thename = agag['name']
-								thevalue = agag['value']
-								if(thename == oldtag.name and thevalue == oldtag.value):
-									check = 1
-							if(check == 0):
-								tags_owned.append(oldtag)
-							toBeIncluded.append(oldtag)
+				old_owned = [{'name':tag2.name, 'value':tag2.value} for tag2 in tempsense.tags]
+		  		for oldtag in old_owned:
+					if(oldtag['name'] == tag['name']):
+							if(oldtag not in tags_owned):
+								if(oldtag['value'] != name):
+									tags_owned.append(oldtag)
+									toBeIncluded.append(oldtag)
 
 	    print tags_owned, "PASSSS", name
 	    Sensor.objects(name=name).update(set__tags=tags_owned)
@@ -185,13 +191,16 @@ class SensorTagsService(MethodView):
 			Values = tobeSearched[BrickTag]
 			for subject in temps:
 				print subject, "new"
-				if subject['name'] not in Recursedict:
+				if subject['name'] in completed:
+					print subject['name'], "IT'S IN THE LIST"
+					pass
+				elif subject['name'] not in Recursedict:
 					Recursedict[subject['name']]  = list()
-				for value in Values:
-					if value not in Recursedict[subject['name']]:
-						Recursedict[subject['name']].append({'name': BrickTag, 'value':value})
-				for tag in subject['tags']:
-					Recursedict[subject['name']].append( {'name': tag['name'], 'value': tag['value']})
+					for value in Values:
+						if value not in Recursedict[subject['name']]:
+							Recursedict[subject['name']].append({'name': BrickTag, 'value':value})
+					for tag in subject['tags']:
+						Recursedict[subject['name']].append( {'name': tag['name'], 'value': tag['value']})
 					#payload = {'data': [{'sensor_id':subject['name']}, {'name': BrickTag, 'value':value},{'name':'RecursiveTag', 'value':subject['name']}]}
 			#		print json.dumps(payload).get_json(), "REVERSE REVERSE"
 				#	print json.dumps(payload)

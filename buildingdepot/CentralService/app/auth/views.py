@@ -72,6 +72,7 @@ def token_gen(client_id, client_secret):
     if client is not None:
         toks = Token.objects(user=client.user)
         for t in toks:
+	    print "I'm totally being deleted!"
             t.delete()
         # Set token expiry period and create it
         expires_in = 864000

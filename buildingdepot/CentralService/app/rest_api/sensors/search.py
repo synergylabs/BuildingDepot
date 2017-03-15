@@ -24,12 +24,11 @@ class SearchService(MethodView):
         try:
             data = request.get_json()['data']
         except KeyError:
-	    print "UhOh"
+	    print "UhOh, Search.py"
             return jsonify(responses.missing_data)
 
         args = {}
 	tempargs={}
-	print "HELLO"
         for key, values in data.iteritems():
 	    tempargs = {}
 	    print key, values
@@ -63,7 +62,7 @@ class SearchService(MethodView):
 			if Special == '*' or Special =='-':
 				#Traverse Downwards
 				loopvar = 1
-				tempvalues = [values]
+				tempvalues = [newvalue]
 				newTemp = []
 				while loopvar==1:
 					loopvar = 0
@@ -80,25 +79,20 @@ class SearchService(MethodView):
 						newTemp = []			
 			
 		elif key =='Tags':
-			print "Point1"
-			print newvalue, "newvalue"
 			form_query('tags',newvalue,args,"$or")
 			loopvar = 1
 			tempvalues = [newvalue]
 			newTemp = []
 			Core = newvalue[0].split(':',1)[0]
 			while loopvar==1:
-				print "Point2", tempvalues
 				loopvar = 0
 				for singleValue in tempvalues:
-					print singleValue, "first"
 					form_query('tags', singleValue, tempargs, "$or")
 					newCollect = Sensor._get_collection().find(tempargs)
 					tempargs = {}
 					for newValue in newCollect:
 						newName = newValue.get('name')
 						newTag = [Core+":"+newName]
-						print newTag, "second"
 						form_query('tags',newTag, args, "$or")
 						newTemp.append(newTag)
 						loopvar = 1
@@ -126,7 +120,6 @@ class SearchService(MethodView):
         if not args:
             return jsonify(responses.no_search_parameters)
         collection = Sensor._get_collection().find(args)
-	print "COLLECTION", collection
         response = dict(responses.success_true)
         response.update({"result":create_response(collection)})
         return jsonify(response)

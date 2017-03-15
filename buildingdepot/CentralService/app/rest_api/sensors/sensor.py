@@ -79,12 +79,17 @@ class SensorService(MethodView):
         }
         """
         data = request.get_json()['data']
+	DataServiceFlag = 0
         try:
             building = data['building']
 	    sensorname = data['name'] #
         except KeyError:
             return jsonify(responses.missing_parameters)
 
+	try
+		DataServiceFlag = data['notimeseries']
+	except KeyError:
+		DataServiceFlag = 0
       #  sensor_name = data.get('name') #
         identifier = data.get('identifier') 
         email = get_email()
@@ -105,7 +110,8 @@ class SensorService(MethodView):
                        source_identifier=xstr(identifier),
                        building=building,
                        owner=email,
-		       Enttype = str(sensortype)).save() #
+		       Enttype = str(sensortype),
+		       timeseries = str(DataserviceFlag)).save() #
                    r.set('owner:{}'.format(uuid), email)
                    response = dict(responses.success_true)
                    response.update({'uuid':uuid})
