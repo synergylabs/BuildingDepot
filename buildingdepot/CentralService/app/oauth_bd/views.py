@@ -19,6 +19,7 @@ from flask_oauthlib.client import OAuth
 from werkzeug.security import gen_salt
 from bson.objectid import ObjectId
 from xmlrpclib import ServerProxy
+from ..rest_api import responses
 import sys, os, binascii
 
 from ..models.cs_models import User
@@ -209,3 +210,38 @@ def get_access_token(client_id, client_secret):
             email=client.user).save()
         return jsonify({'success': 'True', 'access_token': tok.access_token})
     return jsonify({'success': 'False', 'access_token': 'Invalid credentials'})
+
+
+@oauth_bd.route('/generate', methods=['POST'])
+def generate_credentials():
+    cred = request.get_json()['data']
+    print cred['email'], type(cred)
+    email = cred['email']
+    password = cred['password']
+    print email, password
+    user = User.objects(email=email).first()
+    if user is not None and user.first_login and user.verify_password(password):
+        response = dict(responses.success_true)
+        response.update({'login': 'You have logged in for the first time.Please change your\
+         password on the UI'})
+        return jsonify(response)
+    elif user is not None and user.verify_password(password):
+        if len(Client.objects(user=email)) > 0:
+            keys = [{"client_id": gen_salt(40), "client_secret": gen_salt(50)}]
+            item = Client(
+                client_id=keys[0]['client_id'],
+                client_secret=keys[0]['client_secret'],
+                _redirect_uris=' '.join([
+                    'http://localhost:8000/authorized',
+                    'http://127.0.0.1:8000/authorized',
+                    'http://127.0.1:8000/authorized',
+                    'http://127.1:8000/authorized']),
+                _default_scopes='email',
+                user=email).save()
+            response = dict(responses.success_true)
+            response.update({'client_id': keys[0]['client_id'],
+                             'client_key': keys[0]['client_secret']})
+            return jsonify(response)
+    else:
+        response = dict({'success': 'False', 'error': 'Wrong Username and Password'})
+        return jsonify(response)

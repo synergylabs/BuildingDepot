@@ -48,13 +48,21 @@ class BuildingService(MethodView):
 
     @oauth.require_oauth()
     def get(self,name):
-        building = Building.objects(name=name).first()
-        if building is None:
-            return jsonify(responses.invalid_building)
-        response = dict(responses.success_true)
-        response.update({'name':building['name'],
-                        'description':building['description'],
-                        'template':building['template']})
+        if name == 'list':
+            building = []
+            response = dict(responses.success_true)
+            collection = Building.objects
+            for i in collection:
+                building.append(i.name)
+            response.update({'buildings': building})
+        else:
+            building = Building.objects(name=name).first()
+            if building is None:
+                return jsonify(responses.invalid_building)
+            response = dict(responses.success_true)
+            response.update({'name': building['name'],
+                             'description': building['description'],
+                             'template': building['template']})
         return jsonify(response)
 
     @oauth.require_oauth()

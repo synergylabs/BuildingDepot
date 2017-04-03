@@ -12,6 +12,7 @@ has to the specified sensor.
 
 from ...service.utils import validate_users, get_permission, get_admins
 from ...models.ds_models import Sensor, SensorGroup, UserGroup, Permission
+from ...rest_api.helper import check_if_super
 from ...oauth_bd.views import Token
 from ..errors import *
 from ... import r
@@ -94,7 +95,7 @@ def permission(sensor_name, email=None):
         return 'invalid'
 
     # if admin or owner then give complete access or email in get_admins()
-    if r.get('owner:{}'.format(sensor_name)) == email:
+    if r.get('owner:{}'.format(sensor_name)) == email or check_if_super(email):
         r.hset(sensor_name, email, 'r/w/p')
         return 'r/w/p'
 
@@ -132,7 +133,7 @@ def check_db(sensor, email):
     for tag in sensor_obj['tags']:
         current_tag = {"name": tag['name'], "value": tag['value']}
         tag_list.append(current_tag)
-    args['tags__all'] = tag_list
+    args["tags__exact"] = tag_list
     sensor_groups = SensorGroup.objects(**args)
     args = {}
     args['users__user_id'] = email

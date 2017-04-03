@@ -34,7 +34,6 @@
             {% elif current_page==pages %}
                 <div style="text-align: center">Showing {{((current_page-1)*pagesize) + 1}} - {{ total }} of {{ total }} Sensors</div>
             {% endif %}
-
         </div>
         <div>
             <div class="modal fade" id="filter_search">
@@ -83,38 +82,6 @@
                             <div class="btn-group">
                                 <button ng-click="root.addNewFilter()" type="button" class="btn btn-info">Add a new Filter</button>
                                 <button ng-click="root.updateFilter()" type="button" class="btn btn-warning">Search</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="modal fade" id="metadata">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button class="close" data-dismiss="modal">&times;</button>
-                            <h4 class="modal-title">Metadata of Sensor {[ root.sensorName ]}</h4>
-                        </div>
-                        <div class="modal-body">
-                            <table class="table">
-                                <thead>
-                                <tr>
-                                    <th>Name</th>
-                                    <th>Value</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr ng-repeat="pair in metadata">
-                                    <td><input ng-model="metadata[$index].name" type="text" class="form-control" value="{[ pair.name ]}"></td>
-                                    <td><input ng-model="metadata[$index].value" type="text" class="form-control" value="{[ pair.value ]}"></td>
-                                    <td><button class="close" ng-click="root.removeName($index)">&times;</button></td>
-                                </tr>
-                                </tbody>
-                            </table>
-                            <div class="btn-group">
-                                <button ng-click="root.addNewPair()" type="button" class="btn btn-info">Add a new pair</button>
-                                <button ng-click="root.update()" type="button" class="btn btn-warning">Update</button>
                             </div>
                         </div>
                     </div>
@@ -257,9 +224,6 @@
                             <td>{{ obj.source_identifier }}</td>
                             <td>{{ obj.owner }}</td>
                             <td>
-                                <a ng-click="root.select('{{ obj.name }}')" href="#metadata" data-toggle="modal" class="btn btn-info">Metadata</a>
-                            </td>
-                            <td>
                                 <a ng-click="root.tags('{{ obj.name }}')" href="#tags" data-toggle="modal" class="btn btn-info">Tags</a>
                             </td>
                             <!--<td>
@@ -341,7 +305,7 @@
             $scope.root = {};
             $scope.filter_search = [];
             $scope.filter_search.push({'key': '', 'value': ''});
-            $scope.filter_strings = ["ID","Building","SourceName","SourceIdentifier","MetaData","Tags"];
+            $scope.filter_strings = ["ID","Building","SourceName","SourceIdentifier","Tags","Owner"];
             $scope.root.addNewFilter = function () {
                 $scope.filter_search.push({'key': '', 'value': ''});
             };
@@ -425,15 +389,6 @@
                                 json["ID"].push(temp[i].value);
                             }
                         }
-                        else if (temp[i].key == 'MetaData') {
-                            if ("MetaData" in json) {
-                                json["MetaData"].push(temp[i].value.replace('&','%26'));
-                            }
-                            else {
-                                json["MetaData"] = [];
-                                json["MetaData"].push(temp[i].value.replace('&','%26'));
-                            }
-                        }
                         else if (temp[i].key == 'SourceIdentifier') {
                             if ("SourceIdentifier" in json) {
                                 json["SourceIdentifier"].push(temp[i].value.replace('&','%26'));
@@ -450,6 +405,15 @@
                             else {
                                 json["SourceName"] = [];
                                 json["SourceName"].push(temp[i].value.replace('&','%26'));
+                            }
+                        }
+                        else if (temp[i].key == 'Owner') {
+                            if ("Owner" in json) {
+                                json["Owner"].push(temp[i].value.replace('&','%26'));
+                            }
+                            else {
+                                json["Owner"] = [];
+                                json["Owner"].push(temp[i].value.replace('&','%26'));
                             }
                         }
                         else if (temp[i].key == 'Tags') {
@@ -471,54 +435,6 @@
                      form.submit();*/
                 }
 
-            };
-
-            $scope.root.addNewPair = function() {
-
-                $scope.metadata.push({'name': '', 'value': ''});
-            };
-            $scope.root.removeName = function(index) {
-                $scope.metadata.splice(index, 1);
-            };
-
-            $scope.root.select = function(sensorName) {
-                this.sensorName = sensorName;
-                var res = $http.get('/api/sensor/'+ sensorName + '/metadata',{ headers: header });
-                res.success(function(data) {
-                    if (data["success"]==="False"){
-                        $.notify(data["error"], {
-                            position: "top center",
-                            clickToHide: true,
-                            autoHide: true
-                        });
-                    }
-                    else{
-                        $scope.metadata = data.data;
-                    }
-
-                });
-                res.error(function() {
-                    $.notify("Ajax failed", { position:"top center",clickToHide: true,autoHideDelay:2000});
-                });
-            };
-
-            $scope.root.update = function() {
-                var res = $http.post('/api/sensor/'+ this.sensorName + '/metadata', {'data': $scope.metadata},{ headers: header });
-                res.success(function(data) {
-                    if (data["success"]==="False"){
-                        $.notify(data["error"], {
-                            position: "top center",
-                            clickToHide: true,
-                            autoHideDelay:2000
-                        });
-                    }
-                    else if (data["success"]==="True"){
-                       $.notify("Success",{ globalPosition:'top center',clickToHide: true,autoHideDelay:2000, className:'success'});
-                    }
-                });
-                res.error(function() {
-                    $.notify("Ajax failed", { position:"top center",clickToHide: true,autoHideDelay:2000});
-                });
             };
 
             $scope.root.tags = function(sensorName) {

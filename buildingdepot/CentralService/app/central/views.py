@@ -526,6 +526,8 @@ def sensors_search():
             form_query('source_name',values,args,"$or")
         elif key == 'SourceIdentifier':
             form_query('source_identifier',values,args,"$or")
+        elif key == 'Owner':
+            form_query('owner', values, args, "$or")
         elif key == 'ID':
             form_query('name',values,args,"$or")
         elif key == 'Tags':

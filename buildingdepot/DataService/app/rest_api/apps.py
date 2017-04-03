@@ -14,7 +14,7 @@ from flask import request,jsonify
 from ..models.ds_models import Application
 from uuid import uuid4
 from .. import r,oauth, exchange
-from .helper import connect_broker
+from .helper import connect_broker, get_email
 
 import sys,traceback
 

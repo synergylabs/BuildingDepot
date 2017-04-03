@@ -10,15 +10,15 @@ a sensor contains such as Tags,Building,Source identifier,uuid etc.
 @license: UCSD License. See License file for details.
 """
 
-from flask import request,jsonify
+from flask import request, jsonify
 from flask.views import MethodView
 from .. import responses
 from ...models.cs_models import Sensor
-from ..helper import form_query,create_response
+from ..helper import form_query, create_response
 from ... import oauth
 
-class SearchService(MethodView):
 
+class SearchService(MethodView):
     @oauth.require_oauth()
     def post(self):
         try:
@@ -29,21 +29,23 @@ class SearchService(MethodView):
         args = {}
         for key, values in data.iteritems():
             if key == 'Building':
-                form_query('building',values,args,"$or")
+                form_query('building', values, args, "$or")
             elif key == 'SourceName':
-                form_query('source_name',values,args,"$or")
+                form_query('source_name', values, args, "$or")
             elif key == 'SourceIdentifier':
-                form_query('source_identifier',values,args,"$or")
+                form_query('source_identifier', values, args, "$or")
+            elif key == 'Owner':
+                form_query('owner', values, args, "$or")
             elif key == 'ID':
-                form_query('name',values,args,"$or")
+                form_query('name', values, args, "$or")
             elif key == 'Tags':
-                form_query('tags',values,args,"$and")
+                form_query('tags', values, args, "$and")
             elif key == 'MetaData':
-                form_query('metadata',values,args,"$and")
+                form_query('metadata', values, args, "$and")
         if not args:
             return jsonify(responses.no_search_parameters)
         collection = Sensor._get_collection().find(args)
 
         response = dict(responses.success_true)
-        response.update({"result":create_response(collection)})
+        response.update({"result": create_response(collection)})
         return jsonify(response)

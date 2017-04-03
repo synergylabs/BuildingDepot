@@ -15,7 +15,7 @@ from flask import request,jsonify
 from ..models.ds_models import Application
 from .. import r,oauth,exchange
 import sys,traceback
-from .helper import connect_broker
+from .helper import connect_broker,get_email
 
 class AppSubscriptionService(MethodView):
 

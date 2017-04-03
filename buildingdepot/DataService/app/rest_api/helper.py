@@ -11,8 +11,10 @@ such as conversion of timestamps, strings etc.
 
 from flask import request
 from ..oauth_bd.views import Token
-from ..models.ds_models import Building,TagType
-import time,json,pika
+from ..models.ds_models import Building, TagType, User
+from .. import exchange
+import time, json, pika
+
 
 def get_email():
     """ Returns the email address of the user making the request
@@ -26,6 +28,7 @@ def get_email():
     token = headers['Authorization'].split()[1]
     return Token.objects(access_token=token).first().email
 
+
 def xstr(s):
     """Creates a string object, but for null objects returns
     an empty string
@@ -38,6 +41,7 @@ def xstr(s):
         return ""
     else:
         return str(s)
+
 
 def jsonString(obj, pretty=False):
     """Creates a json object, if pretty is specifed as True proper
@@ -53,6 +57,7 @@ def jsonString(obj, pretty=False):
     else:
         return json.dumps(obj)
 
+
 def create_response(sensors):
     """Iterates over the list and generates a json response of sensors list
     Args as data:
@@ -67,6 +72,7 @@ def create_response(sensors):
         json_temp = create_json(sensor)
         sensor_list.append(json_temp)
     return sensor_list
+
 
 def create_json(sensor):
     """Simple function that creates a json object to return for each sensor
@@ -86,6 +92,15 @@ def create_json(sensor):
                    }
     return json_object
 
+
+def check_if_super(email=None):
+    if email is None:
+        email = get_email()
+    if User.objects(email=email).first().role == 'super':
+        return True
+    return False
+
+
 def timestamp_to_time_string(t):
     """Converts a unix timestamp to a string representation of the timestamp
     Args:
@@ -94,6 +109,7 @@ def timestamp_to_time_string(t):
         A string representation of the timestamp
     """
     return time.strftime("%Y-%m-%dT%H:%M:%S", time.gmtime(t)) + str(t - int(t))[1:10] + 'Z'
+
 
 def connect_broker():
     """
@@ -112,8 +128,9 @@ def connect_broker():
         print "Failed to open connection to broker " + str(e)
         return None
 
+
 def add_delete_users(old, now):
-    user_old,user_new = [],[]
+    user_old, user_new = [], []
     for user in old:
         user_old.append(user['user_id'])
     for user in now:
@@ -121,11 +138,13 @@ def add_delete_users(old, now):
     old, now = set(user_old), set(user_new)
     return now - old, old - now
 
-def add_delete(old,now):
+
+def add_delete(old, now):
     old, now = set(old), set(now)
     return now - old, old - now
 
-def form_query(param,values,args,operation):
+
+def form_query(param, values, args, operation):
     res = []
     if param == 'tags':
         for tag in values:
@@ -135,15 +154,16 @@ def form_query(param,values,args,operation):
     elif param == 'metadata':
         for meta in values:
             key_value = meta.split(":", 1)
-            current_meta = {"metadata."+key_value[0]: key_value[1]}
+            current_meta = {"metadata." + key_value[0]: key_value[1]}
             res.append(current_meta)
     else:
         for value in values:
-            res.append({param:value})
+            res.append({param: value})
     if args.get(operation) is None:
         args[operation] = res
     else:
-        args[operation] = args.get(operation)+res
+        args[operation] = args.get(operation) + res
+
 
 def get_building_tags(building):
     """Get all the tags that this building has associated with it"""

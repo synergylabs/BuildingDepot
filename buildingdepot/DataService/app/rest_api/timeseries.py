@@ -10,7 +10,7 @@ data stores.
 @license: UCSD License. See License file for details.
 """
 from flask.views import MethodView
-from flask import request, jsonify
+from flask import request, jsonify, abort
 from . import responses
 from .. import r, influx, oauth, exchange
 from .helper import jsonString, timestamp_to_time_string
@@ -109,7 +109,6 @@ class TimeSeriesService(MethodView):
             for sensor in json:
                 # check a user has permission
                 unauthorised_sensor = []
-                print sensor,sensor['sensor_id']
                 if permission(sensor['sensor_id']) in ['r/w', 'r/w/p']:
                     for sample in sensor['samples']:
                         dic = {
@@ -129,6 +128,7 @@ class TimeSeriesService(MethodView):
                 else:
                     unauthorised_sensor.append(sensor['sensor_id'])
         except KeyError:
+            print json
             abort(400)
 
         result = influx.write_points(points)
