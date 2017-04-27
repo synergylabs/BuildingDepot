@@ -1,13 +1,13 @@
 .. BuildingDepot documentation master file.
 
 =====================
-Building Depot v3.2.6
+Building Depot v3.2.7
 =====================
 
 Overview
 ########
 
-This is the official documentaion of BuildingDepot v3.2.6. BuildingDepot is essentialy an Extensible and Distributed Architecture for Sensor Data Storage, Access and Sharing.
+This is the official documentation of BuildingDepot v3.2.7. BuildingDepot is essentialy an Extensible and Distributed Architecture for Sensor Data Storage, Access and Sharing.
 
 
 Building Depot has two essential components a Central Service and a Data
@@ -25,7 +25,7 @@ A DataService may belong to any single administrative group that requires sole c
 CentralService
 **************
 
-Read more about the :ref:`CentralService<CentralService Overview>`
+Read more about the CentralService
 
 .. toctree::
    :maxdepth: 2
@@ -35,7 +35,7 @@ Read more about the :ref:`CentralService<CentralService Overview>`
 DataService
 ***********
 
-Read more about the :ref:`DataService<DataService Overview>`
+Read more about the DataService
 
 .. toctree::
    :maxdepth: 2
