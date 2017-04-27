@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Installation &mdash; BuildingDepot 3.2.5 documentation</title>
+    <title>Installation &#8212; BuildingDepot 3.2.5 documentation</title>
     
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -17,21 +17,26 @@
         VERSION:     '3.2.5',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
       };
     </script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="BuildingDepot 3.2.5 documentation" href="index.html" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="CentralService APIs" href="api/CentralService/index.html" />
     <link rel="prev" title="Data Service" href="dataservice.html" />
    
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
   
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
   </head>
-  <body role="document">  
+  <body role="document">
+  
 
     <div class="document">
       <div class="documentwrapper">
@@ -56,11 +61,11 @@ and Redis on the same machine.</p>
 <p><code class="code docutils literal"><span class="pre">$</span> <span class="pre">./install.sh</span></code></p>
 <p>This will install BuildingDepot in the default installation location
 <code class="code docutils literal"><span class="pre">/srv/buildingdepot</span></code> with the following directory structure:</p>
-<div class="code bash highlight-python"><div class="highlight"><pre>buildingdepot
-|-- CentralService - CentralService
-|-- DataService - DataService
-|-- CentralReplica - The central replica that is present at every DataService
-+-- venv - Python Virtual Environment
+<div class="code bash highlight-default"><div class="highlight"><pre><span class="n">buildingdepot</span>
+<span class="o">|--</span> <span class="n">CentralService</span> <span class="o">-</span> <span class="n">CentralService</span>
+<span class="o">|--</span> <span class="n">DataService</span> <span class="o">-</span> <span class="n">DataService</span>
+<span class="o">|--</span> <span class="n">CentralReplica</span> <span class="o">-</span> <span class="n">The</span> <span class="n">central</span> <span class="n">replica</span> <span class="n">that</span> <span class="ow">is</span> <span class="n">present</span> <span class="n">at</span> <span class="n">every</span> <span class="n">DataService</span>
+<span class="o">+--</span> <span class="n">venv</span> <span class="o">-</span> <span class="n">Python</span> <span class="n">Virtual</span> <span class="n">Environment</span>
 </pre></div>
 </div>
 </li>
@@ -72,7 +77,7 @@ and Redis on the same machine.</p>
 <h2>What&#8217;s installed<a class="headerlink" href="#what-s-installed" title="Permalink to this headline">¶</a></h2>
 <ul>
 <li><p class="first">The following packages are installed using apt-get</p>
-<div class="code bash highlight-python"><div class="highlight"><pre><span class="n">openssl</span>
+<div class="code bash highlight-default"><div class="highlight"><pre><span class="n">openssl</span>
 <span class="n">python</span><span class="o">-</span><span class="n">setuptools</span>
 <span class="n">python</span><span class="o">-</span><span class="n">dev</span>
 <span class="n">build</span><span class="o">-</span><span class="n">essential</span>
@@ -87,7 +92,7 @@ and Redis on the same machine.</p>
 </div>
 </li>
 <li><p class="first">The following packages are installed in the python virtual environment</p>
-<div class="code bash highlight-python"><div class="highlight"><pre><span class="n">Flask</span>
+<div class="code bash highlight-default"><div class="highlight"><pre><span class="n">Flask</span>
 <span class="n">mongoengine</span>
 <span class="n">flask</span><span class="o">-</span><span class="n">restful</span>
 <span class="n">Flask</span><span class="o">-</span><span class="n">HTTPAuth</span>
@@ -108,19 +113,19 @@ and Redis on the same machine.</p>
 </div>
 <div class="section" id="configuration">
 <span id="id1"></span><h1>Configuration<a class="headerlink" href="#configuration" title="Permalink to this headline">¶</a></h1>
-<p>The BD <a class="reference internal" href="#buildingdepot-installation"><span>Installer</span></a> configures BD with some default values.</p>
+<p>The BD <a class="reference internal" href="#buildingdepot-installation"><span class="std std-ref">Installer</span></a> configures BD with some default values.</p>
 <p>The CentralService can be accessed on port 81 and the DataService on port 81.</p>
 <div class="section" id="dataservice">
 <span id="access-dataservice"></span><h2>DataService<a class="headerlink" href="#dataservice" title="Permalink to this headline">¶</a></h2>
 <p>To access the DataService, go to</p>
-<div class="code bash highlight-python"><div class="highlight"><pre>URL - http://&lt;host&gt;:82
+<div class="code bash highlight-default"><div class="highlight"><pre><span class="n">URL</span> <span class="o">-</span> <span class="n">http</span><span class="p">:</span><span class="o">//&lt;</span><span class="n">host</span><span class="o">&gt;</span><span class="p">:</span><span class="mi">82</span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="centralservice">
 <span id="access-centralservice"></span><h2>CentralService<a class="headerlink" href="#centralservice" title="Permalink to this headline">¶</a></h2>
 <p>To access the CentralService, go to</p>
-<div class="code bash highlight-python"><div class="highlight"><pre>URL - http://&lt;host&gt;:81
+<div class="code bash highlight-default"><div class="highlight"><pre><span class="n">URL</span> <span class="o">-</span> <span class="n">http</span><span class="p">:</span><span class="o">//&lt;</span><span class="n">host</span><span class="o">&gt;</span><span class="p">:</span><span class="mi">81</span>
 </pre></div>
 </div>
 </div>
@@ -157,21 +162,18 @@ and Redis on the same machine.</p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
-      <li><a href="_sources/install.txt"
+      <li><a href="_sources/install.rst.txt"
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -182,11 +184,11 @@ and Redis on the same machine.</p>
       &copy;2016, Synergy Labs.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.6</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.7</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.9</a>
       
       |
-      <a href="_sources/install.txt"
+      <a href="_sources/install.rst.txt"
           rel="nofollow">Page source</a>
     </div>
 
