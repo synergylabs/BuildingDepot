@@ -1,1 +1,8 @@
+title: Building Depot v3.2.7
+description: An open source data storage, management, and actuation system for building-related data.
+google_analytics: 
+show_downloads: true
 theme: jekyll-theme-cayman
+
+gems:
+  - jekyll-mentions
