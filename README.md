@@ -7,7 +7,7 @@ Buildings form an essential part of our lives,and provide many services that mak
 We have created BuildingDepot as a successful IoT ecology.This includes a core building management middleware, an easy to use protocol agnostic API,robust security and privacy protections, to engage users with varying levels of experience.Our vision is to provide building users with a holistic view of the building across various different subsystems,such as lighting,water,air conditioning, and enable applications that work seamlessly across the underlying infrastructure.
 
 ### Features of BuildingDepot:
-*  Integration of data from a wide variety of building systems and communication protocols 
+* ­ Integration of data from a wide variety of building systems and communication protocols 
 * ­ Provide an easy to use API that is protocol agnostic 
 * ­ Provide a search interface to query building data and metadata 
 * ­ Provide an access control system that facilitates security and privacy 
@@ -24,4 +24,4 @@ The [BuildingDepot v3.2.7 API](https://bd-exp.andrew.cmu.edu/) documentation wil
 ### Authors and Contributors
 
 ### License and Copyright
- ©2016, [Synergy Labs](www.synergylabs.org)
+ ©2017, [Synergy Labs](www.synergylabs.org)
