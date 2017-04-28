@@ -24,4 +24,4 @@ The [BuildingDepot v3.2.7 API](https://bd-exp.andrew.cmu.edu/) documentation wil
 ### Authors and Contributors
 
 ### License and Copyright
- ©2017, [Synergy Labs](www.synergylabs.org)
+ ©2017, [Synergy Labs](http://www.synergylabs.org/)
