@@ -112,12 +112,32 @@ class UserGroupNode(EmbeddedDocument):
     user_id = StringField()
     manager = BooleanField()
 
+class BrickType(Document): #
+    name = StringField(required=True,unique=True)#
+    subClass = ListField(StringField()) #
+    SuperClass = ListField(StringField()) #
+    equivalentClass = ListField(StringField()) # 
+    Domain = ListField(StringField()) #
+    Type = ListField(StringField())
+    InverseOf = ListField(StringField())
+    OnProperty = ListField(StringField())
+    Range = ListField(StringField())
+    SubPropertyOf = ListField(StringField())
+    SuperPropertyOf = ListField(StringField())
+    SomeValuesFrom = ListField(StringField())
+    UsesTag = ListField(StringField())
+    Label = ListField(StringField())
+    Imports = ListField(StringField())
+    Comment = ListField(StringField())
+    isHierarchical = ListField(StringField())
 class Sensor(Document):
     name = StringField(required=True, unique=True)
     source_name = StringField()
     source_identifier = StringField()
     owner = StringField()
-
+    Enttype = StringField() #
+    timeseries = StringField()
+	
     metadata = DictField()
     building = StringField()
     tags = ListField(EmbeddedDocumentField(Node))

@@ -1,7 +1,7 @@
 {% extends "index.html" %}
 {% import "bootstrap/wtf.html" as wtf %}
 
-{% block title %}BuildingDepot - Sensor{% endblock %}
+{% block title %}BuildingDepot - Entity{% endblock %}
 
 {% block page_content %}
 
@@ -10,7 +10,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Add a New Sensor</h4>
+                    <h4 class="modal-title">Add a New Entity</h4>
                 </div>
                 <div class="modal-body">
                     {{ wtf.quick_form(form) }}
@@ -20,19 +20,19 @@
     </div>
     <div class="row" ng-app="myApp" ng-controller="metadataController">
         <div class="page-header">
-            <h2 style="display: inline-block;" id = "header">  &nbsp;&nbsp;&nbsp;Sensor&nbsp;&nbsp;<a href="#myModal" data-toggle="modal" class="btn btn-info btn-lg"><span class="glyphicon glyphicon-hand-up"></span>&nbsp;Add a New Sensor</a>
+            <h2 style="display: inline-block;" id = "header">  &nbsp;&nbsp;&nbsp;Entity&nbsp;&nbsp;<a href="#myModal" data-toggle="modal" class="btn btn-info btn-lg"><span class="glyphicon glyphicon-hand-up"></span>&nbsp;Add a New Entity</a>
                 <a ng-click="root.filter()" href="#filter_search" data-toggle="modal" class="btn btn-info btn-lg"><span class="glyphicon glyphicon-search"></span>&nbsp;Search</a></h2>
             <ul class="pagination" id="pagination" style="float: right"></ul>
             {% if total == 0 %}
-                <div style="text-align: center">Showing 0 - {{ total }} of {{ total }} Sensors</div>
+                <div style="text-align: center">Showing 0 - {{ total }} of {{ total }} Entity</div>
             {% elif current_page == 1 and total < pagesize %}
-                <div style="text-align: center">Showing 1 - {{ total }} of {{ total }} Sensors</div>
+                <div style="text-align: center">Showing 1 - {{ total }} of {{ total }} Entity</div>
             {% elif current_page == 1 and total >= pagesize %}
-                <div style="text-align: center">Showing 1 - {{ pagesize }} of {{ total }} Sensors</div>
+                <div style="text-align: center">Showing 1 - {{ pagesize }} of {{ total }} Entity</div>
             {% elif current_page<pages %}
-                <div style="text-align: center">Showing {{ ((current_page-1)*pagesize) + 1 }} - {{ (current_page)*pagesize }} of {{ total }} Sensors</div>
+                <div style="text-align: center">Showing {{ ((current_page-1)*pagesize) + 1 }} - {{ (current_page)*pagesize }} of {{ total }} Entity</div>
             {% elif current_page==pages %}
-                <div style="text-align: center">Showing {{((current_page-1)*pagesize) + 1}} - {{ total }} of {{ total }} Sensors</div>
+                <div style="text-align: center">Showing {{((current_page-1)*pagesize) + 1}} - {{ total }} of {{ total }} Entity</div>
             {% endif %}
         </div>
         <div>
@@ -93,7 +93,7 @@
                     <div class="modal-content">
                         <div class="modal-header">
                             <button class="close" data-dismiss="modal">&times;</button>
-                            <h4 class="modal-title">Assigned Tags for Sensor {[ sensorName ]} </h4>
+                            <h4 class="modal-title">Assigned Tags for Entity {[ EntityName ]} </h4>
                         </div>
                         <div class="modal-body">
                             <div>
@@ -177,7 +177,7 @@
                     <div class="modal-content">
                         <div class="modal-header">
                             <button class="close" data-dismiss="modal">&times;</button>
-                            <h4 class="modal-title">Time Series Data of Sensor {[ sensorName ]}</h4>
+                            <h4 class="modal-title">Time Series Data of Entity {[ EntityName ]}</h4>
                         </div>
                         <div class="modal-body">
                             <table class="table">
@@ -213,6 +213,7 @@
                         <th>Source Name</th>
                         <th>Source Identifier</th>
                         <th>Owner</th>
+			<th>EntityType</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -223,6 +224,7 @@
                             <td>{{ obj.source_name }}</td>
                             <td>{{ obj.source_identifier }}</td>
                             <td>{{ obj.owner }}</td>
+			    <td>{{ obj.Enttype}}</td>
                             <td>
                                 <a ng-click="root.tags('{{ obj.name }}')" href="#tags" data-toggle="modal" class="btn btn-info">Tags</a>
                             </td>
@@ -305,7 +307,7 @@
             $scope.root = {};
             $scope.filter_search = [];
             $scope.filter_search.push({'key': '', 'value': ''});
-            $scope.filter_strings = ["ID","Building","SourceName","SourceIdentifier","Tags","Owner"];
+            $scope.filter_strings = ["ID","Building","SourceName","SourceIdentifier","Type","Tags", "Owner"];
             $scope.root.addNewFilter = function () {
                 $scope.filter_search.push({'key': '', 'value': ''});
             };
@@ -389,6 +391,15 @@
                                 json["ID"].push(temp[i].value);
                             }
                         }
+			else if (temp[i].key=='Type'){
+				if("Type" in json){
+					json["Type"].push(temp[i].value);
+				}
+				else{
+					json["Type"] = [];
+					json["Type"].push(temp[i].value);
+				}
+			}	
                         else if (temp[i].key == 'SourceIdentifier') {
                             if ("SourceIdentifier" in json) {
                                 json["SourceIdentifier"].push(temp[i].value.replace('&','%26'));
@@ -435,6 +446,47 @@
                      form.submit();*/
                 }
 
+            };
+
+
+            $scope.root.select = function(sensorName) {
+                this.sensorName = sensorName;
+                var res = $http.get('/api/sensor/'+ sensorName + '/metadata',{ headers: header });
+                res.success(function(data) {
+                    if (data["success"]==="False"){
+                        $.notify(data["error"], {
+                            position: "top center",
+                            clickToHide: true,
+                            autoHide: true
+                        });
+                    }
+                    else{
+                        $scope.metadata = data.data;
+                    }
+
+                });
+                res.error(function() {
+                    $.notify("Ajax failed", { position:"top center",clickToHide: true,autoHideDelay:2000});
+                });
+            };
+
+            $scope.root.update = function() {
+                var res = $http.post('/api/sensor/'+ this.sensorName + '/metadata', {'data': $scope.metadata},{ headers: header });
+                res.success(function(data) {
+                    if (data["success"]==="False"){
+                        $.notify(data["error"], {
+                            position: "top center",
+                            clickToHide: true,
+                            autoHideDelay:2000
+                        });
+                    }
+                    else if (data["success"]==="True"){
+                       $.notify("Success",{ globalPosition:'top center',clickToHide: true,autoHideDelay:2000, className:'success'});
+                    }
+                });
+                res.error(function() {
+                    $.notify("Ajax failed", { position:"top center",clickToHide: true,autoHideDelay:2000});
+                });
             };
 
             $scope.root.tags = function(sensorName) {
