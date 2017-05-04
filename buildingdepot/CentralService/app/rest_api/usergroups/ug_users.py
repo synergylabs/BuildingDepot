@@ -55,7 +55,7 @@ class UserGroupUsersService(MethodView):
         """
         try:
             emails = request.get_json()['data']
-        except:
+        except KeyError:
             return jsonify(responses.missing_data)
         if UserGroup.objects(name=name).first() is None:
             return jsonify(responses.invalid_usergroup)

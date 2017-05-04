@@ -8,18 +8,17 @@ It handles the required CRUD operations for permissions.
 @copyright: (c) 2016 SynergyLabs
 @license: UCSD License. See License file for details.
 """
-import sys
 from flask.views import MethodView
 from ..helper import get_email
 from .. import responses
-from flask import request,jsonify
-from ...models.cs_models import UserGroup,SensorGroup,Permission
-from ... import r,oauth,permissions
+from flask import request, jsonify
+from ...models.cs_models import UserGroup, SensorGroup, Permission
+from ... import r, oauth, permissions
 from ...auth.acl_cache import invalidate_permission
 from ...rpc import defs
 
-class PermissionService(MethodView):
 
+class PermissionService(MethodView):
     @oauth.require_oauth()
     def get(self):
         """
@@ -61,7 +60,7 @@ class PermissionService(MethodView):
         """
         try:
             data = request.get_json()['data']
-        except:
+        except KeyError:
             return jsonify(responses.missing_data)
         try:
             sensor_group = data['sensor_group']
@@ -78,12 +77,13 @@ class PermissionService(MethodView):
             return jsonify(responses.no_permission_val)
 
         email = get_email()
-        if defs.create_permission(user_group,sensor_group,email,permissions.get(permission)):
+        if defs.create_permission(user_group, sensor_group, email, permissions.get(permission)):
             curr_permission = Permission.objects(user_group=user_group, sensor_group=sensor_group).first()
             if curr_permission is not None:
-                if email == curr_permission['owner'] :
+                if email == curr_permission['owner']:
                     Permission.objects(user_group=user_group,
-                                       sensor_group=sensor_group).first().update(set__permission=permissions.get(permission))
+                                       sensor_group=sensor_group).first().update(
+                        set__permission=permissions.get(permission))
                 else:
                     return jsonify(responses.permission_authorization)
             else:
@@ -91,8 +91,8 @@ class PermissionService(MethodView):
                            permission=permissions.get(permission),
                            owner=email).save()
             invalidate_permission(sensor_group)
-            r.hset('permission:{}:{}'.format(user_group, sensor_group),"permission",permissions.get(permission))
-            r.hset('permission:{}:{}'.format(user_group, sensor_group),"owner",email)
+            r.hset('permission:{}:{}'.format(user_group, sensor_group), "permission", permissions.get(permission))
+            r.hset('permission:{}:{}'.format(user_group, sensor_group), "owner", email)
         else:
             return jsonify(responses.ds_error)
         return jsonify(responses.success_true)
@@ -119,7 +119,7 @@ class PermissionService(MethodView):
                 return jsonify(responses.permission_not_defined)
             else:
                 if permission['owner'] == get_email():
-                    if defs.delete_permission(user_group,sensor_group):
+                    if defs.delete_permission(user_group, sensor_group):
                         permission.delete()
                         r.delete('permission:{}:{}'.format(user_group, sensor_group))
                         invalidate_permission(sensor_group)
