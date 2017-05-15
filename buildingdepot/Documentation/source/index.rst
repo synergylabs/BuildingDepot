@@ -21,6 +21,7 @@ An institution has a single CentralService that houses data of all buildings and
 
 A DataService may belong to any single administrative group that requires sole control over who can access the underlying sensor data points. Different buildings on a campus might desire their own DataService.
 
+In this new release of Building Depot, we have also provided support for utilzing the BRICK uniform metadata specifically, and all graphical metadata schemas generally. 
 
 CentralService
 **************
@@ -41,6 +42,14 @@ Read more about the DataService
    :maxdepth: 2
 
    dataservice.rst
+
+BRICK
+########
+Read more about using Brick
+.. toctree::
+	:maxdepth: 2
+	
+	brick.rst
 
 Download
 ########
