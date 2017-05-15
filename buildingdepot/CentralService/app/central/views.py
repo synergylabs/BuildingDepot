@@ -356,12 +356,18 @@ def sensor():
 		thetype = "BasicBD"
 	else:
 		thetype = str(form.sensor_type.data)
+	no_dataservice = 0
+	if (form.data_service.data):
+		no_dataservice = 1
+	else:
+		no_dataservice = 0
         if defs.create_sensor(uuid,session['email'],form.building.data):
             Sensor(name=uuid,
                    source_name=str(form.source_name.data),
                    source_identifier=str(form.source_identifier.data),
                    building=str(form.building.data),
                    owner=session['email'],
+		   timeseries = str(no_dataservice),
 		   Enttype=thetype).save()
             r.set('owner:{}'.format(uuid), session['email'])
             return redirect(url_for('central.sensor'))

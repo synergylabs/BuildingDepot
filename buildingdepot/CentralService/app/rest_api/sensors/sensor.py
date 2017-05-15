@@ -88,6 +88,7 @@ class SensorService(MethodView):
 
 	try
 		DataServiceFlag = data['notimeseries']
+		DataServiceFlag = 1
 	except KeyError:
 		DataServiceFlag = 0
       #  sensor_name = data.get('name') #

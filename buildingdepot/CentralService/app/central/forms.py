@@ -58,6 +58,7 @@ class SensorForm(Form):
     source_identifier = StringField('Source Identifier')
     sensor_name = StringField('Sensor Name')
     sensor_type = StringField('Sensor Type')
+    data_service = StringField('Data Service')
     building = SelectField('Building', validators=[DataRequired()])
     submit = SubmitField('Submit')
 
