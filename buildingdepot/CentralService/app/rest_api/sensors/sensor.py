@@ -86,7 +86,7 @@ class SensorService(MethodView):
         except KeyError:
             return jsonify(responses.missing_parameters)
 
-	try
+        try:
 		DataServiceFlag = data['notimeseries']
 	except KeyError:
 		DataServiceFlag = 0
