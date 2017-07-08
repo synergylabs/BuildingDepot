@@ -32,7 +32,8 @@ class TimeSeriesService(MethodView):
             "name" : <sensor uuid>
             "start_time" : <unix timestamp of start time>
             "end_time" : <unix timestamp of end time>
-            "resolution" : <optional resolution can be specified to scale down data"
+            "resolution" : <optional resolution can be specified to scale down data",
+            "fields" : "<field1>;<feild2>"
 
            Returns (JSON):
            {
