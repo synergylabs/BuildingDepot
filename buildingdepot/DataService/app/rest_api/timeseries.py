@@ -58,12 +58,14 @@ class TimeSeriesService(MethodView):
             fields = fields.split(';')
             fields = '"' + '", "'.join(fields) + '"'
         else:
-            fields = "*"
+            fields = '*'
 
         if not all([start_time, end_time]):
             return jsonify(responses.missing_parameters)
 
         if resolution:
+            if fields == '*':
+                return jsonify('TODO: Fields are not supported with resolution')
             try:
                 data = influx.query(
                     'select mean(*) from "' + name + '" where (time>\'' + timestamp_to_time_string(
