@@ -18,10 +18,11 @@ Creates a new Sensor point in BuildingDepot and returns the UUID.
    :json string name: Name of the sensor
    :json string identifier: An identifier that will be associated with the sensor
    :json string building: Building in which the sensor is located
+   :json string sensortype (optional): Type of Sensor (occupancy_sensor) 
 
    :returns:
       * **success** `(string)` -- Returns 'True' if data is posted succesfully otherwise 'False'
-      * **uuid** `(string)` -- Returns the uuid of the sensor on succesful creation
+      * **uuid** `(string)` -- Returns sensortype:name of the sensor on succesful creation. Stands as UUID of sensor. If sensortype not provided sensortype = "BasicBD"
    :status 200: Success
    :status 401: Unauthorized Credentials (See :ref:`HTTP 401 <HTTP 401>`)
 
@@ -49,13 +50,13 @@ Creates a new Sensor point in BuildingDepot and returns the UUID.
 
       {
         "success": "True"
-        "uuid": "6cf53d24-e3a3-41bd-b2b5-8f109694f628"
+        "uuid": "BasicBD:Test Sensor"
       }
 
 Get Sensor details
 ******************
 
-Retrieves all the details of the sensor based on the uuid specified
+Retrieves all the details of the sensor based on the sensor name specified
 
 .. http:get:: /api/sensor/<name>
 
@@ -78,7 +79,7 @@ Retrieves all the details of the sensor based on the uuid specified
 
    .. sourcecode:: http
 
-      GET /api/sensor/86ac8207-6372-46a5-ba0b-6b392dbff645
+      GET /api/sensor/BasicBD:Test Sensor
       Accept: application/json; charset=utf-8
 
    **Example response**:
@@ -100,7 +101,7 @@ Retrieves all the details of the sensor based on the uuid specified
               "value": "Temperature"
             }
           ],
-          "name": "86ac8207-6372-46a5-ba0b-6b392dbff645",
+          "name": "BasicBD:Test Sensor",
           "source_identifier": "Sensor Tag",
           "source_name": "SensorTag_1",
           "tags": [
@@ -114,19 +115,17 @@ Retrieves all the details of the sensor based on the uuid specified
 Search Sensors
 **************
 
-The Search API is used search sensors based on uuid,source_name,source_identifier, building, Tag and MetaData. Multiple search queries can be sent in a single request.
-
+The Search API is used search sensors based on sensor_name,source_name,source_identifier, building, Tag. Multiple search queries can be sent in a single request. Optional additional functionality: Recusrive search on type or Tags. Adding * to the tag-type (e.g. isLocatedIn*:Floor:1) will resurively search for anything that Floor:1 isLocatedIn. For use in graphical ontologies which use tags as edges (see Brick ontology). If SensorA islocatedIn Floor:1 and Floor:1 islocatedIn Building:NSH, then SensorA islocatedIn* BuildingNSH. 
 .. http:post:: /api/search
 
 :JSON Parameters:
   * **data** `(dictionary)` -- Contains the list of Search Query key-value pairs
-      * **ID** `(string)` -- UUID of the Sensor
+      * **ID** `(string)` -- Name of the Sensor
       * **Building** `(string)` -- Building in which the sensor is located
       * **Tags** '(dictionary)' -- List of tags owned by the sensor. The are given as key,value pairs.
-      * **Metadata** '(dictionary)' -- List of metadata owned by the sensor.The are given as key,value pairs.
       * **Source_Identifier** '(dictionary)' -- Source identifier of the sensor
       * **Source_Name** '(dictionary)' -- Source name of the sensor
-
+      * **Type** `(string)` -- Type of Sensor in Ontology (e.g. Occupancy_Sensor, BasicBD, Temperature_Sensor)
 .. compound::
 
    **Example request**:
@@ -137,7 +136,7 @@ The Search API is used search sensors based on uuid,source_name,source_identifie
 
       {
         "data":{
-            "ID":"6cf53d24-e3a3-41bd-b2b5-8f109694f628",
+            "ID":"Occupancy_Sensor:OCRM104",
             "Building":"NSH"
             "Tags":["floor:1"]
         }
@@ -154,7 +153,7 @@ The Search API is used search sensors based on uuid,source_name,source_identifie
           "success": "True",
           "building": "NSH",
           "metadata": [],
-          "name": "6cf53d24-e3a3-41bd-b2b5-8f109694f628",
+          "name": "Occupancy_Sensor:OCRM104",
           "source_identifier": "Sensor Tag",
           "source_name": "Test Sensor",
           "tags": [

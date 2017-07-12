@@ -197,7 +197,12 @@ def get_access_token(client_id, client_secret):
         client_secret provided by them are valid"""
     client = Client.objects(client_id=client_id, client_secret=client_secret).first()
     if client != None:
+	toks = Token.objects(user=client.user)
+#	if len(toks) > 10000:
+ #       	for t in toks:
+  #          		t.delete()
         # Set token expiry period and create it
+        expires_in = 864000
         expires = datetime.utcnow() + timedelta(seconds=expires_in)
         tok = Token(
             access_token=str(binascii.hexlify(os.urandom(16))),
@@ -208,6 +213,17 @@ def get_access_token(client_id, client_secret):
             client=client,
             user=client.user,
             email=client.user).save()
+        ## Set token expiry period and create it
+        #expires = datetime.utcnow() + timedelta(seconds=expires_in)
+        #tok = Token(
+         #   access_token=str(binascii.hexlify(os.urandom(16))),
+          #  refresh_token=str(binascii.hexlify(os.urandom(16))),
+           # token_type='Bearer',
+           # _scopes='email',
+           # expires=expires,
+           # client=client,
+           # user=client.user,
+           # email=client.user).save()
         return jsonify({'success': 'True', 'access_token': tok.access_token})
     return jsonify({'success': 'False', 'access_token': 'Invalid credentials'})
 

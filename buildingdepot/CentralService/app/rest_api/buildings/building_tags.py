@@ -14,11 +14,9 @@ based on, can have multiple unique values defined for them.
 from flask.views import MethodView
 from flask import request, jsonify
 from ...models.cs_models import Building, BuildingTemplate
-from ...models.cs_models import TagType, DataService, User
+from ...models.cs_models import TagType
 from .. import responses
-from ..helper import get_email
 from ... import oauth
-from ...auth.access_control import super_required
 
 
 class BuildingTagsService(MethodView):
@@ -26,14 +24,13 @@ class BuildingTagsService(MethodView):
     def post(self, building_name):
         try:
             data = request.get_json()['data']
-        except:
+        except KeyError:
             return jsonify(responses.missing_data)
         try:
             name = data['name']
             value = data['value']
-        except:
+        except KeyError:
             return jsonify(responses.missing_parameters)
-        collection = Building._get_collection()
         # Form the tag to update in MongoDB
         building = Building.objects(name=building_name).first()
         if building is None:
@@ -100,12 +97,12 @@ class BuildingTagsService(MethodView):
             return jsonify(responses.invalid_building)
         try:
             data = request.get_json()['data']
-        except:
+        except KeyError:
             return jsonify(responses.missing_data)
         try:
             name = data['name']
             value = data['value']
-        except:
+        except KeyError:
             return jsonify(responses.missing_parameters)
 
         collection = Building._get_collection()

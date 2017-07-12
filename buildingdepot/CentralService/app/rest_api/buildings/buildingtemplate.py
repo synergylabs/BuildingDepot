@@ -32,7 +32,7 @@ class BuildingTemplateService(MethodView):
             return jsonify(responses.missing_data)
         try:
             name = data['name']
-        except:
+        except KeyError:
             return jsonify(responses.missing_parameters)
 
         template = BuildingTemplate.objects(name=name).first()

@@ -17,6 +17,7 @@ from wtforms.validators import DataRequired
 class SensorForm(Form):
     source_name = StringField('Source Name')
     source_identifier = StringField('Source Identifier')
+    Type = StringField('BrickTypeOfObject') #Change
     building = SelectField('Building', validators=[DataRequired()])
     submit = SubmitField('Submit')
 

@@ -11,19 +11,21 @@ ensure that the cache gets updated as needed.
 @license: UCSD License. See License file for details.
 """
 
+import sys
 from flask import request, jsonify
 from flask.views import MethodView
 from .. import responses
 from ...models.cs_models import Sensor
 from uuid import uuid4
-from ... import r, oauth
-from ..helper import get_email, xstr, get_building_choices
+from ... import r,oauth
+from ..helper import get_email,xstr,get_building_choices
+from ...auth.access_control import authenticate_acl
 from ...rpc import defs
 
-
 class SensorService(MethodView):
+
     @oauth.require_oauth()
-    def get(self, name):
+    def get(self,name):
         """
         Retrieve sensor details based on uuid specified
 
@@ -51,14 +53,14 @@ class SensorService(MethodView):
         metadata = [{'name': key, 'value': val} for key, val in metadata.iteritems()]
         response = dict(responses.success_true)
         response.update({'building': str(sensor.building),
-                         'name': str(sensor.name),
-                         'tags': tags_owned,
-                         'metadata': metadata,
-                         'source_identifier': str(sensor.source_identifier),
-                         'source_name': str(sensor.source_name)
-                         })
+                        'name': str(sensor.name),
+                        'tags': tags_owned,
+			'Type': sensor.Enttype, #
+                        'metadata': metadata,
+                        'source_identifier': str(sensor.source_identifier),
+                        'source_name': str(sensor.source_name)
+                        })
         return jsonify(response)
-
     @oauth.require_oauth()
     def post(self):
         """
@@ -77,27 +79,45 @@ class SensorService(MethodView):
         }
         """
         data = request.get_json()['data']
+	DataServiceFlag = 0
         try:
             building = data['building']
+	    sensorname = data['name'] #
         except KeyError:
             return jsonify(responses.missing_parameters)
 
-        sensor_name = data.get('name')
-        identifier = data.get('identifier')
+	try
+		DataServiceFlag = data['notimeseries']
+		DataServiceFlag = 1
+	except KeyError:
+		DataServiceFlag = 0
+      #  sensor_name = data.get('name') #
+        identifier = data.get('identifier') 
         email = get_email()
-
-        if building in get_building_choices("rest_api"):
-            uuid = str(uuid4())
-            if defs.create_sensor(uuid, email, building):
-                Sensor(name=uuid,
-                       source_name=xstr(sensor_name),
+	sensortype = "" #
+	try:#
+	    sensortype = data['type'] #
+	except KeyError: #
+		sensortype = "BasicBD" #
+       # building = get_building_choices()[0]
+#	print building
+#	print get_building_choices("rest_api")
+	if building in get_building_choices("rest_api"):
+        	Extrauuid = str(uuid4()) #
+		uuid = str(sensortype+":"+sensorname) #
+        	if defs.create_sensor(uuid,email,building):
+                   Sensor(name=uuid,
+                       source_name=xstr(identifier),
                        source_identifier=xstr(identifier),
                        building=building,
-                       owner=email).save()
-                r.set('owner:{}'.format(uuid), email)
-                response = dict(responses.success_true)
-                response.update({'uuid': uuid})
-                return jsonify(response)
-            else:
-                return jsonify(responses.ds_error)
-        return jsonify(responses.invalid_building)
+                       owner=email,
+		       Enttype = str(sensortype),
+		       timeseries = str(DataserviceFlag)).save() #
+                   r.set('owner:{}'.format(uuid), email)
+                   response = dict(responses.success_true)
+                   response.update({'uuid':uuid})
+                   return jsonify(response)
+        	else:
+                   return jsonify(responses.ds_error)
+	return jsonify(responses.invalid_building)
+

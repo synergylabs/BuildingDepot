@@ -53,19 +53,67 @@ def sensors_search():
     data = json.loads(request.args.get('q'))
     print data, type(data)
     args = {}
-    for key, values in data.iteritems():
-        if key == 'Building':
-            form_query('building', values, args, "$or")
-        elif key == 'SourceName':
-            form_query('source_name', values, args, "$or")
-        elif key == 'SourceIdentifier':
-            form_query('source_identifier', values, args, "$or")
-        elif key == 'ID':
-            form_query('name', values, args, "$or")
-        elif key == 'Tags':
-            form_query('tags', values, args, "$and")
-        elif key == 'MetaData':
-            form_query('metadata', values, args, "$and")
+    for key, values in data.iteritems(): # BIG CHANGES
+              for key, values in data.iteritems():
+		    Special = key[len(key)-1]
+	      if Special in ['*', '+', '-']:
+		newkey = key[len(key)-1]
+		if newkey == 'Type':
+			form_query('Enttype', values, args, "$or")
+			if Special == '*' or Special == '+':
+				#Traverse Upwards
+				loopvar = 1
+				tempvalues = [values]
+				newTemp = []
+				while loopvar==1:
+					loopvar = 0
+					for singleValue in tempvalues:
+						form_query("subClass", singleValue, tempargs,"$or")
+						newCollect = BrickType._get_collection().find(tempargs)
+						tempargs = []
+						for newValue in newCollect:
+							newName = newValue.get('name')
+							form_query('Enttype', newName, args, "$or")
+							newTemp.append(newName)
+							loopvar = 1
+						tempvalues = newTemp
+						newTemp = []					
+					
+			if Special == '*' or Special =='-':
+				#Traverse Downwards
+				loopvar = 1
+				tempvalues = [values]
+				newTemp = []
+				while loopvar==1:
+					loopvar = 0
+					for singleValue in tempvalues:
+						form_query("superClass", singleValue, tempargs,"$or")
+						newCollect = BrickType._get_collection().find(tempargs)
+						tempargs = []
+						for newValue in newCollect:
+							newName = newValue.get('name')
+							form_query('Enttype', newName, args, "$or")
+							newTemp.append(newName)
+							loopvar = 1
+						tempvalues = newTemp
+						newTemp = []			
+			
+		else:
+		  	return jsonify(responses.no_search_parameters) 
+              elif key == 'Type':
+		form_query('Enttype', values, args, "$or")
+	      elif key == 'Building':
+                form_query('building',values,args,"$or")
+              elif key == 'SourceName':
+                form_query('source_name',values,args,"$or")
+              elif key == 'SourceIdentifier':
+                form_query('source_identifier',values,args,"$or")
+              elif key == 'ID':
+                form_query('name',values,args,"$or")
+              elif key == 'Tags':
+                form_query('tags',values,args,"$and")
+              elif key == 'MetaData':
+                form_query('metadata',values,args,"$and")    
     print args
     # Show the user PAGE_SIZE number of sensors on each page
     page = request.args.get('page', 1, type=int)
@@ -90,8 +138,8 @@ def sensors_search():
 @service.route('/sensor/<name>/tags')
 def get_sensor_tags(name):
     obj = Sensor.objects(name=name).first()
-    tags_owned = [{'name': tag.name, 'value': tag.value} for tag in obj.tags]
-    tags = get_building_tags(obj.building)
+    tags_owned = [{'name': tag.name, 'value': tag.value} for tag in obj.tags] 
+    tags = get_building_tags(obj.building) #Needs Change
     response = dict(responses.success_true)
     response.update({'tags': tags, 'tags_owned': tags_owned})
     return jsonify(response)

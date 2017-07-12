@@ -347,12 +347,28 @@ def sensor():
     # Create a Sensor
     if form.validate_on_submit():
         uuid = str(uuid4())
+	if(form.sensor_name.data):
+		if(form.sensor_type.data):
+			uuid = str(form.sensor_type.data)+":"+str(form.sensor_name.data)
+		else:
+			uuid = "BasicBD:"+str(form.sensor_name.data)
+	if (not form.sensor_type.data):
+		thetype = "BasicBD"
+	else:
+		thetype = str(form.sensor_type.data)
+	no_dataservice = 0
+	if (form.data_service.data):
+		no_dataservice = 1
+	else:
+		no_dataservice = 0
         if defs.create_sensor(uuid,session['email'],form.building.data):
             Sensor(name=uuid,
                    source_name=str(form.source_name.data),
                    source_identifier=str(form.source_identifier.data),
                    building=str(form.building.data),
-                   owner=session['email']).save()
+                   owner=session['email'],
+		   timeseries = str(no_dataservice),
+		   Enttype=thetype).save()
             r.set('owner:{}'.format(uuid), session['email'])
             return redirect(url_for('central.sensor'))
         else:
@@ -517,44 +533,133 @@ def permission_query():
 @central.route('/sensor/search', methods=['GET', 'POST'])
 @login_required
 def sensors_search():
-    data = json.loads(request.args.get('q'))
-    args = {}
-    for key, values in data.iteritems():
-        if key == 'Building':
-            form_query('building',values,args,"$or")
-        elif key == 'SourceName':
-            form_query('source_name',values,args,"$or")
-        elif key == 'SourceIdentifier':
-            form_query('source_identifier',values,args,"$or")
-        elif key == 'Owner':
-            form_query('owner', values, args, "$or")
-        elif key == 'ID':
-            form_query('name',values,args,"$or")
-        elif key == 'Tags':
-            form_query('tags',values,args,"$and")
-        elif key == 'MetaData':
-            form_query('metadata',values,args,"$and")
-    print args
+    	data = json.loads(request.args.get('q'))
+        args = {}
+	tempargs={}
+        for key, values in data.iteritems():
+	    Special = values[len(values)-1]
+	    Special = Special[len(Special)-1:]
+	    if Special in ['*', '+', '-']:
+		newvalue = values[0]
+		newvalue = [newvalue[:len(newvalue)-1]]
+		if key == 'Type':
+			form_query('Enttype', values, args, "$or")
+			if Special == '*' or Special == '+':
+				#Traverse Upwards
+				loopvar = 1
+				tempvalues = [values]
+				newTemp = []
+				while loopvar==1:
+					loopvar = 0
+					for singleValue in tempvalues:
+						form_query("subClass", singleValue, tempargs,"$or")
+						newCollect = BrickType._get_collection().find(tempargs)
+						tempargs = []
+						for newValue in newCollect:
+							newName = newValue.get('name')
+							form_query('Enttype', newName, args, "$or")
+							newTemp.append(newName)
+							loopvar = 1
+						tempvalues = newTemp
+						newTemp = []					
+					
+			if Special == '*' or Special =='-':
+				#Traverse Downwards
+				loopvar = 1
+				tempvalues = [values]
+				newTemp = []
+				while loopvar==1:
+					loopvar = 0
+					for singleValue in tempvalues:
+						form_query("superClass", singleValue, tempargs,"$or")
+						newCollect = BrickType._get_collection().find(tempargs)
+						tempargs = []
+						for newValue in newCollect:
+							newName = newValue.get('name')
+							form_query('Enttype', newName, args, "$or")
+							newTemp.append(newName)
+							loopvar = 1
+						tempvalues = newTemp
+						newTemp = []			
+			
+		elif key =='Tags':
+                        print "Point1"
+                        print newvalue, "newvalue"
+                        form_query('tags',newvalue,args,"$or")
+                        loopvar = 1
+                        tempvalues = [newvalue]
+                        newTemp = tempvalues
+                        Core = newvalue[0].split(':',1)[0]
+			AntiRecursion = dict()
+                        while loopvar==1:
+                                print "Point2", tempvalues
+                                loopvar = 0
+				tempvalues = newTemp
+				newTemp = []
+                                for singleValue in tempvalues:
+                                        print singleValue,"first"
+					if singleValue[0] not in AntiRecursion:
+						AntiRecursion[singleValue[0]] = 1
+                                        	form_query('tags', singleValue, tempargs, "$or")
+                                        	newCollect = Sensor._get_collection().find(tempargs)
+                                        	tempargs = {}
+                                        	for newValue in newCollect:
+                                                	newName = newValue.get('name')
+                                                	newTag = [Core+":"+newName]
+                                                	print newTag,"second"
+                                                	form_query('tags',newTag, args, "$or")
+                                                	newTemp.append(newTag)
+                                                	loopvar = 1
+
+		else:
+		  	return jsonify(responses.no_search_parameters) 
+            elif key == 'Type':
+		form_query('Enttype', values, args, "$or")
+	    elif key == 'Building':
+                form_query('building',values,args,"$or")
+            elif key == 'SourceName':
+                form_query('source_name',values,args,"$or")
+            elif key == 'SourceIdentifier':
+                form_query('source_identifier',values,args,"$or")
+            elif key == 'ID':
+                form_query('name',values,args,"$or")
+            elif key == 'Tags':
+                form_query('tags',values,args,"$and")
+            elif key == 'MetaData':
+                form_query('metadata',values,args,"$and")
+    #for key, values in data.iteritems():
+     #   if key == 'Building':
+      #      form_query('building',values,args,"$or")
+      #  elif key == 'SourceName':
+      #      form_query('source_name',values,args,"$or")
+      #  elif key == 'SourceIdentifier':
+      #      form_query('source_identifier',values,args,"$or")
+      #  elif key == 'ID':
+      #      form_query('name',values,args,"$or")
+      #  elif key == 'Tags':
+      #      form_query('tags',values,args,"$and")
+     #   elif key == 'MetaData':
+      #      form_query('metadata',values,args,"$and")
     # Show the user PAGE_SIZE number of sensors on each page
-    page = request.args.get('page', 1, type=int)
-    skip_size = (page - 1) * PAGE_SIZE
-    collection = Sensor._get_collection().find(args)
-    sensors = collection.skip(skip_size).limit(PAGE_SIZE)
+    	page = request.args.get('page', 1, type=int)
+    	skip_size = (page - 1) * PAGE_SIZE
+    	collection = Sensor._get_collection().find(args)
+    	sensors = collection.skip(skip_size).limit(PAGE_SIZE)
 
-    sensor_list = []
-    for sensor in sensors:
-        sensor = Sensor(**sensor)
-        sensor.can_delete = True
-        sensor_list.append(sensor)
+    	sensor_list = []
+    	for sensor in sensors:
+        	sensor = Sensor(**sensor)
+        	sensor.can_delete = True
+        	sensor_list.append(sensor)
 
-    total = collection.count()
-    if (total):
-        pages = int(math.ceil(float(total) / PAGE_SIZE))
-    else:
-        pages = 0
-    form = SensorForm()
+    	total = collection.count()
+    	if (total):
+       	 pages = int(math.ceil(float(total) / PAGE_SIZE))
+    	else:
+        	pages = 0
+    	form = SensorForm()
     # Get the list of valid buildings for this DataService
-    form.building.choices = get_building_choices()
-    return render_template('central/sensor.html', objs=sensor_list, form=form, total=total,
+    	form.building.choices = get_building_choices()
+    	return render_template('central/sensor.html', objs=sensor_list, form=form, total=total,
                            pages=pages, current_page=page, pagesize=PAGE_SIZE)
 
