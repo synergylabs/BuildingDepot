@@ -20,13 +20,13 @@ ds_error = {'success': 'False', 'error': 'Communication failure with DataService
 # building API common responses:
 invalid_tagtype = {'success': 'False', 'error': 'TagType does not exist'}
 invalid_template = {'success': 'False', 'error': 'BuildingTemplate does not exist'}
-tagtype_referenced = {'success': 'False', 'error': 'This tag value is being referenced, cannot delete.'}
+tagtype_referenced = {'success': 'False', 'error': 'This tag value is being referenced, cannot delete'}
 # building API specific responses:
 #   building post/get/deletion API responses
 building_in_use = {'success': 'False', 'error': 'Building is in use'}
 #   building-tags post/get/deletion API responses
 invalid_parents = {'success': 'False', 'error': 'One of the parent tags specified does not exist'}
-invalid_tag_value = {'success': 'False', 'error': 'Tag value does not exist.'}
+invalid_tag_value = {'success': 'False', 'error': 'Tag value does not exist'}
 #   building-template post/get/deletion API responses
 invalid_tagtypes = {'success': 'False', 'error': 'One of the tagtypes does not exist'}
 tagtype_in_use = {'success': 'False', 'error': 'Tagtype is in use, cannot be removed from template'}
@@ -38,7 +38,7 @@ invalid_parent_tags = {'success': 'False', 'error': 'List of parents tags not va
 invalid_dataservice = {'success': 'False', 'error': 'DataService does not exist'}
 # dataservice API specific responses:
 #   data-service post/get/deletion API responses
-dataservice_in_use = {'success': 'False', 'error': 'Cannot delete DataService, contains buildings.'}
+dataservice_in_use = {'success': 'False', 'error': 'Cannot delete DataService, contains buildings'}
 #   ds-admin post/get/deletion API responses
 ds_invalid_admin = {'success': 'False', 'error': 'One of the users does not exist'}
 #   ds-building post/get/deletion API responses
@@ -73,7 +73,7 @@ usergroup_exists = {'success': 'False', 'error': 'Usergroup already exists'}
 # User creation API responses
 unauthorized_user = {'success': 'False', 'error': 'Not authorized to create a super user'}
 invalid_user = {'success': 'False', 'error': 'User does not exist'}
-user_exists = {'success': 'False', 'error': 'User already exists.'}
+user_exists = {'success': 'False', 'error': 'User already exists'}
 super_user_required = {'success': 'False', 'error': 'Super user privileges required. Not authorized for this '
                                                     'operation'}
 # not used

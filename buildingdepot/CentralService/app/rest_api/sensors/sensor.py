@@ -86,7 +86,7 @@ class SensorService(MethodView):
         except KeyError:
             return jsonify(responses.missing_parameters)
 
-	try
+        try:
 		DataServiceFlag = data['notimeseries']
 		DataServiceFlag = 1
 	except KeyError:
@@ -120,4 +120,3 @@ class SensorService(MethodView):
         	else:
                    return jsonify(responses.ds_error)
 	return jsonify(responses.invalid_building)
-
