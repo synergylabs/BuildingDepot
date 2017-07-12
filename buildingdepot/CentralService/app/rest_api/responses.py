@@ -71,7 +71,8 @@ user_not_registered = {'success': 'False', 'error': 'One or more users not regis
 usergroup_exists = {'success': 'False', 'error': 'Usergroup already exists'}
 
 # User creation API responses
-unauthorized_user = {'success': 'False', 'error': 'Not authorized to create a super user'}
+unauthorized_user_lookup = {'success': 'False', 'error': 'Not authorized to get information on this user'}
+invalid_user_role = {'success': 'False', 'error': 'User role should be either default or super'}
 invalid_user = {'success': 'False', 'error': 'User does not exist'}
 user_exists = {'success': 'False', 'error': 'User already exists'}
 super_user_required = {'success': 'False', 'error': 'Super user privileges required. Not authorized for this '

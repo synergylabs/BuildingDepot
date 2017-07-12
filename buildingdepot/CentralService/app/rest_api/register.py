@@ -109,5 +109,5 @@ def register_view(app_obj):
     # post changes/adds information to a specified user - if the user is new, an email will be sent
     # delete removes a user
     app_obj.add_url_rule('/api/user', view_func=users_view, methods=['POST'])
-    app_obj.add_url_rule('/api/user/<name>', view_func=users_view, methods=['GET', 'DELETE'])
+    app_obj.add_url_rule('/api/user/<email>', view_func=users_view, methods=['GET', 'DELETE'])
 
