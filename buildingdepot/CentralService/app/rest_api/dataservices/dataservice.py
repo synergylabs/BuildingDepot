@@ -48,11 +48,20 @@ class DataserviceService(MethodView):
 
     @oauth.require_oauth()
     def get(self, name):
-        dataservice = DataService.objects(name=name).first()
-        if dataservice is None:
-            return jsonify(responses.invalid_dataservice)
-        response = dict(responses.success_true)
-        response.update({'name': name,
+        print "Name :", name
+        if name == "list":
+            all_dataservices=[]
+            collection = DataService.objects
+            for i in collection:
+                all_dataservices.append(i.name)
+            response = dict(responses.success_true)
+            response.update({"dataservices": all_dataservices})
+        else:
+            dataservice = DataService.objects(name=name).first()
+            if dataservice is None:
+                return jsonify(responses.invalid_dataservice)
+            response = dict(responses.success_true)
+            response.update({'name': name,
                          'description': xstr(dataservice.description),
                          'host': xstr(dataservice.host),
                          'port': xstr(dataservice.port)})
