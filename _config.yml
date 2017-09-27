@@ -4,5 +4,5 @@ google_analytics:
 show_downloads: true
 theme: jekyll-theme-cayman
 
-gems:
+plugins:
   - jekyll-mentions
