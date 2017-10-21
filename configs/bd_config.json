@@ -1,0 +1,10 @@
+{
+  "access_token": "this will be generated later",
+  "key_path": "/path/to/bd3.key", 
+  "client_id": "yyyyyyyyyyyyyyyyyyyyyyyyyy",
+  "client_secret": "zzzzzzzzzzzzzzzzzzzzz",
+  "cert_path": "/path/to/bd3.cert", 
+  "ip_address": "xxx.xx.xxx.xx",
+  "email": "your gmail",
+  "refresh_token": "this will be generated later"
+}
