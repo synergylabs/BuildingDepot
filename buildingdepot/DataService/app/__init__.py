@@ -24,6 +24,8 @@ from mongoengine import connect, register_connection
 from flask.ext.bootstrap import Bootstrap
 from xmlrpclib import ServerProxy
 from flask_oauthlib.provider import OAuth2Provider
+from ..config import config as app_config
+app_config = app_config['dev']
 
 import redis
 
@@ -33,7 +35,12 @@ permissions = {"rw": "r/w", "r": "r", "dr": "d/r", "rwp": "r/w/p"}
 
 exchange = 'master_exchange'
 r = redis.Redis()
-influx = InfluxDBClient('localhost', 8086, 'root', 'root', 'buildingdepot')
+influx = InfluxDBClient(app_config.INFLUXDB_HOST, 
+                        app_config.INFLUXDB_PORT, 
+                        'root', 
+                        'root', 
+                        app_config.INFLUXDB_DB
+                        )
 
 bootstrap = Bootstrap()
 svr = ServerProxy("http://localhost:8080")

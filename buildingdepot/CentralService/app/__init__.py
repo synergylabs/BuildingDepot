@@ -16,7 +16,6 @@ registered as blueprints.
 """
 
 from flask import Flask
-from config import config
 from mongoengine import connect
 from flask.ext.login import LoginManager
 from flask.ext.bootstrap import Bootstrap
@@ -37,11 +36,9 @@ svr = ServerProxy("http://localhost:8080")
 r = redis.Redis()
 
 
-def create_app(config_mode):
-    connect('buildingdepot')
+def create_app(config_mode): # TODO: remove config_mode
     app = Flask(__name__)
     app.config.from_envvar('CS_SETTINGS')
-    config[config_mode].init_app(app)
     connect(app.config['MONGODB_DATABASE'],
             host=app.config['MONGODB_HOST'],
             port=app.config['MONGODB_PORT'])

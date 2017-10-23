@@ -11,6 +11,10 @@ registered in the CentralService with the name "ds1".
 """
 
 class Config:
+    INFLUXDB_HOST = '127.0.0.1'
+    INFLUXDB_PORT = 8086
+    INFLUXDB_DB = 'buildingdepot'
+
     MONGODB_DATABASE_DS = 'dataservice'
     MONGODB_DATABASE_BD = 'buildingdepot'
     MONGODB_HOST = '127.0.0.1'
