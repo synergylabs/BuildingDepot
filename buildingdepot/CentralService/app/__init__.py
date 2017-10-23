@@ -42,7 +42,6 @@ def create_app(config_mode): # TODO: remove config_mode
     connect(app.config['MONGODB_DATABASE'],
             host=app.config['MONGODB_HOST'],
             port=app.config['MONGODB_PORT'])
-
     login_manager.init_app(app)
     bootstrap.init_app(app)
     oauth.init_app(app)

@@ -19,13 +19,10 @@ registered as blueprints.
 """
 
 from flask import Flask
-from config import config
 from mongoengine import connect, register_connection
 from flask.ext.bootstrap import Bootstrap
 from xmlrpclib import ServerProxy
 from flask_oauthlib.provider import OAuth2Provider
-from ..config import config as app_config
-app_config = app_config['dev']
 
 import redis
 
@@ -35,11 +32,13 @@ permissions = {"rw": "r/w", "r": "r", "dr": "d/r", "rwp": "r/w/p"}
 
 exchange = 'master_exchange'
 r = redis.Redis()
-influx = InfluxDBClient(app_config.INFLUXDB_HOST, 
-                        app_config.INFLUXDB_PORT, 
+app = Flask(__name__)
+app.config.from_envvar('DS_SETTINGS')
+influx = InfluxDBClient(app.config['INFLUXDB_HOST'], 
+                        app.config['INFLUXDB_PORT'], 
                         'root', 
                         'root', 
-                        app_config.INFLUXDB_DB
+                        app.config['INFLUXDB_DB']
                         )
 
 bootstrap = Bootstrap()
@@ -49,14 +48,11 @@ oauth = OAuth2Provider()
 
 
 def create_app(config_mode):
-    app = Flask(__name__)
-    app.config.from_envvar('DS_SETTINGS')
+    global app
     app.debug = True
     app.secret_key = 'secret'
 
     oauth.init_app(app)
-
-    config[config_mode].init_app(app)
 
     connect(app.config['MONGODB_DATABASE_BD'],
             host=app.config['MONGODB_HOST'],
