@@ -14,20 +14,20 @@ config file or falls back to the default one.
 
 import os
 from app import create_app
-from app.models.cs_models import User
-from flask.ext.script import Manager, Shell, Server
+from flask.ext.script import Manager, Shell
 from app.rest_api.register import register_view
 
-application = create_app('deploy')
-manager = Manager(application)
-register_view(application)
+app = create_app(os.getenv('FLASK_CONFIG') or 'dev')
+manager = Manager(app)
+register_view(app)
 
 def make_shell_context():
-    return dict(app=application, User=User)
+    return dict(app=app)
 
-server = Server()
+def get_current():
+    return app
+
 manager.add_command("shell", Shell(make_context=make_shell_context))
-manager.add_command('runserver', server)
 
 if __name__ == '__main__':
-    manager.run(default_command='runserver')
+    manager.run()
