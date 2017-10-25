@@ -18,12 +18,12 @@ from app.models.cs_models import User
 from flask.ext.script import Manager, Shell, Server
 from app.rest_api.register import register_view
 
-application = create_app('deploy')
-manager = Manager(application)
-register_view(application)
+app = create_app('deploy')
+manager = Manager(app)
+register_view(app)
 
 def make_shell_context():
-    return dict(app=application, User=User)
+    return dict(app=app, User=User)
 
 server = Server()
 manager.add_command("shell", Shell(make_context=make_shell_context))
