@@ -25,12 +25,8 @@ def make_shell_context():
 def get_current():
     return app
 
-port = app.config['SERVER_PORT']
-host = '0.0.0.0'
-
-server = Server(host=host, port=port)
+server = Server()
 manager.add_command('runserver', server)
-manager.add_command("shell", Shell(make_context=make_shell_context))
 
 if __name__ == '__main__':
     manager.run(default_command='runserver')
