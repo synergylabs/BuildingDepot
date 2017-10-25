@@ -9,7 +9,7 @@ Flask-WTF==0.9.5
 flask-bootstrap==3.3.0.1
 redis==2.10.3
 influxdb==2.12.0
-pymongo==2.8.0
+pymongo==3.5.0
 flask-oauthlib==0.9.1
 pika==0.10.0
 PyLD==0.7.1
