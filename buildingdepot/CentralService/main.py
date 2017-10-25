@@ -10,18 +10,20 @@ config file or falls back to the default one.
 @license: UCSD License. See License file for details.
 """
 
+# This is for BD docker container only
+
 import os
 from app import create_app
 from app.models.cs_models import User
 from flask.ext.script import Manager, Shell, Server
 from app.rest_api.register import register_view
 
-app = create_app('deploy')
-manager = Manager(app)
-register_view(app)
+application = create_app('deploy')
+manager = Manager(application)
+register_view(application)
 
 def make_shell_context():
-    return dict(app=app, User=User)
+    return dict(app=application, User=User)
 
 server = Server()
 manager.add_command("shell", Shell(make_context=make_shell_context))
