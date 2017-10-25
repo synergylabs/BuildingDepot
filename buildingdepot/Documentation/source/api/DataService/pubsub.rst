@@ -3,11 +3,15 @@
 Apps
 ####
 
+DataService Apps API allows users interact with the underlying app models. This
+API handles the registration and deletion of apps from the system.
+
 
 Get List of Registered Apps
 ***************************
 
-This retrieves a list of applications of the current user.
+This retrieves a list of applications of the current user. This API first
+registers the application to the system, then it opens up a rabbitMQ queue.
 
 .. http:get:: /api/apps
 
@@ -78,7 +82,7 @@ If there already exists an application with the given name, this API call has no
 
    .. sourcecode:: http
 
-      POST /api/apps
+      POST /api/apps HTTP/1.1
       Accept: application/json; charset=utf-8
 
       {
@@ -91,7 +95,7 @@ If there already exists an application with the given name, this API call has no
 
    .. sourcecode:: http
 
-     HTTP/1.1 200 OK
+      HTTP/1.1 200 OK
       Content-Type: application/json
 
       {
@@ -119,4 +123,70 @@ If there already exists an application with the given name, this API call has no
       {
         "success": "False",
         "error": "Failed to create queue"
+      }
+
+Delete an App
+*************
+
+This deletes an app of the current user.
+
+.. http:delete:: /api/apps
+
+   :JSON Parameters:
+      * **data** `(dict)` -- Contains the information of the application to be deleted.
+         * **name** `(string)` -- The name of the application to be deleted.
+
+   :returns:
+      * **success** `(string)` -- Returns 'True' if adding a new application was successful or an application with the given name already exists. Othersie 'False'
+      * **error** `(string)` -- Details of an error if unsuccessful
+
+   :status 200: Success
+   :status 401: Unauthorized Credentials (See :ref:`HTTP 401 <HTTP 401>`)
+
+.. compound::
+
+   **Example request**:
+
+   .. sourcecode:: http
+
+      DELETE /api/apps HTTP/1.1
+      Accept: application/json; charset=utf-8
+
+      {
+        "data": {
+          "name": "example_app_name"
+        }
+      }
+
+   **Example response** (for success):
+
+   .. sourcecode:: http
+
+      HTTP/1.1 200 OK
+      Content-Type: application/json
+
+      {
+         "success": "True",
+      }
+
+   **Example response** (for failure):
+
+   .. sourcecode:: http
+
+      HTTP/1.1 200 OK
+      Content-Type: application/json
+
+      {
+        "success": "False",
+        "error": "Missing Parameters"
+      }
+
+      {
+        "success": "False",
+        "error": "Failed to connect broker"
+      }
+
+      {
+        "success": "False",
+        "error": "Failed to delete queue"
       }
