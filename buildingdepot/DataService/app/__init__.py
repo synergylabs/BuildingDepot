@@ -27,11 +27,12 @@ from flask_oauthlib.provider import OAuth2Provider
 import redis
 
 from influxdb import InfluxDBClient
+import pdb
 
 permissions = {"rw": "r/w", "r": "r", "dr": "d/r", "rwp": "r/w/p"}
 
 exchange = 'master_exchange'
-r = redis.Redis()
+r = redis.Redis(host='127.0.0.1')
 app = Flask(__name__)
 app.config.from_envvar('DS_SETTINGS')
 influx = InfluxDBClient(app.config['INFLUXDB_HOST'], 
@@ -42,7 +43,7 @@ influx = InfluxDBClient(app.config['INFLUXDB_HOST'],
                         )
 
 bootstrap = Bootstrap()
-svr = ServerProxy("http://localhost:8080")
+svr = ServerProxy("http://127.0.0.1:8080")
 
 oauth = OAuth2Provider()
 

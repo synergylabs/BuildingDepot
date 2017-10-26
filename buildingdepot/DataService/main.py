@@ -14,7 +14,7 @@ config file or falls back to the default one.
 
 import os
 from app import create_app
-from flask.ext.script import Manager, Shell
+from flask.ext.script import Manager, Shell, Server
 from app.rest_api.register import register_view
 
 app = create_app(os.getenv('FLASK_CONFIG') or 'dev')
@@ -27,7 +27,9 @@ def make_shell_context():
 def get_current():
     return app
 
+server = Server('0.0.0.0', threaded=True)
 manager.add_command("shell", Shell(make_context=make_shell_context))
+manager.add_command('runserver', server)
 
 if __name__ == '__main__':
-    manager.run()
+    manager.run(default_command='runserver')

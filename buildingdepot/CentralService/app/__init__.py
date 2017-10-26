@@ -24,6 +24,8 @@ from xmlrpclib import ServerProxy
 import redis
 
 
+app = Flask(__name__)
+app.config.from_envvar('CS_SETTINGS')
 permissions = {"rw": "r/w", "r": "r", "dr": "d/r","rwp":"r/w/p"}
 
 login_manager = LoginManager()
@@ -33,15 +35,17 @@ login_manager.login_view = 'auth.login'
 bootstrap = Bootstrap()
 oauth = OAuth2Provider()
 svr = ServerProxy("http://localhost:8080")
-r = redis.Redis()
+r = redis.Redis(host=app.config['REDIS_HOST'])
 
 
 def create_app(config_mode): # TODO: remove config_mode
-    app = Flask(__name__)
-    app.config.from_envvar('CS_SETTINGS')
+    #app = Flask(__name__)
+    #app.config.from_envvar('CS_SETTINGS')
     connect(app.config['MONGODB_DATABASE'],
             host=app.config['MONGODB_HOST'],
-            port=app.config['MONGODB_PORT'])
+            port=app.config['MONGODB_PORT'],
+           # connect=False
+            )
     login_manager.init_app(app)
     bootstrap.init_app(app)
     oauth.init_app(app)
