@@ -22,6 +22,15 @@ The [Getting started](https://docs.google.com/document/d/1XESPZSIt0lIMrCbVb-Uoop
 The [BuildingDepot v3.2.7 API](https://buildingdepot.andrew.cmu.edu/) documentation will help you guide through the list of APIs after the initial setup of BuildingDepot.
 
 ### Authors and Contributors
+* **Carnegie Mellon University** : 
+* [Sudershan Boovaraghavan](www.sudershanb.com)
+* [Joshua Gluck](http://www.synergylabs.org/jgluck/)
+* [Dohyun Kim](https://www.cs.cmu.edu/directory/dohyunk)
+* [Tarun Karuturi](https://www.linkedin.com/in/tarunkaruturi/)
+* [Yuvraj Agarwal](https://www.synergylabs.org/yuvraj/)
+* **UC SanDiego** : 
+* [Jason Koh](https://jbkoh.github.io/)
+* [Bharathan Balaji](http://www.synergylabs.org/bharath/)
 
 ### License and Copyright
  ©2017, [Synergy Labs](http://www.synergylabs.org/)
