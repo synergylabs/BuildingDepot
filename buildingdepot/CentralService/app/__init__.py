@@ -16,7 +16,6 @@ registered as blueprints.
 """
 
 from flask import Flask
-from config import config
 from mongoengine import connect
 from flask.ext.login import LoginManager
 from flask.ext.bootstrap import Bootstrap
@@ -25,6 +24,8 @@ from xmlrpclib import ServerProxy
 import redis
 
 
+app = Flask(__name__)
+app.config.from_envvar('CS_SETTINGS')
 permissions = {"rw": "r/w", "r": "r", "dr": "d/r","rwp":"r/w/p"}
 
 login_manager = LoginManager()
@@ -34,18 +35,17 @@ login_manager.login_view = 'auth.login'
 bootstrap = Bootstrap()
 oauth = OAuth2Provider()
 svr = ServerProxy("http://localhost:8080")
-r = redis.Redis()
+r = redis.Redis(host=app.config['REDIS_HOST'])
 
 
-def create_app(config_mode):
-    connect('buildingdepot')
-    app = Flask(__name__)
-    app.config.from_envvar('CS_SETTINGS')
-    config[config_mode].init_app(app)
+def create_app(config_mode): # TODO: remove config_mode
+    #app = Flask(__name__)
+    #app.config.from_envvar('CS_SETTINGS')
     connect(app.config['MONGODB_DATABASE'],
             host=app.config['MONGODB_HOST'],
-            port=app.config['MONGODB_PORT'])
-
+            port=app.config['MONGODB_PORT'],
+           # connect=False
+            )
     login_manager.init_app(app)
     bootstrap.init_app(app)
     oauth.init_app(app)

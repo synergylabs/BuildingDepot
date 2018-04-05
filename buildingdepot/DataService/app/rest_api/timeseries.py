@@ -20,7 +20,6 @@ import sys, time, influxdb
 sys.path.append('/srv/buildingdepot')
 from ..api_0_0.resources.utils import authenticate_acl, permission
 
-
 class TimeSeriesService(MethodView):
     @oauth.require_oauth()
     @authenticate_acl('r')
@@ -33,7 +32,8 @@ class TimeSeriesService(MethodView):
             "name" : <sensor uuid>
             "start_time" : <unix timestamp of start time>
             "end_time" : <unix timestamp of end time>
-            "resolution" : <optional resolution can be specified to scale down data"
+            "resolution" : <optional resolution can be specified to scale down data",
+            "fields" : "<field1>;<feild2>"
 
            Returns (JSON):
            {
@@ -46,30 +46,41 @@ class TimeSeriesService(MethodView):
                 }
                 "success" : <True or False>
            }
+           Note: 'columns' = ['time', 'mean_value', 
+                              'mean_200_hz_magnitude', 'mean_200_hz_phase']
         """
 
         start_time = request.args.get('start_time')
         end_time = request.args.get('end_time')
         resolution = request.args.get('resolution')
+        fields= request.args.get('fields')
+        if fields:
+            fields = fields.split(';')
+            fields = '"' + '", "'.join(fields) + '"'
+        else:
+            fields = '*'
 
         if not all([start_time, end_time]):
             return jsonify(responses.missing_parameters)
 
-        if resolution != None:
+        if resolution:
+            if fields == '*':
+                return jsonify('TODO: Fields are not supported with resolution')
             try:
                 data = influx.query(
-                    'select mean(value) from "' + name + '" where (time>\'' + timestamp_to_time_string(
+                    'select mean(*) from "' + name + '" where (time>\'' + timestamp_to_time_string(
                         float(start_time)) \
                     + '\' and time<\'' + timestamp_to_time_string(
                         float(end_time)) + '\')' + " GROUP BY time(" + resolution + ")")
             except influxdb.exceptions.InfluxDBClientError:
                 return jsonify(responses.resolution_high)
+            #rawdata = data.raw
         else:
             data = influx.query(
-                'select * from "' + name + '" where time>\'' + timestamp_to_time_string(float(start_time)) \
+                'select ' + fields + ' from "' + name + '" where time>\'' + timestamp_to_time_string(float(start_time)) \
                 + '\' and time<\'' + timestamp_to_time_string(float(end_time)) + '\'')
-            response = dict(responses.success_true)
-            response.update({'data': data.raw})
+        response = dict(responses.success_true)
+        response.update({'data': data.raw})
         return jsonify(response)
 
     @oauth.require_oauth()
@@ -83,6 +94,9 @@ class TimeSeriesService(MethodView):
                             {
                                 "time": A unix timestamp of a sampling
                                 "value": A sensor value
+                                "<freq>_hz_magnitude": freq domain magnitude corresponding to <freq>Hz
+                                "<freq>_hz_phase": freq domain phase corresponding to <freq> Hz
+
                             },
                             { more times and values }
                         ]
@@ -116,9 +130,16 @@ class TimeSeriesService(MethodView):
                             'time': timestamp_to_time_string(sample['time']),
                             'fields': {
                                 'inserted_at': timestamp_to_time_string(time.time()),
-                                'value': sample['value']
+                                #'value': sample['value']
                             }
                         }
+                        del sample['time']
+                        # Key assertion TODO: need to raise appropriate error
+                        for k in sample.keys():
+                            assert k=='value' or \
+                                    '_'.join(k.split('_')[1:]) in \
+                                    ['hz_magnitude', 'hz_phase']
+                        dic['fields'].update(sample)
                         points.append(dic)
                     try:
                         channel.basic_publish(exchange=exchange, routing_key=sensor['sensor_id'], body=str(dic))
