@@ -101,3 +101,19 @@ class SensorService(MethodView):
             else:
                 return jsonify(responses.ds_error)
         return jsonify(responses.invalid_building)
+
+    @oauth.require_oauth()
+    def delete(self, name):
+        if name is None:
+            return jsonify(responses.missing_parameters)
+        sensor = Sensor.objects(name=name).first()
+        # cache process
+        if defs.delete_sensor(name):
+            r.delete('sensor:{}'.format(sensor.name))
+            r.delete('owner:{}'.format(sensor.name))
+            # cache process done
+            Sensor.objects(name=sensor.name).delete()
+        else:
+            flash('Unable to communicate with the DataService')
+        response = dict(responses.success_true)
+        return jsonify(response)
