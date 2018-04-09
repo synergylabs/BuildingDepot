@@ -26,6 +26,7 @@ This OAuth token will have to be sent in the headers of all the requests made to
 
    ../CentralService/oauth.rst
    sensordata.rst
+   pubsub.rst
 
 
 .. may be needed for html generation
