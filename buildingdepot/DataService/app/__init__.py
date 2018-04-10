@@ -55,7 +55,7 @@ def create_app(config_mode):
 
     oauth.init_app(app)
 
-    connect(app.config['MONGODB_DATABASE'],
+    connect(app.config['MONGODB_DATABASE_BD'],
             host=app.config['MONGODB_HOST'],
             port=app.config['MONGODB_PORT'])
 
