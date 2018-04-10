@@ -5,7 +5,6 @@ from werkzeug.security import generate_password_hash
 
 client = MongoClient()
 db = client.buildingdepot
-db.user.create_index('email')
 db.user.insert({"email":"admin@buildingdepot.org",
                 "password":generate_password_hash("admin"),
                 "first_name":"Admin",
