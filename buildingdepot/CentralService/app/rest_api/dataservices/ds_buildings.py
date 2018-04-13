@@ -39,7 +39,7 @@ class DataserviceBuildingsService(MethodView):
             if Building.objects(name=building).first() is None:
                 return jsonify(responses.ds_invalid_building)
 
-        dataservice.update(set__buildings=buildings)
+        dataservice.update(add_to_set__buildings=buildings)
         return jsonify(responses.success_true)
 
     @oauth.require_oauth()

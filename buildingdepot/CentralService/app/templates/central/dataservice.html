@@ -139,7 +139,37 @@
             $scope.root.addNewBuilding = function() {
                 $scope.buildings.push('');
             };
+            //When the user click remove building
             $scope.root.removeBuilding = function(index) {
+
+                if ($scope.buildings[index] === '') {
+                        $scope.buildings.splice(index, 1);
+                        return;
+                    }
+
+                var res = $http({
+                    method: 'DELETE',
+                    url: '/api/dataservice/'+ this.dataServiceName + '/buildings',
+                    data: {'data':{'buildings': [$scope.buildings[index]]}},
+                    headers: header
+                });
+
+                res.success(function(data) {
+                     if (data["success"]==="False"){
+                        $.notify(data["error"], {
+                            position: "top center",
+                            clickToHide: true,
+                            autoHideDelay:4000
+                        });
+                    }
+                    else if (data["success"]==="True"){
+                       $.notify("Success",{ globalPosition:'top center',clickToHide: true,autoHideDelay:2000, className:'success'});
+                    }
+                });
+                res.error(function(){
+                    $.notify("Ajax failed", { position:"top center",clickToHide: true,autoHideDelay:2000});
+                });
+                
                 $scope.buildings.splice(index, 1);
             };
             $scope.root.select = function(dataServiceName) {
