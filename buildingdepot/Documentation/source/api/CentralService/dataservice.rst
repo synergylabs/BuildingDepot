@@ -22,7 +22,7 @@ This request creates a new DataService with description,host and port where the 
       * **success** `(string)` -- Returns 'True' if data is posted successfully otherwise 'False'
       * **error** `(string)` -- An additional value that will be present only if the request fails specifying the cause for failure
    :status 200: Success
-   :status 401: Unauthorized Credentials (See :ref:`HTTP 401 <HTTP 401>`)
+   :status 401: Unauthorized Credentials
 
 .. compound::
 
@@ -86,7 +86,7 @@ This request retrieves name, description, hostname and port to used in the datas
 
 
    :status 200: Success
-   :status 401: Unauthorized Credentials (See :ref:`HTTP 401 <HTTP 401>`)
+   :status 401: Unauthorized Credentials
 
 
 .. compound::
@@ -139,7 +139,7 @@ This request deletes the requested DataService from Building Depot.
       * **success** `(string)` -- Returns 'True' if the DataService is successfully deleted otherwise 'False'
 
    :status 200: Success
-   :status 401: Unauthorized Credentials (See :ref:`HTTP 401 <HTTP 401>`)
+   :status 401: Unauthorized Credentials
 
 .. compound::
 
@@ -195,7 +195,7 @@ This request assigns a specific building to DataService. Once the building is as
       * **success** `(string)` -- Returns 'True' if the building is successfully added to the DataService otherwise 'False'
 
    :status 200: Success
-   :status 401: Unauthorized Credentials (See :ref:`HTTP 401 <HTTP 401>`)
+   :status 401: Unauthorized Credentials
 
 .. compound::
 
@@ -264,7 +264,7 @@ This request retrieves the names of buildings that the specified DataService hos
       * **buildings** `(list)` -- Contains the list of buildings that the the specified DataService hosts
 
    :status 200: Success
-   :status 401: Unauthorized Credentials (See :ref:`HTTP 401 <HTTP 401>`)
+   :status 401: Unauthorized Credentials
 
 .. compound::
 
@@ -317,7 +317,7 @@ This request removes specified buildings from a DataService.
       * **success** `(string)` -- Returns 'True' if the buildings are successfully deleted otherwise 'False'
 
    :status 200: Success
-   :status 401: Unauthorized Credentials (See :ref:`HTTP 401 <HTTP 401>`)
+   :status 401: Unauthorized Credentials
 
 .. compound::
 
@@ -385,7 +385,7 @@ This request grants CRUD (create/read/update/delete) privileges on the DataServi
       * **success** `(string)` -- Returns 'True' if the admin privileges are successfully added to the DataService otherwise 'False'
 
    :status 200: Success
-   :status 401: Unauthorized Credentials (See :ref:`HTTP 401 <HTTP 401>`)
+   :status 401: Unauthorized Credentials
 
 .. compound::
 
@@ -454,7 +454,7 @@ This request retrieves the list of users who have the admin privileges on the sp
       * **admins** `(list)` -- Contains the list of emails of the users who have admin privilege on the specified DataService
 
    :status 200: Success
-   :status 401: Unauthorized Credentials (See :ref:`HTTP 401 <HTTP 401>`)
+   :status 401: Unauthorized Credentials
 
 .. compound::
 
@@ -508,7 +508,7 @@ This request revokes admin privileges on DataService from the specified users.
       * **success** `(string)` -- Returns 'True' if the permissions are successfully revoked otherwise 'False'
 
    :status 200: Success
-   :status 401: Unauthorized Credentials (See :ref:`HTTP 401 <HTTP 401>`)
+   :status 401: Unauthorized Credentials
 
 .. compound::
 

@@ -5,8 +5,8 @@ Timeseries
 ##########
 
 The Sensor collection manages Sensors for Locations associated with the DataService.
-Sensor access is restricted to :ref:`Users <CentralS-Users>` or :ref:`Admins <DataS-Admins>` with
-Permissions for the Sensor and to the `Admin` who owns the Sensor.
+Sensor access is restricted to Central Service `Users` with permissions for the Sensor and to the `Admin` who owns the Sensor.
+
 
 .. _DataS List Sensors:
 
@@ -32,7 +32,7 @@ The first datapoint that is posted to the uuid defines the datatype for all furt
    :returns:
       * **success** `(string)` -- Returns 'True' if data is posted succesfully otherwise 'False'
    :status 200: Success
-   :status 401: Unauthorized Credentials (See :ref:`HTTP 401 <HTTP 401>`)
+   :status 401: Unauthorized Credentials  
 
 .. compound::
 
@@ -102,7 +102,7 @@ This retreives a list of datapoints for the timeseries of the specified Sensorpo
           * **name** `(string)` -- uuid of the sensor whose data is being retrieved
           * **values** `(list)` -- Contains the list of timeseries data that has been requested in the order represented by the columns.
    :status 200: Success
-   :status 401: Unauthorized Credentials (See :ref:`HTTP 401 <HTTP 401>`)
+   :status 401: Unauthorized Credentials  
 
 Note: Both interval and resolution are specified with the time value appended by the type of the value e.g. 10s for 10 seconds or 10m for 10 minutes.
 

@@ -28,7 +28,7 @@ This request creates a new Permission link between a UserGroup and a SensorGroup
       * **error** `(string)` -- An additional value that will be present only if the request fails specifying the cause for failure
 
    :status 200: Success
-   :status 401: Unauthorized Credentials (See :ref:`HTTP 401 <HTTP 401>`)
+   :status 401: Unauthorized Credentials  
 
 .. compound::
 
@@ -94,7 +94,7 @@ This request retrieves Permission level assigned for existing SensorGroup and Us
       * **permission** `(string)` -- Contains the permission level that are attached to this SensorGroup and UserGroup
 
    :status 200: Success
-   :status 401: Unauthorized Credentials (See :ref:`HTTP 401 <HTTP 401>`)
+   :status 401: Unauthorized Credentials  
 
 .. compound::
 
@@ -143,7 +143,7 @@ This request deletes the permission link between the UserGroup and SensorGroup
       * **success** `(string)` -- Returns 'True' if a permission is deleted between the sensor and user group otherwise 'False'
 
    :status 200: Success
-   :status 401: Unauthorized Credentials (See :ref:`HTTP 401 <HTTP 401>`)
+   :status 401: Unauthorized Credentials  
 
 .. compound::
 

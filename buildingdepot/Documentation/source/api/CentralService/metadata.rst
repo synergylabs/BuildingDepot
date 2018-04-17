@@ -23,7 +23,7 @@ Note: The list of metadata points sent in this request will overwrite the previo
    :returns:
       * **success** `(string)` -- Returns 'True' if data is posted succesfully otherwise 'False'
    :status 200: Success
-   :status 401: Unauthorized Credentials (See :ref:`HTTP 401 <HTTP 401>`)
+   :status 401: Unauthorized Credentials  
 
 .. compound::
 
@@ -72,7 +72,7 @@ This retreives a list of the metadata key-value pairs that are attached to the s
           * **name** `(string)` -- Name of the metadata point
           * **value** `(string)` -- Value of the metadata point
    :status 200: Success
-   :status 401: Unauthorized Credentials (See :ref:`HTTP 401 <HTTP 401>`)
+   :status 401: Unauthorized Credentials  
 
 .. compound::
 

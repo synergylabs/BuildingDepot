@@ -5,8 +5,7 @@ Sensor
 ######
 
 The Sensor collection manages Sensors for Locations associated with the CentralService.Sensors can be defined in the CentralService at http://www.example.com:81/central/sensor.
-Sensor access is restricted to :ref:`Users <CentralS-Users>` or :ref:`Admins <DataS-Admins>` with
-Permissions for the Sensor and to the `Admin` who owns the Sensor.
+Sensor access is restricted to Central Service `Users` with permissions for the Sensor and to the `Admin` who owns the Sensor.
 
 Create a Sensor
 ***************
@@ -23,7 +22,7 @@ Creates a new Sensor point in BuildingDepot and returns the UUID.
       * **success** `(string)` -- Returns 'True' if data is posted succesfully otherwise 'False'
       * **uuid** `(string)` -- Returns the uuid of the sensor on succesful creation
    :status 200: Success
-   :status 401: Unauthorized Credentials (See :ref:`HTTP 401 <HTTP 401>`)
+   :status 401: Unauthorized Credentials  
 
 .. compound::
 
@@ -70,7 +69,7 @@ Retrieves all the details of the sensor based on the uuid specified
       * **source_identifier** '(dictionary)' -- Source identifier of the sensor
       * **source_name** '(dictionary)' -- Source name of the sensor
    :status 200: Success
-   :status 401: Unauthorized Credentials (See :ref:`HTTP 401 <HTTP 401>`)
+   :status 401: Unauthorized Credentials  
 
 .. compound::
 
