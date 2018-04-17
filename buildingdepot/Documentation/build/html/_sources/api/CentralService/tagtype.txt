@@ -21,7 +21,7 @@ This request creates a new TagType in BuildingDepot which will be used in the Bu
    :returns:
       * **success** `(array)` -- Returns 'True' if data is posted succesfully otherwise 'False'
    :status 200: Success
-   :status 401: Unauthorized Credentials (See :ref:`HTTP 401 <HTTP 401>`)
+   :status 401: Unauthorized Credentials  
 
 .. compound::
 
@@ -76,7 +76,7 @@ This request retrieves two lists of key-value pairs, one list contains the array
 
 
    :status 200: Success
-   :status 401: Unauthorized Credentials (See :ref:`HTTP 401 <HTTP 401>`)
+   :status 401: Unauthorized Credentials  
 
 .. compound::
 

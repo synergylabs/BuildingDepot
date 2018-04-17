@@ -24,7 +24,7 @@ This request creates a new  User in the Central Service. Only the SuperUser can 
       * **success** `(string)` -- Returns 'True' if data is posted successfully otherwise 'False'
       * **error** `(string)` -- An additional value that will be present only if the request fails specifying the cause for failure
    :status 200: Success
-   :status 401: Unauthorized Credentials (See :ref:`HTTP 401 <HTTP 401>`)
+   :status 401: Unauthorized Credentials  
 
 .. compound::
 
@@ -94,7 +94,7 @@ This request retrieves first name, last_name, email and role of the User specifi
 
 
    :status 200: Success
-   :status 401: Unauthorized Credentials (See :ref:`HTTP 401 <HTTP 401>`)
+   :status 401: Unauthorized Credentials  
 
 
 .. compound::
@@ -147,7 +147,7 @@ This request deletes the requested User from Building Depot.Only the Super user 
       * **success** `(string)` -- Returns 'True' if the User is successfully deleted otherwise 'False'
 
    :status 200: Success
-   :status 401: Unauthorized Credentials (See :ref:`HTTP 401 <HTTP 401>`)
+   :status 401: Unauthorized Credentials  
 
 .. compound::
 

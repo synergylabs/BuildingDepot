@@ -1,7 +1,7 @@
 .. BuildingDepot documentation master file.
 
 =====================
-Building Depot v3.2.7
+Building Depot v3.2.8
 =====================
 
 Overview
@@ -45,7 +45,7 @@ Read more about the DataService
 Download
 ########
 
-You can get the latest BuildingDepot package (tar.gz) from `cmu.buildingdepot.org <http://cmu.buildingdepot.org/BuildingDepot.tar.gz>`_
+You can get the latest BuildingDepot package (tar.gz) from `buildingdepot.org <https://iotexpedition.org/software/BuildingDepot-v3.2.7.tar.gz>`_
 
 Install
 #######

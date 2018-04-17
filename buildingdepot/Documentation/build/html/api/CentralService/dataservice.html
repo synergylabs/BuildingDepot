@@ -56,8 +56,8 @@
 <tr class="field-odd field"><td>&nbsp;</td><td class="field-body"><ul class="first simple">
 <li><strong>name</strong> (<em>string</em>) &#8211; Name of the DataService</li>
 <li><strong>description</strong> (<em>string</em>) &#8211; Description for the DataService</li>
-<li><strong>host</strong> (<em>string</em>) &#8211; HostName of the device where the Dataservice is to be installed</li>
-<li><strong>port</strong> (<em>string</em>) &#8211; Port number of the device where the Dataservice is to be installed</li>
+<li><strong>host</strong> (<em>string</em>) &#8211; HostName of the device where the DataService is to be installed</li>
+<li><strong>port</strong> (<em>string</em>) &#8211; Port number of the device where the DataService is to be installed</li>
 </ul>
 </td>
 </tr>
@@ -69,7 +69,7 @@
 </tr>
 <tr class="field-odd field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
 <li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> &#8211; Success</li>
-<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a> &#8211; Unauthorized Credentials (See <span class="xref std std-ref">HTTP 401</span>)</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a> &#8211; Unauthorized Credentials</li>
 </ul>
 </td>
 </tr>
@@ -136,14 +136,14 @@
 <li><strong>success</strong> <cite>(string)</cite> &#8211; Returns &#8216;True&#8217; if data is retrieved successfully otherwise &#8216;False&#8217;</li>
 <li><strong>name</strong> <cite>(string)</cite> &#8211; Name of the DataService</li>
 <li><strong>description</strong> <cite>(string)</cite> &#8211; Description for the DataService</li>
-<li><strong>host</strong> <cite>(string)</cite> &#8211;  HostName of the device where the Dataservice is installed</li>
-<li><strong>port</strong> <cite>(string)</cite> &#8211;  Port number of the device where the Dataservice is installed</li>
+<li><strong>host</strong> <cite>(string)</cite> &#8211;  HostName of the device where the DataService is installed</li>
+<li><strong>port</strong> <cite>(string)</cite> &#8211;  Port number of the device where the DataService is installed</li>
 </ul>
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
 <li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> &#8211; Success</li>
-<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a> &#8211; Unauthorized Credentials (See <span class="xref std std-ref">HTTP 401</span>)</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a> &#8211; Unauthorized Credentials</li>
 </ul>
 </td>
 </tr>
@@ -185,7 +185,7 @@ Accept: application/json; charset=utf-8
 </div>
 <div class="section" id="delete-dataservice">
 <h2>Delete DataService<a class="headerlink" href="#delete-dataservice" title="Permalink to this headline">¶</a></h2>
-<p>This request deletes the requested Dataservice from Building Depot.</p>
+<p>This request deletes the requested DataService from Building Depot.</p>
 <dl class="delete">
 <dt id="delete--api-dataservice--name-">
 <code class="descname">DELETE </code><code class="descname">/api/dataservice/&lt;name&gt;</code><a class="headerlink" href="#delete--api-dataservice--name-" title="Permalink to this definition">¶</a></dt>
@@ -205,7 +205,7 @@ Accept: application/json; charset=utf-8
 </tr>
 <tr class="field-odd field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
 <li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> &#8211; Success</li>
-<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a> &#8211; Unauthorized Credentials (See <span class="xref std std-ref">HTTP 401</span>)</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a> &#8211; Unauthorized Credentials</li>
 </ul>
 </td>
 </tr>
@@ -234,7 +234,484 @@ Accept: application/json; charset=utf-8
 
 <span class="p">{</span>
   <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;False&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot; Dataservice does not exist&quot;</span>
+  <span class="nt">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;DataService doesn&#39;t exist&quot;</span>
+<span class="p">}</span>
+
+<span class="p">{</span>
+  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;False&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;Cannot delete DataService, contains buildings.&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="assign-buildings-to-dataservice">
+<h2>Assign Buildings to DataService<a class="headerlink" href="#assign-buildings-to-dataservice" title="Permalink to this headline">¶</a></h2>
+<p>This request assigns a specific building to DataService. Once the building is assigned to a specific DataService, the DataService handles sensor datastreams from the building.</p>
+<dl class="post">
+<dt id="post--api-dataservice--name--building">
+<code class="descname">POST </code><code class="descname">/api/dataservice/&lt;name&gt;/building</code><a class="headerlink" href="#post--api-dataservice--name--building" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>name</strong> (<em>string</em>) &#8211; Name of the DataService</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">JSON Parameters:</th></tr>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body"><ul class="first">
+<li><dl class="first docutils">
+<dt><strong>data</strong> <cite>(dict)</cite> &#8211; Contains the information of the buildings to be added to DataService.</dt>
+<dd><ul class="first last simple">
+<li><strong>buildings</strong> <cite>(list)</cite> &#8211; List of buildings to be added to DataService</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><ul class="first simple">
+<li><strong>success</strong> <cite>(string)</cite> &#8211; Returns &#8216;True&#8217; if the building is successfully added to the DataService otherwise &#8216;False&#8217;</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> &#8211; Success</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a> &#8211; Unauthorized Credentials</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="compound">
+<p class="compound-first"><strong>Example request</strong>:</p>
+<div class="compound-middle highlight-http"><div class="highlight"><pre>POST /api/dataservice/ds1/buildings
+
+{
+  &quot;data&quot;:{
+    &quot;buildings&quot;: [&quot;NSH&quot;]
+  }
+}
+</pre></div>
+</div>
+<p class="compound-middle"><strong>Example response</strong> (for success):</p>
+<div class="compound-middle highlight-http"><div class="highlight"><pre><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+
+<span class="p">{</span>
+  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;True&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p class="compound-middle"><strong>Example response</strong> (for failure):</p>
+<div class="compound-last highlight-http"><div class="highlight"><pre><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+
+<span class="p">{</span>
+  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;False&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot; Missing parameters&quot;</span>
+<span class="p">}</span>
+
+<span class="p">{</span>
+  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;False&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot; Missing data&quot;</span>
+<span class="p">}</span>
+
+<span class="p">{</span>
+  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;False&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;DataService doesn&#39;t exist&quot;</span>
+<span class="p">}</span>
+
+<span class="p">{</span>
+  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;False&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;One of the buildings doesn&#39;t exist&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="get-building-details-from-dataservice">
+<h2>Get Building Details from DataService<a class="headerlink" href="#get-building-details-from-dataservice" title="Permalink to this headline">¶</a></h2>
+<p>This request retrieves the names of buildings that the specified DataService hosts.</p>
+<dl class="get">
+<dt id="get--api-dataservice--name--buildings">
+<code class="descname">GET </code><code class="descname">/api/dataservice/&lt;name&gt;/buildings</code><a class="headerlink" href="#get--api-dataservice--name--buildings" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>name</strong> (<em>string</em>) &#8211; Name of the DataService</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><ul class="first simple">
+<li><strong>success</strong> <cite>(string)</cite> &#8211; Returns &#8216;True&#8217; if data is retrieved successfully otherwise &#8216;False&#8217;</li>
+<li><strong>buildings</strong> <cite>(list)</cite> &#8211; Contains the list of buildings that the the specified DataService hosts</li>
+</ul>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> &#8211; Success</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a> &#8211; Unauthorized Credentials</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="compound">
+<p class="compound-first"><strong>Example request</strong>:</p>
+<div class="compound-middle highlight-http"><div class="highlight"><pre>GET /api/dataservice/ds1/buildings
+
+Accept: application/json; charset=utf-8
+</pre></div>
+</div>
+<p class="compound-middle"><strong>Example response</strong>:</p>
+<div class="compound-middle highlight-http"><div class="highlight"><pre><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+
+<span class="p">{</span>
+  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;True&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;buildings&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;NSH&quot;</span><span class="p">,</span> <span class="s2">&quot;GHC&quot;</span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p class="compound-middle"><strong>Example response</strong> (for failure):</p>
+<div class="compound-last highlight-http"><div class="highlight"><pre><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+
+<span class="p">{</span>
+  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;False&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot; DataService doesn&#39;t exist&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="remove-buildings-from-dataservice">
+<h2>Remove Buildings from DataService<a class="headerlink" href="#remove-buildings-from-dataservice" title="Permalink to this headline">¶</a></h2>
+<p>This request removes specified buildings from a DataService.</p>
+<dl class="delete">
+<dt id="delete--api-dataservice--name--buildings">
+<code class="descname">DELETE </code><code class="descname">/api/dataservice/&lt;name&gt;/buildings</code><a class="headerlink" href="#delete--api-dataservice--name--buildings" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>name</strong> (<em>string</em>) &#8211; Name of the DataService</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">JSON Parameters:</th></tr>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body"><ul class="first">
+<li><dl class="first docutils">
+<dt><strong>data</strong> <cite>(dict)</cite> &#8211; Contains the information of the buildings to be deleted from DataService.</dt>
+<dd><ul class="first last simple">
+<li><strong>buildings</strong> <cite>(list)</cite> &#8211; List of buildings to be deleted from DataService</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><ul class="first simple">
+<li><strong>success</strong> <cite>(string)</cite> &#8211; Returns &#8216;True&#8217; if the buildings are successfully deleted otherwise &#8216;False&#8217;</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> &#8211; Success</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a> &#8211; Unauthorized Credentials</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="compound">
+<p class="compound-first"><strong>Example request</strong>:</p>
+<div class="compound-middle highlight-http"><div class="highlight"><pre>DELETE /api/dataservice/ds1/buildings
+Accept: application/json; charset=utf-8
+
+{
+  &quot;data&quot;:{
+    &quot;buildings&quot;: [&quot;NSH&quot;, &quot;GHC&quot;]
+  }
+}
+</pre></div>
+</div>
+<p class="compound-middle"><strong>Example response</strong>:</p>
+<div class="compound-middle highlight-http"><div class="highlight"><pre><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+
+<span class="p">{</span>
+  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;True&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p class="compound-middle"><strong>Example response</strong> (for failure):</p>
+<div class="compound-last highlight-http"><div class="highlight"><pre><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+
+<span class="p">{</span>
+  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;False&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;Missing parameters&quot;</span>
+<span class="p">}</span>
+
+<span class="p">{</span>
+  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;False&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;Missing data&quot;</span>
+<span class="p">}</span>
+
+<span class="p">{</span>
+  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;False&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;DataService doesn&#39;t exist&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="grant-admin-privileges-on-dataservice">
+<h2>Grant Admin Privileges on DataService<a class="headerlink" href="#grant-admin-privileges-on-dataservice" title="Permalink to this headline">¶</a></h2>
+<p>This request grants CRUD (create/read/update/delete) privileges on the DataService to the specified users.</p>
+<dl class="post">
+<dt id="post--api-dataservice--name--admins">
+<code class="descname">POST </code><code class="descname">/api/dataservice/&lt;name&gt;/admins</code><a class="headerlink" href="#post--api-dataservice--name--admins" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>name</strong> (<em>string</em>) &#8211; Name of the DataService</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">JSON Parameters:</th></tr>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body"><ul class="first">
+<li><dl class="first docutils">
+<dt><strong>data</strong> <cite>(dict)</cite> &#8211; Contains the information of the users to whom the CRUD privileges should be given.</dt>
+<dd><ul class="first last simple">
+<li><strong>admins</strong> <cite>(list)</cite> &#8211; List of the emails(string) of the users.</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><ul class="first simple">
+<li><strong>success</strong> <cite>(string)</cite> &#8211; Returns &#8216;True&#8217; if the admin privileges are successfully added to the DataService otherwise &#8216;False&#8217;</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> &#8211; Success</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a> &#8211; Unauthorized Credentials</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="compound">
+<p class="compound-first"><strong>Example request</strong>:</p>
+<div class="compound-middle highlight-http"><div class="highlight"><pre>POST /api/dataservice/ds1/admins
+
+{
+  &quot;data&quot;:{
+    &quot;admins&quot;: [&quot;user1@buildingdepot.org&quot;, &quot;user2@buildingdepot.org&quot;]
+  }
+}
+</pre></div>
+</div>
+<p class="compound-middle"><strong>Example response</strong> (for success):</p>
+<div class="compound-middle highlight-http"><div class="highlight"><pre><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+
+<span class="p">{</span>
+  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;True&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p class="compound-middle"><strong>Example response</strong> (for failure):</p>
+<div class="compound-last highlight-http"><div class="highlight"><pre><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+
+<span class="p">{</span>
+  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;False&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot; Missing parameters&quot;</span>
+<span class="p">}</span>
+
+<span class="p">{</span>
+  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;False&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot; Missing data&quot;</span>
+<span class="p">}</span>
+
+<span class="p">{</span>
+  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;False&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;DataService doesn&#39;t exist&quot;</span>
+<span class="p">}</span>
+
+<span class="p">{</span>
+  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;False&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;One of the users doesn\&#39;t exist&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="get-list-of-admins-from-dataservice">
+<h2>Get List of Admins from DataService<a class="headerlink" href="#get-list-of-admins-from-dataservice" title="Permalink to this headline">¶</a></h2>
+<p>This request retrieves the list of users who have the admin privileges on the specified DataService.</p>
+<dl class="get">
+<dt id="get--api-dataservice--name--admins">
+<code class="descname">GET </code><code class="descname">/api/dataservice/&lt;name&gt;/admins</code><a class="headerlink" href="#get--api-dataservice--name--admins" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>name</strong> (<em>string</em>) &#8211; Name of the DataService</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><ul class="first simple">
+<li><strong>success</strong> <cite>(string)</cite> &#8211; Returns &#8216;True&#8217; if the list is retrieved successfully otherwise &#8216;False&#8217;</li>
+<li><strong>admins</strong> <cite>(list)</cite> &#8211; Contains the list of emails of the users who have admin privilege on the specified DataService</li>
+</ul>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> &#8211; Success</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a> &#8211; Unauthorized Credentials</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="compound">
+<p class="compound-first"><strong>Example request</strong>:</p>
+<div class="compound-middle highlight-http"><div class="highlight"><pre>GET /api/dataservice/ds1/buildings
+
+Accept: application/json; charset=utf-8
+</pre></div>
+</div>
+<p class="compound-middle"><strong>Example response</strong>:</p>
+<div class="compound-middle highlight-http"><div class="highlight"><pre><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+
+<span class="p">{</span>
+  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;True&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;admins&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;user1@buildingdepot.org&quot;</span><span class="p">,</span> <span class="s2">&quot;user2@buildingdepot.org&quot;</span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p class="compound-middle"><strong>Example response</strong> (for failure):</p>
+<div class="compound-last highlight-http"><div class="highlight"><pre><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+
+<span class="p">{</span>
+  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;False&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot; DataService doesn&#39;t exist&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="revoke-admin-privileges-on-dataservice">
+<h2>Revoke Admin Privileges on DataService<a class="headerlink" href="#revoke-admin-privileges-on-dataservice" title="Permalink to this headline">¶</a></h2>
+<p>This request revokes admin privileges on DataService from the specified users.</p>
+<dl class="delete">
+<dt id="delete--api-dataservice--name--admins">
+<code class="descname">DELETE </code><code class="descname">/api/dataservice/&lt;name&gt;/admins</code><a class="headerlink" href="#delete--api-dataservice--name--admins" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>name</strong> (<em>string</em>) &#8211; Name of the DataService</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">JSON Parameters:</th></tr>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body"><ul class="first">
+<li><dl class="first docutils">
+<dt><strong>data</strong> <cite>(dict)</cite> &#8211; Contains the information of the buildings to ba deleted from DataService.</dt>
+<dd><ul class="first last simple">
+<li><strong>admins</strong> <cite>(list)</cite> &#8211; List of the emails of users whose privileges on DataService should be revoked.</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><ul class="first simple">
+<li><strong>success</strong> <cite>(string)</cite> &#8211; Returns &#8216;True&#8217; if the permissions are successfully revoked otherwise &#8216;False&#8217;</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> &#8211; Success</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a> &#8211; Unauthorized Credentials</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="compound">
+<p class="compound-first"><strong>Example request</strong>:</p>
+<div class="compound-middle highlight-http"><div class="highlight"><pre>DELETE /api/dataservice/ds1/admins
+Accept: application/json; charset=utf-8
+
+{
+  &quot;data&quot;:{
+    &quot;admins&quot;: [&quot;user1@buildingdepot.org&quot;, &quot;user2@buildingdepot.org&quot;]
+  }
+}
+</pre></div>
+</div>
+<p class="compound-middle"><strong>Example response</strong>:</p>
+<div class="compound-middle highlight-http"><div class="highlight"><pre><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+
+<span class="p">{</span>
+  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;True&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p class="compound-middle"><strong>Example response</strong> (for failure):</p>
+<div class="compound-last highlight-http"><div class="highlight"><pre><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+
+<span class="p">{</span>
+  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;False&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;Missing parameters&quot;</span>
+<span class="p">}</span>
+
+<span class="p">{</span>
+  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;False&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;Missing data&quot;</span>
+<span class="p">}</span>
+
+<span class="p">{</span>
+  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;False&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;DataService doesn&#39;t exist&quot;</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -254,6 +731,12 @@ Accept: application/json; charset=utf-8
 <li><a class="reference internal" href="#create-a-new-dataservice">Create a new DataService</a></li>
 <li><a class="reference internal" href="#get-dataservice-details">Get DataService Details</a></li>
 <li><a class="reference internal" href="#delete-dataservice">Delete DataService</a></li>
+<li><a class="reference internal" href="#assign-buildings-to-dataservice">Assign Buildings to DataService</a></li>
+<li><a class="reference internal" href="#get-building-details-from-dataservice">Get Building Details from DataService</a></li>
+<li><a class="reference internal" href="#remove-buildings-from-dataservice">Remove Buildings from DataService</a></li>
+<li><a class="reference internal" href="#grant-admin-privileges-on-dataservice">Grant Admin Privileges on DataService</a></li>
+<li><a class="reference internal" href="#get-list-of-admins-from-dataservice">Get List of Admins from DataService</a></li>
+<li><a class="reference internal" href="#revoke-admin-privileges-on-dataservice">Revoke Admin Privileges on DataService</a></li>
 </ul>
 </li>
 </ul>

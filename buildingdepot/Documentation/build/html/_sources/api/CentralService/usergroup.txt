@@ -19,7 +19,7 @@ This request creates a new UserGroup with the name and description as specified 
       * **success** `(string)` -- Returns 'True' if data is posted succesfully otherwise 'False'
       * **error** `(string)` -- An additional value that will be present only if the request fails specifying the cause for failure
    :status 200: Success
-   :status 401: Unauthorized Credentials (See :ref:`HTTP 401 <HTTP 401>`)
+   :status 401: Unauthorized Credentials  
 
 .. compound::
 
@@ -73,7 +73,7 @@ Note: The list of user id's sent in this request will overwrite the previous lis
       * **success** `(string)` -- Returns 'True' if data is posted succesfully otherwise 'False'
       * **error** `(string)` -- An additional value that will be present only if the request fails specifying the cause for failure
    :status 200: Success
-   :status 401: Unauthorized Credentials (See :ref:`HTTP 401 <HTTP 401>`)
+   :status 401: Unauthorized Credentials  
 
 .. compound::
 
@@ -127,7 +127,7 @@ This request retrieves the list of users that are in the specified UserGroup
       * **users** `(list)` -- Contains the list of users in this UserGroup
 
    :status 200: Success
-   :status 401: Unauthorized Credentials (See :ref:`HTTP 401 <HTTP 401>`)
+   :status 401: Unauthorized Credentials  
 
 .. compound::
 
