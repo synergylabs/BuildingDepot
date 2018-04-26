@@ -34,9 +34,11 @@ Creates a new Sensor point in BuildingDepot and returns the UUID.
       Accept: application/json; charset=utf-8
 
       {
-        "name":"Test Sensor",
-        "identifier":"Sensor Tag",
-        "building":"NSH"
+            "data": {
+                      "name":"Test Sensor",
+                      "identifier":"Sensor Tag",
+                      "building":"NSH"
+                    }
       }
 
    **Example response**:

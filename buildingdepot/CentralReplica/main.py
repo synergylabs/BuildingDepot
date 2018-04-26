@@ -16,11 +16,15 @@ from models import *
 from mongoengine import connect
 from config import Config
 
-connect(Config.MONGODB_DATABASE,
-        host=Config.MONGODB_HOST,
-        port=Config.MONGODB_PORT)
+connect(db=Config.MONGODB_DATABASE,
+            host=Config.MONGODB_HOST,
+            port=Config.MONGODB_PORT,
+            username=Config.MONGODB_USERNAME,
+            password=Config.MONGODB_PWD,
+            authentication_source='admin'
+            )
 
-r = redis.Redis()
+r = redis.Redis(host=Config.REDIS_HOST,password=Config.REDIS_PWD)
 
 class ThreadXMLRPCServer(ThreadingMixIn, SimpleXMLRPCServer):
     pass

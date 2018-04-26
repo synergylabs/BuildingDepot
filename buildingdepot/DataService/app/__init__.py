@@ -15,7 +15,7 @@ services such as the main dataservice,rest_api and oauth service are
 registered as blueprints.
 
 @copyright: (c) 2016 SynergyLabs
-@license: UCSD License. See License file for details.
+@license: See License file for details.
 """
 
 from flask import Flask
@@ -29,18 +29,20 @@ import redis
 from influxdb import InfluxDBClient
 import pdb
 
+app = Flask(__name__)
+app.config.from_envvar('DS_SETTINGS')
 permissions = {"rw": "r/w", "r": "r", "dr": "d/r", "rwp": "r/w/p"}
 
 exchange = 'master_exchange'
-r = redis.Redis(host='127.0.0.1')
-app = Flask(__name__)
-app.config.from_envvar('DS_SETTINGS')
+
 influx = InfluxDBClient(app.config['INFLUXDB_HOST'], 
                         app.config['INFLUXDB_PORT'], 
-                        'root', 
-                        'root', 
+                        app.config['INFLUXDB_USERNAME'],
+                        app.config['INFLUXDB_PWD'],
                         app.config['INFLUXDB_DB']
                         )
+
+r = redis.Redis(host=app.config['REDIS_HOST'],password=app.config['REDIS_PWD'])
 
 bootstrap = Bootstrap()
 svr = ServerProxy("http://127.0.0.1:8080")
@@ -55,9 +57,12 @@ def create_app(config_mode):
 
     oauth.init_app(app)
 
-    connect(app.config['MONGODB_DATABASE_BD'],
+    connect(db=app.config['MONGODB_DATABASE_BD'],
             host=app.config['MONGODB_HOST'],
-            port=app.config['MONGODB_PORT'])
+            port=app.config['MONGODB_PORT'],
+            username=app.config['MONGODB_USERNAME'],
+            password=app.config['MONGODB_PWD'],
+            authentication_source='admin')
 
     bootstrap.init_app(app)
 

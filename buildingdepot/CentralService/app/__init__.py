@@ -35,17 +35,18 @@ login_manager.login_view = 'auth.login'
 bootstrap = Bootstrap()
 oauth = OAuth2Provider()
 svr = ServerProxy("http://localhost:8080")
-r = redis.Redis(host=app.config['REDIS_HOST'])
+r = redis.Redis(host=app.config['REDIS_HOST'],password=app.config['REDIS_PWD'])
 
 
 def create_app(config_mode): # TODO: remove config_mode
-    #app = Flask(__name__)
-    #app.config.from_envvar('CS_SETTINGS')
-    connect(app.config['MONGODB_DATABASE'],
+
+    connect(db=app.config['MONGODB_DATABASE'],
             host=app.config['MONGODB_HOST'],
             port=app.config['MONGODB_PORT'],
-           # connect=False
-            )
+            username=app.config['MONGODB_USERNAME'],
+            password=app.config['MONGODB_PWD'],
+            authentication_source='admin')
+    
     login_manager.init_app(app)
     bootstrap.init_app(app)
     oauth.init_app(app)

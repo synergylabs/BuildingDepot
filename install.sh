@@ -95,14 +95,19 @@ function deploy_config {
 function install_packages {
     apt-get install curl
     apt-get install apt-transport-https
+    #Add keys for rabbitmq
     echo 'deb http://www.rabbitmq.com/debian/ testing main' | sudo tee /etc/apt/sources.list.d/rabbitmq.list
+    # Add keys to install influxdb
     curl -sL https://repos.influxdata.com/influxdb.key | sudo apt-key add -
     source /etc/lsb-release
     echo "deb https://repos.influxdata.com/${DISTRIB_ID,,} ${DISTRIB_CODENAME} stable" | sudo tee /etc/apt/sources.list.d/influxdb.list
+    # Add keys to install mongodb
+    sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 2930ADAE8CAF5059EE73BB4B58712A2291FA4AD5
+    echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/${DISTRIB_ID,,} ${DISTRIB_CODENAME}/mongodb-org/3.6 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.6.list
     apt-get update
     apt-get install
     apt-get -y install python-pip
-    apt-get install -y mongodb
+    apt-get install -y mongodb-org
     apt-get install -y openssl python-setuptools python-dev build-essential python-software-properties
     apt-get install -y nginx
     apt-get install -y supervisor
@@ -111,6 +116,7 @@ function install_packages {
     apt-get install wget
     sudo apt-get install influxdb
     sudo service influxdb start
+    sudo service mongod start
     sudo apt-get install rabbitmq-server
     sed -i -e 's/"inet_interfaces = all/"inet_interfaces = loopback-only"/g' /etc/postfix/main.cf
     service postfix restart
@@ -194,6 +200,114 @@ function setup_email {
     fi
 }
 
+function setup_packages {
+
+    echo
+    echo "Securing BD Packages"
+    echo "--------------------"
+    echo "Enter Y to auto-generate credentials for packages (MongoDB,InfluxDB & Redis). Credentials are stored in cs_config file (or) Enter N to input individual package credentials"
+    read response
+    if [ "$response" == "Y" ] || [ "$response" == "y" ]; then
+        ## Add MongoDB Admin user
+        mongoUsername=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 16 | head -n 1)
+        mongoPassword=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)
+        echo "MONGODB_USERNAME = '$mongoUsername'" >> $BD/CentralService/cs_config
+        echo "MONGODB_PWD = '$mongoPassword'" >> $BD/CentralService/cs_config
+        echo "MONGODB_USERNAME = '$mongoUsername'" >> $BD/DataService/ds_config
+        echo "MONGODB_PWD = '$mongoPassword'" >> $BD/DataService/ds_config
+        echo "    MONGODB_USERNAME = '$mongoUsername'" >> $BD/CentralReplica/config.py
+        echo "    MONGODB_PWD = '$mongoPassword'" >> $BD/CentralReplica/config.py
+        mongo --eval "db.getSiblingDB('admin').createUser({user:'$mongoUsername',pwd:'$mongoPassword',roles:['userAdminAnyDatabase','dbAdminAnyDatabase','readWriteAnyDatabase']})"
+        # Enable MongoDB authorization
+        echo "security:" >> /etc/mongod.conf
+        echo "  authorization: \"enabled\"">> /etc/mongod.conf
+        service mongod restart
+
+        sleep 2
+
+        ## Add InfluxDB Admin user
+        influxUsername=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 16 | head -n 1)
+        influxPassword=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)
+        echo "INFLUXDB_USERNAME = '$influxUsername'">> $BD/DataService/ds_config
+        echo "INFLUXDB_PWD = '$influxPassword'">> $BD/DataService/ds_config
+        sleep 1
+        curl -d "q=CREATE USER $influxUsername WITH PASSWORD '$influxPassword' WITH ALL PRIVILEGES" -X POST http://localhost:8086/query
+        sed -ir 's/# auth-enabled = false/auth-enabled = true/g' /etc/influxdb/influxdb.conf
+        service influxdb restart
+
+        sleep 2
+
+        ## Add Redis Admin user
+        redisPassword=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 64 | head -n 1)
+        echo "REDIS_PWD = '$redisPassword'">> $BD/CentralService/cs_config
+        echo "REDIS_PWD = '$redisPassword'">> $BD/DataService/ds_config
+        echo "    REDIS_PWD = '$redisPassword'" >> $BD/CentralReplica/config.py
+        sed -i -e '/#.* requirepass / s/.*/ requirepass  '$redisPassword'/' /etc/redis/redis.conf
+        service redis restart
+
+        echo
+        echo "Auto-Generated User Credentials for BuildingDepot Packages [MongoDB,InfluxDB & Redis]"
+        echo
+
+    elif [ "$response" == 'N' ] || [ "$response" == 'n' ]; then
+        ## Add MongoDB Admin user
+        echo "Enter MongoDB Username: "
+        read mongoUsername
+        echo "Enter MongoDB Password: "
+        read -s mongoPassword
+        echo "MONGODB_USERNAME = '$mongoUsername'" >> $BD/CentralService/cs_config
+        echo "MONGODB_PWD = '$mongoPassword'" >> $BD/CentralService/cs_config
+        echo "MONGODB_USERNAME = '$mongoUsername'" >> $BD/DataService/ds_config
+        echo "MONGODB_PWD = '$mongoPassword'" >> $BD/DataService/ds_config
+        echo "    MONGODB_USERNAME = '$mongoUsername'" >> $BD/CentralReplica/config.py
+        echo "    MONGODB_PWD = '$mongoPassword'" >> $BD/CentralReplica/config.py
+        mongo --eval "db.getSiblingDB('admin').createUser({user:'$mongoUsername',pwd:'$mongoPassword',roles:['userAdminAnyDatabase','dbAdminAnyDatabase','readWriteAnyDatabase']})"
+        # Enable MongoDB authorization
+        echo "security:" >> /etc/mongod.conf
+        echo "  authorization: \"enabled\"">> /etc/mongod.conf
+        service mongod restart
+
+        sleep 2
+
+        ## Add InfluxDB Admin user
+        echo
+        echo "Enter InfluxDB Username: "
+        read influxUsername
+        echo "Enter InfluxDB Password: "
+        read -s influxPassword
+        echo "INFLUXDB_USERNAME = '$influxUsername'">> $BD/DataService/ds_config
+        echo "INFLUXDB_PWD = '$influxPassword'">> $BD/DataService/ds_config
+        sleep 1
+        curl -d "q=CREATE USER $influxUsername WITH PASSWORD '$influxPassword' WITH ALL PRIVILEGES" -X POST http://localhost:8086/query
+        sed -ir 's/# auth-enabled = false/auth-enabled = true/g' /etc/influxdb/influxdb.conf
+        service influxdb restart
+
+        sleep 2
+
+       ## Add Redis Admin user
+        echo
+        echo "Enter Redis Username: "
+        read redisUsername
+        echo "Enter Redis Password: "
+        read -s redisPassword
+        echo "REDIS_PWD = '$redisPassword'">> $BD/CentralService/cs_config
+        echo "REDIS_PWD = '$redisPassword'">> $BD/DataService/ds_config
+        echo "    REDIS_PWD = '$redisPassword'" >> $BD/CentralReplica/config.py
+        sed -i -e '/#.* requirepass / s/.*/ requirepass  '$redisPassword'/' /etc/redis/redis.conf
+        service redis restart
+
+        echo
+        echo "Saved User Credentials for BuildingDepot Packages"
+        echo
+
+     else
+        echo
+        echo "Invalid option please Try again."
+        setup_packages
+    fi
+
+}
+
 deploy_config
 install_packages
 if [ "$DEPLOY_CS" = true ]; then
@@ -204,13 +318,14 @@ if [ "$DEPLOY_DS" = true ]; then
     deploy_dataservice
 fi
 
-/etc/init.d/mongodb start
+service mongod start
 service influxdb start
 service supervisor stop
 service supervisor start
 sleep 5
 supervisorctl restart all
 service influxdb start
+
 
 if [ "$DEPLOY_TOGETHER" = true ]; then
     joint_deployment_fix
@@ -222,9 +337,11 @@ rm -rf configs
 popd
 setup_email
 
-curl -G http://localhost:8086/query --data-urlencode "q=CREATE DATABASE buildingdepot"
-echo -e "\nInstallation Finished..\n"
-/srv/buildingdepot/venv/bin/python2.7 setup_bd.py
-echo -e "Created a super user with following credentials. Please login and change password immediately \n user id : admin@buildingdepot.org \n password: admin"
 
-supervisorctl restart cs
+# Create Database on InfluxDB
+curl -d "q=CREATE DATABASE buildingdepot" -X POST http://localhost:8086/query
+setup_packages
+/srv/buildingdepot/venv/bin/python2.7 setup_bd.py
+#
+echo -e "\nInstallation Finished..\n"
+supervisorctl restart all
