@@ -95,11 +95,13 @@ function deploy_config {
 function install_packages {
     apt-get install curl
     apt-get install apt-transport-https
+    source /etc/lsb-release
+
     #Add keys for rabbitmq
-    echo 'deb http://www.rabbitmq.com/debian/ testing main' | sudo tee /etc/apt/sources.list.d/rabbitmq.list
+    echo 'deb https://dl.bintray.com/rabbitmq/debian ${DISTRIB_CODENAME} main' | sudo tee /etc/apt/sources.list.d/bintray.rabbitmq.list
+    wget -O- https://www.rabbitmq.com/rabbitmq-release-signing-key.asc | sudo apt-key add -
     # Add keys to install influxdb
     curl -sL https://repos.influxdata.com/influxdb.key | sudo apt-key add -
-    source /etc/lsb-release
     echo "deb https://repos.influxdata.com/${DISTRIB_ID,,} ${DISTRIB_CODENAME} stable" | sudo tee /etc/apt/sources.list.d/influxdb.list
     # Add keys to install mongodb
     sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 2930ADAE8CAF5059EE73BB4B58712A2291FA4AD5
