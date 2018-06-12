@@ -1,36 +1,22 @@
 """
-CentralReplica.models
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Replicates all the models that are defined in the CentralService
-as the CentralReplica needs them for it's RPC's.
-
-@copyright: (c) 2016 SynergyLabs
-@license: UCSD License. See License file for details.
-"""
-
-
-from mongoengine import *
-from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
-from werkzeug.security import check_password_hash
-from config import Config
-
-
-"""
 CentralService.models
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Contains all the class definitions that are required for the CentralService.
 Each class here is a Table in MongoDB where each value that is inserted into
-these tables can have any of the paramteres defined within the class
+these tables can have any of the parameters defined within the class. Needs
+them for the RPCs
 
 @copyright: (c) 2016 SynergyLabs
-@license: UCSD License. See License file for details.
+@license: See License file for details.
 """
 
-from flask import current_app
 from mongoengine import *
-from flask.ext.login import UserMixin
+from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
+from werkzeug.security import check_password_hash
+from config import Config
+from flask import current_app
+from flask_login import UserMixin
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from werkzeug.security import generate_password_hash, check_password_hash
 

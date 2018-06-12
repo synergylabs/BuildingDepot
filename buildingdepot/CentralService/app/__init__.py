@@ -17,8 +17,8 @@ registered as blueprints.
 
 from flask import Flask
 from mongoengine import connect
-from flask.ext.login import LoginManager
-from flask.ext.bootstrap import Bootstrap
+from flask_login import LoginManager
+from flask_bootstrap import Bootstrap
 from flask_oauthlib.provider import OAuth2Provider
 from xmlrpclib import ServerProxy
 import redis

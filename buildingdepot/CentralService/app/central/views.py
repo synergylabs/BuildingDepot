@@ -17,7 +17,7 @@ import json,requests,math
 from app.common import PAGE_SIZE
 from uuid import uuid4
 from flask import render_template, request, redirect, url_for, jsonify, session, flash
-from flask.ext.login import login_required
+from flask_login import login_required
 from werkzeug.security import generate_password_hash, gen_salt
 
 from .. import r

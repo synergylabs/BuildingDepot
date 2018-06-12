@@ -22,6 +22,24 @@ mkdir -p /var/log/buildingdepot/CentralService
 mkdir -p /var/log/buildingdepot/DataService
 mkdir -p /var/sockets
 
+
+function setup_venv {
+    cp pip_packages.list $1
+    cd $1
+
+    virtualenv ./venv
+    source venv/bin/activate
+
+    pip install --upgrade pip
+    pip install --upgrade setuptools
+    pip install --upgrade -r pip_packages.list
+
+    pip install --upgrade uWSGI
+    mkdir -p /etc/uwsgi/apps-available/
+
+    deactivate
+    cd -
+}
 # Deploy apps
 function deploy_centralservice {
     setup_venv /srv/buildingdepot/
@@ -122,24 +140,6 @@ function install_packages {
     sudo apt-get install rabbitmq-server
     sed -i -e 's/"inet_interfaces = all/"inet_interfaces = loopback-only"/g' /etc/postfix/main.cf
     service postfix restart
-}
-
-function setup_venv {
-    cp pip_packages.list $1
-    cd $1
-
-    virtualenv ./venv
-    source venv/bin/activate
-
-    pip install --upgrade pip
-    pip install --upgrade setuptools
-    pip install --upgrade -r pip_packages.list
-
-    pip install --upgrade uWSGI
-    mkdir -p /etc/uwsgi/apps-available/
-
-    deactivate
-    cd -
 }
 
 function setup_gmail {

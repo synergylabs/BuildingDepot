@@ -5,4 +5,3 @@ class Config:
     SECRET_KEY = 'This Is Secret Key. Please Make It Complicated'
     TOKEN_EXPIRATION = 3600
     REDIS_HOST = 'localhost'
-    
