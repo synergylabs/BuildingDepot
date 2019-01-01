@@ -67,7 +67,7 @@ function joint_deployment_fix {
     rm -f /etc/nginx/sites-enabled/default
     cd /srv/buildingdepot
     #Setting up SSL
-    ssl_conf_file='configs/ssl_config.json'
+    ssl_conf_file='configs/bd_config.json'
     get_config_value 'cert_path'
     cert_path=$res
     get_config_value 'key_path'
