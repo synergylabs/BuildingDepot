@@ -212,11 +212,35 @@ function set_influxdb_credentials {
   sleep 1
   curl -d "q=CREATE USER $influx_user WITH PASSWORD '$influx_pwd' WITH ALL PRIVILEGES" -X POST http://localhost:8086/query
   sed -ir 's/# auth-enabled = false/auth-enabled = true/g' /etc/influxdb/influxdb.conf
+        service influxdb restart
 }
+
+function set_mongodb_credentials {
+  get_config_value 'mongo_user'
+  mongo_user=$res
+  get_config_value 'mongo_pwd'
+  mongo_pwd=$res
+    echo "MONGODB_USERNAME = '$mongo_user'" >> $BD/CentralService/cs_config
+    echo "MONGODB_PWD = '$mongo_pwd'" >> $BD/CentralService/cs_config
+    echo "MONGODB_USERNAME = '$mongo_user'" >> $BD/DataService/ds_config
+    echo "MONGODB_PWD = '$mongo_pwd'" >> $BD/DataService/ds_config
+    echo "    MONGODB_USERNAME = '$mongo_user'" >> $BD/CentralReplica/config.py
+    echo "    MONGODB_PWD = '$mongo_pwd'" >> $BD/CentralReplica/config.py
+    mongo --eval "db.getSiblingDB('admin').createUser({user:'$mongo_user',pwd:'$mongo_pwd',roles:['userAdminAnyDatabase','dbAdminAnyDatabase','readWriteAnyDatabase']})" || true
+    # Enable MongoDB authorization
+    echo "auth = true" >> /etc/mongodb.conf
+    #echo "security:" >> /etc/mongod.conf
+    #echo "  authorization: \"enabled\"">> /etc/mongod.conf
+    service mongodb restart
+
+
+}
+
 
 function set_credentials {
   set_redis_credentials 
   set_influxdb_credentials
+  set_mongodb_credentials
 }
 
 
@@ -268,7 +292,7 @@ rm -rf configs
 popd
 setup_gmail
 
-curl -G http://localhost:8086/query --data-urlencode "q=CREATE DATABASE buildingdepot"
+#curl -G http://localhost:8086/query --data-urlencode "q=CREATE DATABASE buildingdepot" #TODO: Implement this with admin account
 echo -e "\nInstallation Finished..\n"
 /srv/buildingdepot/venv/bin/python2.7 setup_bd.py
 echo -e "Created a super user with following credentials. Please login and change password immediately \n user id : admin@buildingdepot.org \n password: admin"
