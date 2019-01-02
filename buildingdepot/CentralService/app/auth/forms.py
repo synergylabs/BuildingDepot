@@ -9,7 +9,7 @@ The two forms that are used are for login and for creating a new user.
 @license: UCSD License. See License file for details.
 """
 
-from flask.ext.wtf import Form
+from flask_wtf import Form
 from wtforms import StringField, PasswordField, BooleanField, SubmitField
 from wtforms.validators import DataRequired, Email, Length, EqualTo
 from wtforms import ValidationError
