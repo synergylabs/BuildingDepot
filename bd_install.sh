@@ -60,7 +60,6 @@ fi
 BD=/srv/buildingdepot/
 pushd $(pwd)
 
-cp configs/nginx.conf /etc/nginx/nginx.conf
 
 mkdir -p /srv/buildingdepot
 mkdir -p /var/log/buildingdepot/CentralService
@@ -265,6 +264,7 @@ function setup_gmail {
 
 deploy_config
 install_packages
+cp configs/nginx.conf /etc/nginx/nginx.conf
 if [ "$DEPLOY_CS" = true ]; then
     deploy_centralservice
 fi
