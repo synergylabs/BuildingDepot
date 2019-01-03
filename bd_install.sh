@@ -194,6 +194,7 @@ function set_redis_credentials {
   get_config_value 'redis_pwd'
   redis_pwd=$res
   echo "REDIS_PWD = '$redis_pwd'">> $BD/CentralService/cs_config
+  echo "">> $BD/DataService/ds_config
   echo "REDIS_PWD = '$redis_pwd'">> $BD/DataService/ds_config
   echo "    REDIS_PWD = '$redis_pwd'" >> $BD/CentralReplica/config.py
   sed -i -e '/#.* requirepass / s/.*/ requirepass  '$redis_pwd'/' /etc/redis/redis.conf
@@ -227,7 +228,11 @@ function set_mongodb_credentials {
   echo "    MONGODB_PWD = '$mongo_pwd'" >> $BD/CentralReplica/config.py
   mongo --eval "db.getSiblingDB('admin').createUser({user:'$mongo_user',pwd:'$mongo_pwd',roles:['userAdminAnyDatabase','dbAdminAnyDatabase','readWriteAnyDatabase']})" || true
   # Enable MongoDB authorization
-  echo "auth = true" >> /etc/mongodb.conf
+  lastline=$(cat /etc/mongodb.conf | tail -1)
+  auth_opt="auth = true"
+  if ["$lastline" != "$auth_opt"]; then
+      echo $auth_opt >> /etc/mongodb.conf
+  fi
   #echo "security:" >> /etc/mongod.conf
   #echo "  authorization: \"enabled\"">> /etc/mongod.conf
   service mongodb restart
