@@ -70,7 +70,7 @@ class Token(Document):
 def token_gen(client_id, client_secret):
     client = Client.objects(client_id=client_id, client_secret=client_secret).first()
     if client is not None:
-        toks = Token.objects(user=client.user)
+        toks = Token.objects(client=client)
         for t in toks:
             t.delete()
         # Set token expiry period and create it
