@@ -219,18 +219,18 @@ function set_mongodb_credentials {
   mongo_user=$res
   get_config_value 'mongo_pwd'
   mongo_pwd=$res
-    echo "MONGODB_USERNAME = '$mongo_user'" >> $BD/CentralService/cs_config
-    echo "MONGODB_PWD = '$mongo_pwd'" >> $BD/CentralService/cs_config
-    echo "MONGODB_USERNAME = '$mongo_user'" >> $BD/DataService/ds_config
-    echo "MONGODB_PWD = '$mongo_pwd'" >> $BD/DataService/ds_config
-    echo "    MONGODB_USERNAME = '$mongo_user'" >> $BD/CentralReplica/config.py
-    echo "    MONGODB_PWD = '$mongo_pwd'" >> $BD/CentralReplica/config.py
-    mongo --eval "db.getSiblingDB('admin').createUser({user:'$mongo_user',pwd:'$mongo_pwd',roles:['userAdminAnyDatabase','dbAdminAnyDatabase','readWriteAnyDatabase']})" || true
-    # Enable MongoDB authorization
-    echo "auth = true" >> /etc/mongodb.conf
-    #echo "security:" >> /etc/mongod.conf
-    #echo "  authorization: \"enabled\"">> /etc/mongod.conf
-    service mongodb restart
+  echo "MONGODB_USERNAME = '$mongo_user'" >> $BD/CentralService/cs_config
+  echo "MONGODB_PWD = '$mongo_pwd'" >> $BD/CentralService/cs_config
+  echo "MONGODB_USERNAME = '$mongo_user'" >> $BD/DataService/ds_config
+  echo "MONGODB_PWD = '$mongo_pwd'" >> $BD/DataService/ds_config
+  echo "    MONGODB_USERNAME = '$mongo_user'" >> $BD/CentralReplica/config.py
+  echo "    MONGODB_PWD = '$mongo_pwd'" >> $BD/CentralReplica/config.py
+  mongo --eval "db.getSiblingDB('admin').createUser({user:'$mongo_user',pwd:'$mongo_pwd',roles:['userAdminAnyDatabase','dbAdminAnyDatabase','readWriteAnyDatabase']})" || true
+  # Enable MongoDB authorization
+  echo "auth = true" >> /etc/mongodb.conf
+  #echo "security:" >> /etc/mongod.conf
+  #echo "  authorization: \"enabled\"">> /etc/mongod.conf
+  service mongodb restart
 
 
 }
