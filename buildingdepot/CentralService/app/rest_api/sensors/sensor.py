@@ -84,10 +84,12 @@ class SensorService(MethodView):
 
         sensor_name = data.get('name')
         identifier = data.get('identifier')
+        uuid = data.get('uuid')
         email = get_email()
 
         if building in get_building_choices("rest_api"):
-            uuid = str(uuid4())
+            if not uuid:
+                uuid = str(uuid4())
             if defs.create_sensor(uuid, email, building):
                 Sensor(name=uuid,
                        source_name=xstr(sensor_name),
