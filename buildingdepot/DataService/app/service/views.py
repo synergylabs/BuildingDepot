@@ -44,7 +44,6 @@ def sensor():
         pages = int(math.ceil(float(total) / PAGE_SIZE))
     else:
         pages = 0
-    print('44444444444')
     return render_template('service/sensor.html', objs=objs, total=total,
                            pages=pages, current_page=page, pagesize=PAGE_SIZE)
 
