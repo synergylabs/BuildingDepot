@@ -123,7 +123,8 @@ def building():
        the system"""
     page = request.args.get('page', 1, type=int)
     skip_size = (page - 1) * PAGE_SIZE
-    objs = Building.objects().skip(skip_size).limit(PAGE_SIZE)
+    objs = Building.objects[skip_size:skip_size+PAGE_SIZE]
+    #objs = Building.objects().skip(skip_size).limit(PAGE_SIZE)
     # If the building doesn't have any tags associated to it then mark
     # it as can be deleted
     for obj in objs:
@@ -336,7 +337,7 @@ def sensor():
     objs = Sensor.objects().skip(skip_size).limit(PAGE_SIZE)
     for obj in objs:
         obj.can_delete = True
-    total = len(Sensor.objects())
+    total = Sensor.objects.count()
     if (total):
         pages = int(math.ceil(float(total) / PAGE_SIZE))
     else:
@@ -538,23 +539,16 @@ def sensors_search():
     # Show the user PAGE_SIZE number of sensors on each page
     page = request.args.get('page', 1, type=int)
     skip_size = (page - 1) * PAGE_SIZE
-    collection = Sensor._get_collection().find(args)
-    sensors = collection.skip(skip_size).limit(PAGE_SIZE)
-
-    sensor_list = []
+    total_sensors = Sensor.objects(__raw__=args)
+    total_cnt = total_sensors.count()
+    sensors = total_sensors.skip(skip_size).limit(PAGE_SIZE)
     for sensor in sensors:
-        sensor = Sensor(**sensor)
         sensor.can_delete = True
-        sensor_list.append(sensor)
-
-    total = collection.count()
-    if (total):
-        pages = int(math.ceil(float(total) / PAGE_SIZE))
-    else:
-        pages = 0
+    pages = int(math.ceil(float(total_cnt) / PAGE_SIZE))
     form = SensorForm()
     # Get the list of valid buildings for this DataService
     form.building.choices = get_building_choices()
-    return render_template('central/sensor.html', objs=sensor_list, form=form, total=total,
+    return render_template('central/sensor.html', objs=sensors, form=form, total=total_cnt,
+    #return render_template('central/sensor.html', objs=sensor_list, form=form, total=total,
                            pages=pages, current_page=page, pagesize=PAGE_SIZE)
 

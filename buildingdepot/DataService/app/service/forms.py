@@ -9,7 +9,7 @@ in the frontend of the DataService.
 @license: UCSD License. See License file for details.
 """
 
-from flask.ext.wtf import Form
+from flask_wtf import Form
 from wtforms import StringField, SelectMultipleField, SubmitField, SelectField, BooleanField
 from wtforms.validators import DataRequired
 

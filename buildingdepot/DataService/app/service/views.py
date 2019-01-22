@@ -39,7 +39,7 @@ def sensor():
     objs = Sensor.objects().skip(skip_size).limit(PAGE_SIZE)
     for obj in objs:
         obj.can_delete = True
-    total = len(Sensor.objects())
+    total = Sensor.objects.count()
     if (total):
         pages = int(math.ceil(float(total) / PAGE_SIZE))
     else:

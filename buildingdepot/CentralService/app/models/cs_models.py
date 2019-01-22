@@ -12,7 +12,7 @@ these tables can have any of the paramteres defined within the class
 
 from flask import current_app
 from mongoengine import *
-from flask.ext.login import UserMixin
+from flask_login import UserMixin
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from werkzeug.security import generate_password_hash, check_password_hash
 
