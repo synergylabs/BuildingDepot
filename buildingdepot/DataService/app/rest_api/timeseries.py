@@ -171,4 +171,4 @@ class TimeSeriesService(MethodView):
             except Exception as e:
                 print "Failed to end RabbitMQ session" + str(e)
 
-        return jsonString(response)
+        return jsonify(response)
