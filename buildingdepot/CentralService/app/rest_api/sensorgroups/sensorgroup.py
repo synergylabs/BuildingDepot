@@ -16,7 +16,7 @@ from flask import request,jsonify,current_app
 from .. import responses
 from ...models.cs_models import SensorGroup
 from ... import r,oauth
-from ..helper import xstr,get_building_choices
+from ..helper import xstr, get_building_choices, get_email
 import sys
 
 class SensorGroupService(MethodView):
@@ -47,13 +47,16 @@ class SensorGroupService(MethodView):
         if sensor_group:
             return jsonify(responses.sensorgroup_exists)
 
+        # Get the current user's email to assign as the owner for the sensor_group
+        owner = get_email()
+
         # Get the list of buildings and verify that the one specified in the
         # request exists
         buildings_list = get_building_choices('rest_api')
         for item in buildings_list:
             if building in item:
                 SensorGroup(name=xstr(name), building=xstr(building),
-                            description=xstr(description)).save()
+                            description=xstr(description), owner=xstr(owner)).save()
                 return jsonify(responses.success_true)
 
         return jsonify(responses.invalid_building)
