@@ -70,6 +70,7 @@ invalid_usergroup = {'success': 'False', 'error': 'Usergroup does not exist'}
 usergroup_add_authorization = {'success': 'False', 'error': 'Not authorized for adding users to user group'}
 user_not_registered = {'success': 'False', 'error': 'One or more users not registered'}
 usergroup_exists = {'success': 'False', 'error': 'Usergroup already exists'}
+usergroup_delete_authorization = {'success': 'False', 'error': 'Not authorized to delete user group'}
 
 # User creation API responses
 unauthorized_user_lookup = {'success': 'False', 'error': 'Not authorized to get information on this user'}
