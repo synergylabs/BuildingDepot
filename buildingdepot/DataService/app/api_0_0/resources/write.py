@@ -1,4 +1,4 @@
-from flask.ext.restful import Resource, reqparse
+from flask_restful import Resource, reqparse
 from ... import r, influx
 from .utils import success, validate_sensor, permission
 from .. import auth, g

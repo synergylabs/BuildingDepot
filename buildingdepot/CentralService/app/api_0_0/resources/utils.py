@@ -6,7 +6,7 @@ from ..errors import not_allowed
 from ...rest_api.helper import get_email
 from ...rest_api import responses
 from ...models.cs_models import User
-from flask.ext.restful import marshal, reqparse
+from flask_restful import marshal, reqparse
 
 
 def is_super(user):
