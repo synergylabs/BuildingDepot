@@ -144,7 +144,7 @@ function install_packages {
     apt-get install
     apt-get -y install python-pip
     apt-get install -y mongodb
-    apt-get install -y openssl python-setuptools python-dev build-essential 
+    apt-get install -y openssl python-setuptools python-dev build-essential
     if [ "$OS_VER" = "18.04" ];
     then
       apt-get install -y software-properties-common
@@ -242,7 +242,7 @@ function set_mongodb_credentials {
 
 
 function set_credentials {
-  set_redis_credentials 
+  set_redis_credentials
   set_influxdb_credentials
   set_mongodb_credentials
 }
@@ -299,7 +299,7 @@ setup_gmail
 
 #curl -G http://localhost:8086/query --data-urlencode "q=CREATE DATABASE buildingdepot" #TODO: Implement this with admin account
 echo -e "\nInstallation Finished..\n"
-/srv/buildingdepot/venv/bin/python2.7 setup_bd.py
+/srv/buildingdepot/venv/bin/python2.7 setup_bd.py "bd_install"
 echo -e "Created a super user with following credentials. Please login and change password immediately \n user id : admin@buildingdepot.org \n password: admin"
 
 supervisorctl restart cs

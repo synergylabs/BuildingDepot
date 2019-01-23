@@ -53,7 +53,7 @@ def register_view(app_obj):
     search_view = search.SearchService.as_view('search_service')
     # sensor search - search for sensors using the following keywords
     # 'Building', 'SourceName', 'SourceIdentifier', 'ID', 'Tags', 'MetaData'
-    app_obj.add_url_rule('/api/search', view_func=search_view, methods=['POST'])
+    app_obj.add_url_rule('/api/sensor/search', view_func=search_view, methods=['POST'])
 
     tagtype_view = tagtype.TagTypeService.as_view('tagtype_api')
     # add/change tagtypes

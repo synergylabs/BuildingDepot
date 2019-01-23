@@ -111,8 +111,8 @@ function deploy_config {
 }
 
 function install_packages {
-    apt-get install curl
-    apt-get install apt-transport-https
+    apt-get install -y curl
+    apt-get install -y apt-transport-https
     source /etc/lsb-release
 
     #Add keys for rabbitmq
@@ -124,7 +124,7 @@ function install_packages {
     # Add keys to install mongodb
     sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 2930ADAE8CAF5059EE73BB4B58712A2291FA4AD5
     echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/${DISTRIB_ID,,} ${DISTRIB_CODENAME}/mongodb-org/3.6 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.6.list
-    apt-get update
+    apt-get update -y
     apt-get install
     apt-get -y install python-pip
     apt-get install -y mongodb-org
@@ -169,7 +169,7 @@ function setup_email {
     echo "Enter Y to install an MTA and N to use your GMail account."
     read response
     if [ "$response" == "Y" ] || [ "$response" == "y" ]; then
-        sudo apt-get install mailutils
+        sudo apt-get install -y mailutils
         sed -i -e 's/"inet_interfaces = all/"inet_interfaces = loopback-only"/g' /etc/postfix/main.cf
         service postfix restart
         while true; do
@@ -181,7 +181,7 @@ function setup_email {
             read input
             if [ $input == $n ]; then
                 echo "EMAIL = 'LOCAL'" >> $BD/CentralService/cs_config
-		echo "EMAIL_ID = 'admin@buildingdepot.org'" >> $BD/CentralService/cs_config 
+		echo "EMAIL_ID = 'admin@buildingdepot.org'" >> $BD/CentralService/cs_config
                 break
             else
                 echo "Verification failed. Enter R to retry, Y to use GMail"
@@ -343,7 +343,7 @@ setup_email
 # Create Database on InfluxDB
 curl -d "q=CREATE DATABASE buildingdepot" -X POST http://localhost:8086/query
 setup_packages
-/srv/buildingdepot/venv/bin/python2.7 setup_bd.py
+/srv/buildingdepot/venv/bin/python2.7 setup_bd.py "install"
 #
 echo -e "\nInstallation Finished..\n"
 supervisorctl restart all

@@ -72,7 +72,7 @@ class BuildingService(MethodView):
         if building is None:
             return jsonify(responses.invalid_building)
         collection = DataService._get_collection()
-        if len(building.tags)==0 and collection.find({'buildings':name}).count()==0:
+        if len(building.tags) == 0 and collection.count({'buildings': name}) == 0:
             building.delete()
         else:
             return jsonify(responses.building_in_use)
