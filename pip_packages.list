@@ -13,3 +13,4 @@ pymongo==3.5.0
 flask-oauthlib==0.9.1
 pika==0.10.0
 PyLD==0.7.1
+oauthlib==2.1.0
