@@ -29,6 +29,8 @@ def register_view(app_obj):
     app_obj.add_url_rule('/api/sensor_group', view_func=sensorgroup_view, methods=['POST'])
     # get a list of sensors in a specified sensor group
     app_obj.add_url_rule('/api/sensor_group/<name>', view_func=sensorgroup_view, methods=['GET'])
+    # delete a sensor_group
+    app_obj.add_url_rule('/api/sensor_group/<name>', view_func=sensorgroup_view, methods=['DELETE'])
 
     sgtags_view = sg_tags.SensorGroupTagsService.as_view('sgtags_api')
     # get a list of tags in a specified sensor group

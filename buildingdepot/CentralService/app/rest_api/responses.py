@@ -59,6 +59,7 @@ invalid_sensorgroup = {'success': 'False', 'error': 'Sensorgroup does not exist'
 sensorgroup_used = {'success': 'False', 'error': 'Sensor group tags cannot be edited. Already being used for '
                                                  'permissions'}
 invalid_tag_permission = {'success': 'False', 'error': 'Tag value cannot be used for permissions'}
+sensorgroup_delete_authorization = {'success': 'False', 'error': 'Not authorized to delete Sensorgroup'}
 
 # Sensors API responses
 no_search_parameters = {'success': 'False', 'error': 'No search parameters specified'}

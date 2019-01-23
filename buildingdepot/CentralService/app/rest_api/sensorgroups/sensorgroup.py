@@ -13,6 +13,8 @@ for acl's and other purposes.
 """
 from flask.views import MethodView
 from flask import request,jsonify,current_app
+
+from buildingdepot.CentralService.app.rpc import defs
 from .. import responses
 from ...models.cs_models import SensorGroup
 from ... import r,oauth
@@ -83,4 +85,26 @@ class SensorGroupService(MethodView):
         response.update({"name":sensor_group['name'],
                         "building":sensor_group['building'],
                         "description":sensor_group['description']})
+        return jsonify(response)
+
+    @oauth.require_oauth()
+    def delete(self,name):
+        """
+        Args as data:
+            name = <name of sensor group>
+        Returns (JSON):
+            {
+                "success" : <True or False>
+                "error" : <If False then error will be returned
+            }
+        """
+        email = get_email()
+        sensor_group = SensorGroup.objects(name=name).first()
+        if sensor_group is None:
+            return jsonify(responses.invalid_usergroup)
+        if email == sensor_group.owner and defs.invalidate_permission(name):
+            SensorGroup._get_collection().remove({"name":sensor_group['name']})
+            response = dict(responses.success_true)
+        else:
+            response = dict(responses.sensorgroup_delete_authorization)
         return jsonify(response)
