@@ -63,7 +63,9 @@ class MetaDataService(MethodView):
         """
         metadata = Sensor._get_collection().find({'name': name}, {'metadata': 1, '_id': 0})[0]['metadata']
         metadata = [{'name': key, 'value': val} for key, val in metadata.iteritems()]
-        return jsonify({'data': metadata})
+        response = dict(responses.success_true)
+        response.update({'data': metadata})
+        return jsonify(response)
 
     @oauth.require_oauth()
     def post(self,name):
