@@ -59,6 +59,7 @@ invalid_sensorgroup = {'success': 'False', 'error': 'Sensorgroup does not exist'
 sensorgroup_used = {'success': 'False', 'error': 'Sensor group tags cannot be edited. Already being used for '
                                                  'permissions'}
 invalid_tag_permission = {'success': 'False', 'error': 'Tag value cannot be used for permissions'}
+sensorgroup_delete_authorization = {'success': 'False', 'error': 'Not authorized to delete Sensorgroup'}
 
 # Sensors API responses
 no_search_parameters = {'success': 'False', 'error': 'No search parameters specified'}
@@ -69,6 +70,7 @@ invalid_usergroup = {'success': 'False', 'error': 'Usergroup does not exist'}
 usergroup_add_authorization = {'success': 'False', 'error': 'Not authorized for adding users to user group'}
 user_not_registered = {'success': 'False', 'error': 'One or more users not registered'}
 usergroup_exists = {'success': 'False', 'error': 'Usergroup already exists'}
+usergroup_delete_authorization = {'success': 'False', 'error': 'Not authorized to delete user group'}
 
 # User creation API responses
 unauthorized_user_lookup = {'success': 'False', 'error': 'Not authorized to get information on this user'}

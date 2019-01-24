@@ -13,10 +13,12 @@ for acl's and other purposes.
 """
 from flask.views import MethodView
 from flask import request,jsonify,current_app
+
+from buildingdepot.CentralService.app.rpc import defs
 from .. import responses
 from ...models.cs_models import SensorGroup
 from ... import r,oauth
-from ..helper import xstr,get_building_choices
+from ..helper import xstr, get_building_choices, get_email
 import sys
 
 class SensorGroupService(MethodView):
@@ -47,13 +49,16 @@ class SensorGroupService(MethodView):
         if sensor_group:
             return jsonify(responses.sensorgroup_exists)
 
+        # Get the current user's email to assign as the owner for the sensor_group
+        owner = get_email()
+
         # Get the list of buildings and verify that the one specified in the
         # request exists
         buildings_list = get_building_choices('rest_api')
         for item in buildings_list:
             if building in item:
                 SensorGroup(name=xstr(name), building=xstr(building),
-                            description=xstr(description)).save()
+                            description=xstr(description), owner=xstr(owner)).save()
                 return jsonify(responses.success_true)
 
         return jsonify(responses.invalid_building)
@@ -80,4 +85,26 @@ class SensorGroupService(MethodView):
         response.update({"name":sensor_group['name'],
                         "building":sensor_group['building'],
                         "description":sensor_group['description']})
+        return jsonify(response)
+
+    @oauth.require_oauth()
+    def delete(self,name):
+        """
+        Args as data:
+            name = <name of sensor group>
+        Returns (JSON):
+            {
+                "success" : <True or False>
+                "error" : <If False then error will be returned
+            }
+        """
+        email = get_email()
+        sensor_group = SensorGroup.objects(name=name).first()
+        if sensor_group is None:
+            return jsonify(responses.invalid_usergroup)
+        if email == sensor_group.owner and defs.invalidate_permission(name):
+            SensorGroup._get_collection().remove({"name":sensor_group['name']})
+            response = dict(responses.success_true)
+        else:
+            response = dict(responses.sensorgroup_delete_authorization)
         return jsonify(response)

@@ -12,6 +12,8 @@ or deleting an existing one.
 import sys
 from flask.views import MethodView
 from flask import request,jsonify
+
+from buildingdepot.CentralService.app.auth.access_control import authorize_addition
 from .. import responses
 from ...models.cs_models import UserGroup
 from ... import r,oauth
@@ -68,5 +70,26 @@ class UserGroupService(MethodView):
         response = dict(responses.success_true)
         response.update({"name":user_group['name'],
                         "description":user_group['description']})
+        return jsonify(response)
+
+    @oauth.require_oauth()
+    def delete(self,name):
+        """
+        Args as data:
+            name = <name of user group>
+        Returns (JSON):
+            {
+                "success" : <True or False>
+                "error" : <If False then error will be returned
+            }
+        """
+        user_group = UserGroup.objects(name=name).first()
+        if user_group is None:
+            return jsonify(responses.invalid_usergroup)
+        if authorize_addition(name, get_email()):
+            UserGroup._get_collection().remove({"name":user_group['name']})
+            response = dict(responses.success_true)
+        else:
+            response = dict(responses.usergroup_delete_authorization)
         return jsonify(response)
 
