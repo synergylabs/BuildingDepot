@@ -23,7 +23,7 @@ class AppSubscriptionService(MethodView):
 
     @oauth.require_oauth()
     def dispatch_request(self):
-        json_data = request.get_json()
+        json_data = request.get_json()['data']
         email = get_email()
         try:
             app_id = json_data['app']

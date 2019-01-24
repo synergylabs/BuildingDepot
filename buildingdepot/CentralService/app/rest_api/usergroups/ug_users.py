@@ -54,7 +54,7 @@ class UserGroupUsersService(MethodView):
             }
         """
         try:
-            emails = request.get_json()['data']
+            emails = request.get_json()['data']['users']
         except:
             return jsonify(responses.missing_data)
         if UserGroup.objects(name=name).first() is None:

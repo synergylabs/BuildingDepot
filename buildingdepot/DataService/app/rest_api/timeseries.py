@@ -118,7 +118,7 @@ class TimeSeriesService(MethodView):
                 print "Failed to open channel" + " error" + str(e)
 
         try:
-            json = request.get_json()
+            json = request.get_json()['data']
             points = []
             for sensor in json:
                 # check a user has permission

@@ -35,7 +35,7 @@ class UserGroupService(MethodView):
         }
         """
         try:
-            data = request.get_json()
+            data = request.get_json()['data']
             name = data['name']
             description = data['description']
         except KeyError:
