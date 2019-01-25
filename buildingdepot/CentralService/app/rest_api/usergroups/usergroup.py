@@ -13,7 +13,7 @@ import sys
 from flask.views import MethodView
 from flask import request,jsonify
 
-from buildingdepot.CentralService.app.auth.access_control import authorize_addition
+from ...auth.access_control import authorize_addition
 from .. import responses
 from ...models.cs_models import UserGroup
 from ... import r,oauth
