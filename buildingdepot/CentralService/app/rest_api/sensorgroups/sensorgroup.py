@@ -14,7 +14,7 @@ for acl's and other purposes.
 from flask.views import MethodView
 from flask import request,jsonify,current_app
 
-from buildingdepot.CentralService.app.rpc import defs
+from ...rpc import defs
 from .. import responses
 from ...models.cs_models import SensorGroup
 from ... import r,oauth
