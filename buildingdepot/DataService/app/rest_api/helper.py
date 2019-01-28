@@ -8,11 +8,14 @@ such as conversion of timestamps, strings etc.
 @copyright: (c) 2016 SynergyLabs
 @license: UCSD License. See License file for details.
 """
+from datetime import datetime
+from functools import wraps
+from os import abort
 
 from flask import request
 from ..oauth_bd.views import Token
 from ..models.ds_models import Building, TagType, User
-from .. import exchange
+from .. import exchange, r
 import time, json, pika
 
 
@@ -178,3 +181,28 @@ def get_building_tags(building):
             tagtype_dict['acl_tag'] = TagType.objects(name=tag['name']).first().acl_tag
             res[tag['name']] = tagtype_dict
     return res
+
+
+def check_oauth(f):
+    @wraps(f)
+    def secure(*args, **kwargs):
+        access_token = request.headers.get("Authorization")[7:]
+        if request.headers.get("Authorization") is not None:
+            user = r.get(''.join(['oauth:', access_token]))
+            if user is not None:
+                return f(*args, **kwargs)
+            else:
+                # Not found in Redis, checking in MongoDB
+                token = Token.objects(access_token=access_token).first()
+                if token:
+                    # Calculate time to expire in seconds using timedelta
+                    expires_in = (token.expires - datetime.now()).total_seconds()
+                    if expires_in > 0:
+                        # Still valid, adding to redis
+                        r.setex(''.join(['oauth:', access_token]), token.user, int(expires_in))
+                        return f(*args, **kwargs)
+                    else:
+                        # Invalid, deleting
+                        token.delete()
+        abort(401)
+    return secure

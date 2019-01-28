@@ -18,12 +18,12 @@ from ...rpc import defs
 from .. import responses
 from ...models.cs_models import SensorGroup
 from ... import r,oauth
-from ..helper import xstr, get_building_choices, get_email
+from ..helper import xstr, get_building_choices, get_email, check_oauth
 import sys
 
 class SensorGroupService(MethodView):
 
-    @oauth.require_oauth()
+    @check_oauth
     def post(self):
         """
         Args as data:
@@ -63,7 +63,7 @@ class SensorGroupService(MethodView):
 
         return jsonify(responses.invalid_building)
 
-    @oauth.require_oauth()
+    @check_oauth
     def get(self,name):
         """
         Args as data:
@@ -87,7 +87,7 @@ class SensorGroupService(MethodView):
                         "description":sensor_group['description']})
         return jsonify(response)
 
-    @oauth.require_oauth()
+    @check_oauth
     def delete(self,name):
         """
         Args as data:

@@ -10,7 +10,7 @@ token generation and verification
 """
 
 from . import oauth_bd
-from .. import oauth
+from .. import oauth, r
 from ..service.utils import get_user_oauth
 from datetime import datetime, timedelta
 from flask import Flask, current_app, Blueprint
@@ -165,8 +165,11 @@ def load_token(access_token=None, refresh_token=None):
 @oauth.tokensetter
 def save_token(token, request, *args, **kwargs):
     toks = Token.objects(client=request.client, user=request.user)
+    previous_tokens = []
     for t in toks:
+        previous_tokens.append(''.join(['oauth:', t.access_token]))
         t.delete()
+    r.delete(*previous_tokens)
 
     expires_in = token.pop('expires_in')
     expires = datetime.utcnow() + timedelta(seconds=expires_in)
@@ -179,6 +182,7 @@ def save_token(token, request, *args, **kwargs):
         client=request.client,
         user=request.user,
         email=request.user).save()
+    r.setex(''.join(['oauth:', tok.access_token]), client.user, expires_in)
     return tok
 
 
@@ -199,5 +203,6 @@ def get_access_token(client_id, client_secret):
             client=client,
             user=client.user,
             email=client.user).save()
+        r.setex(''.join(['oauth:', tok.access_token]), client.user, expires_in)
         return jsonify({'success': 'True', 'access_token': tok.access_token})
     return jsonify({'success': 'False', 'access_token': 'Invalid credentials'})

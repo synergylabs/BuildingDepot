@@ -8,12 +8,17 @@ such as conversion of timestamps, strings etc.
 @copyright: (c) 2016 SynergyLabs
 @license: UCSD License. See License file for details.
 """
+from datetime import datetime
+from functools import wraps
+from os import abort
+
 from flask import current_app, request
 from ..models.cs_models import TagType, DataService, User
 from ..models.cs_models import Building, SensorGroup, Sensor
 from ..oauth_bd.views import Token
 import smtplib, requests, base64
 from . import responses
+from .. import r
 
 url = "https://www.googleapis.com/oauth2/v3/token"
 headers = {'content-type': 'application/x-www-form-urlencoded',
@@ -272,3 +277,28 @@ def get_sg_ds(sensor_group):
     args['buildings__all'] = [sg.building]
     dataservices = DataService.objects(**args)
     return dataservices.first().name
+
+
+def check_oauth(f):
+    @wraps(f)
+    def secure(*args, **kwargs):
+        access_token = request.headers.get("Authorization")[7:]
+        if request.headers.get("Authorization") is not None:
+            user = r.get(''.join(['oauth:', access_token]))
+            if user is not None:
+                return f(*args, **kwargs)
+            else:
+                # Not found in Redis, checking in MongoDB
+                token = Token.objects(access_token=access_token).first()
+                if token:
+                    # Calculate time to expire in seconds using timedelta
+                    expires_in = (token.expires - datetime.now()).total_seconds()
+                    if expires_in > 0:
+                        # Still valid, adding to redis
+                        r.setex(''.join(['oauth:', access_token]), token.user, int(expires_in))
+                        return f(*args, **kwargs)
+                    else:
+                        # Invalid, deleting
+                        token.delete()
+        abort(401)
+    return secure

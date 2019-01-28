@@ -15,7 +15,7 @@ import sys
 from flask.views import MethodView
 from flask import request,jsonify
 from .. import responses
-from ..helper import add_delete,get_building_tags
+from ..helper import add_delete,get_building_tags, check_oauth
 from ...models.cs_models import SensorGroup,Permission
 from ... import r,oauth
 from ...auth.access_control import authenticate_acl
@@ -23,7 +23,7 @@ from ...rpc import defs
 
 class SensorGroupTagsService(MethodView):
 
-    @oauth.require_oauth()
+    @check_oauth
     def get(self,name):
         """
         Args as data:
@@ -56,7 +56,7 @@ class SensorGroupTagsService(MethodView):
         response.update({'tags': tags, 'tags_owned': tags_owned})
         return jsonify(response)
 
-    @oauth.require_oauth()
+    @check_oauth
     def post(self,name):
         """
         Args as data:

@@ -15,13 +15,13 @@ from flask import request,jsonify
 from ..models.ds_models import Application
 from .. import r,oauth,exchange
 import sys,traceback
-from .helper import connect_broker,get_email
+from .helper import connect_broker,get_email, check_oauth
 
 class AppSubscriptionService(MethodView):
 
     methods = ['POST','DELETE']
 
-    @oauth.require_oauth()
+    @check_oauth
     def dispatch_request(self):
         json_data = request.get_json()['data']
         email = get_email()

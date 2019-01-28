@@ -14,7 +14,7 @@ from flask import request, jsonify
 from ..models.ds_models import Application
 from uuid import uuid4
 from .. import r, oauth, exchange
-from .helper import connect_broker, get_email
+from .helper import connect_broker, get_email, check_oauth
 from . import responses
 
 import sys
@@ -22,7 +22,7 @@ import traceback
 
 
 class AppService(MethodView):
-    @oauth.require_oauth()
+    @check_oauth
     def get(self):
         """
         Args as data:
@@ -40,7 +40,7 @@ class AppService(MethodView):
         apps = Application._get_collection().find({'user': email})
         return jsonify({'success': 'True', 'app_list': apps[0]['apps']})
 
-    @oauth.require_oauth()
+    @check_oauth
     def post(self):
         """
         Args as data:
@@ -97,7 +97,7 @@ class AppService(MethodView):
 
         return jsonify({'success': 'True', 'app_id': result.method.queue})
 
-    @oauth.require_oauth()
+    @check_oauth
     def delete(self):
         """
         Delete one of current user's applications with the given name.

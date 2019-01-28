@@ -13,7 +13,7 @@ from flask.views import MethodView
 from flask import request, jsonify, abort
 from . import responses
 from .. import r, influx, oauth, exchange
-from .helper import jsonString, timestamp_to_time_string
+from .helper import jsonString, timestamp_to_time_string, check_oauth
 from .helper import connect_broker
 import sys, time, influxdb
 
@@ -21,7 +21,7 @@ sys.path.append('/srv/buildingdepot')
 from ..api_0_0.resources.utils import authenticate_acl, permission
 
 class TimeSeriesService(MethodView):
-    @oauth.require_oauth()
+    @check_oauth
     @authenticate_acl('r')
     def get(self, name):
         """Reads the time series data of the sensor over the interval specified and returns it to the
@@ -83,7 +83,7 @@ class TimeSeriesService(MethodView):
         response.update({'data': data.raw})
         return jsonify(response)
 
-    @oauth.require_oauth()
+    @check_oauth
     def post(self):
         """
         Args as data:

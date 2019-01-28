@@ -17,11 +17,11 @@ from ...auth.access_control import authorize_addition
 from .. import responses
 from ...models.cs_models import UserGroup
 from ... import r,oauth
-from ..helper import xstr,get_email,get_building_choices
+from ..helper import xstr,get_email,get_building_choices, check_oauth
 
 class UserGroupService(MethodView):
 
-    @oauth.require_oauth()
+    @check_oauth
     def post(self):
         """
         Args as data:
@@ -50,7 +50,7 @@ class UserGroupService(MethodView):
                   owner = get_email()).save()
         return jsonify(responses.success_true)
 
-    @oauth.require_oauth()
+    @check_oauth
     def get(self,name):
         """
         Args as data:
@@ -72,7 +72,7 @@ class UserGroupService(MethodView):
                         "description":user_group['description']})
         return jsonify(response)
 
-    @oauth.require_oauth()
+    @check_oauth
     def delete(self,name):
         """
         Args as data:

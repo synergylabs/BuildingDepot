@@ -13,7 +13,7 @@ parent and children tagtypes specifed for it.
 from flask.views import MethodView
 from flask import request, jsonify
 from ...models.cs_models import TagType, BuildingTemplate
-from ..helper import add_delete, gen_update, get_email, check_if_super
+from ..helper import add_delete, gen_update, get_email, check_if_super, check_oauth
 from .. import responses
 from ... import oauth
 from ...auth.access_control import super_required
@@ -22,7 +22,7 @@ from ...auth.access_control import super_required
 class TagTypeService(MethodView):
     params = ['name', 'description', 'parents', 'acl_tag']
 
-    @oauth.require_oauth()
+    @check_oauth
     def post(self):
         try:
             data = request.get_json()['data']
@@ -60,7 +60,7 @@ class TagTypeService(MethodView):
             collection.update({'name': name}, {'$set': gen_update(self.params, data)})
         return jsonify(responses.success_true)
 
-    @oauth.require_oauth()
+    @check_oauth
     def get(self, name):
         tagtype = TagType.objects(name=name).first()
         if tagtype:
@@ -71,7 +71,7 @@ class TagTypeService(MethodView):
         else:
             return jsonify(responses.invalid_tagtype)
 
-    @oauth.require_oauth()
+    @check_oauth
     @super_required
     def delete(self, name):
         print "in the rest api call"
