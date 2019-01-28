@@ -146,5 +146,9 @@ def authorize_addition(usergroup_name, email):
 
 def get_email():
     headers = request.headers
-    token = headers['Authorization'].split()[1]
-    return Token.objects(access_token=token).first().email
+    token = headers['Authorization'][7:]
+    user = r.get(''.join(['oauth:', token]))
+    if user:
+        return user
+    token = Token.objects(access_token=token).first()
+    return token.email
