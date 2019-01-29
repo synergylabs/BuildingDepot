@@ -18,8 +18,9 @@ from werkzeug.security import generate_password_hash
 from ...models.cs_models import User
 from ..helper import get_email, send_mail_gmail, send_local_smtp, check_oauth
 from .. import responses
-from ... import oauth
+from ... import oauth, r
 from ...auth.access_control import super_required
+from ...auth.views import Client, Token
 
 
 class UserService(MethodView):
@@ -153,6 +154,19 @@ class UserService(MethodView):
         # check whether the specified user exists
         if user is None:
             return jsonify(responses.invalid_user)
+
+        # Remove client object
+        Client._get_collection().remove({'user':email})
+
+        # Find token objects
+        tokens = Token._get_collection().find({'email':email})
+
+        # Remove tokens
+        p = r.pipeline()
+        for token in tokens:
+            p.delete(''.join(['oauth:', token.access_token]))
+            token.delete()
+        p.execute()
 
         # delete the user
         user.delete()
