@@ -13,9 +13,12 @@ permissions_val = {"u/d": 1, "r/w/p": 2, "r/w": 3, "r": 4, "d/r": 5}
 def super_required(f):
     def decorated_function(*args, **kwargs):
         email = get_email()
+        if r.sismember('superusers', email):
+            return f(*args, **kwargs)
         user = User.objects(email=email).first()
         if user.role != 'super':
             return jsonify(responses.super_user_required)
+        r.sadd('superusers', email)
         return f(*args, **kwargs)
 
     return decorated_function

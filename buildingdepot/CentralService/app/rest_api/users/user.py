@@ -76,6 +76,10 @@ class UserService(MethodView):
         # register the user finally
         self.register_user(first_name, last_name, email, role)
 
+        # cache superuser in redis
+        if role == 'super':
+            r.sadd('superusers', email)
+
         return jsonify(responses.success_true)
 
     @check_oauth
@@ -161,8 +165,11 @@ class UserService(MethodView):
         # Find token objects
         tokens = Token._get_collection().find({'email':email})
 
-        # Remove tokens
         p = r.pipeline()
+        if user.role == 'super':
+            p.srem('superusers', email)
+
+        # Remove tokens
         for token in tokens:
             p.delete(''.join(['oauth:', token.access_token]))
             token.delete()

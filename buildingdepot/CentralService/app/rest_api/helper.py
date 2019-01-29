@@ -147,7 +147,10 @@ def get_email():
 def check_if_super(email=None):
     if email is None:
         email = get_email()
+    if r.sismember('superusers', email):
+        return True
     if User.objects(email=email).first().role == 'super':
+        r.sadd('superusers', email)
         return True
     return False
 
