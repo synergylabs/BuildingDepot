@@ -13,12 +13,13 @@ from flask.views import MethodView
 from flask import request, jsonify, abort
 from . import responses
 from .. import r, influx, oauth, exchange
-from .helper import jsonString, timestamp_to_time_string, check_oauth
+from .helper import jsonString, timestamp_to_time_string, check_oauth, get_email
 from .helper import connect_broker
 import sys, time, influxdb
 
 sys.path.append('/srv/buildingdepot')
-from ..api_0_0.resources.utils import authenticate_acl, permission
+from ..api_0_0.resources.utils import authenticate_acl, permission, batch_permission_check
+
 
 class TimeSeriesService(MethodView):
     @check_oauth
@@ -120,10 +121,13 @@ class TimeSeriesService(MethodView):
         try:
             json = request.get_json()['data']
             points = []
+            sensors_list = [sensor['sensor_id'] for sensor in json]
+            permissions = batch_permission_check(sensors_list, get_email())
             for sensor in json:
                 # check a user has permission
                 unauthorised_sensor = []
-                if permission(sensor['sensor_id']) in ['r/w', 'r/w/p']:
+                # If 'w' (write is in the permission), authorize
+                if 'w' in permissions[sensor['sensor_id']]:
                     for sample in sensor['samples']:
                         dic = {
                             'measurement': sensor['sensor_id'],
