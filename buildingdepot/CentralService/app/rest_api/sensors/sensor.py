@@ -115,7 +115,7 @@ class SensorService(MethodView):
             r.delete('owner:{}'.format(sensor.name))
             # cache process done
             Sensor.objects(name=sensor.name).delete()
+            response = dict(responses.success_true)
         else:
-            flash('Unable to communicate with the DataService')
-        response = dict(responses.success_true)
+            response = dict(responses.ds_error)
         return jsonify(response)
