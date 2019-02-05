@@ -43,8 +43,10 @@ class AppSubscriptionService(MethodView):
                     channel = pubsub.channel()
                     if request.method == 'POST':
                         channel.queue_bind(exchange=exchange, queue=app['value'], routing_key=sensor)
+                        r.sadd(''.join(['apps:', sensor]), app['value'])
                     elif request.method == 'DELETE':
                         channel.queue_unbind(exchange=exchange, queue=app['value'], routing_key=sensor)
+                        r.srem(''.join(['apps:', sensor]), app['value'])
                 except Exception as e:
                     print "Failed to bind queue " + str(e)
                     print traceback.print_exc()
