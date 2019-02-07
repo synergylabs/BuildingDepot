@@ -13,15 +13,16 @@ from flask.views import MethodView
 from flask import request, jsonify, abort
 from . import responses
 from .. import r, influx, oauth, exchange
-from .helper import jsonString, timestamp_to_time_string
+from .helper import jsonString, timestamp_to_time_string, check_oauth, get_email
 from .helper import connect_broker
 import sys, time, influxdb
 
 sys.path.append('/srv/buildingdepot')
-from ..api_0_0.resources.utils import authenticate_acl, permission
+from ..api_0_0.resources.utils import authenticate_acl, permission, batch_permission_check
+
 
 class TimeSeriesService(MethodView):
-    @oauth.require_oauth()
+    @check_oauth
     @authenticate_acl('r')
     def get(self, name):
         """Reads the time series data of the sensor over the interval specified and returns it to the
@@ -46,7 +47,7 @@ class TimeSeriesService(MethodView):
                 }
                 "success" : <True or False>
            }
-           Note: 'columns' = ['time', 'mean_value', 
+           Note: 'columns' = ['time', 'mean_value',
                               'mean_200_hz_magnitude', 'mean_200_hz_phase']
         """
 
@@ -83,7 +84,7 @@ class TimeSeriesService(MethodView):
         response.update({'data': data.raw})
         return jsonify(response)
 
-    @oauth.require_oauth()
+    @check_oauth
     def post(self):
         """
         Args as data:
@@ -110,20 +111,23 @@ class TimeSeriesService(MethodView):
             }
         """
 
-        pubsub = connect_broker()
-        if pubsub:
-            try:
-                channel = pubsub.channel()
-            except Exception as e:
-                print "Failed to open channel" + " error" + str(e)
+        pubsub = None
 
         try:
-            json = request.get_json()
+            json = request.get_json()['data']
             points = []
+            sensors_list = [sensor['sensor_id'] for sensor in json]
+            permissions = batch_permission_check(sensors_list, get_email())
+            # Check if there are any apps associated with the sensors
+            pipeline = r.pipeline()
+            for sensor in sensors_list:
+                pipeline.exists(''.join(['apps:', sensor]))
+            apps = dict(zip(sensors_list, pipeline.execute()))
             for sensor in json:
                 # check a user has permission
                 unauthorised_sensor = []
-                if permission(sensor['sensor_id']) in ['r/w', 'r/w/p']:
+                # If 'w' (write is in the permission), authorize
+                if 'w' in permissions[sensor['sensor_id']]:
                     for sample in sensor['samples']:
                         dic = {
                             'measurement': sensor['sensor_id'],
@@ -141,17 +145,25 @@ class TimeSeriesService(MethodView):
                                     ['hz_magnitude', 'hz_phase']
                         dic['fields'].update(sample)
                         points.append(dic)
-                    try:
-                        channel.basic_publish(exchange=exchange, routing_key=sensor['sensor_id'], body=str(dic))
-                    except Exception as e:
-                        print "except inside"
-                        print "Failed to write to broker " + str(e)
+                    if apps[sensor['sensor_id']]:
+                        if not pubsub:
+                            pubsub = connect_broker()
+
+                            if pubsub:
+                                try:
+                                    channel = pubsub.channel()
+                                except Exception as e:
+                                    print "Failed to open channel" + " error" + str(e)
+                        try:
+                            channel.basic_publish(exchange=exchange, routing_key=sensor['sensor_id'], body=str(dic))
+                        except Exception as e:
+                            print "except inside"
+                            print "Failed to write to broker " + str(e)
                 else:
                     unauthorised_sensor.append(sensor['sensor_id'])
         except KeyError:
             print json
             abort(400)
-
         result = influx.write_points(points)
         if result:
             if len(unauthorised_sensor) > 0:

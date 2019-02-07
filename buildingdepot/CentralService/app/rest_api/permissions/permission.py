@@ -10,7 +10,7 @@ It handles the required CRUD operations for permissions.
 """
 import sys
 from flask.views import MethodView
-from ..helper import get_email
+from ..helper import get_email, check_oauth
 from .. import responses
 from flask import request,jsonify
 from ...models.cs_models import UserGroup,SensorGroup,Permission
@@ -20,7 +20,7 @@ from ...rpc import defs
 
 class PermissionService(MethodView):
 
-    @oauth.require_oauth()
+    @check_oauth
     def get(self):
         """
         Args as data:
@@ -46,7 +46,7 @@ class PermissionService(MethodView):
                 response['permission'] = permission.permission
                 return jsonify(response)
 
-    @oauth.require_oauth()
+    @check_oauth
     def post(self):
         """
         Args as data:
@@ -97,7 +97,7 @@ class PermissionService(MethodView):
             return jsonify(responses.ds_error)
         return jsonify(responses.success_true)
 
-    @oauth.require_oauth()
+    @check_oauth
     def delete(self):
         """
         Args as data:

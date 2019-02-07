@@ -16,14 +16,15 @@ from flask import request, jsonify, current_app
 from flask.views import MethodView
 from werkzeug.security import generate_password_hash
 from ...models.cs_models import User
-from ..helper import get_email, send_mail_gmail, send_local_smtp
+from ..helper import get_email, send_mail_gmail, send_local_smtp, check_oauth
 from .. import responses
-from ... import oauth
+from ... import oauth, r
 from ...auth.access_control import super_required
+from ...auth.views import Client, Token
 
 
 class UserService(MethodView):
-    @oauth.require_oauth()
+    @check_oauth
     @super_required
     def post(self):
         """
@@ -75,9 +76,13 @@ class UserService(MethodView):
         # register the user finally
         self.register_user(first_name, last_name, email, role)
 
+        # cache superuser in redis
+        if role == 'super':
+            r.sadd('superusers', email)
+
         return jsonify(responses.success_true)
 
-    @oauth.require_oauth()
+    @check_oauth
     @super_required
     def get(self, email):
         """
@@ -125,7 +130,7 @@ class UserService(MethodView):
 
         return jsonify(response)
 
-    @oauth.require_oauth()
+    @check_oauth
     @super_required
     def delete(self, email):
         """
@@ -153,6 +158,22 @@ class UserService(MethodView):
         # check whether the specified user exists
         if user is None:
             return jsonify(responses.invalid_user)
+
+        # Remove client object
+        Client._get_collection().remove({'user':email})
+
+        # Find token objects
+        tokens = Token._get_collection().find({'email':email})
+
+        p = r.pipeline()
+        if user.role == 'super':
+            p.srem('superusers', email)
+
+        # Remove tokens
+        for token in tokens:
+            p.delete(''.join(['oauth:', token.access_token]))
+            token.delete()
+        p.execute()
 
         # delete the user
         user.delete()

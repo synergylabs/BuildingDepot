@@ -17,7 +17,7 @@ from werkzeug.security import gen_salt
 
 from . import auth
 from .forms import LoginForm
-from .. import svr
+from .. import svr, r
 from ..models.ds_models import *
 
 
@@ -72,8 +72,11 @@ def token_gen(client_id, client_secret):
     client = Client.objects(client_id=client_id, client_secret=client_secret).first()
     if client is not None:
         toks = Token.objects(client=client)
+        previous_tokens = []
         for t in toks:
+            previous_tokens.append(''.join(['oauth:', t.access_token]))
             t.delete()
+        r.delete(*previous_tokens)
         # Set token expiry period and create it
         expires_in = 864000
         expires = datetime.utcnow() + timedelta(seconds=expires_in)
@@ -86,6 +89,7 @@ def token_gen(client_id, client_secret):
             client=client,
             user=client.user,
             email=client.user).save()
+    r.setex(''.join(['oauth:', tok.access_token]), client.user, expires_in)
     return tok.access_token
 
 

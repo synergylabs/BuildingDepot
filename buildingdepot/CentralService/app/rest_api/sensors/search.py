@@ -14,12 +14,12 @@ from flask import request, jsonify
 from flask.views import MethodView
 from .. import responses
 from ...models.cs_models import Sensor
-from ..helper import form_query, create_response
+from ..helper import form_query, create_response, check_oauth
 from ... import oauth
 
 
 class SearchService(MethodView):
-    @oauth.require_oauth()
+    @check_oauth
     def post(self):
         try:
             data = request.get_json()['data']

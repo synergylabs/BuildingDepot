@@ -125,6 +125,92 @@ def permission(sensor_name, email=None):
     return current_res
 
 
+def batch_permission_check(sensors_list, email=None):
+    permissions = {}  # dict to store permissions
+    missing_from_cache = []  # permission not found in cache
+    sensors_missing = []  # sensors not foun
+    sensors_missing_from_cache = []  # sensor info not found in cache (owner:sensor)
+    not_owner_sensors = []  # sensors which the user does not own
+
+    if not email:
+        email = get_email()
+
+    # Get cached permissions for sensor
+    p = r.pipeline()
+    for sensor in sensors_list:
+        p.hget(sensor, email)
+    cache_results = p.execute()
+
+    # If found in cache, add to permissions dict. If not, append to missing_from_cache
+    for i in range(len(sensors_list)):
+        if cache_results[i]:
+            permissions[sensors_list[i]] = cache_results[i]
+        else:
+            missing_from_cache.append(sensors_list[i])
+
+    if not missing_from_cache:
+        return permissions
+
+    # check if the owner:sensor key is present => sensor exists
+    redis_sensor_keys = [''.join(['owner:', sensor]) for sensor in sensors_list]
+    owners = dict(zip(redis_sensor_keys, r.mget(*redis_sensor_keys)))
+    for k, v in owners.iteritems():
+        if not v:
+            sensors_missing_from_cache.append(k[6:])
+
+    # for sensors not found, query MongoDB
+    if sensors_missing_from_cache:
+        sensors = Sensor._get_collection().find({
+            'name': {
+                '$in': sensors_missing_from_cache
+            }
+        })
+        for sensor in sensors:
+            owners[''.join(['owner:', sensor.name])] = sensor.owner
+
+    # Invalid sensors
+    for k, v in owners.iteritems():
+        if not v:
+            del owners[k]
+            permissions[k[6:]] = 'absent'
+            sensors_missing.append(k[6:])
+
+    # If the user is sensor owner or admin, give complete access and add to cache
+    p = r.pipeline()
+    for k, v in owners.iteritems():
+        if check_if_super(email) or email == v:
+            permissions[k[6:]] = 'r/w/p'
+            r.hset(k[6:], email, 'r/w/p')
+        else:
+            not_owner_sensors.append(k[6:])
+    p.execute()
+    if not not_owner_sensors:
+        return permissions
+
+    # Calculating most restrictive sensor:user permissions from usergroup:sensorgroup permissions
+    usergroups = r.smembers(''.join(['user:', email]))
+    for sensor in not_owner_sensors:
+        current_res = 'u/d'
+        sensorgroups = r.smembers(''.join(['sensor:', sensor]))
+        for usergroup in usergroups:
+            for sensorgroup in sensorgroups:
+                res = r.hget('permission:{}:{}'.format(usergroup, sensorgroup), "permission")
+                owner_email = r.hget('permission:{}:{}'.format(usergroup, sensorgroup), "owner")
+                if res and permission(sensor, owner_email) == 'r/w/p':
+                    if permissions_val[res] > permissions_val[current_res]:
+                        current_res = res
+
+            # If not found, check from MongoDB
+            if current_res == 'u/d':
+                mongo_permission = check_db(sensor, email)
+                permissions[sensors_list[i]] = mongo_permission
+                r.hset(sensor, email, mongo_permission)
+            else:
+                permissions[sensor] = current_res
+                r.hset(sensor, email, current_res)
+    return permissions
+
+
 def check_db(sensor, email):
     sensor_obj = Sensor.objects(name=sensor).first()
     args = {}
@@ -184,5 +270,9 @@ def authorize_addition(usergroup_name, email):
 
 def get_email():
     headers = request.headers
-    token = headers['Authorization'].split()[1]
-    return Token.objects(access_token=token).first().email
+    token = headers['Authorization'][7:]
+    user = r.get(''.join(['oauth:', token]))
+    if user:
+        return user
+    token = Token.objects(access_token=token).first()
+    return token.email

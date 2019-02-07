@@ -16,10 +16,11 @@ from ...models.cs_models import Building, DataService
 from .. import responses
 from ... import oauth
 from ...auth.access_control import super_required
+from ..helper import check_oauth
 
 
 class DataserviceBuildingsService(MethodView):
-    @oauth.require_oauth()
+    @check_oauth
     @super_required
     def post(self, name):
         try:
@@ -42,7 +43,7 @@ class DataserviceBuildingsService(MethodView):
         dataservice.update(add_to_set__buildings=buildings)
         return jsonify(responses.success_true)
 
-    @oauth.require_oauth()
+    @check_oauth
     def get(self, name):
         dataservice = DataService.objects(name=name).first()
         if dataservice is None:
@@ -51,7 +52,7 @@ class DataserviceBuildingsService(MethodView):
         response.update({'buildings': dataservice.buildings})
         return jsonify(response)
 
-    @oauth.require_oauth()
+    @check_oauth
     @super_required
     def delete(self, name):
         try:

@@ -15,7 +15,7 @@ from flask import jsonify,request,current_app
 from flask.views import MethodView
 from ...models.cs_models import Building,BuildingTemplate,DataService
 from .. import responses
-from ..helper import gen_update
+from ..helper import gen_update, check_oauth
 from ... import oauth
 from ...auth.access_control import super_required
 
@@ -24,7 +24,7 @@ class BuildingService(MethodView):
 
     params = ['name','template','description']
 
-    @oauth.require_oauth()
+    @check_oauth
     @super_required
     def post(self):
         try:
@@ -46,7 +46,7 @@ class BuildingService(MethodView):
             collection.update({'name': name},{"$set":gen_update(self.params,data)})
         return jsonify(responses.success_true)
 
-    @oauth.require_oauth()
+    @check_oauth
     def get(self,name):
         if name == 'list':
             building = []
@@ -65,7 +65,7 @@ class BuildingService(MethodView):
                              'template': building['template']})
         return jsonify(response)
 
-    @oauth.require_oauth()
+    @check_oauth
     @super_required
     def delete(self,name):
         building = Building.objects(name=name).first()

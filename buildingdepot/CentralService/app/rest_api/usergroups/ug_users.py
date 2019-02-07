@@ -15,14 +15,14 @@ from flask.views import MethodView
 from flask import request,jsonify
 from .. import responses
 from ...models.cs_models import UserGroup
-from ..helper import add_delete_users,get_email,validate_users
+from ..helper import add_delete_users,get_email,validate_users, check_oauth
 from ... import r,oauth
 from ...auth.access_control import authenticate_acl,authorize_addition
 from ...auth.acl_cache import invalidate_user
 
 class UserGroupUsersService(MethodView):
 
-    @oauth.require_oauth()
+    @check_oauth
     def get(self,name):
         """
         Args as data:
@@ -39,7 +39,7 @@ class UserGroupUsersService(MethodView):
         response.update({'users':[{'user_id': user.user_id, 'manager': user.manager} for user in obj.users]})
         return jsonify(response)
 
-    @oauth.require_oauth()
+    @check_oauth
     def post(self,name):
         """
         Args as data:
@@ -54,7 +54,7 @@ class UserGroupUsersService(MethodView):
             }
         """
         try:
-            emails = request.get_json()['data']
+            emails = request.get_json()['data']['users']
         except:
             return jsonify(responses.missing_data)
         if UserGroup.objects(name=name).first() is None:

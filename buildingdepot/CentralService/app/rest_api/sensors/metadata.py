@@ -16,10 +16,11 @@ from ...models.cs_models import Sensor
 from ... import oauth
 from .. import responses
 import sys
+from ..helper import check_oauth
 
 class MetaDataService(MethodView):
 
-    @oauth.require_oauth()
+    @check_oauth
     def get(self,name):
         """
         Args as data:
@@ -67,7 +68,7 @@ class MetaDataService(MethodView):
         response.update({'data': metadata})
         return jsonify(response)
 
-    @oauth.require_oauth()
+    @check_oauth
     def post(self,name):
         """
         Args as data:

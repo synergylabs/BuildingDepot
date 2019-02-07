@@ -16,14 +16,14 @@ from flask.views import MethodView
 from flask import request,jsonify
 from ..import responses
 from ...models.cs_models import Sensor,SensorGroup
-from ..helper import get_building_tags
+from ..helper import get_building_tags, check_oauth
 from ... import r,oauth
 from ...rpc import defs
 from ...auth.access_control import authenticate_acl
 
 class SensorTagsService(MethodView):
 
-    @oauth.require_oauth()
+    @check_oauth
     def get(self,name):
         """
         Args as data:
@@ -56,7 +56,7 @@ class SensorTagsService(MethodView):
         response.update({'tags': tags, 'tags_owned': tags_owned})
         return jsonify(response)
 
-    @oauth.require_oauth()
+    @check_oauth
     @authenticate_acl('r/w/p')
     def post(self,name):
         """
@@ -81,7 +81,7 @@ class SensorTagsService(MethodView):
             "success": <True or False>
         }
         """
-        tags = request.get_json()['data']
+        tags = request.get_json()['data']['tags']
         sensor = Sensor.objects(name=name).first()
         if defs.invalidate_sensor(name):
             if sensor is None:

@@ -13,7 +13,7 @@ of buildings and admins that belong to it.
 from flask import request, jsonify
 from flask.views import MethodView
 from .. import responses
-from ..helper import xstr, gen_update
+from ..helper import xstr, gen_update, check_oauth
 from ...models.cs_models import DataService
 from ... import oauth
 from ...auth.access_control import super_required
@@ -22,7 +22,7 @@ from ...auth.access_control import super_required
 class DataserviceService(MethodView):
     params = ['description', 'host', 'port']
 
-    @oauth.require_oauth()
+    @check_oauth
     @super_required
     def post(self):
         try:
@@ -46,7 +46,7 @@ class DataserviceService(MethodView):
             collection.update({'name': name}, {'$set': gen_update(self.params, data)})
         return jsonify(responses.success_true)
 
-    @oauth.require_oauth()
+    @check_oauth
     def get(self, name):
         print "Name :", name
         if name == "list":
@@ -67,7 +67,7 @@ class DataserviceService(MethodView):
                          'port': xstr(dataservice.port)})
         return jsonify(response)
 
-    @oauth.require_oauth()
+    @check_oauth
     @super_required
     def delete(self, name):
         dataservice = DataService.objects(name=name).first()

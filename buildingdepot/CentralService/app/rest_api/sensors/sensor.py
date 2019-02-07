@@ -17,12 +17,12 @@ from .. import responses
 from ...models.cs_models import Sensor
 from uuid import uuid4
 from ... import r, oauth
-from ..helper import get_email, xstr, get_building_choices
+from ..helper import get_email, xstr, get_building_choices, check_oauth
 from ...rpc import defs
 
 
 class SensorService(MethodView):
-    @oauth.require_oauth()
+    @check_oauth
     def get(self, name):
         """
         Retrieve sensor details based on uuid specified
@@ -59,7 +59,7 @@ class SensorService(MethodView):
                          })
         return jsonify(response)
 
-    @oauth.require_oauth()
+    @check_oauth
     def post(self):
         """
         Creates sensor if the building specified is valid
@@ -104,7 +104,7 @@ class SensorService(MethodView):
                 return jsonify(responses.ds_error)
         return jsonify(responses.invalid_building)
 
-    @oauth.require_oauth()
+    @check_oauth
     def delete(self, name):
         if name is None:
             return jsonify(responses.missing_parameters)
@@ -115,7 +115,7 @@ class SensorService(MethodView):
             r.delete('owner:{}'.format(sensor.name))
             # cache process done
             Sensor.objects(name=sensor.name).delete()
+            response = dict(responses.success_true)
         else:
-            flash('Unable to communicate with the DataService')
-        response = dict(responses.success_true)
+            response = dict(responses.ds_error)
         return jsonify(response)

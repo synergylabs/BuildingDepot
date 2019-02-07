@@ -15,15 +15,15 @@ from flask import request,jsonify
 from ..models.ds_models import Application
 from .. import r,oauth,exchange
 import sys,traceback
-from .helper import connect_broker,get_email
+from .helper import connect_broker,get_email, check_oauth
 
 class AppSubscriptionService(MethodView):
 
     methods = ['POST','DELETE']
 
-    @oauth.require_oauth()
+    @check_oauth
     def dispatch_request(self):
-        json_data = request.get_json()
+        json_data = request.get_json()['data']
         email = get_email()
         try:
             app_id = json_data['app']
@@ -43,8 +43,10 @@ class AppSubscriptionService(MethodView):
                     channel = pubsub.channel()
                     if request.method == 'POST':
                         channel.queue_bind(exchange=exchange, queue=app['value'], routing_key=sensor)
+                        r.sadd(''.join(['apps:', sensor]), app['value'])
                     elif request.method == 'DELETE':
                         channel.queue_unbind(exchange=exchange, queue=app['value'], routing_key=sensor)
+                        r.srem(''.join(['apps:', sensor]), app['value'])
                 except Exception as e:
                     print "Failed to bind queue " + str(e)
                     print traceback.print_exc()
