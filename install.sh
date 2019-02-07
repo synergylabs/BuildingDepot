@@ -147,6 +147,7 @@ function install_packages {
     sudo apt-get install rabbitmq-server
     sed -i -e 's/"inet_interfaces = all/"inet_interfaces = loopback-only"/g' /etc/postfix/main.cf
     service postfix restart
+    systemctl enable mongod.service
 }
 
 function setup_gmail {
