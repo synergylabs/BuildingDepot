@@ -81,7 +81,7 @@ class SensorTagsService(MethodView):
             "success": <True or False>
         }
         """
-        tags = request.get_json()['data']
+        tags = request.get_json()['data']['tags']
         sensor = Sensor.objects(name=name).first()
         if defs.invalidate_sensor(name):
             if sensor is None:
