@@ -14,11 +14,6 @@ def register_view(app_obj):
     # create a new sensor
     app_obj.add_url_rule('/api/sensor', view_func=sensor_view, methods=['POST'])
 
-    metadata_view = metadata.MetaDataService.as_view('metadata_api')
-    # get gets a sensor's metadata
-    # post changes/adds to a sensor's metadata
-    app_obj.add_url_rule('/api/sensor/<name>/metadata', view_func=metadata_view, methods=['GET', 'POST'])
-
     sensortags_view = sensor_tags.SensorTagsService.as_view('sensortags_api')
     # get gets a sensor's tags
     # post changes/adds to a sensor's tags
