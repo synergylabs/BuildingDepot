@@ -82,7 +82,7 @@ class SensorGroupTagsService(MethodView):
         if Permission.objects(sensor_group=name).first() is not None:
             return jsonify(responses.sensorgroup_used)
         try:
-            tags = request.get_json()['data']
+            tags = request.get_json()['data']['tags']
         except KeyError:
             return jsonify(responses.missing_data)
         sensorgroup = SensorGroup.objects(name=name).first()
