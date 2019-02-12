@@ -146,7 +146,7 @@
                         set[users[i].user_id] = true;
                     }
                 }
-                var res = $http.post('/api/user_group/'+ $scope.userGroupName + '/users', {'data': users},{ headers: header });
+                var res = $http.post('/api/user_group/'+ $scope.userGroupName + '/users', {'data': {'users':users}},{ headers: header });
                 res.success(function(data) {
                         if (data["success"]==="False"){
                             $.notify(data["error"], {
