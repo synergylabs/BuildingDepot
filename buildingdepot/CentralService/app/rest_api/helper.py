@@ -10,9 +10,8 @@ such as conversion of timestamps, strings etc.
 """
 from datetime import datetime
 from functools import wraps
-from os import abort
 
-from flask import current_app, request
+from flask import current_app, request, abort
 from ..models.cs_models import TagType, DataService, User
 from ..models.cs_models import Building, SensorGroup, Sensor
 from ..oauth_bd.views import Token
