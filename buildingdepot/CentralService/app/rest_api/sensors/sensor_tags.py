@@ -9,7 +9,7 @@ update/remove tags from a sensor
 
 
 @copyright: (c) 2016 SynergyLabs
-@license: UCSD License. See License file for details.
+@license: See License file for details.
 """
 import sys
 from flask.views import MethodView
@@ -81,6 +81,7 @@ class SensorTagsService(MethodView):
             "success": <True or False>
         }
         """
+
         tags = request.get_json()['data']['tags']
         sensor = Sensor.objects(name=name).first()
         if defs.invalidate_sensor(name):

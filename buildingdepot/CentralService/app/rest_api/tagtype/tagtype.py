@@ -7,7 +7,7 @@ of all the CRUD operations on the tagtypes. Each tagtype can have
 parent and children tagtypes specifed for it.
 
 @copyright: (c) 2016 SynergyLabs
-@license: UCSD License. See License file for details.
+@license: See License file for details.
 """
 
 from flask.views import MethodView
