@@ -5,7 +5,7 @@ from .dataservices import dataservice, ds_buildings, ds_admins
 from .users import user
 from .sensorgroups import sensorgroup, sg_tags
 from .usergroups import ug_users, usergroup
-from .sensors import sensor, search, sensor_tags, metadata
+from .sensors import sensor, search, sensor_tags
 from .permissions import permission
 
 
