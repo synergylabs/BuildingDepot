@@ -31,7 +31,7 @@ Note: The list of metadata points sent in this request will overwrite the previo
 
    .. sourcecode:: http
 
-      POST /api/sensor/26da099a-3fe0-4966-b068-14f51bcedb6e/metadata
+      POST /api/sensor/26da099a-3fe0-4966-b068-14f51bcedb6e/metadata HTTP/1.1
       Accept: application/json; charset=utf-8
 
       {
@@ -80,7 +80,7 @@ This retreives a list of the metadata key-value pairs that are attached to the s
 
    .. sourcecode:: http
 
-      GET /api/sensor/26da099a-3fe0-4966-b068-14f51bcedb6e/metadata
+      GET /api/sensor/26da099a-3fe0-4966-b068-14f51bcedb6e/metadata HTTP/1.1
       Accept: application/json; charset=utf-8
 
    **Example response**:

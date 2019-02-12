@@ -4,7 +4,7 @@
 BuildingTemplate
 ################
 
-Each building within BuildingDepot has a BuildingTemplate as a foundation. The BuildingTemplate helps define the structure of the building. The user has to assign a set of tags to the BuildingTemplate on creation which can be used later on for all the sensors within that building. BuildingTemplate can be defined in the CentralService at http://www.example.com:81/central/buildingtemplate.
+Each building within BuildingDepot has a BuildingTemplate as a foundation. The BuildingTemplate helps define the structure of the building. The user has to assign a set of tags to the BuildingTemplate on creation which can be used later on for all the sensors within that building. BuildingTemplate can be defined in the CentralService at http://www.example.com:81/api/buildingtemplate.
 
 Create a Building Template
 **************************
@@ -29,7 +29,8 @@ This request creates a Building Template with the name, description and tagtypes
 
    .. sourcecode:: http
 
-      POST /api/template
+      POST /api/template HTTP/1.1
+      Accept: application/json; charset=utf-8
 
       {
         "data":{
@@ -97,8 +98,7 @@ This request retrieves name, description and tagtypes used in the buildingtempla
 
    .. sourcecode:: http
 
-      GET /api/template/Test_Building_Template
-
+      GET /api/template/Test_Building_Template HTTP/1.1
       Accept: application/json; charset=utf-8
 
    **Example response**:
@@ -114,17 +114,17 @@ This request retrieves name, description and tagtypes used in the buildingtempla
           "tags": ["floor","room","corridor"]
       }
 
-    **Example response** (for failure):
+   **Example response** (for failure):
 
    .. sourcecode:: http
 
       HTTP/1.1 200 OK
       Content-Type: application/json
 
-      {
-        "success": "False",
+      {  "success": "False",
         "error": " BuildingTemplate does not exist"
-      }
+        }
+
 
 Delete Building Template
 ************************
@@ -148,7 +148,7 @@ This request deletes the requested BuildingTemplate and the Tagtypes assigned to
 
    .. sourcecode:: http
 
-      DELETE /api/template/Test_Building_Template
+      DELETE /api/template/Test_Building_Template  HTTP/1.1
       Accept: application/json; charset=utf-8
 
    **Example response**:

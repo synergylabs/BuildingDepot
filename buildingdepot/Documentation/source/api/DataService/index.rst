@@ -4,7 +4,7 @@
 DataService APIs
 ================
 
-All urls in this chapter are with respect to the base url of the DataService. For example: If the DataService is at http://www.example.com:82 then a url such as /service/sensor refers to http://www.example.com:82/service/sensor
+All urls in this chapter are with respect to the base url of the DataService. For example: If the DataService is at http://www.example.com:82 then a url such as /service/sensor refers to http://www.example.com:82/api/sensor
 
 Authentication
 --------------

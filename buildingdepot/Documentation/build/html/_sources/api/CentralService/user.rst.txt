@@ -4,7 +4,7 @@
 User
 ####
 
-The Users of BuildingDepot have either of the two roles SuperUser and Default User through which we maintain the access control. The Super User is the admin of BuildingDepot who has permission to add,remove,read,write,delete any entity. The Default User has limited access and does not have permission to add,remove any building and dataservice related entity.Only the SuperUser can add another user and the SuperUser by default in every Building Depot installtion is admin@buildingdepot.org. A new User can be added by the SuperUser in the CentralService at http://www.example.com:81/central/user.
+The Users of BuildingDepot have either of the two roles SuperUser and Default User through which we maintain the access control. The Super User is the admin of BuildingDepot who has permission to add,remove,read,write,delete any entity. The Default User has limited access and does not have permission to add,remove any building and dataservice related entity.Only the SuperUser can add another user and the SuperUser by default in every Building Depot installtion is admin@buildingdepot.org. A new User can be added by the SuperUser in the CentralService at http://www.example.com:81/api/user.
 
 Add a new User
 **************
@@ -32,7 +32,8 @@ This request creates a new  User in the Central Service. Only the SuperUser can 
 
    .. sourcecode:: http
 
-      POST /api/user
+      POST /api/user HTTP/1.1
+      Accept: application/json; charset=utf-8
 
       {
         "data":{
@@ -103,8 +104,7 @@ This request retrieves first name, last_name, email and role of the User specifi
 
    .. sourcecode:: http
 
-      GET /api/user/newuser@gmail.com
-
+      GET /api/user/newuser@gmail.com HTTP/1.1
       Accept: application/json; charset=utf-8
 
    **Example response**:
@@ -121,7 +121,7 @@ This request retrieves first name, last_name, email and role of the User specifi
             "role":"super"
       }
 
-    **Example response** (for failure):
+   **Example response** (for failure):
 
    .. sourcecode:: http
 
@@ -155,7 +155,7 @@ This request deletes the requested User from Building Depot.Only the Super user 
 
    .. sourcecode:: http
 
-      DELETE /api/User/newuser@gmail.com
+      DELETE /api/User/newuser@gmail.com HTTP/1.1
       Accept: application/json; charset=utf-8
 
    **Example response**:

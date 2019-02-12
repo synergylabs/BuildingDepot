@@ -17,20 +17,16 @@ This stores datapoints in the timeseries of the specified Sensorpoint.
 
 The first datapoint that is posted to the uuid defines the datatype for all further timeseries datapoints e.g. if the first datapoint posted to a certain uuid is a int then all further datapoints have to be ints.
 
-
 .. http:post:: /api/sensor/timeseries
 
    Within a singe POST request data can be posted to multiple sensor points. The format for each sensor point in the list should be as follows.
 
    :json string sensor_id: UUID of the sensor to which data has to be posted
-   :json list samples: A list of the data points that have to be added to the time-series of the sensor point given by sensor_id. Each item in the list has to be of the following format:
-        {
-            "time": A unix timestamp of a sampling,
-
-            "value": A sensor value
-        }
+   :json list samples:
+       * A list of the data points that have to be added to the time-series of the sensor point given by sensor_id. Each item in the list has to be of the following format:
+       * [{ "time": A unix timestamp of a sampling, "value": A sensor value } ]
    :returns:
-      * **success** `(string)` -- Returns 'True' if data is posted succesfully otherwise 'False'
+      * **success** `(string)` -- Returns 'True' if data is posted successfully otherwise 'False'
    :status 200: Success
    :status 401: Unauthorized Credentials  
 

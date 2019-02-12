@@ -4,7 +4,7 @@
 CentralService APIs
 ===================
 
-All urls in this chapter are with respect to the base url of the CentralService. For example: If the CentralService is at http://www.example.com:81 then a url such as /service/tagtype refers to http://www.example.com:81/central/tagtype account.
+All urls in this chapter are with respect to the base url of the CentralService. For example: If the CentralService is at http://www.example.com:81 then a url such as /service/tagtype refers to http://www.example.com:81/api/tagtype account.
 
 Authentication
 --------------
@@ -34,7 +34,6 @@ This OAuth token will have to be sent in the headers of all the requests made to
    building.rst
    dataservice.rst
    sensor.rst
-   metadata.rst
    sensorgroup.rst
    usergroup.rst
    permission.rst
