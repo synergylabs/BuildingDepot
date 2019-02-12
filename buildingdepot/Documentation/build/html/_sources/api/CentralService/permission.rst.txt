@@ -4,7 +4,7 @@
 Permission
 ##########
 
-The Permissions are created between SensorGroups and UserGroups in Building Depot which come together to form the access control lists.Here we select a User Group and a Sensor Group and a permission value with which we want to associate these both. There are three levels of permission defined in BuildingDepot which are ‘d/r’ (deny read) ,’r’ (read), ‘r/w’ (read write) and 'r/w/p' (read write permission). If there are multiple permission mappings between a user and a sensor then the one that is most restrictive is chosen. Permissions can be defined in the CentralService at http://www.example.com:81/central/permission.
+The Permissions are created between SensorGroups and UserGroups in Building Depot which come together to form the access control lists.Here we select a User Group and a Sensor Group and a permission value with which we want to associate these both. There are three levels of permission defined in BuildingDepot which are ‘d/r’ (deny read) ,’r’ (read), ‘r/w’ (read write) and 'r/w/p' (read write permission). If there are multiple permission mappings between a user and a sensor then the one that is most restrictive is chosen. Permissions can be defined in the CentralService at http://www.example.com:81/api/permission.
 
 Create Permission
 *****************
@@ -36,12 +36,13 @@ This request creates a new Permission link between a UserGroup and a SensorGroup
 
    .. sourcecode:: http
 
-      POST /api/permission
+      POST /api/permission HTTP/1.1
+      Accept: application/json; charset=utf-8
 
       {
         "data":{
-            "sensor_group":"Test Sensor Group",
-            "user_group":"Test User Group",
+            "sensor_group":"Test_Sensor_Group",
+            "user_group":"Test_User_Group",
             "permission":"r"
         }
       }
@@ -102,7 +103,7 @@ This request retrieves Permission level assigned for existing SensorGroup and Us
 
    .. sourcecode:: http
 
-      GET /api/permission?user_group=Test User Group&sensor_group=Test Sensor Group
+      GET /api/permission?user_group=Test_User_Group&sensor_group=Test_Sensor_Group HTTP/1.1
       Accept: application/json; charset=utf-8
 
    **Example response**:
@@ -151,7 +152,7 @@ This request deletes the permission link between the UserGroup and SensorGroup
 
    .. sourcecode:: http
 
-      DELETE /api/permission?user_group=Test User Group&sensor_group=Test Sensor Group
+      DELETE /api/permission?user_group=Test_User_Group&sensor_group=Test_Sensor_Group HTTP/1.1
       Accept: application/json; charset=utf-8
 
    **Example response**:

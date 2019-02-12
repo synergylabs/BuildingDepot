@@ -4,7 +4,7 @@
 CentralService APIs
 ===================
 
-All urls in this chapter are with respect to the base url of the CentralService. For example: If the CentralService is at http://www.example.com:81 then a url such as /service/tagtype refers to http://www.example.com:81/central/tagtype account.
+All urls in this chapter are with respect to the base url of the CentralService. For example: If the CentralService is at http://www.example.com:81 then a url such as /service/tagtype refers to http://www.example.com:81/api/tagtype account.
 
 Authentication
 --------------

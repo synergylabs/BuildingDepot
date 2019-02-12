@@ -1,31 +1,24 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
-
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
-    <title>HTTP Routing Table &mdash; BuildingDepot 3.2.5 documentation</title>
-    
+    <title>HTTP Routing Table &#8212; BuildingDepot 3.2.8 documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    './',
-        VERSION:     '3.2.5',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
-      };
-    </script>
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="BuildingDepot 3.2.5 documentation" href="index.html" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
 
    
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
   
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
@@ -35,12 +28,14 @@
     </script>
 
 
-  </head>
-  <body role="document">  
+  </head><body>
+  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
+          
+
           <div class="body" role="main">
             
 
@@ -52,14 +47,19 @@
    <a href="#cap-/sensor"><strong>/sensor</strong></a>
    </div>
 
-   <table class="indextable modindextable" cellspacing="0" cellpadding="2">
-     <tr class="pcap"><td></td><td>&nbsp;</td><td></td></tr>
+   <table class="indextable modindextable">
+     <tr class="pcap"><td></td><td>&#160;</td><td></td></tr>
      <tr class="cap" id="cap-/api"><td></td><td>
        <strong>/api</strong></td><td></td></tr>
      <tr>
        <td></td>
        <td>
        <a href="api/DataService/pubsub.html#get--api-apps"><code class="xref">GET /api/apps</code></a></td><td>
+       <em></em></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="api/CentralService/building.html#get--api-building--building_name--tags"><code class="xref">GET /api/building/&lt;building_name&gt;/tags</code></a></td><td>
        <em></em></td></tr>
      <tr>
        <td></td>
@@ -99,12 +99,17 @@
      <tr>
        <td></td>
        <td>
-       <a href="api/CentralService/tagtype.html#get--api-sensor--name--tags"><code class="xref">GET /api/sensor/&lt;name&gt;/tags</code></a></td><td>
+       <a href="api/CentralService/sensor.html#get--api-sensor--name--tags"><code class="xref">GET /api/sensor/&lt;name&gt;/tags</code></a></td><td>
        <em></em></td></tr>
      <tr>
        <td></td>
        <td>
        <a href="api/CentralService/sensorgroup.html#get--api-sensor_group--name--tags"><code class="xref">GET /api/sensor_group/&lt;name&gt;/tags</code></a></td><td>
+       <em></em></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="api/CentralService/tagtype.html#get--api-tagtype--name-"><code class="xref">GET /api/tagtype/&lt;name&gt;</code></a></td><td>
        <em></em></td></tr>
      <tr>
        <td></td>
@@ -130,6 +135,11 @@
        <td></td>
        <td>
        <a href="api/CentralService/building.html#post--api-building"><code class="xref">POST /api/building</code></a></td><td>
+       <em></em></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="api/CentralService/building.html#post--api-building--building_name--tags"><code class="xref">POST /api/building/&lt;building_name&gt;/tags</code></a></td><td>
        <em></em></td></tr>
      <tr>
        <td></td>
@@ -165,6 +175,11 @@
        <td></td>
        <td>
        <a href="api/CentralService/metadata.html#post--api-sensor--name--metadata"><code class="xref">POST /api/sensor/&lt;name&gt;/metadata</code></a></td><td>
+       <em></em></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="api/CentralService/sensor.html#post--api-sensor--name--tags"><code class="xref">POST /api/sensor/&lt;name&gt;/tags</code></a></td><td>
        <em></em></td></tr>
      <tr>
        <td></td>
@@ -214,6 +229,11 @@
      <tr>
        <td></td>
        <td>
+       <a href="api/CentralService/building.html#delete--api-building--building_name--tags"><code class="xref">DELETE /api/building/&lt;building_name&gt;/tags</code></a></td><td>
+       <em></em></td></tr>
+     <tr>
+       <td></td>
+       <td>
        <a href="api/CentralService/building.html#delete--api-building--name-"><code class="xref">DELETE /api/building/&lt;name&gt;</code></a></td><td>
        <em></em></td></tr>
      <tr>
@@ -246,7 +266,7 @@
        <td>
        <a href="api/CentralService/user.html#delete--api-user--email-"><code class="xref">DELETE /api/user/&lt;email&gt;</code></a></td><td>
        <em></em></td></tr>
-     <tr class="pcap"><td></td><td>&nbsp;</td><td></td></tr>
+     <tr class="pcap"><td></td><td>&#160;</td><td></td></tr>
      <tr class="cap" id="cap-/oauth"><td></td><td>
        <strong>/oauth</strong></td><td></td></tr>
      <tr>
@@ -254,7 +274,7 @@
        <td>
        <a href="api/CentralService/oauth.html#get--oauth-access_token-client_id=-client_id--client_secret=-client_secret-"><code class="xref">GET /oauth/access_token/client_id=&lt;client_id&gt;/client_secret=&lt;client_secret&gt;</code></a></td><td>
        <em></em></td></tr>
-     <tr class="pcap"><td></td><td>&nbsp;</td><td></td></tr>
+     <tr class="pcap"><td></td><td>&#160;</td><td></td></tr>
      <tr class="cap" id="cap-/sensor"><td></td><td>
        <strong>/sensor</strong></td><td></td></tr>
      <tr>
@@ -266,6 +286,7 @@
 
 
           </div>
+          
         </div>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
@@ -278,15 +299,14 @@
 </div>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
       <input type="text" name="q" />
       <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
+    </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -294,11 +314,11 @@
       <div class="clearer"></div>
     </div>
     <div class="footer">
-      &copy;2018, SynergyLabs.
+      &copy;2019, SynergyLabs.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.6</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.7</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.7.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
     </div>
 

@@ -4,7 +4,7 @@
 Usergroups
 ##########
 
-Usergroups are as the name suggests a group of users formed using the id's with which they are registered in BuildingDepot. Usergroups when combined with SensorGroups help in bringing about the Access Control functions that BuildingDepot provides.UserGroups can be defined in the CentralService at http://www.example.com:81/central/usergroup.
+Usergroups are as the name suggests a group of users formed using the id's with which they are registered in BuildingDepot. Usergroups when combined with SensorGroups help in bringing about the Access Control functions that BuildingDepot provides.UserGroups can be defined in the CentralService at http://www.example.com:81/api/usergroup.
 
 Create UserGroup
 ******************
@@ -27,7 +27,8 @@ This request creates a new UserGroup with the name and description as specified 
 
    .. sourcecode:: http
 
-      POST /api/user_group
+      POST /api/user_group HTTP/1.1
+      Accept: application/json; charset=utf-8
 
       {
         "name": "Test User Group",
@@ -81,7 +82,7 @@ Note: The list of user id's sent in this request will overwrite the previous lis
 
    .. sourcecode:: http
 
-      POST /api/user_group/Test/users
+      POST /api/user_group/Test/users HTTP/1.1
       Accept: application/json; charset=utf-8
 
       {
@@ -89,7 +90,7 @@ Note: The list of user id's sent in this request will overwrite the previous lis
                  "synergy@gmail.com",
                  "test@gmail.com"
                ]
-     }
+      }
 
    **Example response** (for succcess):
 
@@ -135,7 +136,7 @@ This request retrieves the list of users that are in the specified UserGroup
 
    .. sourcecode:: http
 
-      GET /api/user_group/Test/users
+      GET /api/user_group/Test/users HTTP/1.1
       Accept: application/json; charset=utf-8
 
    **Example response**:

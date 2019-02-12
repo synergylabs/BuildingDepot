@@ -1,47 +1,41 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
-
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
-    <title>DataService &mdash; BuildingDepot 3.2.5 documentation</title>
-    
+    <title>DataService &#8212; BuildingDepot 3.2.8 documentation</title>
     <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-    
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '../../',
-        VERSION:     '3.2.5',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
-      };
-    </script>
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <link rel="top" title="BuildingDepot 3.2.5 documentation" href="../../index.html" />
-    <link rel="up" title="CentralService APIs" href="index.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="Sensor" href="sensor.html" />
     <link rel="prev" title="Buildings" href="building.html" />
    
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
   
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
-  </head>
-  <body role="document">  
+  </head><body>
+  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
+          
+
           <div class="body" role="main">
             
   <div class="section" id="dataservice">
 <h1>DataService<a class="headerlink" href="#dataservice" title="Permalink to this headline">¶</a></h1>
-<p>The DataService is where all the data related to sensors and the timeseries data of each sensor resides. All the access control related functionality is defined at centralservice is also enforced within the DataService.  A new DataService can be defined in the CentralService at <a class="reference external" href="http://www.example.com:81/central/dataservice">http://www.example.com:81/central/dataservice</a>.</p>
+<p>The DataService is where all the data related to sensors and the timeseries data of each sensor resides. All the access control related functionality is defined at centralservice is also enforced within the DataService.  A new DataService can be defined in the CentralService at <a class="reference external" href="http://www.example.com:81/api/dataservice">http://www.example.com:81/api/dataservice</a>.</p>
 <div class="section" id="create-a-new-dataservice">
 <h2>Create a new DataService<a class="headerlink" href="#create-a-new-dataservice" title="Permalink to this headline">¶</a></h2>
 <p>This request creates a new DataService with description,host and port where the datservice will function.</p>
@@ -53,23 +47,23 @@
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name" colspan="2">JSON Parameters:</th></tr>
-<tr class="field-odd field"><td>&nbsp;</td><td class="field-body"><ul class="first simple">
-<li><strong>name</strong> (<em>string</em>) &#8211; Name of the DataService</li>
-<li><strong>description</strong> (<em>string</em>) &#8211; Description for the DataService</li>
-<li><strong>host</strong> (<em>string</em>) &#8211; HostName of the device where the DataService is to be installed</li>
-<li><strong>port</strong> (<em>string</em>) &#8211; Port number of the device where the DataService is to be installed</li>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body"><ul class="first simple">
+<li><strong>name</strong> (<em>string</em>) – Name of the DataService</li>
+<li><strong>description</strong> (<em>string</em>) – Description for the DataService</li>
+<li><strong>host</strong> (<em>string</em>) – HostName of the device where the DataService is to be installed</li>
+<li><strong>port</strong> (<em>string</em>) – Port number of the device where the DataService is to be installed</li>
 </ul>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><ul class="first simple">
-<li><strong>success</strong> <cite>(string)</cite> &#8211; Returns &#8216;True&#8217; if data is posted successfully otherwise &#8216;False&#8217;</li>
-<li><strong>error</strong> <cite>(string)</cite> &#8211; An additional value that will be present only if the request fails specifying the cause for failure</li>
+<li><strong>success</strong> <cite>(string)</cite> – Returns ‘True’ if data is posted successfully otherwise ‘False’</li>
+<li><strong>error</strong> <cite>(string)</cite> – An additional value that will be present only if the request fails specifying the cause for failure</li>
 </ul>
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
-<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> &#8211; Success</li>
-<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a> &#8211; Unauthorized Credentials</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> – Success</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a> – Unauthorized Credentials</li>
 </ul>
 </td>
 </tr>
@@ -79,7 +73,8 @@
 
 <div class="compound">
 <p class="compound-first"><strong>Example request</strong>:</p>
-<div class="compound-middle highlight-http"><div class="highlight"><pre>POST /api/dataservice
+<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">POST</span> <span class="nn">/api/dataservice</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Accept</span><span class="o">:</span> <span class="l">application/json; charset=utf-8</span>
 
 {
   &quot;data&quot;:{
@@ -92,7 +87,7 @@
 </pre></div>
 </div>
 <p class="compound-middle"><strong>Example response</strong> (for success):</p>
-<div class="compound-middle highlight-http"><div class="highlight"><pre><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
 <span class="p">{</span>
@@ -101,7 +96,7 @@
 </pre></div>
 </div>
 <p class="compound-middle"><strong>Example response</strong> (for failure):</p>
-<div class="compound-last highlight-http"><div class="highlight"><pre><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<div class="compound-last highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
 <span class="p">{</span>
@@ -128,22 +123,22 @@
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>name</strong> (<em>string</em>) &#8211; Name of the DataService</li>
+<li><strong>name</strong> (<em>string</em>) – Name of the DataService</li>
 </ul>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><ul class="first simple">
-<li><strong>success</strong> <cite>(string)</cite> &#8211; Returns &#8216;True&#8217; if data is retrieved successfully otherwise &#8216;False&#8217;</li>
-<li><strong>name</strong> <cite>(string)</cite> &#8211; Name of the DataService</li>
-<li><strong>description</strong> <cite>(string)</cite> &#8211; Description for the DataService</li>
-<li><strong>host</strong> <cite>(string)</cite> &#8211;  HostName of the device where the DataService is installed</li>
-<li><strong>port</strong> <cite>(string)</cite> &#8211;  Port number of the device where the DataService is installed</li>
+<li><strong>success</strong> <cite>(string)</cite> – Returns ‘True’ if data is retrieved successfully otherwise ‘False’</li>
+<li><strong>name</strong> <cite>(string)</cite> – Name of the DataService</li>
+<li><strong>description</strong> <cite>(string)</cite> – Description for the DataService</li>
+<li><strong>host</strong> <cite>(string)</cite> –  HostName of the device where the DataService is installed</li>
+<li><strong>port</strong> <cite>(string)</cite> –  Port number of the device where the DataService is installed</li>
 </ul>
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
-<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> &#8211; Success</li>
-<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a> &#8211; Unauthorized Credentials</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> – Success</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a> – Unauthorized Credentials</li>
 </ul>
 </td>
 </tr>
@@ -153,26 +148,24 @@
 
 <div class="compound">
 <p class="compound-first"><strong>Example request</strong>:</p>
-<div class="compound-middle highlight-http"><div class="highlight"><pre>GET /api/dataservice/ds3
-
-Accept: application/json; charset=utf-8
+<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">GET</span> <span class="nn">/api/dataservice/ds3</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Accept</span><span class="o">:</span> <span class="l">application/json; charset=utf-8</span>
 </pre></div>
 </div>
 <p class="compound-middle"><strong>Example response</strong>:</p>
-<div class="compound-middle highlight-http"><div class="highlight"><pre>  HTTP/1.1 200 OK
-  Content-Type: application/json
+<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
-  {   &quot;success&quot;: &quot;True&quot;,
-        &quot;name&quot;: &quot;ds3&quot;
-        &quot;description&quot;:&quot;Test_ds3&quot;,
-        &quot;host&quot;:&quot;127.0.0.3&quot;,
-        &quot;port&quot;:&quot;83&quot;
-  }
-
-**Example response** (for failure):
+<span class="p">{</span>   <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;True&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;ds3&quot;</span>
+      <span class="s2">&quot;description&quot;</span><span class="p">:</span><span class="s2">&quot;Test_ds3&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;host&quot;</span><span class="p">:</span><span class="s2">&quot;127.0.0.3&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;port&quot;</span><span class="p">:</span><span class="s2">&quot;83&quot;</span>
+<span class="p">}</span>
 </pre></div>
 </div>
-<div class="compound-last highlight-http"><div class="highlight"><pre><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<p class="compound-middle"><strong>Example response</strong> (for failure):</p>
+<div class="compound-last highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
 <span class="p">{</span>
@@ -194,18 +187,18 @@ Accept: application/json; charset=utf-8
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>name</strong> (<em>string</em>) &#8211; Name of the DataService</li>
+<li><strong>name</strong> (<em>string</em>) – Name of the DataService</li>
 </ul>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><ul class="first simple">
-<li><strong>success</strong> <cite>(string)</cite> &#8211; Returns &#8216;True&#8217; if the DataService is successfully deleted otherwise &#8216;False&#8217;</li>
+<li><strong>success</strong> <cite>(string)</cite> – Returns ‘True’ if the DataService is successfully deleted otherwise ‘False’</li>
 </ul>
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
-<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> &#8211; Success</li>
-<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a> &#8211; Unauthorized Credentials</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> – Success</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a> – Unauthorized Credentials</li>
 </ul>
 </td>
 </tr>
@@ -215,12 +208,12 @@ Accept: application/json; charset=utf-8
 
 <div class="compound">
 <p class="compound-first"><strong>Example request</strong>:</p>
-<div class="compound-middle highlight-http"><div class="highlight"><pre>DELETE /api/dataservice/ds3
-Accept: application/json; charset=utf-8
+<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">DELETE</span> <span class="nn">/api/dataservice/ds3</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Accept</span><span class="o">:</span> <span class="l">application/json; charset=utf-8</span>
 </pre></div>
 </div>
 <p class="compound-middle"><strong>Example response</strong>:</p>
-<div class="compound-middle highlight-http"><div class="highlight"><pre><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
 <span class="p">{</span>
@@ -229,7 +222,7 @@ Accept: application/json; charset=utf-8
 </pre></div>
 </div>
 <p class="compound-middle"><strong>Example response</strong> (for failure):</p>
-<div class="compound-last highlight-http"><div class="highlight"><pre><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<div class="compound-last highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
 <span class="p">{</span>
@@ -256,16 +249,16 @@ Accept: application/json; charset=utf-8
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>name</strong> (<em>string</em>) &#8211; Name of the DataService</li>
+<li><strong>name</strong> (<em>string</em>) – Name of the DataService</li>
 </ul>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name" colspan="2">JSON Parameters:</th></tr>
-<tr class="field-even field"><td>&nbsp;</td><td class="field-body"><ul class="first">
+<tr class="field-even field"><td>&#160;</td><td class="field-body"><ul class="first simple">
 <li><dl class="first docutils">
-<dt><strong>data</strong> <cite>(dict)</cite> &#8211; Contains the information of the buildings to be added to DataService.</dt>
-<dd><ul class="first last simple">
-<li><strong>buildings</strong> <cite>(list)</cite> &#8211; List of buildings to be added to DataService</li>
+<dt><strong>data</strong> <cite>(dict)</cite> – Contains the information of the buildings to be added to DataService.</dt>
+<dd><ul class="first last">
+<li><strong>buildings</strong> <cite>(list)</cite> – List of buildings to be added to DataService</li>
 </ul>
 </dd>
 </dl>
@@ -274,13 +267,13 @@ Accept: application/json; charset=utf-8
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><ul class="first simple">
-<li><strong>success</strong> <cite>(string)</cite> &#8211; Returns &#8216;True&#8217; if the building is successfully added to the DataService otherwise &#8216;False&#8217;</li>
+<li><strong>success</strong> <cite>(string)</cite> – Returns ‘True’ if the building is successfully added to the DataService otherwise ‘False’</li>
 </ul>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
-<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> &#8211; Success</li>
-<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a> &#8211; Unauthorized Credentials</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> – Success</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a> – Unauthorized Credentials</li>
 </ul>
 </td>
 </tr>
@@ -290,7 +283,9 @@ Accept: application/json; charset=utf-8
 
 <div class="compound">
 <p class="compound-first"><strong>Example request</strong>:</p>
-<div class="compound-middle highlight-http"><div class="highlight"><pre>POST /api/dataservice/ds1/buildings
+<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">POST</span> <span class="nn">/api/dataservice/ds1/buildings</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Accept</span><span class="o">:</span> <span class="l">application/json; charset=utf-8</span>
+
 
 {
   &quot;data&quot;:{
@@ -300,7 +295,7 @@ Accept: application/json; charset=utf-8
 </pre></div>
 </div>
 <p class="compound-middle"><strong>Example response</strong> (for success):</p>
-<div class="compound-middle highlight-http"><div class="highlight"><pre><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
 <span class="p">{</span>
@@ -309,7 +304,7 @@ Accept: application/json; charset=utf-8
 </pre></div>
 </div>
 <p class="compound-middle"><strong>Example response</strong> (for failure):</p>
-<div class="compound-last highlight-http"><div class="highlight"><pre><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<div class="compound-last highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
 <span class="p">{</span>
@@ -346,19 +341,19 @@ Accept: application/json; charset=utf-8
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>name</strong> (<em>string</em>) &#8211; Name of the DataService</li>
+<li><strong>name</strong> (<em>string</em>) – Name of the DataService</li>
 </ul>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><ul class="first simple">
-<li><strong>success</strong> <cite>(string)</cite> &#8211; Returns &#8216;True&#8217; if data is retrieved successfully otherwise &#8216;False&#8217;</li>
-<li><strong>buildings</strong> <cite>(list)</cite> &#8211; Contains the list of buildings that the the specified DataService hosts</li>
+<li><strong>success</strong> <cite>(string)</cite> – Returns ‘True’ if data is retrieved successfully otherwise ‘False’</li>
+<li><strong>buildings</strong> <cite>(list)</cite> – Contains the list of buildings that the the specified DataService hosts</li>
 </ul>
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
-<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> &#8211; Success</li>
-<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a> &#8211; Unauthorized Credentials</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> – Success</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a> – Unauthorized Credentials</li>
 </ul>
 </td>
 </tr>
@@ -368,13 +363,12 @@ Accept: application/json; charset=utf-8
 
 <div class="compound">
 <p class="compound-first"><strong>Example request</strong>:</p>
-<div class="compound-middle highlight-http"><div class="highlight"><pre>GET /api/dataservice/ds1/buildings
-
-Accept: application/json; charset=utf-8
+<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">GET</span> <span class="nn">/api/dataservice/ds1/buildings</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Accept</span><span class="o">:</span> <span class="l">application/json; charset=utf-8</span>
 </pre></div>
 </div>
 <p class="compound-middle"><strong>Example response</strong>:</p>
-<div class="compound-middle highlight-http"><div class="highlight"><pre><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
 <span class="p">{</span>
@@ -384,7 +378,7 @@ Accept: application/json; charset=utf-8
 </pre></div>
 </div>
 <p class="compound-middle"><strong>Example response</strong> (for failure):</p>
-<div class="compound-last highlight-http"><div class="highlight"><pre><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<div class="compound-last highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
 <span class="p">{</span>
@@ -406,16 +400,16 @@ Accept: application/json; charset=utf-8
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>name</strong> (<em>string</em>) &#8211; Name of the DataService</li>
+<li><strong>name</strong> (<em>string</em>) – Name of the DataService</li>
 </ul>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name" colspan="2">JSON Parameters:</th></tr>
-<tr class="field-even field"><td>&nbsp;</td><td class="field-body"><ul class="first">
+<tr class="field-even field"><td>&#160;</td><td class="field-body"><ul class="first simple">
 <li><dl class="first docutils">
-<dt><strong>data</strong> <cite>(dict)</cite> &#8211; Contains the information of the buildings to be deleted from DataService.</dt>
-<dd><ul class="first last simple">
-<li><strong>buildings</strong> <cite>(list)</cite> &#8211; List of buildings to be deleted from DataService</li>
+<dt><strong>data</strong> <cite>(dict)</cite> – Contains the information of the buildings to be deleted from DataService.</dt>
+<dd><ul class="first last">
+<li><strong>buildings</strong> <cite>(list)</cite> – List of buildings to be deleted from DataService</li>
 </ul>
 </dd>
 </dl>
@@ -424,13 +418,13 @@ Accept: application/json; charset=utf-8
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><ul class="first simple">
-<li><strong>success</strong> <cite>(string)</cite> &#8211; Returns &#8216;True&#8217; if the buildings are successfully deleted otherwise &#8216;False&#8217;</li>
+<li><strong>success</strong> <cite>(string)</cite> – Returns ‘True’ if the buildings are successfully deleted otherwise ‘False’</li>
 </ul>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
-<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> &#8211; Success</li>
-<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a> &#8211; Unauthorized Credentials</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> – Success</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a> – Unauthorized Credentials</li>
 </ul>
 </td>
 </tr>
@@ -440,8 +434,8 @@ Accept: application/json; charset=utf-8
 
 <div class="compound">
 <p class="compound-first"><strong>Example request</strong>:</p>
-<div class="compound-middle highlight-http"><div class="highlight"><pre>DELETE /api/dataservice/ds1/buildings
-Accept: application/json; charset=utf-8
+<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">DELETE</span> <span class="nn">/api/dataservice/ds1/buildings</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Accept</span><span class="o">:</span> <span class="l">application/json; charset=utf-8</span>
 
 {
   &quot;data&quot;:{
@@ -451,7 +445,7 @@ Accept: application/json; charset=utf-8
 </pre></div>
 </div>
 <p class="compound-middle"><strong>Example response</strong>:</p>
-<div class="compound-middle highlight-http"><div class="highlight"><pre><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
 <span class="p">{</span>
@@ -460,7 +454,7 @@ Accept: application/json; charset=utf-8
 </pre></div>
 </div>
 <p class="compound-middle"><strong>Example response</strong> (for failure):</p>
-<div class="compound-last highlight-http"><div class="highlight"><pre><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<div class="compound-last highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
 <span class="p">{</span>
@@ -492,16 +486,16 @@ Accept: application/json; charset=utf-8
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>name</strong> (<em>string</em>) &#8211; Name of the DataService</li>
+<li><strong>name</strong> (<em>string</em>) – Name of the DataService</li>
 </ul>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name" colspan="2">JSON Parameters:</th></tr>
-<tr class="field-even field"><td>&nbsp;</td><td class="field-body"><ul class="first">
+<tr class="field-even field"><td>&#160;</td><td class="field-body"><ul class="first simple">
 <li><dl class="first docutils">
-<dt><strong>data</strong> <cite>(dict)</cite> &#8211; Contains the information of the users to whom the CRUD privileges should be given.</dt>
-<dd><ul class="first last simple">
-<li><strong>admins</strong> <cite>(list)</cite> &#8211; List of the emails(string) of the users.</li>
+<dt><strong>data</strong> <cite>(dict)</cite> – Contains the information of the users to whom the CRUD privileges should be given.</dt>
+<dd><ul class="first last">
+<li><strong>admins</strong> <cite>(list)</cite> – List of the emails(string) of the users.</li>
 </ul>
 </dd>
 </dl>
@@ -510,13 +504,13 @@ Accept: application/json; charset=utf-8
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><ul class="first simple">
-<li><strong>success</strong> <cite>(string)</cite> &#8211; Returns &#8216;True&#8217; if the admin privileges are successfully added to the DataService otherwise &#8216;False&#8217;</li>
+<li><strong>success</strong> <cite>(string)</cite> – Returns ‘True’ if the admin privileges are successfully added to the DataService otherwise ‘False’</li>
 </ul>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
-<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> &#8211; Success</li>
-<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a> &#8211; Unauthorized Credentials</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> – Success</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a> – Unauthorized Credentials</li>
 </ul>
 </td>
 </tr>
@@ -526,7 +520,8 @@ Accept: application/json; charset=utf-8
 
 <div class="compound">
 <p class="compound-first"><strong>Example request</strong>:</p>
-<div class="compound-middle highlight-http"><div class="highlight"><pre>POST /api/dataservice/ds1/admins
+<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">POST</span> <span class="nn">/api/dataservice/ds1/admins</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Accept</span><span class="o">:</span> <span class="l">application/json; charset=utf-8</span>
 
 {
   &quot;data&quot;:{
@@ -536,7 +531,7 @@ Accept: application/json; charset=utf-8
 </pre></div>
 </div>
 <p class="compound-middle"><strong>Example response</strong> (for success):</p>
-<div class="compound-middle highlight-http"><div class="highlight"><pre><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
 <span class="p">{</span>
@@ -545,7 +540,7 @@ Accept: application/json; charset=utf-8
 </pre></div>
 </div>
 <p class="compound-middle"><strong>Example response</strong> (for failure):</p>
-<div class="compound-last highlight-http"><div class="highlight"><pre><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<div class="compound-last highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
 <span class="p">{</span>
@@ -582,19 +577,19 @@ Accept: application/json; charset=utf-8
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>name</strong> (<em>string</em>) &#8211; Name of the DataService</li>
+<li><strong>name</strong> (<em>string</em>) – Name of the DataService</li>
 </ul>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><ul class="first simple">
-<li><strong>success</strong> <cite>(string)</cite> &#8211; Returns &#8216;True&#8217; if the list is retrieved successfully otherwise &#8216;False&#8217;</li>
-<li><strong>admins</strong> <cite>(list)</cite> &#8211; Contains the list of emails of the users who have admin privilege on the specified DataService</li>
+<li><strong>success</strong> <cite>(string)</cite> – Returns ‘True’ if the list is retrieved successfully otherwise ‘False’</li>
+<li><strong>admins</strong> <cite>(list)</cite> – Contains the list of emails of the users who have admin privilege on the specified DataService</li>
 </ul>
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
-<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> &#8211; Success</li>
-<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a> &#8211; Unauthorized Credentials</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> – Success</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a> – Unauthorized Credentials</li>
 </ul>
 </td>
 </tr>
@@ -604,13 +599,12 @@ Accept: application/json; charset=utf-8
 
 <div class="compound">
 <p class="compound-first"><strong>Example request</strong>:</p>
-<div class="compound-middle highlight-http"><div class="highlight"><pre>GET /api/dataservice/ds1/buildings
-
-Accept: application/json; charset=utf-8
+<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">GET</span> <span class="nn">/api/dataservice/ds1/buildings</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Accept</span><span class="o">:</span> <span class="l">application/json; charset=utf-8</span>
 </pre></div>
 </div>
 <p class="compound-middle"><strong>Example response</strong>:</p>
-<div class="compound-middle highlight-http"><div class="highlight"><pre><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
 <span class="p">{</span>
@@ -620,7 +614,7 @@ Accept: application/json; charset=utf-8
 </pre></div>
 </div>
 <p class="compound-middle"><strong>Example response</strong> (for failure):</p>
-<div class="compound-last highlight-http"><div class="highlight"><pre><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<div class="compound-last highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
 <span class="p">{</span>
@@ -642,16 +636,16 @@ Accept: application/json; charset=utf-8
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>name</strong> (<em>string</em>) &#8211; Name of the DataService</li>
+<li><strong>name</strong> (<em>string</em>) – Name of the DataService</li>
 </ul>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name" colspan="2">JSON Parameters:</th></tr>
-<tr class="field-even field"><td>&nbsp;</td><td class="field-body"><ul class="first">
+<tr class="field-even field"><td>&#160;</td><td class="field-body"><ul class="first simple">
 <li><dl class="first docutils">
-<dt><strong>data</strong> <cite>(dict)</cite> &#8211; Contains the information of the buildings to ba deleted from DataService.</dt>
-<dd><ul class="first last simple">
-<li><strong>admins</strong> <cite>(list)</cite> &#8211; List of the emails of users whose privileges on DataService should be revoked.</li>
+<dt><strong>data</strong> <cite>(dict)</cite> – Contains the information of the buildings to ba deleted from DataService.</dt>
+<dd><ul class="first last">
+<li><strong>admins</strong> <cite>(list)</cite> – List of the emails of users whose privileges on DataService should be revoked.</li>
 </ul>
 </dd>
 </dl>
@@ -660,13 +654,13 @@ Accept: application/json; charset=utf-8
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><ul class="first simple">
-<li><strong>success</strong> <cite>(string)</cite> &#8211; Returns &#8216;True&#8217; if the permissions are successfully revoked otherwise &#8216;False&#8217;</li>
+<li><strong>success</strong> <cite>(string)</cite> – Returns ‘True’ if the permissions are successfully revoked otherwise ‘False’</li>
 </ul>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
-<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> &#8211; Success</li>
-<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a> &#8211; Unauthorized Credentials</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> – Success</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a> – Unauthorized Credentials</li>
 </ul>
 </td>
 </tr>
@@ -676,8 +670,8 @@ Accept: application/json; charset=utf-8
 
 <div class="compound">
 <p class="compound-first"><strong>Example request</strong>:</p>
-<div class="compound-middle highlight-http"><div class="highlight"><pre>DELETE /api/dataservice/ds1/admins
-Accept: application/json; charset=utf-8
+<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">DELETE</span> <span class="nn">/api/dataservice/ds1/admins</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Accept</span><span class="o">:</span> <span class="l">application/json; charset=utf-8</span>
 
 {
   &quot;data&quot;:{
@@ -687,7 +681,7 @@ Accept: application/json; charset=utf-8
 </pre></div>
 </div>
 <p class="compound-middle"><strong>Example response</strong>:</p>
-<div class="compound-middle highlight-http"><div class="highlight"><pre><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
 <span class="p">{</span>
@@ -696,7 +690,7 @@ Accept: application/json; charset=utf-8
 </pre></div>
 </div>
 <p class="compound-middle"><strong>Example response</strong> (for failure):</p>
-<div class="compound-last highlight-http"><div class="highlight"><pre><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<div class="compound-last highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
 <span class="p">{</span>
@@ -721,6 +715,7 @@ Accept: application/json; charset=utf-8
 
 
           </div>
+          
         </div>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
@@ -754,21 +749,20 @@ Accept: application/json; charset=utf-8
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
-      <li><a href="../../_sources/api/CentralService/dataservice.txt"
+      <li><a href="../../_sources/api/CentralService/dataservice.rst.txt"
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="../../search.html" method="get">
       <input type="text" name="q" />
       <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
+    </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -776,14 +770,14 @@ Accept: application/json; charset=utf-8
       <div class="clearer"></div>
     </div>
     <div class="footer">
-      &copy;2018, SynergyLabs.
+      &copy;2019, SynergyLabs.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.6</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.7</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.7.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |
-      <a href="../../_sources/api/CentralService/dataservice.txt"
+      <a href="../../_sources/api/CentralService/dataservice.rst.txt"
           rel="nofollow">Page source</a>
     </div>
 

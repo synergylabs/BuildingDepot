@@ -4,7 +4,7 @@
 DataService
 ###########
 
-The DataService is where all the data related to sensors and the timeseries data of each sensor resides. All the access control related functionality is defined at centralservice is also enforced within the DataService.  A new DataService can be defined in the CentralService at http://www.example.com:81/central/dataservice.
+The DataService is where all the data related to sensors and the timeseries data of each sensor resides. All the access control related functionality is defined at centralservice is also enforced within the DataService.  A new DataService can be defined in the CentralService at http://www.example.com:81/api/dataservice.
 
 Create a new DataService
 ************************
@@ -30,7 +30,8 @@ This request creates a new DataService with description,host and port where the 
 
    .. sourcecode:: http
 
-      POST /api/dataservice
+      POST /api/dataservice HTTP/1.1
+      Accept: application/json; charset=utf-8
 
       {
         "data":{
@@ -95,8 +96,7 @@ This request retrieves name, description, hostname and port to used in the datas
 
    .. sourcecode:: http
 
-      GET /api/dataservice/ds3
-
+      GET /api/dataservice/ds3 HTTP/1.1
       Accept: application/json; charset=utf-8
 
    **Example response**:
@@ -113,7 +113,7 @@ This request retrieves name, description, hostname and port to used in the datas
             "port":"83"
       }
 
-    **Example response** (for failure):
+   **Example response** (for failure):
 
    .. sourcecode:: http
 
@@ -147,7 +147,7 @@ This request deletes the requested DataService from Building Depot.
 
    .. sourcecode:: http
 
-      DELETE /api/dataservice/ds3
+      DELETE /api/dataservice/ds3 HTTP/1.1
       Accept: application/json; charset=utf-8
 
    **Example response**:
@@ -203,7 +203,9 @@ This request assigns a specific building to DataService. Once the building is as
 
    .. sourcecode:: http
 
-      POST /api/dataservice/ds1/buildings
+      POST /api/dataservice/ds1/buildings HTTP/1.1
+      Accept: application/json; charset=utf-8
+
 
       {
         "data":{
@@ -272,8 +274,7 @@ This request retrieves the names of buildings that the specified DataService hos
 
    .. sourcecode:: http
 
-      GET /api/dataservice/ds1/buildings
-
+      GET /api/dataservice/ds1/buildings HTTP/1.1
       Accept: application/json; charset=utf-8
 
    **Example response**:
@@ -325,7 +326,7 @@ This request removes specified buildings from a DataService.
 
    .. sourcecode:: http
 
-      DELETE /api/dataservice/ds1/buildings
+      DELETE /api/dataservice/ds1/buildings HTTP/1.1
       Accept: application/json; charset=utf-8
 
       {
@@ -393,7 +394,8 @@ This request grants CRUD (create/read/update/delete) privileges on the DataServi
 
    .. sourcecode:: http
 
-      POST /api/dataservice/ds1/admins
+      POST /api/dataservice/ds1/admins HTTP/1.1
+      Accept: application/json; charset=utf-8
 
       {
         "data":{
@@ -462,8 +464,7 @@ This request retrieves the list of users who have the admin privileges on the sp
 
    .. sourcecode:: http
 
-      GET /api/dataservice/ds1/buildings
-
+      GET /api/dataservice/ds1/buildings HTTP/1.1
       Accept: application/json; charset=utf-8
 
    **Example response**:
@@ -516,7 +517,7 @@ This request revokes admin privileges on DataService from the specified users.
 
    .. sourcecode:: http
 
-      DELETE /api/dataservice/ds1/admins
+      DELETE /api/dataservice/ds1/admins HTTP/1.1
       Accept: application/json; charset=utf-8
 
       {

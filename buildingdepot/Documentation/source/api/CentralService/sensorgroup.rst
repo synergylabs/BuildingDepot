@@ -4,7 +4,7 @@
 SensorGroups
 ############
 
-SensorGroups are a virtual collection of sensors that are created based on the tags that are specified. The list of sensors that belong to a SensorGroup can be changed by modifying the tags attached to this SensorGroup. All sensors having the current tags will fall under this SensorGroup automatically for any subsequent operations.SensorGroups can be defined in the CentralService at http://www.example.com:81/central/sensorgroup.
+SensorGroups are a virtual collection of sensors that are created based on the tags that are specified. The list of sensors that belong to a SensorGroup can be changed by modifying the tags attached to this SensorGroup. All sensors having the current tags will fall under this SensorGroup automatically for any subsequent operations.SensorGroups can be defined in the CentralService at http://www.example.com:81/api/sensorgroup.
 
 Create SensorGroup
 ******************
@@ -29,7 +29,8 @@ This request creates a new SensorGroup with the name and description in the buil
 
    .. sourcecode:: http
 
-      POST /api/sensor_group
+      POST /api/sensor_group HTTP/1.1
+      Accept: application/json; charset=utf-8
 
       {
         "name":"Test Sensor Group",
@@ -85,7 +86,7 @@ Note: The list of tags sent in this request will overwrite the previous list.
 
    .. sourcecode:: http
 
-      POST /api/sensor_group/test/tags
+      POST /api/sensor_group/test/tags HTTP/1.1
       Accept: application/json; charset=utf-8
 
 
@@ -140,7 +141,7 @@ This request retrieves two lists of key-value pairs, one list contains the array
 
    .. sourcecode:: http
 
-      GET /api/sensor_group/test/tags
+      GET /api/sensor_group/test/tags HTTP/1.1
       Accept: application/json; charset=utf-8
 
    **Example response**:

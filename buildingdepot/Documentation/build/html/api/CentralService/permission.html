@@ -1,47 +1,41 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
-
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
-    <title>Permission &mdash; BuildingDepot 3.2.5 documentation</title>
-    
+    <title>Permission &#8212; BuildingDepot 3.2.8 documentation</title>
     <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-    
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '../../',
-        VERSION:     '3.2.5',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
-      };
-    </script>
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <link rel="top" title="BuildingDepot 3.2.5 documentation" href="../../index.html" />
-    <link rel="up" title="CentralService APIs" href="index.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="User" href="user.html" />
     <link rel="prev" title="Usergroups" href="usergroup.html" />
    
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
   
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
-  </head>
-  <body role="document">  
+  </head><body>
+  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
+          
+
           <div class="body" role="main">
             
   <div class="section" id="permission">
 <h1>Permission<a class="headerlink" href="#permission" title="Permalink to this headline">¶</a></h1>
-<p>The Permissions are created between SensorGroups and UserGroups in Building Depot which come together to form the access control lists.Here we select a User Group and a Sensor Group and a permission value with which we want to associate these both. There are three levels of permission defined in BuildingDepot which are ‘d/r’ (deny read) ,’r’ (read), ‘r/w’ (read write) and &#8216;r/w/p&#8217; (read write permission). If there are multiple permission mappings between a user and a sensor then the one that is most restrictive is chosen. Permissions can be defined in the CentralService at <a class="reference external" href="http://www.example.com:81/central/permission">http://www.example.com:81/central/permission</a>.</p>
+<p>The Permissions are created between SensorGroups and UserGroups in Building Depot which come together to form the access control lists.Here we select a User Group and a Sensor Group and a permission value with which we want to associate these both. There are three levels of permission defined in BuildingDepot which are ‘d/r’ (deny read) ,’r’ (read), ‘r/w’ (read write) and ‘r/w/p’ (read write permission). If there are multiple permission mappings between a user and a sensor then the one that is most restrictive is chosen. Permissions can be defined in the CentralService at <a class="reference external" href="http://www.example.com:81/api/permission">http://www.example.com:81/api/permission</a>.</p>
 <div class="section" id="create-permission">
 <h2>Create Permission<a class="headerlink" href="#create-permission" title="Permalink to this headline">¶</a></h2>
 <p>This request creates a new Permission link between a UserGroup and a SensorGroup.</p>
@@ -55,21 +49,19 @@
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name" colspan="2">JSON Parameters:</th></tr>
-<tr class="field-odd field"><td>&nbsp;</td><td class="field-body"><ul class="first">
+<tr class="field-odd field"><td>&#160;</td><td class="field-body"><ul class="first simple">
 <li><dl class="first docutils">
-<dt><strong>data</strong> <cite>(dictionary)</cite> &#8211; Contains the permission value for sensorgroup and usergroup</dt>
+<dt><strong>data</strong> <cite>(dictionary)</cite> – Contains the permission value for sensorgroup and usergroup</dt>
 <dd><ul class="first last">
-<li><p class="first"><strong>sensor_group</strong> <cite>(string)</cite> &#8211; Name of the sensor_group</p>
-</li>
-<li><p class="first"><strong>user_group</strong> <cite>(string)</cite> &#8211; Name of the user_group</p>
-</li>
+<li><strong>sensor_group</strong> <cite>(string)</cite> – Name of the sensor_group</li>
+<li><strong>user_group</strong> <cite>(string)</cite> – Name of the user_group</li>
 <li><dl class="first docutils">
-<dt><strong>permission</strong> <cite>(string)</cite> &#8211; Permission level</dt>
-<dd><ul class="first last simple">
-<li><strong>r</strong> <cite>(string)</cite> &#8211; Read - Will give read only access to the sensors</li>
-<li><strong>rw</strong> <cite>(string)</cite> &#8211; Read-Write - Will give read and write access to the sensors</li>
-<li><strong>dr</strong> <cite>(string)</cite> &#8211; Deny-read - Will deny any access to the sensors</li>
-<li><strong>rwp</strong> <cite>(string)</cite> &#8211; Read-Write-Permission - Highest level of permission that can be assigned. Will give read and write access to the sensors. In addition to this the user will be able to add/remove tags from the sensor.</li>
+<dt><strong>permission</strong> <cite>(string)</cite> – Permission level</dt>
+<dd><ul class="first last">
+<li><strong>r</strong> <cite>(string)</cite> – Read - Will give read only access to the sensors</li>
+<li><strong>rw</strong> <cite>(string)</cite> – Read-Write - Will give read and write access to the sensors</li>
+<li><strong>dr</strong> <cite>(string)</cite> – Deny-read - Will deny any access to the sensors</li>
+<li><strong>rwp</strong> <cite>(string)</cite> – Read-Write-Permission - Highest level of permission that can be assigned. Will give read and write access to the sensors. In addition to this the user will be able to add/remove tags from the sensor.</li>
 </ul>
 </dd>
 </dl>
@@ -85,8 +77,8 @@
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">returns:</th><td class="field-body"><ul class="first simple">
-<li><strong>success</strong> <cite>(string)</cite> &#8211; Returns &#8216;True&#8217; if data is posted successfully otherwise &#8216;False&#8217;</li>
-<li><strong>error</strong> <cite>(string)</cite> &#8211; An additional value that will be present only if the request fails specifying the cause for failure</li>
+<li><strong>success</strong> <cite>(string)</cite> – Returns ‘True’ if data is posted successfully otherwise ‘False’</li>
+<li><strong>error</strong> <cite>(string)</cite> – An additional value that will be present only if the request fails specifying the cause for failure</li>
 </ul>
 </td>
 </tr>
@@ -105,19 +97,20 @@
 </table>
 <div class="compound">
 <p class="compound-first"><strong>Example request</strong>:</p>
-<div class="compound-middle highlight-http"><div class="highlight"><pre>POST /api/permission
+<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">POST</span> <span class="nn">/api/permission</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Accept</span><span class="o">:</span> <span class="l">application/json; charset=utf-8</span>
 
 {
   &quot;data&quot;:{
-      &quot;sensor_group&quot;:&quot;Test Sensor Group&quot;,
-      &quot;user_group&quot;:&quot;Test User Group&quot;,
+      &quot;sensor_group&quot;:&quot;Test_Sensor_Group&quot;,
+      &quot;user_group&quot;:&quot;Test_User_Group&quot;,
       &quot;permission&quot;:&quot;r&quot;
   }
 }
 </pre></div>
 </div>
 <p class="compound-middle"><strong>Example response</strong> (for success):</p>
-<div class="compound-middle highlight-http"><div class="highlight"><pre><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
 <span class="p">{</span>
@@ -126,7 +119,7 @@
 </pre></div>
 </div>
 <p class="compound-middle"><strong>Example response</strong> (for failure):</p>
-<div class="compound-last highlight-http"><div class="highlight"><pre><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<div class="compound-last highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
 <span class="p">{</span>
@@ -158,20 +151,20 @@
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>user_group</strong> (<em>string</em>) &#8211; Name of UserGroup (compulsory)</li>
-<li><strong>sensor_group</strong> (<em>string</em>) &#8211; Name of SensorGroup (compulsory)</li>
+<li><strong>user_group</strong> (<em>string</em>) – Name of UserGroup (compulsory)</li>
+<li><strong>sensor_group</strong> (<em>string</em>) – Name of SensorGroup (compulsory)</li>
 </ul>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><ul class="first simple">
-<li><strong>success</strong> <cite>(string)</cite> &#8211; Returns &#8216;True&#8217; if a permission exists between the sensor and user group otherwise &#8216;False&#8217;</li>
-<li><strong>permission</strong> <cite>(string)</cite> &#8211; Contains the permission level that are attached to this SensorGroup and UserGroup</li>
+<li><strong>success</strong> <cite>(string)</cite> – Returns ‘True’ if a permission exists between the sensor and user group otherwise ‘False’</li>
+<li><strong>permission</strong> <cite>(string)</cite> – Contains the permission level that are attached to this SensorGroup and UserGroup</li>
 </ul>
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
-<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> &#8211; Success</li>
-<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a> &#8211; Unauthorized Credentials</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> – Success</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a> – Unauthorized Credentials</li>
 </ul>
 </td>
 </tr>
@@ -181,12 +174,12 @@
 
 <div class="compound">
 <p class="compound-first"><strong>Example request</strong>:</p>
-<div class="compound-middle highlight-http"><div class="highlight"><pre>GET /api/permission?user_group=Test User Group&amp;sensor_group=Test Sensor Group
-Accept: application/json; charset=utf-8
+<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">GET</span> <span class="nn">/api/permission?user_group=Test_User_Group&amp;sensor_group=Test_Sensor_Group</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Accept</span><span class="o">:</span> <span class="l">application/json; charset=utf-8</span>
 </pre></div>
 </div>
 <p class="compound-middle"><strong>Example response</strong>:</p>
-<div class="compound-middle highlight-http"><div class="highlight"><pre><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
 <span class="p">{</span>
@@ -196,7 +189,7 @@ Accept: application/json; charset=utf-8
 </pre></div>
 </div>
 <p class="compound-middle"><strong>Example response</strong> (for failure):</p>
-<div class="compound-last highlight-http"><div class="highlight"><pre><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<div class="compound-last highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
 <span class="p">{</span>
@@ -218,19 +211,19 @@ Accept: application/json; charset=utf-8
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>user_group</strong> (<em>string</em>) &#8211; Name of UserGroup (compulsory)</li>
-<li><strong>sensor_group</strong> (<em>string</em>) &#8211; Name of SensorGroup (compulsory)</li>
+<li><strong>user_group</strong> (<em>string</em>) – Name of UserGroup (compulsory)</li>
+<li><strong>sensor_group</strong> (<em>string</em>) – Name of SensorGroup (compulsory)</li>
 </ul>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><ul class="first simple">
-<li><strong>success</strong> <cite>(string)</cite> &#8211; Returns &#8216;True&#8217; if a permission is deleted between the sensor and user group otherwise &#8216;False&#8217;</li>
+<li><strong>success</strong> <cite>(string)</cite> – Returns ‘True’ if a permission is deleted between the sensor and user group otherwise ‘False’</li>
 </ul>
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
-<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> &#8211; Success</li>
-<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a> &#8211; Unauthorized Credentials</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> – Success</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a> – Unauthorized Credentials</li>
 </ul>
 </td>
 </tr>
@@ -240,12 +233,12 @@ Accept: application/json; charset=utf-8
 
 <div class="compound">
 <p class="compound-first"><strong>Example request</strong>:</p>
-<div class="compound-middle highlight-http"><div class="highlight"><pre>DELETE /api/permission?user_group=Test User Group&amp;sensor_group=Test Sensor Group
-Accept: application/json; charset=utf-8
+<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">DELETE</span> <span class="nn">/api/permission?user_group=Test_User_Group&amp;sensor_group=Test_Sensor_Group</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Accept</span><span class="o">:</span> <span class="l">application/json; charset=utf-8</span>
 </pre></div>
 </div>
 <p class="compound-middle"><strong>Example response</strong>:</p>
-<div class="compound-middle highlight-http"><div class="highlight"><pre><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
 <span class="p">{</span>
@@ -254,7 +247,7 @@ Accept: application/json; charset=utf-8
 </pre></div>
 </div>
 <p class="compound-middle"><strong>Example response</strong> (for failure):</p>
-<div class="compound-last highlight-http"><div class="highlight"><pre><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<div class="compound-last highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
 <span class="p">{</span>
@@ -279,6 +272,7 @@ Accept: application/json; charset=utf-8
 
 
           </div>
+          
         </div>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
@@ -306,21 +300,20 @@ Accept: application/json; charset=utf-8
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
-      <li><a href="../../_sources/api/CentralService/permission.txt"
+      <li><a href="../../_sources/api/CentralService/permission.rst.txt"
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="../../search.html" method="get">
       <input type="text" name="q" />
       <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
+    </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -328,14 +321,14 @@ Accept: application/json; charset=utf-8
       <div class="clearer"></div>
     </div>
     <div class="footer">
-      &copy;2018, SynergyLabs.
+      &copy;2019, SynergyLabs.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.6</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.7</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.7.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |
-      <a href="../../_sources/api/CentralService/permission.txt"
+      <a href="../../_sources/api/CentralService/permission.rst.txt"
           rel="nofollow">Page source</a>
     </div>
 
