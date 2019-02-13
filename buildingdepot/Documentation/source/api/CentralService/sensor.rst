@@ -19,8 +19,8 @@ Creates a new Sensor point in BuildingDepot and returns the UUID.
    :json string building: Building in which the sensor is located
 
    :returns:
-      * **success** `(string)` -- Returns 'True' if data is posted succesfully otherwise 'False'
-      * **uuid** `(string)` -- Returns the uuid of the sensor on succesful creation
+      * **success** `(string)` -- Returns 'True' if data is posted successfully otherwise 'False'
+      * **uuid** `(string)` -- Returns the uuid of the sensor on successful creation
    :status 200: Success
    :status 401: Unauthorized Credentials  
 

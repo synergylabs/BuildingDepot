@@ -4,7 +4,7 @@
 User
 ####
 
-The Users of BuildingDepot have either of the two roles SuperUser and Default User through which we maintain the access control. The Super User is the admin of BuildingDepot who has permission to add,remove,read,write,delete any entity. The Default User has limited access and does not have permission to add,remove any building and dataservice related entity.Only the SuperUser can add another user and the SuperUser by default in every Building Depot installtion is admin@buildingdepot.org. A new User can be added by the SuperUser in the CentralService at http://www.example.com:81/api/user.
+The Users of BuildingDepot have either of the two roles SuperUser and Default User through which we maintain the access control. The Super User is the admin of BuildingDepot who has permission to add,remove,read,write,delete any entity. The Default User has limited access and does not have permission to add,remove any building and dataservice related entity.Only the SuperUser can add another user and the SuperUser by default in every Building Depot installation is admin@buildingdepot.org. A new User can be added by the SuperUser in the CentralService at http://www.example.com:81/api/user.
 
 Add a new User
 **************
