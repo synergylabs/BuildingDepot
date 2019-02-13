@@ -115,6 +115,11 @@ function install_packages {
     apt-get install -y apt-transport-https
     source /etc/lsb-release
 
+
+    #Add keys for rabbitmq
+    echo "deb https://dl.bintray.com/rabbitmq/debian ${DISTRIB_CODENAME} main" | sudo tee /etc/apt/sources.list.d/bintray.rabbitmq.list
+    echo "deb https://dl.bintray.com/rabbitmq-erlang/debian ${DISTRIB_CODENAME} erlang" | sudo tee -a /etc/apt/sources.list.d/bintray.rabbitmq.list
+    wget -O- https://www.rabbitmq.com/rabbitmq-release-signing-key.asc | sudo apt-key add -
     # Add keys to install influxdb
     curl -sL https://repos.influxdata.com/influxdb.key | sudo apt-key add -
     echo "deb https://repos.influxdata.com/${DISTRIB_ID,,} ${DISTRIB_CODENAME} stable" | sudo tee /etc/apt/sources.list.d/influxdb.list
