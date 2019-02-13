@@ -174,7 +174,7 @@ def load_token(access_token=None, refresh_token=None):
 @oauth.tokensetter
 def save_token(token, request, *args, **kwargs):
     toks = Token.objects(client=request.client, user=request.user)
-    previous_tokens = []
+    previous_tokens = ['oauth']
     for t in toks:
         previous_tokens.append(''.join(['oauth:', t.access_token]))
         t.delete()

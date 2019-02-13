@@ -38,7 +38,11 @@ class AppService(MethodView):
         if email is None:
             return jsonify(responses.missing_parameters)
         apps = Application._get_collection().find({'user': email})
-        return jsonify({'success': 'True', 'app_list': apps[0]['apps']})
+        if apps.count() == 0:
+            app_list = []
+        else:
+            app_list = apps[0]['apps']
+        return jsonify({'success': 'True', 'app_list': app_list})
 
     @check_oauth
     def post(self):

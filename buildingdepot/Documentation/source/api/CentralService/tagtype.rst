@@ -4,7 +4,7 @@
 TagType
 #######
 
-Tag Type are used to describe the structure and domains of buildings and help in categorising sensors that can be easily allocated in groups to different users. TagType can be defined in the CentralService at http://www.example.com:81/api/tagtype. TagsTypes have a hierarchical structure i.e. a tag can have both parent tags and children tags. They play a very crucial role within BuildingDepot in defining permissions that restrict access to sensors based on the permissions a user has. Also, A building template is supported by a group of tag types allocated to it.
+Tag Types are used to describe the structure and domains of buildings and help in categorising sensors that can be easily allocated in groups to different users. TagType can be defined in the CentralService at http://www.example.com:81/api/tagtype. TagsTypes have a hierarchical structure i.e. a tag can have both parent tags and children tags. They play a very crucial role within BuildingDepot in defining permissions that restrict access to sensors based on the permissions a user has. Also, A building template is supported by a group of tag types allocated to it.
 
 Add TagType
 ***********
@@ -19,7 +19,7 @@ This request creates a new TagType in BuildingDepot which will be used in the Bu
           * **description** `(string)` `(optional)` -- Description of the Tag Type
           * **parents** `(string)` `(optional)` -- Parent Tag Types
    :returns:
-      * **success** `(array)` -- Returns 'True' if data is posted succesfully otherwise 'False'
+      * **success** `(array)` -- Returns 'True' if data is posted successfully otherwise 'False'
    :status 200: Success
    :status 401: Unauthorized Credentials  
 
@@ -77,7 +77,7 @@ This request fetches information about a TagType in BuildingDepot.
       * **name** `(string)` -- Name of the Tag Type
       * **description** `(string)` -- Description of the Tag Type
       * **parents** `(string)` -- Parents of this Tag Type.
-      * **children** `(string)` -- Childrens of this Tag Type.
+      * **children** `(string)` -- Children of this Tag Type.
    :status 200: Success
    :status 401: Unauthorized Credentials
 

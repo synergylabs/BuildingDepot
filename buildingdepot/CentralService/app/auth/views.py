@@ -72,7 +72,7 @@ def token_gen(client_id, client_secret):
     client = Client.objects(client_id=client_id, client_secret=client_secret).first()
     if client is not None:
         toks = Token.objects(client=client)
-        previous_tokens = []
+        previous_tokens = ['oauth']
         for t in toks:
             previous_tokens.append(''.join(['oauth:', t.access_token]))
             t.delete()
