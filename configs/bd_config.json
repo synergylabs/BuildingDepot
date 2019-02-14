@@ -1,15 +1,15 @@
 {
-  "access_token": "ya29.GluFBmrJ_km58xGsbPozKcqzyfBuvcaGWpdCh7zGxwAyLbXtE24slq9jaH44d51WZI3OaXk4RJA3kMuTzcdiKkyND5bCl5DpQNzpPdjZMKmSIqDWHU040r0ggkby", 
-  "key_path": "/etc/letsencrypt/live/bd-testbed.ucsd.edu/privkey.pem", 
-  "client_id": "266865174382-95tvm4in05j181rj3bkleg9tm9qpme4f.apps.googleusercontent.com", 
-  "client_secret": "IGuYmOWRh0bc4p_RY59Yp10a", 
-  "cert_path": "/etc/letsencrypt/live/bd-testbed.ucsd.edu/fullchain.pem", 
-  "ip_address": "bd-testbed.ucsd.edu", 
-  "email": "jbkoh@eng.ucsd.edu", 
-  "refresh_token": "1/PF1FE6m3CxToYXSCW_JMqrat5gaaRPdV8DakMULdoSIf-dUBJjN8bGhRs1Dr9fTP",
-  "redis_pwd": "redis_pwd",
-  "influx_user": "bd_influx_admin",
-  "influx_pwd": "influx_bd_pw",
-  "mongo_user": "bd_mongo_admin",
-  "mongo_pwd": "mongo_bd_pw"
+  "access_token": "",
+  "key_path": "",
+  "client_id": "",
+  "client_secret": "",
+  "cert_path": "",
+  "ip_address": "",
+  "email": "",
+  "refresh_token": "",
+  "redis_pwd": "",
+  "influx_user": "",
+  "influx_pwd": "",
+  "mongo_user": "",
+  "mongo_pwd": ""
 }
