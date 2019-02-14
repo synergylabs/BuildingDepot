@@ -70,8 +70,8 @@ If there already exists an application with the given name, this API call has no
          * **name** `(string)` -- The name of the new application to be registered.
 
    :returns:
-      * **success** `(string)` -- Returns 'True' if adding a new application was successful or an application with the given name already exists. Othersie 'False'
-      * **app_id** `(string)` -- If successful, contains the new RabitMQ channel ID that corresponds to the new application.
+      * **success** `(string)` -- Returns 'True' if adding a new application was successful or an application with the given name already exists. Otherwise 'False'
+      * **app_id** `(string)` -- If successful, contains the new RabbitMQ channel ID that corresponds to the new application.
 
    :status 200: Success
    :status 401: Unauthorized Credentials  
@@ -137,7 +137,7 @@ This deletes an app of the current user.
          * **name** `(string)` -- The name of the application to be deleted.
 
    :returns:
-      * **success** `(string)` -- Returns 'True' if adding a new application was successful or an application with the given name already exists. Othersie 'False'
+      * **success** `(string)` -- Returns 'True' if adding a new application was successful or an application with the given name already exists. Otherwise 'False'
       * **error** `(string)` -- Details of an error if unsuccessful
 
    :status 200: Success

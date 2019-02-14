@@ -53,7 +53,7 @@
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><ul class="first simple">
-<li><strong>success</strong> <cite>(string)</cite> – Returns ‘True’ if data is posted succesfully otherwise ‘False’</li>
+<li><strong>success</strong> <cite>(string)</cite> – Returns ‘True’ if data is posted successfully otherwise ‘False’</li>
 <li><strong>error</strong> <cite>(string)</cite> – An additional value that will be present only if the request fails specifying the cause for failure</li>
 </ul>
 </td>
@@ -79,7 +79,7 @@
 }
 </pre></div>
 </div>
-<p class="compound-middle"><strong>Example response</strong> (for succcess):</p>
+<p class="compound-middle"><strong>Example response</strong> (for success):</p>
 <div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
@@ -118,12 +118,19 @@
 </tr>
 <tr class="field-even field"><th class="field-name" colspan="2">JSON Parameters:</th></tr>
 <tr class="field-even field"><td>&#160;</td><td class="field-body"><ul class="first simple">
-<li><strong>data</strong> <cite>(list)</cite> – List of user ID’s</li>
+<li><dl class="first docutils">
+<dt><strong>data</strong> <cite>(dictionary)</cite> – Contains the information of the users to be added to the UserGroup.</dt>
+<dd><ul class="first last">
+<li><strong>users</strong> <cite>(list)</cite> – List of user ID’s</li>
+</ul>
+</dd>
+</dl>
+</li>
 </ul>
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><ul class="first simple">
-<li><strong>success</strong> <cite>(string)</cite> – Returns ‘True’ if data is posted succesfully otherwise ‘False’</li>
+<li><strong>success</strong> <cite>(string)</cite> – Returns ‘True’ if data is posted successfully otherwise ‘False’</li>
 <li><strong>error</strong> <cite>(string)</cite> – An additional value that will be present only if the request fails specifying the cause for failure</li>
 </ul>
 </td>
@@ -144,14 +151,16 @@
 <span class="na">Accept</span><span class="o">:</span> <span class="l">application/json; charset=utf-8</span>
 
 {
-  &quot;data&quot;:[
+  &quot;data&quot;:{
+      &quot;users&quot;:[
            &quot;synergy@gmail.com&quot;,
            &quot;test@gmail.com&quot;
          ]
+  }
 }
 </pre></div>
 </div>
-<p class="compound-middle"><strong>Example response</strong> (for succcess):</p>
+<p class="compound-middle"><strong>Example response</strong> (for success):</p>
 <div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 

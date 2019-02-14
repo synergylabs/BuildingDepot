@@ -16,7 +16,7 @@ This request creates a new UserGroup with the name and description as specified 
    :param string name: Name of UserGroup
    :param string description (optional): Descrption for UserGroup
    :returns:
-      * **success** `(string)` -- Returns 'True' if data is posted succesfully otherwise 'False'
+      * **success** `(string)` -- Returns 'True' if data is posted successfully otherwise 'False'
       * **error** `(string)` -- An additional value that will be present only if the request fails specifying the cause for failure
    :status 200: Success
    :status 401: Unauthorized Credentials  
@@ -35,7 +35,7 @@ This request creates a new UserGroup with the name and description as specified 
         "description": "Description for User Group"
       }
 
-   **Example response** (for succcess):
+   **Example response** (for success):
 
    .. sourcecode:: http
 
@@ -69,9 +69,10 @@ Note: The list of user id's sent in this request will overwrite the previous lis
 
    :param string name: Name of UserGroup
    :JSON Parameters:
-      * **data** `(list)` -- List of user ID's
+      * **data** `(dictionary)` -- Contains the information of the users to be added to the UserGroup.
+          * **users** `(list)` -- List of user ID's
    :returns:
-      * **success** `(string)` -- Returns 'True' if data is posted succesfully otherwise 'False'
+      * **success** `(string)` -- Returns 'True' if data is posted successfully otherwise 'False'
       * **error** `(string)` -- An additional value that will be present only if the request fails specifying the cause for failure
    :status 200: Success
    :status 401: Unauthorized Credentials  
@@ -86,13 +87,15 @@ Note: The list of user id's sent in this request will overwrite the previous lis
       Accept: application/json; charset=utf-8
 
       {
-        "data":[
+        "data":{
+            "users":[
                  "synergy@gmail.com",
                  "test@gmail.com"
                ]
+        }
       }
 
-   **Example response** (for succcess):
+   **Example response** (for success):
 
    .. sourcecode:: http
 

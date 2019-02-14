@@ -21,7 +21,7 @@ Note: The list of metadata points sent in this request will overwrite the previo
           * **name** `(string)` -- Name of the metadata point
           * **value** `(string)` -- Value of the metadata point
    :returns:
-      * **success** `(string)` -- Returns 'True' if data is posted succesfully otherwise 'False'
+      * **success** `(string)` -- Returns 'True' if data is posted successfully otherwise 'False'
    :status 200: Success
    :status 401: Unauthorized Credentials  
 
@@ -62,7 +62,7 @@ Note: The list of metadata points sent in this request will overwrite the previo
 Read Metadata
 *************
 
-This retreives a list of the metadata key-value pairs that are attached to the sensor specified in the request.
+This retrieves a list of the metadata key-value pairs that are attached to the sensor specified in the request.
 
 .. http:get:: /api/sensor/<name>/metadata
 

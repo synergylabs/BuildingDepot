@@ -63,8 +63,8 @@ This request creates a new TagType in BuildingDepot which will be used in the Bu
         "error": "List of parents tags not valid"
       }
 
-Get TagTypes
-************
+Get TagType
+***********
 
 This request fetches information about a TagType in BuildingDepot.
 
