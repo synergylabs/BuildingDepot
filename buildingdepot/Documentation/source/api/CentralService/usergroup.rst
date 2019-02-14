@@ -13,8 +13,10 @@ This request creates a new UserGroup with the name and description as specified 
 
 .. http:post:: /api/user_group
 
-   :param string name: Name of UserGroup
-   :param string description (optional): Descrption for UserGroup
+   :JSON Parameters:
+      * **data** `(dictionary)` -- Contains the information about the UserGroup
+          * **name** `(string)` -- Name of the UserGroup
+          * **description** `(string)` -- Description of the UserGroup
    :returns:
       * **success** `(string)` -- Returns 'True' if data is posted successfully otherwise 'False'
       * **error** `(string)` -- An additional value that will be present only if the request fails specifying the cause for failure
@@ -31,8 +33,10 @@ This request creates a new UserGroup with the name and description as specified 
       Accept: application/json; charset=utf-8
 
       {
-        "name": "Test User Group",
-        "description": "Description for User Group"
+        "data": {
+                "name": "Test User Group",
+                "description": "Description for User Group"
+            }
       }
 
    **Example response** (for success):
@@ -57,6 +61,104 @@ This request creates a new UserGroup with the name and description as specified 
         "success": "False",
         "error": "No Name"
       }
+
+Get UserGroup Details
+*********************
+
+This request retrieves the details of a UserGroup
+
+.. http:get:: /api/user_group/<name>
+
+   :param string name: Name of user group (compulsory)
+   :returns:
+      * **name** `(string)` -- Contains the name of the UserGroup
+      * **description** `(string)` -- Contains the description of the UserGroup
+
+   :status 200: Success
+   :status 401: Unauthorized Credentials
+
+.. compound::
+
+   **Example request**:
+
+   .. sourcecode:: http
+
+      GET /api/user_group/Test HTTP/1.1
+      Accept: application/json; charset=utf-8
+
+   **Example response** (for success):
+
+   .. sourcecode:: http
+
+      HTTP/1.1 200 OK
+      Content-Type: application/json
+
+      {
+        "success" : "true",
+        "name":"Test",
+        "description":"A UserGroup for Test"
+      }
+
+   **Example response** (for failure):
+
+   .. sourcecode:: http
+
+      HTTP/1.1 200 OK
+      Content-Type: application/json
+
+      {
+        "success": "False",
+        "error": "Usergroup does not exist"
+      }
+
+
+Delete UserGroup
+****************
+
+This request deletes the UserGroup
+
+.. http:delete:: /api/user_group/Test
+
+
+   :param string email: Name of the UserGroup
+   :returns:
+      * **success** `(string)` -- Returns 'True' if the UserGroup is successfully deleted otherwise 'False'
+
+   :status 200: Success
+   :status 401: Unauthorized Credentials
+
+.. compound::
+
+   **Example request**:
+
+   .. sourcecode:: http
+
+      DELETE /api/user_group/<name> HTTP/1.1
+      Accept: application/json; charset=utf-8
+
+   **Example response** (for success):
+
+   .. sourcecode:: http
+
+      HTTP/1.1 200 OK
+      Content-Type: application/json
+
+      {
+        "success": "True"
+      }
+
+   **Example response** (for failure):
+
+   .. sourcecode:: http
+
+      HTTP/1.1 200 OK
+      Content-Type: application/json
+
+      {
+        "success": "False",
+        "error": "Usergroup does not exist"
+      }
+
 
 Add users to UserGroup
 **********************

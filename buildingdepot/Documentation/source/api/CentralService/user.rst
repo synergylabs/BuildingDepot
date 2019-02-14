@@ -93,7 +93,6 @@ This request retrieves first name, last_name, email and role of the User specifi
       * **email** `(string)` --  Email of the User
       * **role** `(string)` --  role of the User
 
-
    :status 200: Success
    :status 401: Unauthorized Credentials  
 

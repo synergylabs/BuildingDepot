@@ -46,9 +46,17 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>name</strong> (<em>string</em>) – Name of UserGroup</li>
-<li><strong>description (optional)</strong> (<em>string</em>) – Descrption for UserGroup</li>
+<tr class="field-odd field"><th class="field-name" colspan="2">JSON Parameters:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body"><ul class="first simple">
+<li><dl class="first docutils">
+<dt><strong>data</strong> <cite>(dictionary)</cite> – Contains the information about the UserGroup</dt>
+<dd><ul class="first last">
+<li><strong>name</strong> <cite>(string)</cite> – Name of the UserGroup</li>
+<li><strong>description</strong> <cite>(string)</cite> – Description of the UserGroup</li>
+</ul>
+</dd>
+</dl>
+</li>
 </ul>
 </td>
 </tr>
@@ -74,8 +82,10 @@
 <span class="na">Accept</span><span class="o">:</span> <span class="l">application/json; charset=utf-8</span>
 
 {
-  &quot;name&quot;: &quot;Test User Group&quot;,
-  &quot;description&quot;: &quot;Description for User Group&quot;
+  &quot;data&quot;: {
+          &quot;name&quot;: &quot;Test User Group&quot;,
+          &quot;description&quot;: &quot;Description for User Group&quot;
+      }
 }
 </pre></div>
 </div>
@@ -95,6 +105,123 @@
 <span class="p">{</span>
   <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;False&quot;</span><span class="p">,</span>
   <span class="nt">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;No Name&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="get-usergroup-details">
+<h2>Get UserGroup Details<a class="headerlink" href="#get-usergroup-details" title="Permalink to this headline">¶</a></h2>
+<p>This request retrieves the details of a UserGroup</p>
+<dl class="get">
+<dt id="get--api-user_group--name-">
+<code class="descname">GET </code><code class="descname">/api/user_group/&lt;name&gt;</code><a class="headerlink" href="#get--api-user_group--name-" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>name</strong> (<em>string</em>) – Name of user group (compulsory)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><ul class="first simple">
+<li><strong>name</strong> <cite>(string)</cite> – Contains the name of the UserGroup</li>
+<li><strong>description</strong> <cite>(string)</cite> – Contains the description of the UserGroup</li>
+</ul>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> – Success</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a> – Unauthorized Credentials</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="compound">
+<p class="compound-first"><strong>Example request</strong>:</p>
+<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">GET</span> <span class="nn">/api/user_group/Test</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Accept</span><span class="o">:</span> <span class="l">application/json; charset=utf-8</span>
+</pre></div>
+</div>
+<p class="compound-middle"><strong>Example response</strong> (for success):</p>
+<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+
+<span class="p">{</span>
+  <span class="nt">&quot;success&quot;</span> <span class="p">:</span> <span class="s2">&quot;true&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;Test&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="s2">&quot;A UserGroup for Test&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p class="compound-middle"><strong>Example response</strong> (for failure):</p>
+<div class="compound-last highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+
+<span class="p">{</span>
+  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;False&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;Usergroup does not exist&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="delete-usergroup">
+<h2>Delete UserGroup<a class="headerlink" href="#delete-usergroup" title="Permalink to this headline">¶</a></h2>
+<p>This request deletes the UserGroup</p>
+<dl class="delete">
+<dt id="delete--api-user_group-Test">
+<code class="descname">DELETE </code><code class="descname">/api/user_group/Test</code><a class="headerlink" href="#delete--api-user_group-Test" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>email</strong> (<em>string</em>) – Name of the UserGroup</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><ul class="first simple">
+<li><strong>success</strong> <cite>(string)</cite> – Returns ‘True’ if the UserGroup is successfully deleted otherwise ‘False’</li>
+</ul>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> – Success</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a> – Unauthorized Credentials</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="compound">
+<p class="compound-first"><strong>Example request</strong>:</p>
+<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">DELETE</span> <span class="nn">/api/user_group/&lt;name&gt;</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Accept</span><span class="o">:</span> <span class="l">application/json; charset=utf-8</span>
+</pre></div>
+</div>
+<p class="compound-middle"><strong>Example response</strong> (for success):</p>
+<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+
+<span class="p">{</span>
+  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;True&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p class="compound-middle"><strong>Example response</strong> (for failure):</p>
+<div class="compound-last highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+
+<span class="p">{</span>
+  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;False&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;Usergroup does not exist&quot;</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -244,6 +371,8 @@
   <ul>
 <li><a class="reference internal" href="#">Usergroups</a><ul>
 <li><a class="reference internal" href="#create-usergroup">Create UserGroup</a></li>
+<li><a class="reference internal" href="#get-usergroup-details">Get UserGroup Details</a></li>
+<li><a class="reference internal" href="#delete-usergroup">Delete UserGroup</a></li>
 <li><a class="reference internal" href="#add-users-to-usergroup">Add users to UserGroup</a></li>
 <li><a class="reference internal" href="#get-list-of-users-in-usergroup">Get list of users in UserGroup</a></li>
 </ul>

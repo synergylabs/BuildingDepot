@@ -21,10 +21,12 @@ The first datapoint that is posted to the uuid defines the datatype for all furt
 
    Within a singe POST request data can be posted to multiple sensor points. The format for each sensor point in the list should be as follows.
 
-   :json string sensor_id: UUID of the sensor to which data has to be posted
-   :json list samples:
-       * A list of the data points that have to be added to the time-series of the sensor point given by sensor_id. Each item in the list has to be of the following format:
-       * [{ "time": A unix timestamp of a sampling, "value": A sensor value } ]
+   :JSON Parameters:
+      * **data** `(list of dictionaries)` -- Contains the information of the tag to be added to the sensor.
+          * **sensor_id** `(string)` -- UUID of the sensor to which data has to be posted
+          * **samples** `(list)` -- A list of the data points that have to be added to the time-series of the sensor point given by sensor_id. Each item in the list has the following information:
+              * **time** `(timestamp)` -- Unix timestamp of a sampling
+              * **value** `(int/float)` -- Sensor value
    :returns:
       * **success** `(string)` -- Returns 'True' if data is posted successfully otherwise 'False'
    :status 200: Success
@@ -39,34 +41,35 @@ The first datapoint that is posted to the uuid defines the datatype for all furt
       POST /api/sensor/timeseries HTTP/1.1
       Accept: application/json; charset=utf-8
 
-      [
-        {
-          "sensor_id":"a5d6277e-4b51-4056-b9fd-0a6505b4f5a6",
-          "samples":[
-                  {
-                    "value":24.56,
-                    "time":1225865462
-                  },
-                  {
-                    "value":23.12,
-                    "time":1225865500
-                  }
-                 ]
-        },
-        {
-          "sensor_id":"cee06227-72e5-49d2-94f1-20c501ca2afa",
-          "samples":[
-                  {
-                    "value":24.56,
-                    "time":1225865462
-                  },
-                  {
-                    "value":23.12,
-                    "time":1225865500
-                  }
-                 ]
+      { "data":     [
+                        {
+                          "sensor_id":"a5d6277e-4b51-4056-b9fd-0a6505b4f5a6",
+                          "samples":[
+                                  {
+                                    "value":24.56,
+                                    "time":1225865462
+                                  },
+                                  {
+                                    "value":23.12,
+                                    "time":1225865500
+                                  }
+                                 ]
+                        },
+                        {
+                          "sensor_id":"cee06227-72e5-49d2-94f1-20c501ca2afa",
+                          "samples":[
+                                  {
+                                    "value":24.56,
+                                    "time":1225865462
+                                  },
+                                  {
+                                    "value":23.12,
+                                    "time":1225865500
+                                  }
+                                 ]
+                        }
+                      ]
         }
-      ]
 
    **Example response**:
 

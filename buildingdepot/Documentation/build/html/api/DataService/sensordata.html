@@ -51,11 +51,22 @@ Sensor access is restricted to Central Service <cite>Users</cite> with permissio
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name" colspan="2">JSON Parameters:</th></tr>
 <tr class="field-odd field"><td>&#160;</td><td class="field-body"><ul class="first simple">
-<li><strong>sensor_id</strong> (<em>string</em>) – UUID of the sensor to which data has to be posted</li>
-<li><strong>samples</strong> (<em>list</em>) – <ul>
-<li>A list of the data points that have to be added to the time-series of the sensor point given by sensor_id. Each item in the list has to be of the following format:</li>
-<li>[{ “time”: A unix timestamp of a sampling, “value”: A sensor value } ]</li>
+<li><dl class="first docutils">
+<dt><strong>data</strong> <cite>(list of dictionaries)</cite> – Contains the information of the tag to be added to the sensor.</dt>
+<dd><ul class="first last">
+<li><strong>sensor_id</strong> <cite>(string)</cite> – UUID of the sensor to which data has to be posted</li>
+<li><dl class="first docutils">
+<dt><strong>samples</strong> <cite>(list)</cite> – A list of the data points that have to be added to the time-series of the sensor point given by sensor_id. Each item in the list has the following information:</dt>
+<dd><ul class="first last">
+<li><strong>time</strong> <cite>(timestamp)</cite> – Unix timestamp of a sampling</li>
+<li><strong>value</strong> <cite>(int/float)</cite> – Sensor value</li>
 </ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
 </li>
 </ul>
 </td>
@@ -80,34 +91,35 @@ Sensor access is restricted to Central Service <cite>Users</cite> with permissio
 <div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">POST</span> <span class="nn">/api/sensor/timeseries</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
 <span class="na">Accept</span><span class="o">:</span> <span class="l">application/json; charset=utf-8</span>
 
-[
-  {
-    &quot;sensor_id&quot;:&quot;a5d6277e-4b51-4056-b9fd-0a6505b4f5a6&quot;,
-    &quot;samples&quot;:[
-            {
-              &quot;value&quot;:24.56,
-              &quot;time&quot;:1225865462
-            },
-            {
-              &quot;value&quot;:23.12,
-              &quot;time&quot;:1225865500
-            }
-           ]
-  },
-  {
-    &quot;sensor_id&quot;:&quot;cee06227-72e5-49d2-94f1-20c501ca2afa&quot;,
-    &quot;samples&quot;:[
-            {
-              &quot;value&quot;:24.56,
-              &quot;time&quot;:1225865462
-            },
-            {
-              &quot;value&quot;:23.12,
-              &quot;time&quot;:1225865500
-            }
-           ]
+{ &quot;data&quot;:     [
+                  {
+                    &quot;sensor_id&quot;:&quot;a5d6277e-4b51-4056-b9fd-0a6505b4f5a6&quot;,
+                    &quot;samples&quot;:[
+                            {
+                              &quot;value&quot;:24.56,
+                              &quot;time&quot;:1225865462
+                            },
+                            {
+                              &quot;value&quot;:23.12,
+                              &quot;time&quot;:1225865500
+                            }
+                           ]
+                  },
+                  {
+                    &quot;sensor_id&quot;:&quot;cee06227-72e5-49d2-94f1-20c501ca2afa&quot;,
+                    &quot;samples&quot;:[
+                            {
+                              &quot;value&quot;:24.56,
+                              &quot;time&quot;:1225865462
+                            },
+                            {
+                              &quot;value&quot;:23.12,
+                              &quot;time&quot;:1225865500
+                            }
+                           ]
+                  }
+                ]
   }
-]
 </pre></div>
 </div>
 <p class="compound-middle"><strong>Example response</strong>:</p>

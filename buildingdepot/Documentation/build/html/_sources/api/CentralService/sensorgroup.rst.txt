@@ -13,9 +13,11 @@ This request creates a new SensorGroup with the name and description in the buil
 
 .. http:post:: /api/sensor_group
 
-   :json string name: Name of the sensor group
-   :json string building: Building to which this sensor group belongs
-   :json string description: Description for the sensor group
+    :JSON Parameters:
+      * **data** `(dictionary)` -- Contains the information about the SensorGroup
+          * **name** `(string)` -- Name of the SensorGroup
+          * **building** `(string)` -- Building to which this sensor group belongs
+          * **description** `(string)` -- Description of the SensorGroup
 
    :returns:
       * **success** `(string)` -- Returns 'True' if data is posted successfully otherwise 'False'
@@ -32,10 +34,11 @@ This request creates a new SensorGroup with the name and description in the buil
       POST /api/sensor_group HTTP/1.1
       Accept: application/json; charset=utf-8
 
-      {
-        "name":"Test Sensor Group",
-        "building":"NSH",
-        "description":"Description for Sensor Group"
+      { "data": {
+                    "name":"Test Sensor Group",
+                    "building":"NSH",
+                    "description":"Description for Sensor Group"
+                }
       }
 
    **Example response** (for success):
@@ -60,6 +63,104 @@ This request creates a new SensorGroup with the name and description in the buil
         "success": "False",
         "error": "Building does not exist"
       }
+
+Get SensorGroup Details
+***********************
+
+This request retrieves the details of a SensorGroup
+
+.. http:get:: /api/sensor_group/<name>
+
+   :param string name: Name of Sensor group (compulsory)
+   :returns:
+      * **name** `(string)` -- Contains the name of the SensorGroup
+      * **description** `(string)` -- Contains the description of the SensorGroup
+      * **building** `(string)` -- Contains the name of the building of the SensorGroup
+
+   :status 200: Success
+   :status 401: Unauthorized Credentials
+
+.. compound::
+
+   **Example request**:
+
+   .. sourcecode:: http
+
+      GET /api/sensor_group/Test HTTP/1.1
+      Accept: application/json; charset=utf-8
+
+   **Example response** (for success):
+
+   .. sourcecode:: http
+
+      HTTP/1.1 200 OK
+      Content-Type: application/json
+
+      {
+        "success" : "true"
+        "name":"Test",
+        "description": "A SensorGroup for Test"
+        "building":"NSH"
+      }
+
+   **Example response** (for failure):
+
+   .. sourcecode:: http
+
+      HTTP/1.1 200 OK
+      Content-Type: application/json
+
+      {
+        "success": "False",
+        "error": "SensorGroup does not exist"
+      }
+
+Delete SensorGroup
+******************
+
+This request deletes the SensorGroup
+
+.. http:delete:: /api/sensor_group/<name>
+
+   :param string email: Name of the SensorGroup
+   :returns:
+      * **success** `(string)` -- Returns 'True' if the SensorGroup is successfully deleted otherwise 'False'
+
+   :status 200: Success
+   :status 401: Unauthorized Credentials
+
+.. compound::
+
+   **Example request**:
+
+   .. sourcecode:: http
+
+      DELETE /api/sensor_group/Test HTTP/1.1
+      Accept: application/json; charset=utf-8
+
+   **Example response (for success)**:
+
+   .. sourcecode:: http
+
+      HTTP/1.1 200 OK
+      Content-Type: application/json
+
+      {
+        "success": "True"
+      }
+
+   **Example response** (for failure):
+
+   .. sourcecode:: http
+
+      HTTP/1.1 200 OK
+      Content-Type: application/json
+
+      {
+        "success": "False",
+        "error": "SensorGroup does not exist"
+      }
+
 
 Add tags to SensorGroup
 ***********************

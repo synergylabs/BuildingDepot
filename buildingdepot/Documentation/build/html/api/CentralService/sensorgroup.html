@@ -42,25 +42,40 @@
 <dl class="post">
 <dt id="post--api-sensor_group">
 <code class="descname">POST </code><code class="descname">/api/sensor_group</code><a class="headerlink" href="#post--api-sensor_group" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
+<dd><blockquote>
+<div><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name" colspan="2">JSON Parameters:</th></tr>
-<tr class="field-odd field"><td>&#160;</td><td class="field-body"><ul class="first simple">
-<li><strong>name</strong> (<em>string</em>) – Name of the sensor group</li>
-<li><strong>building</strong> (<em>string</em>) – Building to which this sensor group belongs</li>
-<li><strong>description</strong> (<em>string</em>) – Description for the sensor group</li>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body"><ul class="first last simple">
+<li><dl class="first docutils">
+<dt><strong>data</strong> <cite>(dictionary)</cite> – Contains the information about the SensorGroup</dt>
+<dd><ul class="first last">
+<li><strong>name</strong> <cite>(string)</cite> – Name of the SensorGroup</li>
+<li><strong>building</strong> <cite>(string)</cite> – Building to which this sensor group belongs</li>
+<li><strong>description</strong> <cite>(string)</cite> – Description of the SensorGroup</li>
+</ul>
+</dd>
+</dl>
+</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><ul class="first simple">
+</tbody>
+</table>
+</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><ul class="first simple">
 <li><strong>success</strong> <cite>(string)</cite> – Returns ‘True’ if data is posted successfully otherwise ‘False’</li>
 <li><strong>error</strong> <cite>(string)</cite> – An additional value that will be present only if the request fails specifying the cause for failure</li>
 </ul>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
+<tr class="field-even field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
 <li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> – Success</li>
 <li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a> – Unauthorized Credentials</li>
 </ul>
@@ -75,10 +90,11 @@
 <div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">POST</span> <span class="nn">/api/sensor_group</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
 <span class="na">Accept</span><span class="o">:</span> <span class="l">application/json; charset=utf-8</span>
 
-{
-  &quot;name&quot;:&quot;Test Sensor Group&quot;,
-  &quot;building&quot;:&quot;NSH&quot;,
-  &quot;description&quot;:&quot;Description for Sensor Group&quot;
+{ &quot;data&quot;: {
+              &quot;name&quot;:&quot;Test Sensor Group&quot;,
+              &quot;building&quot;:&quot;NSH&quot;,
+              &quot;description&quot;:&quot;Description for Sensor Group&quot;
+          }
 }
 </pre></div>
 </div>
@@ -98,6 +114,125 @@
 <span class="p">{</span>
   <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;False&quot;</span><span class="p">,</span>
   <span class="nt">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;Building does not exist&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="get-sensorgroup-details">
+<h2>Get SensorGroup Details<a class="headerlink" href="#get-sensorgroup-details" title="Permalink to this headline">¶</a></h2>
+<p>This request retrieves the details of a SensorGroup</p>
+<dl class="get">
+<dt id="get--api-sensor_group--name-">
+<code class="descname">GET </code><code class="descname">/api/sensor_group/&lt;name&gt;</code><a class="headerlink" href="#get--api-sensor_group--name-" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>name</strong> (<em>string</em>) – Name of Sensor group (compulsory)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><ul class="first simple">
+<li><strong>name</strong> <cite>(string)</cite> – Contains the name of the SensorGroup</li>
+<li><strong>description</strong> <cite>(string)</cite> – Contains the description of the SensorGroup</li>
+<li><strong>building</strong> <cite>(string)</cite> – Contains the name of the building of the SensorGroup</li>
+</ul>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> – Success</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a> – Unauthorized Credentials</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="compound">
+<p class="compound-first"><strong>Example request</strong>:</p>
+<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">GET</span> <span class="nn">/api/sensor_group/Test</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Accept</span><span class="o">:</span> <span class="l">application/json; charset=utf-8</span>
+</pre></div>
+</div>
+<p class="compound-middle"><strong>Example response</strong> (for success):</p>
+<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+
+<span class="p">{</span>
+  <span class="nt">&quot;success&quot;</span> <span class="p">:</span> <span class="s2">&quot;true&quot;</span>
+  <span class="s2">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;Test&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;A SensorGroup for Test&quot;</span>
+  <span class="s2">&quot;building&quot;</span><span class="p">:</span><span class="s2">&quot;NSH&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p class="compound-middle"><strong>Example response</strong> (for failure):</p>
+<div class="compound-last highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+
+<span class="p">{</span>
+  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;False&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;SensorGroup does not exist&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="delete-sensorgroup">
+<h2>Delete SensorGroup<a class="headerlink" href="#delete-sensorgroup" title="Permalink to this headline">¶</a></h2>
+<p>This request deletes the SensorGroup</p>
+<dl class="delete">
+<dt id="delete--api-sensor_group--name-">
+<code class="descname">DELETE </code><code class="descname">/api/sensor_group/&lt;name&gt;</code><a class="headerlink" href="#delete--api-sensor_group--name-" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>email</strong> (<em>string</em>) – Name of the SensorGroup</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><ul class="first simple">
+<li><strong>success</strong> <cite>(string)</cite> – Returns ‘True’ if the SensorGroup is successfully deleted otherwise ‘False’</li>
+</ul>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> – Success</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a> – Unauthorized Credentials</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="compound">
+<p class="compound-first"><strong>Example request</strong>:</p>
+<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">DELETE</span> <span class="nn">/api/sensor_group/Test</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Accept</span><span class="o">:</span> <span class="l">application/json; charset=utf-8</span>
+</pre></div>
+</div>
+<p class="compound-middle"><strong>Example response (for success)</strong>:</p>
+<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+
+<span class="p">{</span>
+  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;True&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p class="compound-middle"><strong>Example response</strong> (for failure):</p>
+<div class="compound-last highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+
+<span class="p">{</span>
+  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;False&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;SensorGroup does not exist&quot;</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -291,6 +426,8 @@
   <ul>
 <li><a class="reference internal" href="#">SensorGroups</a><ul>
 <li><a class="reference internal" href="#create-sensorgroup">Create SensorGroup</a></li>
+<li><a class="reference internal" href="#get-sensorgroup-details">Get SensorGroup Details</a></li>
+<li><a class="reference internal" href="#delete-sensorgroup">Delete SensorGroup</a></li>
 <li><a class="reference internal" href="#add-tags-to-sensorgroup">Add tags to SensorGroup</a></li>
 <li><a class="reference internal" href="#get-list-of-tags-in-sensorgroup">Get list of tags in SensorGroup</a></li>
 </ul>
