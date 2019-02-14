@@ -33,4 +33,4 @@ The [BuildingDepot v3.2.7 API](https://buildingdepot.andrew.cmu.edu/) documentat
 * [Bharathan Balaji](http://www.synergylabs.org/bharath/)
 
 ### License and Copyright
- ©2017, [Synergy Labs](http://www.synergylabs.org/)
+ ©2019, [Synergy Labs](http://www.synergylabs.org/)
