@@ -114,7 +114,11 @@ class TimeSeriesService(MethodView):
         pubsub = None
 
         try:
-            json = request.get_json()['data']
+            postData = request.get_json()
+            if "data" in postData:
+                json = postData['data']
+            else:
+                json = postData
             points = []
             sensors_list = [sensor['sensor_id'] for sensor in json]
             permissions = batch_permission_check(sensors_list, get_email())

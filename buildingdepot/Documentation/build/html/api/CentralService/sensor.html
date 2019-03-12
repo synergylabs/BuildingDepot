@@ -156,8 +156,8 @@ Sensor access is restricted to Central Service <cite>Users</cite> with permissio
 <h2>Search Sensors<a class="headerlink" href="#search-sensors" title="Permalink to this headline">¶</a></h2>
 <p>The Search API is used search sensors based on uuid,source_name,source_identifier, building, Tag and MetaData. Multiple search queries can be sent in a single request.</p>
 <dl class="post">
-<dt id="post--api-search">
-<code class="descname">POST </code><code class="descname">/api/search</code><a class="headerlink" href="#post--api-search" title="Permalink to this definition">¶</a></dt>
+<dt id="post--api-sensor-search">
+<code class="descname">POST </code><code class="descname">/api/sensor/search</code><a class="headerlink" href="#post--api-sensor-search" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <table class="docutils field-list" frame="void" rules="none">
@@ -169,12 +169,12 @@ Sensor access is restricted to Central Service <cite>Users</cite> with permissio
 <li><dl class="first docutils">
 <dt><strong>data</strong> <cite>(dictionary)</cite> – Contains the list of Search Query key-value pairs</dt>
 <dd><ul class="first last">
-<li><strong>ID</strong> <cite>(string)</cite> – UUID of the Sensor</li>
-<li><strong>Building</strong> <cite>(string)</cite> – Building in which the sensor is located</li>
-<li><strong>Tags</strong> ‘(dictionary)’ – List of tags owned by the sensor. The are given as key,value pairs.</li>
-<li><strong>Metadata</strong> ‘(dictionary)’ – List of metadata owned by the sensor.The are given as key,value pairs.</li>
-<li><strong>Source_Identifier</strong> ‘(dictionary)’ – Source identifier of the sensor</li>
-<li><strong>Source_Name</strong> ‘(dictionary)’ – Source name of the sensor</li>
+<li><strong>ID</strong> <cite>(list)</cite> – UUID of the Sensor</li>
+<li><strong>Building</strong> <cite>(list)</cite> – Building in which the sensor is located</li>
+<li><strong>Tags</strong> <cite>(list)</cite> – List of tags owned by the sensor. The are given as key,value pairs.</li>
+<li><strong>Metadata</strong> <cite>(list)</cite> – List of metadata owned by the sensor.The are given as key,value pairs.</li>
+<li><strong>Source_Identifier</strong> <cite>(list)</cite> – Source identifier of the sensor</li>
+<li><strong>Source_Name</strong> <cite>(list)</cite> – Source name of the sensor</li>
 </ul>
 </dd>
 </dl>
@@ -186,14 +186,14 @@ Sensor access is restricted to Central Service <cite>Users</cite> with permissio
 </table>
 <div class="compound">
 <p class="compound-first"><strong>Example request</strong>:</p>
-<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">POST</span> <span class="nn">/api/search</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">POST</span> <span class="nn">/api/sensor/search</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
 <span class="na">Accept</span><span class="o">:</span> <span class="l">application/json; charset=utf-8</span>
 
 {
   &quot;data&quot;:{
-      &quot;ID&quot;:&quot;6cf53d24-e3a3-41bd-b2b5-8f109694f628&quot;,
-      &quot;Building&quot;:&quot;NSH&quot;
-      &quot;Tags&quot;:[&quot;floor:1&quot;]
+      &quot;ID&quot;:[&quot;6cf53d24-e3a3-41bd-b2b5-8f109694f628&quot;],
+      &quot;Building&quot;:[&quot;NSH&quot;],
+      &quot;Tags&quot;:[&quot;floor:1&quot;, &quot;corridor:4200&quot;]
   }
 }
 </pre></div>
@@ -208,6 +208,7 @@ Sensor access is restricted to Central Service <cite>Users</cite> with permissio
     <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;6cf53d24-e3a3-41bd-b2b5-8f109694f628&quot;</span><span class="p">,</span>
     <span class="nt">&quot;source_identifier&quot;</span><span class="p">:</span> <span class="s2">&quot;Sensor Tag&quot;</span><span class="p">,</span>
     <span class="nt">&quot;source_name&quot;</span><span class="p">:</span> <span class="s2">&quot;Test Sensor&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;tags&quot;</span><span class="p">:[{</span><span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;floor&quot;</span><span class="p">,</span> <span class="nt">&quot;value&quot;</span><span class="p">:</span> <span class="s2">&quot;1&quot;</span><span class="p">},</span> <span class="p">{</span><span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;corridor&quot;</span><span class="p">,</span> <span class="nt">&quot;value&quot;</span><span class="p">:</span> <span class="s2">&quot;4200&quot;</span><span class="p">}]</span>
 <span class="p">}</span>
 </pre></div>
 </div>

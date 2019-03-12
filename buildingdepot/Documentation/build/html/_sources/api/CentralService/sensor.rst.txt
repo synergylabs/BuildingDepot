@@ -100,16 +100,16 @@ Search Sensors
 
 The Search API is used search sensors based on uuid,source_name,source_identifier, building, Tag and MetaData. Multiple search queries can be sent in a single request.
 
-.. http:post:: /api/search
+.. http:post:: /api/sensor/search
 
 :JSON Parameters:
   * **data** `(dictionary)` -- Contains the list of Search Query key-value pairs
-      * **ID** `(string)` -- UUID of the Sensor
-      * **Building** `(string)` -- Building in which the sensor is located
-      * **Tags** '(dictionary)' -- List of tags owned by the sensor. The are given as key,value pairs.
-      * **Metadata** '(dictionary)' -- List of metadata owned by the sensor.The are given as key,value pairs.
-      * **Source_Identifier** '(dictionary)' -- Source identifier of the sensor
-      * **Source_Name** '(dictionary)' -- Source name of the sensor
+      * **ID** `(list)` -- UUID of the Sensor
+      * **Building** `(list)` -- Building in which the sensor is located
+      * **Tags** `(list)` -- List of tags owned by the sensor. The are given as key,value pairs.
+      * **Metadata** `(list)` -- List of metadata owned by the sensor.The are given as key,value pairs.
+      * **Source_Identifier** `(list)` -- Source identifier of the sensor
+      * **Source_Name** `(list)` -- Source name of the sensor
 
 .. compound::
 
@@ -117,14 +117,14 @@ The Search API is used search sensors based on uuid,source_name,source_identifie
 
    .. sourcecode:: http
 
-      POST /api/search HTTP/1.1
+      POST /api/sensor/search HTTP/1.1
       Accept: application/json; charset=utf-8
 
       {
         "data":{
-            "ID":"6cf53d24-e3a3-41bd-b2b5-8f109694f628",
-            "Building":"NSH"
-            "Tags":["floor:1"]
+            "ID":["6cf53d24-e3a3-41bd-b2b5-8f109694f628"],
+            "Building":["NSH"],
+            "Tags":["floor:1", "corridor:4200"]
         }
       }
 
@@ -141,6 +141,7 @@ The Search API is used search sensors based on uuid,source_name,source_identifie
           "name": "6cf53d24-e3a3-41bd-b2b5-8f109694f628",
           "source_identifier": "Sensor Tag",
           "source_name": "Test Sensor",
+          "tags":[{"name": "floor", "value": "1"}, {"name": "corridor", "value": "4200"}]
       }
 
    **Example response** (for failure):
