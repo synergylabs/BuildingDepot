@@ -33,7 +33,7 @@ class BuildingTagsService(MethodView):
             value = data['value']
         except:
             return jsonify(responses.missing_parameters)
-        collection = Building._get_collection()
+        # collection = Building._get_collection()
         # Form the tag to update in MongoDB
         building = Building.objects(name=building_name).first()
         if building is None:
@@ -56,7 +56,8 @@ class BuildingTagsService(MethodView):
             'metadata': metadata if metadata else [],
             'parents': parents if parents else [],
         }
-        tag_exists = collection.find({'tags':
+        tag_exists = collection.find({'name': building_name,
+                                      'tags':
                                           {"$elemMatch": {"name": name, "value": value}}})
         if tag_exists.count() == 0:
             collection.update(
