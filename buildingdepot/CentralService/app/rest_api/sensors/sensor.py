@@ -86,6 +86,10 @@ class SensorService(MethodView):
         identifier = data.get('identifier')
         uuid = data.get('uuid')
         email = get_email()
+        try:
+            tags = data.get('tags')
+        except:
+            tags = []
 
         if building in get_building_choices("rest_api"):
             if not uuid:
@@ -95,7 +99,8 @@ class SensorService(MethodView):
                        source_name=xstr(sensor_name),
                        source_identifier=xstr(identifier),
                        building=building,
-                       owner=email).save()
+                       owner=email,
+                       tags=tags).save()
                 r.set('owner:{}'.format(uuid), email)
                 response = dict(responses.success_true)
                 response.update({'uuid': uuid})
