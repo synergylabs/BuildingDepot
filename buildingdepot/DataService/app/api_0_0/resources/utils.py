@@ -219,7 +219,8 @@ def check_db(sensor, email):
     for tag in sensor_obj['tags']:
         current_tag = {"name": tag['name'], "value": tag['value']}
         tag_list.append(current_tag)
-    args["tags__exact"] = tag_list
+    args["tags__size"] = len(tag_list)
+    args["tags__all"] = tag_list
     sensor_groups = SensorGroup.objects(**args)
     args = {}
     args['users__user_id'] = email
