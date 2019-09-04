@@ -142,11 +142,6 @@ class TimeSeriesService(MethodView):
                             }
                         }
                         del sample['time']
-                        # Key assertion TODO: need to raise appropriate error
-                        for k in sample.keys():
-                            assert k=='value' or \
-                                    '_'.join(k.split('_')[1:]) in \
-                                    ['hz_magnitude', 'hz_phase']
                         dic['fields'].update(sample)
                         points.append(dic)
                     if apps[sensor['sensor_id']]:
