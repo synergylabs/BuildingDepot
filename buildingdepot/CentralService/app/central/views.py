@@ -366,6 +366,9 @@ def sensor():
 @login_required
 def sensor_delete():
     sensor = Sensor.objects(name=request.form.get('name')).first()
+    if r.get('parent:{}'.format(request.form.get('name'))):
+        flash('Sensor view can\'t be deleted.')
+        return redirect(url_for('central.sensor'))
     # cache process
     if defs.delete_sensor(request.form.get('name')):
         r.delete('sensor:{}'.format(sensor.name))
