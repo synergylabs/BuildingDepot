@@ -55,8 +55,10 @@ class TimeSeriesService(MethodView):
         end_time = request.args.get('end_time')
         resolution = request.args.get('resolution')
         fields= request.args.get('fields')
+        original_fields = fields
         if fields:
             fields = fields.split(';')
+            original_fields = fields
             fields = '"' + '", "'.join(fields) + '"'
         else:
             fields = '*'
@@ -64,24 +66,45 @@ class TimeSeriesService(MethodView):
         if not all([start_time, end_time]):
             return jsonify(responses.missing_parameters)
 
+        if r.sismember('views', name):
+            allowed_fields = [value.strip() for value in r.get('fields:{}'.format(name)).split(',')]
+            if original_fields:
+                fields = [field for field in original_fields if field in allowed_fields]
+                fields = ','.join(fields)
+            else:
+                fields = ','.join(allowed_fields)
+            name = r.get('parent:{}'.format(name))
+
         if resolution:
             if fields == '*':
                 return jsonify('TODO: Fields are not supported with resolution')
             try:
-                data = influx.query(
-                    'select mean(*) from "' + name + '" where (time>\'' + timestamp_to_time_string(
+                query = 'select mean(*) from "' + name + '" where (time>\'' + timestamp_to_time_string(
                         float(start_time)) \
                     + '\' and time<\'' + timestamp_to_time_string(
-                        float(end_time)) + '\')' + " GROUP BY time(" + resolution + ")")
+                        float(end_time)) + '\')' + " GROUP BY time(" + resolution + ")"
+                data = influx.query(query)
             except influxdb.exceptions.InfluxDBClientError:
                 return jsonify(responses.resolution_high)
-            #rawdata = data.raw
         else:
-            data = influx.query(
-                'select ' + fields + ' from "' + name + '" where time>\'' + timestamp_to_time_string(float(start_time)) \
-                + '\' and time<\'' + timestamp_to_time_string(float(end_time)) + '\'')
+            if fields is not '*':
+                fields = '"' + '", "'.join(fields.split(',')) + '"'
+            query = 'select ' + fields + ' from "' + name + '" where time>\'' + timestamp_to_time_string(float(start_time)) \
+                + '\' and time<\'' + timestamp_to_time_string(float(end_time)) + '\''
+
+            # # Log InfluxDB Query # #
+            # print ('\n\n' + '{s:{c}^{n}}'.format(s=' InfluxDB Query ', n=100, c='#'))
+            # print (query)
+            # print ('#' * 100 + '\n\n')
+            data = influx.query(query)
         response = dict(responses.success_true)
+
+        # # Log InfluxDB Query # #
+        # print ('\n\n' + '{s:{c}^{n}}'.format(s=' InfluxDB Data ', n=100, c='#'))
+        # print (data.raw)
+        # print ('#' * 100 + '\n\n')
         response.update({'data': data.raw})
+
         return jsonify(response)
 
     @check_oauth
@@ -133,6 +156,12 @@ class TimeSeriesService(MethodView):
                 # If 'w' (write is in the permission), authorize
                 if 'w' in permissions[sensor['sensor_id']]:
                     for sample in sensor['samples']:
+                        for key in sample.keys():
+                            if type(sample[key]) is list:
+                                length = len(sample[key])
+                                for i in range(length):
+                                    sample.update({"%s-%d" % (key, i): sample[key][i]})
+                                del sample[key]
                         dic = {
                             'measurement': sensor['sensor_id'],
                             'time': timestamp_to_time_string(sample['time']),
@@ -163,6 +192,12 @@ class TimeSeriesService(MethodView):
         except KeyError:
             print json
             abort(400)
+
+        # # Log InfluxDB Query # #
+        # print ('\n\n' + '{s:{c}^{n}}'.format(s=' InfluxDB Data Points ', n=100, c='#'))
+        # print (points)
+        # print ('#' * 100 + '\n\n')
+
         result = influx.write_points(points)
         if result:
             if len(unauthorised_sensor) > 0:
