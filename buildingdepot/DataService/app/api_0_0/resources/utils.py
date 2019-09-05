@@ -92,7 +92,7 @@ def permission(sensor_name, email=None):
 
     sensor = Sensor.objects(name=sensor_name).first()
     if sensor is None:
-        return 'invalid'
+        return 'u/d'
 
     # if admin or owner then give complete access or email in get_admins()
     if r.get('owner:{}'.format(sensor_name)) == email or check_if_super(email):

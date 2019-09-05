@@ -63,7 +63,7 @@ def permission(sensor_name, email=None):
 
     sensor = Sensor.objects(name=sensor_name).first()
     if sensor is None:
-        return 'invalid'
+        return 'u/d'
 
     # check if super user
     if check_if_super(email) or email in get_admins(get_ds(sensor_name)):
