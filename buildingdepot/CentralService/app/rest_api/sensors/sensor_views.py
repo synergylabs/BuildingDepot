@@ -117,6 +117,9 @@ class SensorViewService(MethodView):
                 r.sadd('views:{}'.format(name), uuid)
                 r.set('fields:{}'.format(uuid), fields)
                 r.set('parent:{}'.format(uuid), name)
+                fields = [field.strip() for field in fields.split(",")]
+                for field in fields:
+                    r.sadd('{}:{}'.format(name, field), uuid)
                 r.sadd('views', uuid)
                 response = dict(responses.success_true)
                 response.update({'id': uuid})
@@ -133,6 +136,12 @@ class SensorViewService(MethodView):
         # cache process
         if get_email() == sensor.owner:
             if defs.delete_sensor(uuid):
+                fields = r.get('fields:{}'.format(uuid))
+                if fields:
+                    fields = fields.split(",")
+                    fields = [field.strip() for field in fields]
+                    for field in fields:
+                        r.srem('{}:{}'.format(name, field), uuid)
                 r.delete('fields:{}'.format(uuid))
                 r.delete('parent:{}'.format(uuid))
                 r.delete(uuid)
