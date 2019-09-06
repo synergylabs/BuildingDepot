@@ -77,6 +77,8 @@ class SensorViewService(MethodView):
         sensor = Sensor.objects(name=name).first()
         if sensor is None:
             return jsonify(responses.invalid_uuid)
+        if r.get('parent:{}'.format(name)):
+            return jsonify({"success":"False", "error":"Sensor views can't have sub-views."})
         data = request.get_json()['data']
         try:
             view_name = data.get('name')
