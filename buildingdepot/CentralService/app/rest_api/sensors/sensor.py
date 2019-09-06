@@ -116,6 +116,13 @@ class SensorService(MethodView):
         sensor = Sensor.objects(name=name).first()
         if r.get('parent:{}'.format(name)):
             return jsonify({'success': 'False', 'error': 'Sensor view can\'t be deleted.'})
+        views = r.smembers('views:{}'.format(sensor.name))
+        for view in views:
+            if defs.delete_sensor(view):
+                r.delete('sensor:{}'.format(view))
+                r.delete('owner:{}'.format(view))
+                # cache process done
+                Sensor.objects(name=view).delete()
         # cache process
         if defs.delete_sensor(name):
             r.delete('sensor:{}'.format(sensor.name))

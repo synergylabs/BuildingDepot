@@ -130,6 +130,13 @@ class SensorViewService(MethodView):
         sensor = Sensor.objects(name=name).first()
         # cache process
         if get_email() == sensor.owner:
+            views = r.smembers('views:{}'.format(sensor.name))
+            for view in views:
+                if defs.delete_sensor(view):
+                    r.delete('sensor:{}'.format(view))
+                    r.delete('owner:{}'.format(view))
+                    # cache process done
+                    Sensor.objects(name=view).delete()
             if defs.delete_sensor(uuid):
                 r.srem('views:{}'.format(sensor.name), uuid)
                 r.delete('fields:{}'.format(uuid))
