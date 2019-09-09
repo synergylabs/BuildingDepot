@@ -146,6 +146,10 @@ class TimeSeriesService(MethodView):
             sensors_list = [sensor['sensor_id'] for sensor in json]
             permissions = batch_permission_check(sensors_list, get_email())
             # Check if there are any apps associated with the sensors
+            views_list = []
+            for sensor in sensors_list:
+                views_list = views_list + list(r.smembers('views:{}'.format(sensor)))
+            sensors_list = sensors_list + views_list
             pipeline = r.pipeline()
             for sensor in sensors_list:
                 pipeline.exists(''.join(['apps:', sensor]))
@@ -182,22 +186,23 @@ class TimeSeriesService(MethodView):
                         view_dic = dict(dic)
                         view_fields = {k: v for k, v in dic['fields'].items() if k in fields }
                         view_dic.update({'fields': view_fields})
-                        if not pubsub:
-                            pubsub = connect_broker()
+                        if apps[view]:
+                            if not pubsub:
+                                pubsub = connect_broker()
 
-                            if pubsub:
-                                try:
-                                    channel = pubsub.channel()
-                                except Exception as e:
-                                    print "Failed to open channel" + " error" + str(e)
-                        try:
-                            # print ('\n\n' + '{s:{c}^{n}}'.format(s=' view_dic ', n=100, c='#'))
-                            # print (view_dic)
-                            # print ('#' * 100 + '\n\n')
-                            channel.basic_publish(exchange=exchange, routing_key=view, body=str(view_dic))
-                        except Exception as e:
-                            print "except inside"
-                            print "Failed to write to broker " + str(e)
+                                if pubsub:
+                                    try:
+                                        channel = pubsub.channel()
+                                    except Exception as e:
+                                        print "Failed to open channel" + " error" + str(e)
+                            try:
+                                # print ('\n\n' + '{s:{c}^{n}}'.format(s=' view_dic ', n=100, c='#'))
+                                # print (view_dic)
+                                # print ('#' * 100 + '\n\n')
+                                channel.basic_publish(exchange=exchange, routing_key=view, body=str(view_dic))
+                            except Exception as e:
+                                print "except inside"
+                                print "Failed to write to broker " + str(e)
 
                     if apps[sensor['sensor_id']]:
                         if not pubsub:
