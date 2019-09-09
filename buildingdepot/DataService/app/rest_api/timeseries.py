@@ -173,6 +173,32 @@ class TimeSeriesService(MethodView):
                         del sample['time']
                         dic['fields'].update(sample)
                         points.append(dic)
+                    views = r.smembers('views:{}'.format(sensor['sensor_id']))
+                    for view in views:
+                        fields = []
+                        view_fields = r.get('fields:{}'.format(view))
+                        if view_fields:
+                            fields = [field.strip() for field in view_fields.split(',')]
+                        view_dic = dict(dic)
+                        view_fields = {k: v for k, v in dic['fields'].items() if k in fields }
+                        view_dic.update({'fields': view_fields})
+                        if not pubsub:
+                            pubsub = connect_broker()
+
+                            if pubsub:
+                                try:
+                                    channel = pubsub.channel()
+                                except Exception as e:
+                                    print "Failed to open channel" + " error" + str(e)
+                        try:
+                            # print ('\n\n' + '{s:{c}^{n}}'.format(s=' view_dic ', n=100, c='#'))
+                            # print (view_dic)
+                            # print ('#' * 100 + '\n\n')
+                            channel.basic_publish(exchange=exchange, routing_key=view, body=str(view_dic))
+                        except Exception as e:
+                            print "except inside"
+                            print "Failed to write to broker " + str(e)
+
                     if apps[sensor['sensor_id']]:
                         if not pubsub:
                             pubsub = connect_broker()
@@ -183,6 +209,9 @@ class TimeSeriesService(MethodView):
                                 except Exception as e:
                                     print "Failed to open channel" + " error" + str(e)
                         try:
+                            # print ('\n\n' + '{s:{c}^{n}}'.format(s=' dic ', n=100, c='#'))
+                            # print (dic)
+                            # print ('#' * 100 + '\n\n')
                             channel.basic_publish(exchange=exchange, routing_key=sensor['sensor_id'], body=str(dic))
                         except Exception as e:
                             print "except inside"
