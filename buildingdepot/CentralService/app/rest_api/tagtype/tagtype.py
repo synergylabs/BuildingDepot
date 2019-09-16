@@ -75,7 +75,6 @@ class TagTypeService(MethodView):
     @check_oauth
     @super_required
     def delete(self, name):
-        print "in the rest api call"
         tagtype = TagType.objects(name=name).first()
         if not tagtype:
             return jsonify(responses.invalid_tagtype)
