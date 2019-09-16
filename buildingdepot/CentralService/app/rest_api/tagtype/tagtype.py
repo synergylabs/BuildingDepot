@@ -31,8 +31,9 @@ class TagTypeService(MethodView):
         parents = data.get('parents')
         name = data.get('name')
         acl_tag = data.get('acl_tag')
+        if not name:
+            return jsonify({'success':'False', 'error': 'Invalid TagType name.'})
         tagtype = TagType.objects(name=data.get('name')).first()
-
         if not tagtype:
             if name is None:
                 return jsonify(responses.missing_parameters)
