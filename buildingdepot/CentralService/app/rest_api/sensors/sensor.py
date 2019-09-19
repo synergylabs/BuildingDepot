@@ -114,6 +114,8 @@ class SensorService(MethodView):
         if name is None:
             return jsonify(responses.missing_parameters)
         sensor = Sensor.objects(name=name).first()
+        if sensor is None:
+            return jsonify(responses.invalid_uuid)
         # cache process
         if defs.delete_sensor(name):
             r.delete('sensor:{}'.format(sensor.name))
