@@ -35,6 +35,8 @@ class DataserviceService(MethodView):
         except KeyError:
             return jsonify(responses.missing_parameters)
 
+        if not name:
+            return jsonify({'success':'False', 'error': 'Invalid Data Service name.'})
         dataservice = DataService.objects(name=name).first()
         if dataservice is None:
             DataService(name=name,
