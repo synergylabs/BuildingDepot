@@ -608,6 +608,7 @@
                         }
                         else if (data["success"]==="True"){
                            $.notify("Success",{ globalPosition:'top center',clickToHide: true,autoHideDelay:2000, className:'success'});
+                           location.reload();
                         }
                     });
                     res.error(function() {
@@ -629,6 +630,7 @@
                         }
                         else if (data["success"]==="True"){
                            $.notify("Success",{ globalPosition:'top center',clickToHide: true,autoHideDelay:2000, className:'success'});
+                           location.reload();
                         }
                     });
                     res.error(function() {
