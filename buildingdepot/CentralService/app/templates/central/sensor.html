@@ -284,9 +284,11 @@
                             <td>
                                 <a ng-click="root.tags('{{ obj.name }}')" href="#tags" data-toggle="modal" class="btn btn-info">Tags</a>
                             </td>
-                            <td>
-                                <a ng-click="root.views('{{ obj.name }}')" href="#views" data-toggle="modal" class="btn btn-info">Views</a>
-                            </td>
+                            {% if obj.source_identifier !='SensorView' %}
+                                <td>
+                                    <a ng-click="root.views('{{ obj.name }}')" href="#views" data-toggle="modal" class="btn btn-info">Views</a>
+                                </td>
+                            {% endif %}
                             <!--<td>
                                 <a ng-click="root.selectSubscribers('{{ obj.name }}')" href="#subscribers" data-toggle="modal" class="btn btn-info">Subscribers</a>
                             </td>
@@ -595,6 +597,7 @@
                         }
                         set[views[i].fields] = true;
                     }
+
                 }
                 $scope.addedViews.forEach(view => {
                     var res = $http.post('/api/sensor/'+ $scope.sensorName + '/views', {'data': {'id':view.id, 'source_name': view.source_name, 'fields': view.fields}},{ headers: header });
@@ -637,6 +640,8 @@
                         $.notify("Ajax failed", { position:"top center",clickToHide: true,autoHideDelay:2000});
                     });
                 })
+                $scope.addedViews = []
+                $scope.removedViews = []
             };
 
             /*$scope.root.addNewSubscriber = function() {
