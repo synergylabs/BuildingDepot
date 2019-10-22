@@ -334,10 +334,10 @@ def sensor():
     # Show the user PAGE_SIZE number of sensors on each page
     page = request.args.get('page', 1, type=int)
     skip_size = (page - 1) * PAGE_SIZE
-    objs = Sensor.objects().skip(skip_size).limit(PAGE_SIZE)
+    objs = Sensor.objects(source_identifier__ne='SensorView').skip(skip_size).limit(PAGE_SIZE)
     for obj in objs:
         obj.can_delete = not r.get('parent:{}'.format(obj.name))
-    total = Sensor.objects.count()
+    total = Sensor.objects(source_identifier__ne='SensorView').count()
     if (total):
         pages = int(math.ceil(float(total) / PAGE_SIZE))
     else:
