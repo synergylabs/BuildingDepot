@@ -71,7 +71,6 @@ class SensorViewService(MethodView):
         Args as data:
         "source_name":<name-of-view>
         "fields":<field1, field2...>
-        "uuid":<uuid-for-view>
 
         Returns (JSON) :
         {
@@ -87,15 +86,11 @@ class SensorViewService(MethodView):
             return jsonify({"success": "False", "error": "Sensor views can't have sub-views."})
         data = request.get_json()['data']
         try:
-            uuid = data.get('id')
             view_name = data.get('source_name')
             fields = data.get('fields')
         except KeyError:
             return jsonify(responses.missing_parameters)
 
-        view = Sensor.objects(name=uuid).first()
-        if view:
-            return jsonify({"success": "False", "error": "UUID already exists."})
         email = get_email()
         building = sensor.building
         try:
@@ -107,8 +102,7 @@ class SensorViewService(MethodView):
         tags = tags + [{"name": tag.name, "value": tag.value} for tag in sensor.tags] + [{"name": "parent", "value": sensor.name}, {"name": "fields", "value": fields}]
         print tags
         if building in get_building_choices("rest_api"):
-            if not uuid:
-                uuid = str(uuid4())
+            uuid = str(uuid4())
             if defs.create_sensor(uuid, email, building):
                 Sensor(name=uuid,
                        source_name=xstr(view_name),
