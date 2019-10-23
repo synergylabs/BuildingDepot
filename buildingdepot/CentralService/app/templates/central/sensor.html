@@ -174,14 +174,12 @@
                                 <table class="table">
                                     <thead>
                                     <tr>
-                                        <th>ID</th>
                                         <th>Source Name</th>
                                         <th>Fields</th>
                                     </tr>
                                     </thead>
                                     <tbody>
                                     <tr ng-repeat="view in addedViews">
-                                        <td><input ng-model="addedViews[$index].id" class="form-control"></input></td>
                                         <td><input ng-model="addedViews[$index].source_name" class="form-control"></input></td>
                                         <td><input ng-model="addedViews[$index].fields" class="form-control"></input></td>
                                         <td><button class="close" ng-click="root.removeView($index)">&times;</button></td>
@@ -576,7 +574,7 @@
                 $scope.addedViews.push({'source_name': '', 'fields': '', 'id': ''});
             };
             $scope.root.removeExistingView = function(index) {
-                $scope.removedViews.push({'source_name': $scope.views_owned[index].source_name, 'fields': $scope.views_owned[index].fields, 'id': $scope.views_owned[index].id});
+                $scope.removedViews.push({'source_name': $scope.views_owned[index].source_name, 'fields': $scope.views_owned[index].fields});
                 $scope.views_owned.splice(index, 1);
             };
             $scope.root.removeView = function(index) {
@@ -600,7 +598,7 @@
 
                 }
                 $scope.addedViews.forEach(view => {
-                    var res = $http.post('/api/sensor/'+ $scope.sensorName + '/views', {'data': {'id':view.id, 'source_name': view.source_name, 'fields': view.fields}},{ headers: header });
+                    var res = $http.post('/api/sensor/'+ $scope.sensorName + '/views', {'data': {'source_name': view.source_name, 'fields': view.fields}},{ headers: header });
                     res.success(function(data) {
                         if (data["success"]==="False"){
                             $.notify(data["error"], {
