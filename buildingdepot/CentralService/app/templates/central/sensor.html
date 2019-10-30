@@ -108,13 +108,13 @@
                                     <tr ng-repeat="tag in tags_owned">
                                         <td><input disabled ng-model="tags_owned[$index].name" type="text" class="form-control" value="{[ tag.name ]}"></td>
                                         <td><input disabled ng-model="tags_owned[$index].value" type="text" class="form-control" value="{[ tag.value ]}"></td>
-                                        <td><button class="close" ng-click="root.removeExistingTag($index)">&times;</button></td>
+                                        <td ng-hide="root.sensorView"><button class="close" ng-click="root.removeExistingTag($index)">&times;</button></td>
                                     </tr>
                                     </tbody>
                                 </table>
                             </div>
 
-                            <div>
+                            <div ng-hide="root.sensorView">
                                 <table class="table">
                                     <thead>
                                     <tr>
@@ -133,7 +133,7 @@
                             </div>
 
 
-                            <div class="btn-group">
+                            <div class="btn-group" ng-hide="root.sensorView">
                                 <button ng-click="root.addNewTag()" type="button" class="btn btn-info">Add a new tag</button>
                                 <button ng-click="root.updateTags()" type="button" class="btn btn-warning">Update</button>
                             </div>
@@ -506,7 +506,7 @@
                     $scope.tags = data.tags;
                     $scope.tags_owned = data.tags_owned;
                     $scope.names = Object.keys($scope.tags);
-
+                    $scope.root.sensorView = $scope.tags_owned.map(t=> t.name).includes('parent');
                 });
                 res.error(function() {
                     $.notify("Ajax failed", { position:"top center",clickToHide: true,autoHideDelay:2000});

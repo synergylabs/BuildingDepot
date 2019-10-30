@@ -84,6 +84,8 @@ class SensorTagsService(MethodView):
 
         tags = request.get_json()['data']['tags']
         sensor = Sensor.objects(name=name).first()
+        if sensor.source_identifier == 'SensorView':
+                return jsonify({"success": "false", "error": "Sensor Views are read-only."})
         old_tags = set([(tag.name, tag.value) for tag in sensor.tags])
         new_tags = set([(tag['name'], tag['value']) for tag in tags])
         tags_added = new_tags - old_tags
