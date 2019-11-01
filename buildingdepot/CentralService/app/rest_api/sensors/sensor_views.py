@@ -50,13 +50,13 @@ class SensorViewService(MethodView):
         all_views = []
         for view in views:
             tags_owned = [{'name': tag.name, 'value': tag.value} for tag in view.tags]
-            fields = ''
+            fields = []
             for tag in tags_owned:
-                if tag['name'] == 'fields':
-                    fields = tag['value']
+                if tag['name'] == 'field':
+                    fields.append(tag['value'])
             all_views.append({
                              'id': str(view.name),
-                             'fields': fields,
+                             'fields': ', '.join(sorted(fields)),
                              'source_name': xstr(view.source_name)
                              })
         response = dict(responses.success_true)
@@ -99,8 +99,9 @@ class SensorViewService(MethodView):
                 tags = []
         except:
             tags = []
-        tags = tags + [{"name": tag.name, "value": tag.value} for tag in sensor.tags] + [{"name": "parent", "value": sensor.name}, {"name": "fields", "value": fields}]
-        print tags
+        fields_list = fields.split(',')
+        field_tags = [{"name": "field", "value": field.strip()} for field in fields_list]
+        tags = tags + [{"name": tag.name, "value": tag.value} for tag in sensor.tags] + [{"name": "parent", "value": sensor.name}] + field_tags
         if building in get_building_choices("rest_api"):
             uuid = str(uuid4())
             if defs.create_sensor(uuid, email, building):
