@@ -86,10 +86,16 @@ class SensorService(MethodView):
         identifier = data.get('identifier')
         uuid = data.get('uuid')
         email = get_email()
+        fields = data.get('fields')
         try:
             tags = data.get('tags')
         except:
             tags = []
+
+        if fields:
+            if not tags:
+                tags = []
+            tags.append({"name": "fields", "value": fields})
 
         if building in get_building_choices("rest_api"):
             if not uuid:
