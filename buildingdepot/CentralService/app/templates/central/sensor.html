@@ -108,13 +108,65 @@
                                     <tr ng-repeat="tag in tags_owned">
                                         <td><input disabled ng-model="tags_owned[$index].name" type="text" class="form-control" value="{[ tag.name ]}"></td>
                                         <td><input disabled ng-model="tags_owned[$index].value" type="text" class="form-control" value="{[ tag.value ]}"></td>
-                                        <td ng-hide="root.sensorView"><button class="close" ng-click="root.removeExistingTag($index)">&times;</button></td>
+                                        <td><button class="close" ng-click="root.removeExistingTag($index)">&times;</button></td>
                                     </tr>
                                     </tbody>
                                 </table>
                             </div>
 
-                            <div ng-hide="root.sensorView">
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Value</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr ng-repeat="tag in addedTags">
+                                    <td><select ng-model="addedTags[$index].name" class="form-control" ng-options="name for name in names | orderBy: name"></select></td>
+                                    <td><select ng-model="addedTags[$index].value" class="form-control" ng-options="value for value in values | valueFilter: this: addedTags[$index].name | orderBy: value"></select></td>
+                                    <td><button class="close" ng-click="root.removeTag($index)">&times;</button></td>
+                                </tr>
+                                </tbody>
+                            </table>
+
+
+                            <div class="btn-group">
+                                <button ng-click="root.addNewTag()" type="button" class="btn btn-info">Add a new tag</button>
+                                <button ng-click="root.updateTags()" type="button" class="btn btn-warning">Update</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" id="tags">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title">Assigned Tags for Sensor {[ sensorName ]} </h4>
+                        </div>
+                        <div class="modal-body">
+                            <div>
+                                <table class="table" ng-show="tags_owned.length > 0">
+                                    <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Value</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr ng-repeat="tag in tags_owned">
+                                        <td><input disabled ng-model="tags_owned[$index].name" type="text" class="form-control" value="{[ tag.name ]}"></td>
+                                        <td><input disabled ng-model="tags_owned[$index].value" type="text" class="form-control" value="{[ tag.value ]}"></td>
+                                        <td><button class="close" ng-click="root.removeExistingTag($index)">&times;</button></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div>
                                 <table class="table">
                                     <thead>
                                     <tr>
@@ -133,65 +185,9 @@
                             </div>
 
 
-                            <div class="btn-group" ng-hide="root.sensorView">
+                            <div class="btn-group">
                                 <button ng-click="root.addNewTag()" type="button" class="btn btn-info">Add a new tag</button>
                                 <button ng-click="root.updateTags()" type="button" class="btn btn-warning">Update</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="modal fade" id="views">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button class="close" data-dismiss="modal">&times;</button>
-                            <h4 class="modal-title">Assigned Views for Sensor {[ sensorName ]} </h4>
-                        </div>
-                        <div class="modal-body">
-                            <div>
-                                <table class="table" ng-show="views_owned.length > 0">
-                                    <thead>
-                                    <tr>
-                                        <th>ID</th>
-                                        <th>Source Name</th>
-                                        <th>Fields</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <tr ng-repeat="view in views_owned">
-                                        <td><input disabled ng-model="views_owned[$index].id" type="text" class="form-control" value="{[ view.id ]}"></td>
-                                        <td><input disabled ng-model="views_owned[$index].source_name" type="text" class="form-control" value="{[ view.source_name ]}"></td>
-                                        <td><input disabled ng-model="views_owned[$index].fields" type="text" class="form-control" value="{[ view.fields ]}"></td>
-                                        <td><button class="close" ng-click="root.removeExistingView($index)">&times;</button></td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-
-                            <div>
-                                <table class="table">
-                                    <thead>
-                                    <tr>
-                                        <th>Source Name</th>
-                                        <th>Fields</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <tr ng-repeat="view in addedViews">
-                                        <td><input ng-model="addedViews[$index].source_name" class="form-control"></input></td>
-                                        <td><input ng-model="addedViews[$index].fields" class="form-control"></input></td>
-                                        <td><button class="close" ng-click="root.removeView($index)">&times;</button></td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-
-
-                            <div class="btn-group">
-                                <button ng-click="root.addNewView()" type="button" class="btn btn-info">Add a new view</button>
-                                <button ng-click="root.updateViews()" type="button" class="btn btn-warning">Update</button>
                             </div>
                         </div>
                     </div>
@@ -506,7 +502,6 @@
                     $scope.tags = data.tags;
                     $scope.tags_owned = data.tags_owned;
                     $scope.names = Object.keys($scope.tags);
-                    $scope.root.sensorView = $scope.tags_owned.map(t=> t.name).includes('parent');
                 });
                 res.error(function() {
                     $.notify("Ajax failed", { position:"top center",clickToHide: true,autoHideDelay:2000});
