@@ -1,5 +1,5 @@
 from .tagtype import tagtype
-from .buildingtemplate import buildingtemplate
+from .buildingtemplate import buildingtemplate, buildingtemplate_tagtypes
 from .buildings import building, building_tags
 from .dataservices import dataservice, ds_buildings, ds_admins
 from .users import user
@@ -23,6 +23,12 @@ def register_view(app_obj):
     # delete deletes the template
     app_obj.add_url_rule('/api/template', view_func=template_view, methods=['POST'])
     app_obj.add_url_rule('/api/template/<name>', view_func=template_view, methods=['GET', 'DELETE'])
+
+    template_tagtypes_view = buildingtemplate_tagtypes.BuildingTemplateTagtypeService.as_view('template_tagtypes_api')
+    # post creates/modifies building templates
+    # get returns information on a specified building template.
+    # delete deletes the template
+    app_obj.add_url_rule('/api/template/<name>/tags', view_func=template_tagtypes_view, methods=['GET', 'DELETE', 'POST', 'PUT'])
 
     building_view = building.BuildingService.as_view('building_api')
     # post creates/modifies buildings
