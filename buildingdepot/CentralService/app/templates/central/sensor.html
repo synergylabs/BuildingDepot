@@ -571,7 +571,7 @@
                 $scope.addedViews.push({'source_name': '', 'fields': '', 'id': ''});
             };
             $scope.root.removeExistingView = function(index) {
-                $scope.removedViews.push({'source_name': $scope.views_owned[index].source_name, 'fields': $scope.views_owned[index].fields});
+                $scope.removedViews.push({'id': $scope.views_owned[index].id, 'source_name': $scope.views_owned[index].source_name, 'fields': $scope.views_owned[index].fields});
                 $scope.views_owned.splice(index, 1);
             };
             $scope.root.removeView = function(index) {
