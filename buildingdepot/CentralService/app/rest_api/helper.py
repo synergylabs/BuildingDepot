@@ -288,6 +288,8 @@ def get_sg_ds(sensor_group):
 def check_oauth(f):
     @wraps(f)
     def secure(*args, **kwargs):
+        if not request.headers.get("Authorization"):
+            abort(401)
         access_token = request.headers.get("Authorization")[7:]
         if request.headers.get("Authorization") is not None:
             user = r.get(''.join(['oauth:', access_token]))

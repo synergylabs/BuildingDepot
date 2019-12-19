@@ -84,9 +84,19 @@ class SensorTagsService(MethodView):
 
         tags = request.get_json()['data']['tags']
         sensor = Sensor.objects(name=name).first()
+        old_tags = set([(tag.name, tag.value) for tag in sensor.tags])
+        new_tags = set([(tag['name'], tag['value']) for tag in tags])
+        tags_added = new_tags - old_tags
+        tags_removed = old_tags - new_tags
         if defs.invalidate_sensor(name):
             if sensor is None:
                 return jsonify(responses.invalid_uuid)
+            views = Sensor.objects(tags__all=[{"name": "parent", "value": name}])
+            for view in views:
+                if defs.invalidate_sensor(view.name):
+                    view.update(add_to_set__tags=[{'name': tag[0], 'value': tag[1]} for tag in tags_added])
+                    view.update(pull_all__tags=[{'name': tag[0], 'value': tag[1]} for tag in tags_removed])
+                    r.delete(view.name)
             Sensor.objects(name=name).update(set__tags=tags)
             r.delete(name)
         else:

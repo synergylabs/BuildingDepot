@@ -1,11 +1,11 @@
 from .tagtype import tagtype
-from .buildingtemplate import buildingtemplate
+from .buildingtemplate import buildingtemplate, buildingtemplate_tagtypes
 from .buildings import building, building_tags
 from .dataservices import dataservice, ds_buildings, ds_admins
 from .users import user
 from .sensorgroups import sensorgroup, sg_tags
 from .usergroups import ug_users, usergroup
-from .sensors import sensor, search, sensor_tags
+from .sensors import sensor, search, sensor_tags, sensor_views
 from .permissions import permission
 
 
@@ -23,6 +23,12 @@ def register_view(app_obj):
     # delete deletes the template
     app_obj.add_url_rule('/api/template', view_func=template_view, methods=['POST'])
     app_obj.add_url_rule('/api/template/<name>', view_func=template_view, methods=['GET', 'DELETE'])
+
+    template_tagtypes_view = buildingtemplate_tagtypes.BuildingTemplateTagtypeService.as_view('template_tagtypes_api')
+    # post creates/modifies building templates
+    # get returns information on a specified building template.
+    # delete deletes the template
+    app_obj.add_url_rule('/api/template/<name>/tags', view_func=template_tagtypes_view, methods=['GET', 'DELETE', 'POST', 'PUT'])
 
     building_view = building.BuildingService.as_view('building_api')
     # post creates/modifies buildings
@@ -60,6 +66,14 @@ def register_view(app_obj):
     app_obj.add_url_rule('/api/sensor/<name>', view_func=sensor_view, methods=['GET', 'DELETE'])
     # create a new sensor
     app_obj.add_url_rule('/api/sensor', view_func=sensor_view, methods=['POST'])
+
+    sensor_view_view = sensor_views.SensorViewService.as_view('sensor_view_api')
+    # get views of sensor by name
+    app_obj.add_url_rule('/api/sensor/<name>/views', view_func=sensor_view_view, methods=['GET'])
+    # delete views of sensor by name
+    app_obj.add_url_rule('/api/sensor/<name>/views/<uuid>', view_func=sensor_view_view, methods=['DELETE'])
+    # create a new views for sensor
+    app_obj.add_url_rule('/api/sensor/<name>/views', view_func=sensor_view_view, methods=['POST'])
 
     sensortags_view = sensor_tags.SensorTagsService.as_view('sensortags_api')
     # get gets a sensor's tags

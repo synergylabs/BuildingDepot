@@ -86,10 +86,16 @@ class SensorService(MethodView):
         identifier = data.get('identifier')
         uuid = data.get('uuid')
         email = get_email()
+        fields = data.get('fields')
         try:
             tags = data.get('tags')
         except:
             tags = []
+
+        if fields:
+            if not tags:
+                tags = []
+            tags.append({"name": "fields", "value": fields})
 
         if building in get_building_choices("rest_api"):
             if not uuid:
@@ -114,8 +120,15 @@ class SensorService(MethodView):
         if name is None:
             return jsonify(responses.missing_parameters)
         sensor = Sensor.objects(name=name).first()
-        if sensor is None:
-            return jsonify(responses.invalid_uuid)
+        if r.get('parent:{}'.format(name)):
+            return jsonify({'success': 'False', 'error': 'Sensor view can\'t be deleted.'})
+        views = r.smembers('views:{}'.format(sensor.name))
+        for view in views:
+            if defs.delete_sensor(view):
+                r.delete('sensor:{}'.format(view))
+                r.delete('owner:{}'.format(view))
+                # cache process done
+                Sensor.objects(name=view).delete()
         # cache process
         if defs.delete_sensor(name):
             r.delete('sensor:{}'.format(sensor.name))
