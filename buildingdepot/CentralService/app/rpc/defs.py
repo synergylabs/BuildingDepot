@@ -13,6 +13,15 @@ def create_sensor(sensor_id, email, building):
     return True
 
 
+def create_sensor_view(sensor_view_id, email, fields, parent, building):
+    svr = get_remote(get_ds(parent, building))
+    try:
+        svr.create_sensor_view(sensor_view_id, email, fields, parent)
+    except Exception as e:
+        return False
+    return True
+
+
 def invalidate_sensor(sensor_id):
     svr = get_remote(get_ds(sensor_id))
     try:
@@ -26,6 +35,15 @@ def delete_sensor(sensor_id):
     svr = get_remote(get_ds(sensor_id))
     try:
         svr.delete_sensor(sensor_id)
+    except Exception as e:
+        return False
+    return True
+
+
+def delete_sensor_view(sensor_view_id, parent):
+    svr = get_remote(get_ds(sensor_view_id))
+    try:
+        svr.delete_sensor_view(sensor_view_id, parent)
     except Exception as e:
         return False
     return True
