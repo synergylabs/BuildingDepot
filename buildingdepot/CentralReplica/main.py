@@ -35,41 +35,39 @@ def get_user(email, password):
         return True
     return False
 
-def create_sensor(sensor_id, email):
+def create_sensor(sensor_id, email, fields = None, parent = None):
     r.set('owner:{}'.format(sensor_id), email)
-
-def create_sensor_view(sensor_view_id, email ,fields, parent):
-    r.set('owner:{}'.format(sensor_view_id), email)
-    r.sadd('views:{}'.format(parent), sensor_view_id)
-    r.set('fields:{}'.format(sensor_view_id), fields)
-    r.set('parent:{}'.format(sensor_view_id), parent)
-    fields = [field.strip() for field in fields.split(",")]
-    for field in fields:
-        r.sadd('{}:{}'.format(parent, field), sensor_view_id)
-    r.sadd('views', sensor_view_id)
+    if parent:
+        r.set('owner:{}'.format(sensor_id), email)
+        r.sadd('views:{}'.format(parent), sensor_id)
+        r.set('fields:{}'.format(sensor_id), fields)
+        r.set('parent:{}'.format(sensor_id), parent)
+        fields = [field.strip() for field in fields.split(",")]
+        for field in fields:
+            r.sadd('{}:{}'.format(parent, field), sensor_id)
+        r.sadd('views', sensor_id)
 
 
 def invalidate_sensor(sensor_id):
     r.delete('sensor:{}'.format(sensor_id))
 
-def delete_sensor(sensor_id):
+def delete_sensor(sensor_id, parent = None):
     r.delete('sensor:{}'.format(sensor_id))
     r.delete('owner:{}'.format(sensor_id))
+    if parent:
+        fields = r.get('fields:{}'.format(sensor_id))
+        if fields:
+            fields = fields.split(",")
+            fields = [field.strip() for field in fields]
+            for field in fields:
+                r.srem('{}:{}'.format(parent, field), sensor_id)
+        r.delete('fields:{}'.format(sensor_id))
+        r.delete('parent:{}'.format(sensor_id))
+        r.delete(sensor_id)
+        r.srem('views', sensor_id)
+        # cache process done
+        Sensor.objects(name=sensor_id).delete()
 
-def delete_sensor_view(sensor_view_id, parent):
-    fields = r.get('fields:{}'.format(sensor_view_id))
-    if fields:
-        fields = fields.split(",")
-        fields = [field.strip() for field in fields]
-        for field in fields:
-            r.srem('{}:{}'.format(parent, field), sensor_view_id)
-    r.delete('fields:{}'.format(sensor_view_id))
-    r.delete('parent:{}'.format(sensor_view_id))
-    r.delete(sensor_view_id)
-    r.srem('views', sensor_view_id)
-    # cache process done
-    Sensor.objects(name=sensor_view_id).delete()
-    r.srem('views:{}'.format(parent), sensor_view_id)
 
 def create_permission(user_group, sensor_group, email, permission):
     invalidate_permission(sensor_group)
@@ -126,10 +124,8 @@ def get_admins(name):
 svr = ThreadXMLRPCServer(("", 8080), allow_none=True)
 svr.register_function(get_user)
 svr.register_function(create_sensor)
-svr.register_function(create_sensor_view)
 svr.register_function(invalidate_sensor)
 svr.register_function(delete_sensor)
-svr.register_function(delete_sensor_view)
 svr.register_function(create_permission)
 svr.register_function(delete_permission)
 svr.register_function(invalidate_permission)

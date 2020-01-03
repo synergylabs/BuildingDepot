@@ -104,25 +104,24 @@ class SensorViewService(MethodView):
         tags = tags + [{"name": tag.name, "value": tag.value} for tag in sensor.tags] + [{"name": "parent", "value": sensor.name}] + field_tags
         if building in get_building_choices("rest_api"):
             uuid = str(uuid4())
-            if defs.create_sensor(uuid, email, building):
-                if defs.create_sensor_view(uuid, email, fields, name, building):
-                    Sensor(name=uuid,
-                           source_name=xstr(view_name),
-                           source_identifier="SensorView",
-                           building=building,
-                           owner=email,
-                           tags=tags).save()
-                    r.set('owner:{}'.format(uuid), email)
-                    r.sadd('views:{}'.format(name), uuid)
-                    r.set('fields:{}'.format(uuid), fields)
-                    r.set('parent:{}'.format(uuid), name)
-                    fields = [field.strip() for field in fields.split(",")]
-                    for field in fields:
-                        r.sadd('{}:{}'.format(name, field), uuid)
-                    r.sadd('views', uuid)
-                    response = dict(responses.success_true)
-                    response.update({'id': uuid})
-                    return jsonify(response)
+            if defs.create_sensor(uuid, email, fields, name, building):
+                Sensor(name=uuid,
+                       source_name=xstr(view_name),
+                       source_identifier="SensorView",
+                       building=building,
+                       owner=email,
+                       tags=tags).save()
+                r.set('owner:{}'.format(uuid), email)
+                r.sadd('views:{}'.format(name), uuid)
+                r.set('fields:{}'.format(uuid), fields)
+                r.set('parent:{}'.format(uuid), name)
+                fields = [field.strip() for field in fields.split(",")]
+                for field in fields:
+                    r.sadd('{}:{}'.format(name, field), uuid)
+                r.sadd('views', uuid)
+                response = dict(responses.success_true)
+                response.update({'id': uuid})
+                return jsonify(response)
             else:
                 return jsonify(responses.ds_error)
         return jsonify(responses.invalid_building)
@@ -134,22 +133,21 @@ class SensorViewService(MethodView):
         sensor = Sensor.objects(name=name).first()
         # cache process
         if get_email() == sensor.owner:
-            if defs.delete_sensor(uuid):
-                if defs.delete_sensor_view(uuid, name):
-                    fields = r.get('fields:{}'.format(uuid))
-                    if fields:
-                        fields = fields.split(",")
-                        fields = [field.strip() for field in fields]
-                        for field in fields:
-                            r.srem('{}:{}'.format(name, field), uuid)
-                    r.delete('fields:{}'.format(uuid))
-                    r.delete('parent:{}'.format(uuid))
-                    r.delete(uuid)
-                    r.srem('views', uuid)
-                    # cache process done
-                    Sensor.objects(name=uuid).delete()
-                    r.srem('views:{}'.format(sensor.name), uuid)
-                    response = dict(responses.success_true)
+            if defs.delete_sensor(uuid, name):
+                fields = r.get('fields:{}'.format(uuid))
+                if fields:
+                    fields = fields.split(",")
+                    fields = [field.strip() for field in fields]
+                    for field in fields:
+                        r.srem('{}:{}'.format(name, field), uuid)
+                r.delete('fields:{}'.format(uuid))
+                r.delete('parent:{}'.format(uuid))
+                r.delete(uuid)
+                r.srem('views', uuid)
+                # cache process done
+                Sensor.objects(name=uuid).delete()
+                r.srem('views:{}'.format(sensor.name), uuid)
+                response = dict(responses.success_true)
             else:
                 response = dict(responses.ds_error)
         else:
