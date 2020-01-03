@@ -104,7 +104,7 @@ class SensorViewService(MethodView):
         tags = tags + [{"name": tag.name, "value": tag.value} for tag in sensor.tags] + [{"name": "parent", "value": sensor.name}] + field_tags
         if building in get_building_choices("rest_api"):
             uuid = str(uuid4())
-            if defs.create_sensor(uuid, email, fields, name, building):
+            if defs.create_sensor(uuid, email, building, fields, name):
                 Sensor(name=uuid,
                        source_name=xstr(view_name),
                        source_identifier="SensorView",
