@@ -55,6 +55,7 @@ permission_del_authorization = {'success': 'False', 'error': 'Not authorized to 
 
 # SensorGroup API responses
 sensorgroup_exists = {'success': 'False', 'error': 'Sensorgroup already exists'}
+no_sensorgroup_tags = {'success': 'False', 'error': 'Cannot create permissions for a SensorGroup with no tags'}
 invalid_sensorgroup = {'success': 'False', 'error': 'Sensorgroup does not exist'}
 sensorgroup_used = {'success': 'False', 'error': 'Sensor group tags cannot be edited. Already being used for '
                                                  'permissions'}

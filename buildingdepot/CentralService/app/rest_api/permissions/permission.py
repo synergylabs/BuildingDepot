@@ -70,13 +70,15 @@ class PermissionService(MethodView):
         except KeyError:
             return jsonify(responses.missing_parameters)
 
+        sg = SensorGroup.objects(name=sensor_group).first()
         if UserGroup.objects(name=user_group).first() is None:
             return jsonify(responses.no_usergroup)
-        if SensorGroup.objects(name=sensor_group).first() is None:
+        if not sg:
             return jsonify(responses.no_sensorgroup)
         if permissions.get(permission) is None:
             return jsonify(responses.no_permission_val)
-
+        if not len(sg.tags):
+            return jsonify(responses.no_sensorgroup_tags)
         email = get_email()
         if defs.create_permission(user_group,sensor_group,email,permissions.get(permission)):
             curr_permission = Permission.objects(user_group=user_group, sensor_group=sensor_group).first()

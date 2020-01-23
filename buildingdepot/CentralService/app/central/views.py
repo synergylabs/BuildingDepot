@@ -473,6 +473,9 @@ def permission_create():
                 form.user_group.data, form.sensor_group.data))
             return redirect(url_for('central.permission'))
         if defs.create_permission(form.user_group.data,form.sensor_group.data,session['email'],form.permission.data):
+            if not len(SensorGroup.objects(name=form.sensor_group.data).first().tags):
+                flash('No tags present in the SensorGroup')
+                return redirect(url_for('central.permission'))
             # If permission doesn't exist then create it
             Permission(user_group=str(form.user_group.data),
                        sensor_group=str(form.sensor_group.data),
