@@ -179,7 +179,16 @@
                                     <tbody>
                                     <tr ng-repeat="view in addedViews">
                                         <td><input ng-model="addedViews[$index].source_name" class="form-control"></input></td>
-                                        <td><input ng-model="addedViews[$index].fields" class="form-control"></input></td>
+                                        <td><input ng-model="addedViews[$index].fields" class="form-control" ng-options="for item in "></input></td>
+{#                                        <td><select ng-model="addedViews[$index].fields" class="form-control" ng-options="name for name in names | orderBy: name"></select></td>#}
+{#                                        <td>#}
+{#                                            <select multiple size="2" class="form-control" >#}
+{#                                              <option value="volvo">Volvo</option>#}
+{#                                              <option value="saab">Saab</option>#}
+{#                                              <option value="mercedes">Mercedes</option>#}
+{#                                              <option value="audi">Audi</option>#}
+{#                                            </select>#}
+{#                                        </td>#}
                                         <td><button class="close" ng-click="root.removeView($index)">&times;</button></td>
                                     </tr>
                                     </tbody>
@@ -503,6 +512,7 @@
                 res.success(function(data) {
                     $scope.tags = data.tags;
                     $scope.tags_owned = data.tags_owned;
+                    console.log(data.tags)
                     $scope.names = Object.keys($scope.tags);
                 });
                 res.error(function() {
@@ -561,6 +571,7 @@
                 $scope.sensorName = sensorName;
                 var res = $http.get('/api/sensor/' + sensorName + '/views',{ headers: header });
                 res.success(function(data) {
+                    console.log(data.views)
                     $scope.views_owned = data.views_owned;
                 });
                 res.error(function() {

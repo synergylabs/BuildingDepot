@@ -92,6 +92,7 @@ Subject: Password for BuildingDepot account
 Account details:
 User id : %s
 Password : %s
+Hostname: %s
 
 Please register and change your password immediately.
 '''

@@ -65,7 +65,7 @@ def send_local_smtp(user_name, to_email, password):
     sender = current_app.config['EMAIL_ID']
     receivers = [to_email]
 
-    message = responses.registration_email % (sender, user_name, to_email, to_email, password)
+    message = responses.registration_email % (sender, user_name, to_email, to_email, password, '/'.join(request.base_url.split('/')[:3]))
 
     try:
         smtpObj = smtplib.SMTP('localhost')
@@ -120,7 +120,7 @@ def send_mail_gmail(user_name, to_email, password):
         smtp_conn.starttls()
         smtp_conn.docmd('AUTH',
                         'XOAUTH2 ' + base64.b64encode(GenerateOAuth2String(sender, access_token, base64_encode=False)))
-        msg = responses.registration_email % (sender, user_name, to_email, to_email, password)
+        msg = responses.registration_email % (sender, user_name, to_email, to_email, password, '/'.join(request.base_url.split('/')[:3]))
         smtp_conn.sendmail(sender, to_email, msg)
     except Exception as e:
         print "Failed to send registration email to " + to_email + " " + str(e)
@@ -283,6 +283,8 @@ def get_sg_ds(sensor_group):
     args['buildings__all'] = [sg.building]
     dataservices = DataService.objects(**args)
     return dataservices.first().name
+    # sg = SensorGroup.objects(name=sensor_group).first()
+    # return DataService.objects(buildings__contains=sg.building).first().name
 
 
 def check_oauth(f):
