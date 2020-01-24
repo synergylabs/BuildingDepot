@@ -5,30 +5,60 @@
 function generateChartData(data) {
   var chartData = [];
   for ( var i = 0; i < data.length; i++ ) {
-
-      var newDate= data[i][0];
-      var a=data[i][2];
-      var b=data[i][2];
-    chartData.push( {
-      date: newDate,
-      value: a,
-      volume: b
-    } );
+    var a=data[i][2];
+    var b = data[i][2];
+    if (typeof a === 'number' || a instanceof Number) {
+      var newDate = data[i][0];
+      chartData.push({
+        date: newDate,
+        value: a,
+        volume: b
+      });
+    }
+    else{
+      var newDate = data[i][0];
+      chartData.push({
+        date: newDate,
+        value: 1,
+        volume: 1
+      });
+    }
   }
   return chartData;
+}
+
+
+function generateTextualData(data) {
+  var textualData = [];
+  for ( var i = 0; i < data.length; i++ ) {
+    var a=data[i][2];
+    if (typeof a === 'string' || a instanceof String){
+          var newDate= data[i][0];
+          textualData.push( {
+            date:  new Date(newDate),
+            type: "flag",
+            backgroundColor: "#33ccff",
+            backgroundAlpha: 0.5,
+            graph: "g1",
+            text: a,
+            description: a
+          } );
+      }
+  }
+  return textualData;
 }
 
 function makechart(data) {
 
     var chartData = generateChartData(data);
-    var chart = AmCharts.makeChart( "chartdiv", {
+    var textualData = generateTextualData(data);
+    var config = {
   "type": "stock",
   "theme": "light",
 
   "categoryAxesSettings": {
     "minPeriod": "fff"
   },
-
   "dataSets": [ {
     "color": "#33ccff",
     "fieldMappings": [ {
@@ -38,10 +68,12 @@ function makechart(data) {
       "fromField": "volume",
       "toField": "volume"
     } ],
-
     "dataProvider": chartData,
-    "categoryField": "date"
+    "categoryField": "date",
+    // EVENTS
+    "stockEvents": textualData
   } ],
+
 
   "panels": [ {
     "showCategoryAxis": false,
@@ -81,7 +113,7 @@ function makechart(data) {
   },
 
   "chartCursorSettings": {
-    "valueBalloonsEnabled": true
+    "valueBalloonsEnabled": true,
   },
 
   "periodSelector": {
@@ -142,12 +174,12 @@ function makechart(data) {
   "panelsSettings": {
     "usePrefixes": false
   },
-
   "export": {
     "enabled": true,
     "position": "bottom-right"
   }
-} );
+};
+    var chart = AmCharts.makeChart( "chartdiv", config );
 
 
 }
