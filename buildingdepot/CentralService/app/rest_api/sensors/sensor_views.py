@@ -45,8 +45,7 @@ class SensorViewService(MethodView):
         sensor = Sensor.objects(name=name).first()
         if sensor is None:
             return jsonify(responses.invalid_uuid)
-        views_list = r.smembers('views:{}'.format(sensor.name))
-        views = Sensor.objects(name__in=views_list)
+        views = Sensor.objects(tags__all=[{"name": "parent", "value": name}])
         all_views = []
         for view in views:
             tags_owned = [{'name': tag.name, 'value': tag.value} for tag in view.tags]
