@@ -97,87 +97,6 @@ Sensor access is restricted to Central Service <cite>Users</cite> with permissio
 </div>
 </div>
 </div>
-<div class="section" id="create-a-sensor-view">
-<h2>Create a Sensor View<a class="headerlink" href="#create-a-sensor-view" title="Permalink to this headline">¶</a></h2>
-<p>Creates a new Sensor View for a sensor point in BuildingDepot. Each sensor may have multiple fields of data, however,
-the user may only want to receive or request a subset of data. This API creates a view for the sensor and returns the
-UUID for the sensor.</p>
-<dl class="post">
-<dt id="post--api-sensor--name--view">
-<code class="descname">POST </code><code class="descname">/api/sensor/&lt;name&gt;/view</code><a class="headerlink" href="#post--api-sensor--name--view" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>id</strong> (<em>string</em>) – UUID associated with Sensor (required)</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name" colspan="2">JSON Parameters:</th></tr>
-<tr class="field-even field"><td>&#160;</td><td class="field-body"><ul class="first simple">
-<li><dl class="first docutils">
-<dt><strong>data</strong> <cite>(dictionary)</cite> – Contains the information of the sensor view.</dt>
-<dd><ul class="first last">
-<li><strong>fields</strong> <cite>(string)</cite> – The data fields of the sensor that is being posted to BD.</li>
-<li><strong>source_name</strong> <cite>(string)</cite> – Name of the sensor view</li>
-</ul>
-</dd>
-</dl>
-</li>
-</ul>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><ul class="first simple">
-<li><strong>success</strong> <cite>(dictionary)</cite> – Returns ‘True’ if data is posted successfully otherwise ‘False’</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
-<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> – Success</li>
-<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a> – Unauthorized Credentials</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<div class="compound">
-<p class="compound-first"><strong>Example request</strong>:</p>
-<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">POST</span> <span class="nn">/api/sensor/8aac1048-aa9f-41c9-9c20-6dd81339c7de/views</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
-<span class="na">Accept</span><span class="o">:</span> <span class="l">application/json; charset=utf-8</span>
-
-{
-      &quot;data&quot;:{
-              &quot;fields&quot;: &quot;EMI-1, Temp-2&quot;,
-              &quot;source_name&quot;: &quot;Important Values&quot;
-              }
-}
-</pre></div>
-</div>
-<p class="compound-middle"><strong>Example response</strong> (for success):</p>
-<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
-<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
-
-<span class="p">{</span>
-  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;True&quot;</span>
-  <span class="s2">&quot;uuid&quot;</span><span class="p">:</span> <span class="s2">&quot;6cf53d24-e3a3-41bd-b2b5-8f109694f628&quot;</span>
-<span class="p">}</span>
-</pre></div>
-</div>
-<p class="compound-middle"><strong>Example response</strong> (for failure):</p>
-<div class="compound-last highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
-<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
-
-<span class="p">{</span>
-  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;False&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;Communication failure with DataService&quot;</span>
-<span class="p">}</span>
-</pre></div>
-</div>
-</div>
-</div>
 <div class="section" id="get-sensor-details">
 <h2>Get Sensor details<a class="headerlink" href="#get-sensor-details" title="Permalink to this headline">¶</a></h2>
 <p>Retrieves all the details of the sensor based on the uuid specified</p>
@@ -243,78 +162,13 @@ UUID for the sensor.</p>
 </div>
 </div>
 </div>
-<div class="section" id="get-sensor-view-details">
-<h2>Get Sensor View details<a class="headerlink" href="#get-sensor-view-details" title="Permalink to this headline">¶</a></h2>
-<p>Retrieves all the views of the sensor based on the sensor uuid specified</p>
-<dl class="get">
-<dt id="get--api-sensor--name--views">
-<code class="descname">GET </code><code class="descname">/api/sensor/&lt;name&gt;/views</code><a class="headerlink" href="#get--api-sensor--name--views" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>name</strong> (<em>string</em>) – uuid of the sensor</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><ul class="first simple">
-<li><strong>success</strong> <cite>(string)</cite> – Returns ‘True’ if data is retrieved successfully otherwise ‘False’</li>
-<li><strong>available_fields</strong> <cite>(list)</cite> – List of available fields that the sensor can have.</li>
-<li><strong>views_owned</strong> <cite>(list)</cite> – List of views for the sensor.
-* <strong>fields</strong> <cite>(string)</cite> – A subset of fields in the sensor
-* <strong>id</strong> <cite>(string)</cite> – UUID name of the views of the sensor
-* <strong>source_name</strong> <cite>(string)</cite> – Source name of the views of the sensor</li>
-</ul>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
-<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> – Success</li>
-<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a> – Unauthorized Credentials</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<div class="compound">
-<p class="compound-first"><strong>Example request</strong>:</p>
-<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">GET</span> <span class="nn">/api/sensor/6cf53d24-e3a3-41bd-b2b5-8f109694f628</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
-<span class="na">Accept</span><span class="o">:</span> <span class="l">application/json; charset=utf-8</span>
-</pre></div>
-</div>
-<p class="compound-middle"><strong>Example response</strong> (for success):</p>
-<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
-<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
-
-<span class="p">{</span>   <span class="nt">&quot;building&quot;</span><span class="p">:</span> <span class="s2">&quot;NSH&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;86ac8207-6372-46a5-ba0b-6b392dbff645&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;source_identifier&quot;</span><span class="p">:</span> <span class="s2">&quot;Sensor_Tag&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;source_name&quot;</span><span class="p">:</span> <span class="s2">&quot;Test_Sensor&quot;</span>
-<span class="p">}</span>
-</pre></div>
-</div>
-<p class="compound-middle"><strong>Example response</strong> (for failure):</p>
-<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
-<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
-
-<span class="p">{</span>
-  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;False&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot; Sensor does not exist&quot;</span>
-<span class="p">}</span>
-</pre></div>
-</div>
-<p class="compound-middle"><strong>Example response</strong> (for failure):</p>
-<div class="compound-last highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
-<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
-
-<span class="p">{</span>
-  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;False&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;Missing parameters&quot;</span>
-<span class="p">}</span>
-</pre></div>
-</div>
+<div class="section" id="delete-a-sensor">
+<h2>Delete a Sensor<a class="headerlink" href="#delete-a-sensor" title="Permalink to this headline">¶</a></h2>
+<p>Delete the Sensor associated with <cite>sensor_uuid</cite>.</p>
+<div class="admonition attention">
+<p class="first admonition-title">Attention</p>
+<p>Restricted to Admins only</p>
+<p class="last">Currently can only be done through the GUI</p>
 </div>
 </div>
 <div class="section" id="search-sensors">
@@ -384,83 +238,6 @@ UUID for the sensor.</p>
 <span class="p">{</span>
   <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;False&quot;</span><span class="p">,</span>
   <span class="nt">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot; Sensor does not exist&quot;</span>
-<span class="p">}</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="section" id="delete-a-sensor">
-<h2>Delete a Sensor<a class="headerlink" href="#delete-a-sensor" title="Permalink to this headline">¶</a></h2>
-<p>Delete the Sensor associated with <cite>sensor_uuid</cite>.</p>
-<div class="admonition attention">
-<p class="first admonition-title">Attention</p>
-<p>Restricted to Admins only</p>
-<p class="last">Currently can only be done through the GUI</p>
-</div>
-</div>
-<div class="section" id="delete-a-sensor-view">
-<h2>Delete a Sensor View<a class="headerlink" href="#delete-a-sensor-view" title="Permalink to this headline">¶</a></h2>
-<p>This request deletes a sensor view of a sensor.</p>
-<dl class="delete">
-<dt id="delete--api-sensor--uuid--views--view_uuid-">
-<code class="descname">DELETE </code><code class="descname">/api/sensor/&lt;uuid&gt;/views/&lt;view_uuid&gt;</code><a class="headerlink" href="#delete--api-sensor--uuid--views--view_uuid-" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>uuid</strong> (<em>string</em>) – UUID of the sensor.</li>
-<li><strong>view_uuid</strong> (<em>string</em>) – UUID of the view sensor.</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><ul class="first simple">
-<li><strong>success</strong> <cite>(string)</cite> – Returns ‘True’ if the UserGroup is successfully deleted otherwise ‘False’</li>
-</ul>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
-<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> – Success</li>
-<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a> – Unauthorized Credentials</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<div class="compound">
-<p class="compound-first"><strong>Example request</strong>:</p>
-<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">DELETE</span> <span class="nn">/api/sensor/8aac1048-aa9f-41c9-9c20-6dd81339c7de/views/22d807bf-af67-493a-80b7-2690d26c9244</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
-<span class="na">Accept</span><span class="o">:</span> <span class="l">application/json; charset=utf-8</span>
-</pre></div>
-</div>
-<p class="compound-middle"><strong>Example response</strong> (for success):</p>
-<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
-<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
-
-<span class="p">{</span>
-  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;True&quot;</span>
-<span class="p">}</span>
-</pre></div>
-</div>
-<p class="compound-middle"><strong>Example response</strong> (for failure):</p>
-<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
-<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
-
-<span class="p">{</span>
-  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;False&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;Permission does not exist&quot;</span>
-<span class="p">}</span>
-</pre></div>
-</div>
-<p class="compound-middle"><strong>Example response</strong> (for failure):</p>
-<div class="compound-last highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
-<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
-
-<span class="p">{</span>
-  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;False&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;Communication failure with DataService&quot;</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -658,6 +435,244 @@ UUID for the sensor.</p>
 </div>
 </div>
 </div>
+<div class="section" id="create-a-sensor-view">
+<h2>Create a Sensor View<a class="headerlink" href="#create-a-sensor-view" title="Permalink to this headline">¶</a></h2>
+<p>Creates a new Sensor View for a sensor point in BuildingDepot. Each sensor may have multiple fields of data, however,
+the user may only want to receive or request a subset of data. This API creates a view for the sensor and returns the
+UUID for the sensor.</p>
+<dl class="post">
+<dt id="post--api-sensor--name--view">
+<code class="descname">POST </code><code class="descname">/api/sensor/&lt;name&gt;/view</code><a class="headerlink" href="#post--api-sensor--name--view" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>id</strong> (<em>string</em>) – UUID associated with Sensor (required)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">JSON Parameters:</th></tr>
+<tr class="field-even field"><td>&#160;</td><td class="field-body"><ul class="first simple">
+<li><dl class="first docutils">
+<dt><strong>data</strong> <cite>(dictionary)</cite> – Contains the information of the sensor view.</dt>
+<dd><ul class="first last">
+<li><strong>fields</strong> <cite>(string)</cite> – The data fields of the sensor that is being posted to BD.</li>
+<li><strong>source_name</strong> <cite>(string)</cite> – Name of the sensor view</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><ul class="first simple">
+<li><strong>success</strong> <cite>(dictionary)</cite> – Returns ‘True’ if data is posted successfully otherwise ‘False’</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> – Success</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a> – Unauthorized Credentials</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="compound">
+<p class="compound-first"><strong>Example request</strong>:</p>
+<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">POST</span> <span class="nn">/api/sensor/8aac1048-aa9f-41c9-9c20-6dd81339c7de/views</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Accept</span><span class="o">:</span> <span class="l">application/json; charset=utf-8</span>
+
+{
+      &quot;data&quot;:{
+              &quot;fields&quot;: &quot;EMI-1, Temp-2&quot;,
+              &quot;source_name&quot;: &quot;Important Values&quot;
+              }
+}
+</pre></div>
+</div>
+<p class="compound-middle"><strong>Example response</strong> (for success):</p>
+<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+
+<span class="p">{</span>
+  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;True&quot;</span>
+  <span class="s2">&quot;uuid&quot;</span><span class="p">:</span> <span class="s2">&quot;6cf53d24-e3a3-41bd-b2b5-8f109694f628&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p class="compound-middle"><strong>Example response</strong> (for failure):</p>
+<div class="compound-last highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+
+<span class="p">{</span>
+  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;False&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;Communication failure with DataService&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="get-sensor-view-details">
+<h2>Get Sensor View details<a class="headerlink" href="#get-sensor-view-details" title="Permalink to this headline">¶</a></h2>
+<p>Retrieves all the views of the sensor based on the sensor uuid specified</p>
+<dl class="get">
+<dt id="get--api-sensor--name--views">
+<code class="descname">GET </code><code class="descname">/api/sensor/&lt;name&gt;/views</code><a class="headerlink" href="#get--api-sensor--name--views" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>name</strong> (<em>string</em>) – uuid of the sensor</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><ul class="first simple">
+<li><strong>success</strong> <cite>(string)</cite> – Returns ‘True’ if data is retrieved successfully otherwise ‘False’</li>
+<li><strong>available_fields</strong> <cite>(list)</cite> – List of available fields that the sensor can have.</li>
+<li><strong>views_owned</strong> <cite>(list)</cite> – List of views for the sensor.
+* <strong>fields</strong> <cite>(string)</cite> – A subset of fields in the sensor
+* <strong>id</strong> <cite>(string)</cite> – UUID name of the views of the sensor
+* <strong>source_name</strong> <cite>(string)</cite> – Source name of the views of the sensor</li>
+</ul>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> – Success</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a> – Unauthorized Credentials</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="compound">
+<p class="compound-first"><strong>Example request</strong>:</p>
+<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">GET</span> <span class="nn">/api/sensor/6cf53d24-e3a3-41bd-b2b5-8f109694f628</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Accept</span><span class="o">:</span> <span class="l">application/json; charset=utf-8</span>
+</pre></div>
+</div>
+<p class="compound-middle"><strong>Example response</strong> (for success):</p>
+<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+
+<span class="p">{</span>
+    <span class="nt">&quot;available_fields&quot;</span><span class="p">:</span> <span class="p">[</span>
+      <span class="s2">&quot;Temp-0&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;EMI-1&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;Mic-2&quot;</span>
+    <span class="p">],</span>
+    <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;True&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;views_owned&quot;</span><span class="p">:</span> <span class="p">[</span>
+      <span class="p">{</span>
+        <span class="nt">&quot;fields&quot;</span><span class="p">:</span> <span class="s2">&quot;EMI-1, Mic-2, Temp-0&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;3240e89b-81df-4c1c-a411-fe891ed2aaef&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;source_name&quot;</span><span class="p">:</span> <span class="s2">&quot;All&quot;</span>
+      <span class="p">},</span>
+      <span class="p">{</span>
+        <span class="nt">&quot;fields&quot;</span><span class="p">:</span> <span class="s2">&quot;EMI-1&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;ce7330aa-0893-4115-842d-0b6ab92e98de&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;source_name&quot;</span><span class="p">:</span> <span class="s2">&quot;EMI Average&quot;</span>
+      <span class="p">}</span>
+    <span class="p">]</span>
+  <span class="p">}</span>
+</pre></div>
+</div>
+<p class="compound-middle"><strong>Example response</strong> (for failure):</p>
+<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+
+<span class="p">{</span>
+  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;False&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot; Sensor does not exist&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p class="compound-middle"><strong>Example response</strong> (for failure):</p>
+<div class="compound-last highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+
+<span class="p">{</span>
+  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;False&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;Missing parameters&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="delete-a-sensor-view">
+<h2>Delete a Sensor View<a class="headerlink" href="#delete-a-sensor-view" title="Permalink to this headline">¶</a></h2>
+<p>This request deletes a sensor view of a sensor.</p>
+<dl class="delete">
+<dt id="delete--api-sensor--uuid--views--view_uuid-">
+<code class="descname">DELETE </code><code class="descname">/api/sensor/&lt;uuid&gt;/views/&lt;view_uuid&gt;</code><a class="headerlink" href="#delete--api-sensor--uuid--views--view_uuid-" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>uuid</strong> (<em>string</em>) – UUID of the sensor.</li>
+<li><strong>view_uuid</strong> (<em>string</em>) – UUID of the view sensor.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><ul class="first simple">
+<li><strong>success</strong> <cite>(string)</cite> – Returns ‘True’ if the UserGroup is successfully deleted otherwise ‘False’</li>
+</ul>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> – Success</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a> – Unauthorized Credentials</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="compound">
+<p class="compound-first"><strong>Example request</strong>:</p>
+<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">DELETE</span> <span class="nn">/api/sensor/8aac1048-aa9f-41c9-9c20-6dd81339c7de/views/22d807bf-af67-493a-80b7-2690d26c9244</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Accept</span><span class="o">:</span> <span class="l">application/json; charset=utf-8</span>
+</pre></div>
+</div>
+<p class="compound-middle"><strong>Example response</strong> (for success):</p>
+<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+
+<span class="p">{</span>
+  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;True&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p class="compound-middle"><strong>Example response</strong> (for failure):</p>
+<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+
+<span class="p">{</span>
+  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;False&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;Permission does not exist&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p class="compound-middle"><strong>Example response</strong> (for failure):</p>
+<div class="compound-last highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+
+<span class="p">{</span>
+  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;False&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;Communication failure with DataService&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
 <div class="section" id="sensorgroups-and-usergroups">
 <h2>SensorGroups and UserGroups<a class="headerlink" href="#sensorgroups-and-usergroups" title="Permalink to this headline">¶</a></h2>
 <dl class="docutils">
@@ -687,14 +702,14 @@ UUID for the sensor.</p>
   <ul>
 <li><a class="reference internal" href="#">Sensor</a><ul>
 <li><a class="reference internal" href="#create-a-sensor">Create a Sensor</a></li>
-<li><a class="reference internal" href="#create-a-sensor-view">Create a Sensor View</a></li>
 <li><a class="reference internal" href="#get-sensor-details">Get Sensor details</a></li>
-<li><a class="reference internal" href="#get-sensor-view-details">Get Sensor View details</a></li>
-<li><a class="reference internal" href="#search-sensors">Search Sensors</a></li>
 <li><a class="reference internal" href="#delete-a-sensor">Delete a Sensor</a></li>
-<li><a class="reference internal" href="#delete-a-sensor-view">Delete a Sensor View</a></li>
+<li><a class="reference internal" href="#search-sensors">Search Sensors</a></li>
 <li><a class="reference internal" href="#add-tags-to-a-sensor">Add Tags to a Sensor</a></li>
 <li><a class="reference internal" href="#get-tags-of-a-sensor">Get Tags of a Sensor</a></li>
+<li><a class="reference internal" href="#create-a-sensor-view">Create a Sensor View</a></li>
+<li><a class="reference internal" href="#get-sensor-view-details">Get Sensor View details</a></li>
+<li><a class="reference internal" href="#delete-a-sensor-view">Delete a Sensor View</a></li>
 <li><a class="reference internal" href="#sensorgroups-and-usergroups">SensorGroups and UserGroups</a></li>
 </ul>
 </li>
