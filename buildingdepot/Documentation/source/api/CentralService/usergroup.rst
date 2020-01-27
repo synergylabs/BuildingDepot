@@ -261,7 +261,13 @@ This request retrieves the list of users that are in the specified UserGroup
 
       {
         "users": [
-                   "synergy@gmail.com",
-                   "test@gmail.com",
+                   {
+                      "user_id":"synergy@gmail.com",
+                      "manager": true
+                   },
+                   {
+                      "user_id":"test@gmail.com",
+                      "manager": false
+                   }
                  ]
       }

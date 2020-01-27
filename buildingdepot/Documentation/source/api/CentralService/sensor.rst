@@ -177,6 +177,7 @@ Retrieves all the views of the sensor based on the sensor uuid specified
 
    :returns:
       * **success** `(string)` -- Returns 'True' if data is retrieved successfully otherwise 'False'
+      * **available_fields** `(list)` -- List of available fields that the sensor can have.
       * **views_owned** `(list)` -- List of views for the sensor.
         * **fields** `(string)` -- A subset of fields in the sensor
         * **id** `(string)` -- UUID name of the views of the sensor
