@@ -104,13 +104,13 @@ class SensorViewService(MethodView):
         available_tags = Building.objects(name=building).first().tags
         available_tags = [{"name": tag.name, "value": tag.value} for tag in available_tags]
         tags = tags + [{"name": tag.name, "value": tag.value} for tag in sensor.tags] + [{"name": "parent", "value": sensor.name}] + field_tags
-        print (available_tags)
-        print (tags)
         if any(tag not in available_tags for tag in tags):
             missing_tags = set([(tag['name'], tag['value']) for tag in tags]) - set([(tag['name'], tag['value']) for tag in available_tags])
             missing_tags = [{'name': name, 'value': value} for name, value in missing_tags]
-            return jsonify({'success': 'False', 'building_tags_required': missing_tags, 'error': 'Operation requires '
-                                                                                                 'additional building '
+            return jsonify({'success': 'False', 'building_tags_required': missing_tags, 'error': 'Cannot create '
+                                                                                                 'sensor views '
+                                                                                                 'without the '
+                                                                                                 'required building '
                                                                                                  'tags.'})
         uuid = str(uuid4())
         if defs.create_sensor(uuid, email, building, fields, name):
