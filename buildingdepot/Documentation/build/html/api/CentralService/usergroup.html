@@ -230,7 +230,7 @@
 <div class="section" id="add-users-to-usergroup">
 <h2>Add users to UserGroup<a class="headerlink" href="#add-users-to-usergroup" title="Permalink to this headline">¶</a></h2>
 <p>This request adds the users specified in the request to the usergroup</p>
-<p>Note: The list of user id’s sent in this request will overwrite the previous list</p>
+<p>Note: The list of users sent in this request will overwrite the previous list</p>
 <dl class="post">
 <dt id="post--api-user_group--name--users">
 <code class="descname">POST </code><code class="descname">/api/user_group/&lt;name&gt;/users</code><a class="headerlink" href="#post--api-user_group--name--users" title="Permalink to this definition">¶</a></dt>
@@ -248,7 +248,15 @@
 <li><dl class="first docutils">
 <dt><strong>data</strong> <cite>(dictionary)</cite> – Contains the information of the users to be added to the UserGroup.</dt>
 <dd><ul class="first last">
-<li><strong>users</strong> <cite>(list)</cite> – List of user ID’s</li>
+<li><dl class="first docutils">
+<dt><strong>users</strong> <cite>(list)</cite> – List of user objects</dt>
+<dd><ul class="first last">
+<li><strong>user_id</strong> <cite>(string)</cite> – Email of the user</li>
+<li><strong>manager</strong> <cite>(boolean)</cite> – Specifies whether the user is a manager of the UserGroup</li>
+</ul>
+</dd>
+</dl>
+</li>
 </ul>
 </dd>
 </dl>
@@ -280,8 +288,14 @@
 {
   &quot;data&quot;:{
       &quot;users&quot;:[
-           &quot;synergy@gmail.com&quot;,
-           &quot;test@gmail.com&quot;
+           {
+              &quot;user_id&quot;:&quot;synergy@gmail.com&quot;,
+              &quot;manager&quot;: true
+           },
+           {
+              &quot;user_id&quot;:&quot;test@gmail.com&quot;,
+              &quot;manager&quot;: false
+           }
          ]
   }
 }
@@ -350,8 +364,14 @@
 
 <span class="p">{</span>
   <span class="nt">&quot;users&quot;</span><span class="p">:</span> <span class="p">[</span>
-             <span class="s2">&quot;synergy@gmail.com&quot;</span><span class="p">,</span>
-             <span class="s2">&quot;test@gmail.com&quot;</span><span class="p">,</span>
+             <span class="p">{</span>
+                <span class="nt">&quot;user_id&quot;</span><span class="p">:</span><span class="s2">&quot;synergy@gmail.com&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;manager&quot;</span><span class="p">:</span> <span class="kc">true</span>
+             <span class="p">},</span>
+             <span class="p">{</span>
+                <span class="nt">&quot;user_id&quot;</span><span class="p">:</span><span class="s2">&quot;test@gmail.com&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;manager&quot;</span><span class="p">:</span> <span class="kc">false</span>
+             <span class="p">}</span>
            <span class="p">]</span>
 <span class="p">}</span>
 </pre></div>
