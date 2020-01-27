@@ -46,6 +46,10 @@ class SensorViewService(MethodView):
         if sensor is None:
             return jsonify(responses.invalid_uuid)
         views = Sensor.objects(tags__all=[{"name": "parent", "value": name}])
+        available_fields = []
+        for tag in sensor.tags:
+            if tag['name'] == 'fields':
+                available_fields += [field.strip() for field in tag['value'].split(",")]
         all_views = []
         for view in views:
             tags_owned = [{'name': tag.name, 'value': tag.value} for tag in view.tags]
@@ -59,7 +63,7 @@ class SensorViewService(MethodView):
                              'source_name': xstr(view.source_name)
                              })
         response = dict(responses.success_true)
-        response.update({"views_owned": all_views})
+        response.update({"views_owned": all_views, 'available_fields': available_fields})
         return jsonify(response)
 
     @check_oauth
