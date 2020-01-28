@@ -3,4 +3,4 @@
 	url = https://github.com/IoT-Expedition/BD-Performance-Test
 [submodule "testing/functional-testing-tool"]
 	path = testing/functional-testing-tool
-	url = https://github.com/shreyasnagare/functional-testing-tool
+	url = https://github.com/IoT-Expedition/functional-testing-tool
