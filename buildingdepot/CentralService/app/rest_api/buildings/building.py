@@ -38,6 +38,8 @@ class BuildingService(MethodView):
             return jsonify(responses.missing_parameters)
         if BuildingTemplate.objects(name=template).first() is None:
                 return jsonify(responses.invalid_template)
+        if not name:
+            return jsonify({'success':'False', 'error': 'Invalid Building name.'})
         building = Building.objects(name=name).first()
         if building is None:
             Building(**gen_update(self.params,data)).save()

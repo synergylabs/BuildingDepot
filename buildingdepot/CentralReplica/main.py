@@ -35,15 +35,39 @@ def get_user(email, password):
         return True
     return False
 
-def create_sensor(sensor_id, email):
+def create_sensor(sensor_id, email, fields = None, parent = None):
     r.set('owner:{}'.format(sensor_id), email)
+    if parent:
+        r.set('owner:{}'.format(sensor_id), email)
+        r.sadd('views:{}'.format(parent), sensor_id)
+        r.set('fields:{}'.format(sensor_id), fields)
+        r.set('parent:{}'.format(sensor_id), parent)
+        fields = [field.strip() for field in fields.split(",")]
+        for field in fields:
+            r.sadd('{}:{}'.format(parent, field), sensor_id)
+        r.sadd('views', sensor_id)
+
 
 def invalidate_sensor(sensor_id):
     r.delete('sensor:{}'.format(sensor_id))
 
-def delete_sensor(sensor_id):
+def delete_sensor(sensor_id, parent = None):
     r.delete('sensor:{}'.format(sensor_id))
     r.delete('owner:{}'.format(sensor_id))
+    if parent:
+        fields = r.get('fields:{}'.format(sensor_id))
+        if fields:
+            fields = fields.split(",")
+            fields = [field.strip() for field in fields]
+            for field in fields:
+                r.srem('{}:{}'.format(parent, field), sensor_id)
+        r.delete('fields:{}'.format(sensor_id))
+        r.delete('parent:{}'.format(sensor_id))
+        r.delete(sensor_id)
+        r.srem('views', sensor_id)
+        # cache process done
+        Sensor.objects(name=sensor_id).delete()
+
 
 def create_permission(user_group, sensor_group, email, permission):
     invalidate_permission(sensor_group)

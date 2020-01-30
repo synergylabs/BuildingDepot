@@ -34,9 +34,12 @@ class BuildingTemplateService(MethodView):
             name = data['name']
         except:
             return jsonify(responses.missing_parameters)
-
+        if not name:
+            return jsonify({'success':'False', 'error': 'Invalid Building Template name.'})
         template = BuildingTemplate.objects(name=name).first()
         tagtypes = data.get('tag_types')
+        if not tagtypes:
+            tagtypes = []
         for tagtype in tagtypes:
             if TagType.objects(name=tagtype).first() is None:
                 return jsonify(responses.invalid_tagtypes)

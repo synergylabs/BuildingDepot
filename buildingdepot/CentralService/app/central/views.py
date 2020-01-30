@@ -334,10 +334,10 @@ def sensor():
     # Show the user PAGE_SIZE number of sensors on each page
     page = request.args.get('page', 1, type=int)
     skip_size = (page - 1) * PAGE_SIZE
-    objs = Sensor.objects().skip(skip_size).limit(PAGE_SIZE)
+    objs = Sensor.objects(source_identifier__ne='SensorView').skip(skip_size).limit(PAGE_SIZE)
     for obj in objs:
-        obj.can_delete = True
-    total = Sensor.objects.count()
+        obj.can_delete = not r.get('parent:{}'.format(obj.name))
+    total = Sensor.objects(source_identifier__ne='SensorView').count()
     if (total):
         pages = int(math.ceil(float(total) / PAGE_SIZE))
     else:
@@ -366,6 +366,16 @@ def sensor():
 @login_required
 def sensor_delete():
     sensor = Sensor.objects(name=request.form.get('name')).first()
+    if r.get('parent:{}'.format(request.form.get('name'))):
+        flash('Sensor view can\'t be deleted.')
+        return redirect(url_for('central.sensor'))
+    views = r.smembers('views:{}'.format(sensor.name))
+    for view in views:
+        if defs.delete_sensor(view):
+            r.delete('sensor:{}'.format(view))
+            r.delete('owner:{}'.format(view))
+            # cache process done
+            Sensor.objects(name=view).delete()
     # cache process
     if defs.delete_sensor(request.form.get('name')):
         r.delete('sensor:{}'.format(sensor.name))
@@ -463,6 +473,9 @@ def permission_create():
                 form.user_group.data, form.sensor_group.data))
             return redirect(url_for('central.permission'))
         if defs.create_permission(form.user_group.data,form.sensor_group.data,session['email'],form.permission.data):
+            if not len(SensorGroup.objects(name=form.sensor_group.data).first().tags):
+                flash('No tags present in the SensorGroup')
+                return redirect(url_for('central.permission'))
             # If permission doesn't exist then create it
             Permission(user_group=str(form.user_group.data),
                        sensor_group=str(form.sensor_group.data),

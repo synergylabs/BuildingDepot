@@ -53,6 +53,7 @@ Creates a new Sensor point in BuildingDepot and returns the UUID.
         "uuid": "6cf53d24-e3a3-41bd-b2b5-8f109694f628"
       }
 
+
 Get Sensor details
 ******************
 
@@ -79,7 +80,7 @@ Retrieves all the details of the sensor based on the uuid specified
 
    .. sourcecode:: http
 
-      GET /api/sensor/6cf53d24-e3a3-41bd-b2b5-8f109694f628 HTTP/1.1
+      GET /api/sensor/8aac1048-aa9f-41c9-9c20-6dd81339c7de/views HTTP/1.1
       Accept: application/json; charset=utf-8
 
    **Example response**:
@@ -89,11 +90,32 @@ Retrieves all the details of the sensor based on the uuid specified
       HTTP/1.1 200 OK
       Content-Type: application/json
 
-      {   "building": "NSH",
-          "name": "86ac8207-6372-46a5-ba0b-6b392dbff645",
-          "source_identifier": "Sensor_Tag",
-          "source_name": "Test_Sensor"
+      {
+          "success": "True",
+          "views_owned": [
+            {
+              "fields": "EMI-0",
+              "id": "280bc754-a963-4740-89f4-bdae9ede76f6",
+              "source_name": "Averages"
+            },
+            {
+              "fields": "EMI-2, EMI-3",
+              "id": "6336a9d7-6f65-4572-9e52-78fa3808c92f",
+              "source_name": "Min, Max EMI"
+            }
+          ]
       }
+
+Delete a Sensor
+***************
+
+Delete the Sensor associated with `sensor_uuid`.
+
+.. attention::
+
+   Restricted to Admins only
+
+   Currently can only be done through the GUI
 
 Search Sensors
 **************
@@ -155,17 +177,6 @@ The Search API is used search sensors based on uuid,source_name,source_identifie
         "success": "False",
         "error": " Sensor does not exist"
       }
-
-Delete a Sensor
-***************
-
-Delete the Sensor associated with `sensor_uuid`.
-
-.. attention::
-
-   Restricted to Admins only
-
-   Currently can only be done through the GUI
 
 Add Tags to a Sensor
 *********************
@@ -308,6 +319,208 @@ This request retrieves two lists of key-value pairs, one list contains the array
       {
         "success": "False",
         "error": " Sensor does not exist"
+      }
+
+
+Create a Sensor View
+********************
+
+Creates a new Sensor View for a sensor point in BuildingDepot. Each sensor may have multiple fields of data, however,
+the user may only want to receive or request a subset of data. This API creates a view for the sensor and returns the
+UUID for the sensor.
+
+.. http:post:: /api/sensor/<name>/view
+
+   :param string id: UUID associated with Sensor (required)
+
+   :JSON Parameters:
+      * **data** `(dictionary)` -- Contains the information of the sensor view.
+          * **fields** `(string)` -- The data fields of the sensor that is being posted to BD.
+          * **source_name** `(string)` -- Name of the sensor view
+
+   :returns:
+      * **success** `(dictionary)` -- Returns 'True' if data is posted successfully otherwise 'False'
+   :status 200: Success
+   :status 401: Unauthorized Credentials
+
+.. compound::
+
+   **Example request**:
+
+   .. sourcecode:: http
+
+      POST /api/sensor/8aac1048-aa9f-41c9-9c20-6dd81339c7de/views HTTP/1.1
+      Accept: application/json; charset=utf-8
+
+      {
+            "data":{
+                    "fields": "EMI-1, Temp-2",
+                    "source_name": "Important Values"
+                    }
+      }
+
+   **Example response** (for success):
+
+   .. sourcecode:: http
+
+      HTTP/1.1 200 OK
+      Content-Type: application/json
+
+      {
+        "success": "True"
+        "uuid": "6cf53d24-e3a3-41bd-b2b5-8f109694f628"
+      }
+
+   **Example response** (for failure):
+
+   .. sourcecode:: http
+
+      HTTP/1.1 200 OK
+      Content-Type: application/json
+
+      {
+        "success": "False",
+        "error": "Communication failure with DataService"
+      }
+
+Get Sensor View details
+***********************
+
+Retrieves all the views of the sensor based on the sensor uuid specified
+
+.. http:get:: /api/sensor/<name>/views
+
+   :param string name: uuid of the sensor
+
+   :returns:
+      * **success** `(string)` -- Returns 'True' if data is retrieved successfully otherwise 'False'
+      * **available_fields** `(list)` -- List of available fields that the sensor can have.
+      * **views_owned** `(list)` -- List of views for the sensor.
+        * **fields** `(string)` -- A subset of fields in the sensor
+        * **id** `(string)` -- UUID name of the views of the sensor
+        * **source_name** `(string)` -- Source name of the views of the sensor
+
+   :status 200: Success
+   :status 401: Unauthorized Credentials
+
+.. compound::
+
+   **Example request**:
+
+   .. sourcecode:: http
+
+      GET /api/sensor/6cf53d24-e3a3-41bd-b2b5-8f109694f628 HTTP/1.1
+      Accept: application/json; charset=utf-8
+
+   **Example response** (for success):
+
+   .. sourcecode:: http
+
+      HTTP/1.1 200 OK
+      Content-Type: application/json
+
+      {
+          "available_fields": [
+            "Temp-0",
+            "EMI-1",
+            "Mic-2"
+          ],
+          "success": "True",
+          "views_owned": [
+            {
+              "fields": "EMI-1, Mic-2, Temp-0",
+              "id": "3240e89b-81df-4c1c-a411-fe891ed2aaef",
+              "source_name": "All"
+            },
+            {
+              "fields": "EMI-1",
+              "id": "ce7330aa-0893-4115-842d-0b6ab92e98de",
+              "source_name": "EMI Average"
+            }
+          ]
+        }
+
+   **Example response** (for failure):
+
+   .. sourcecode:: http
+
+      HTTP/1.1 200 OK
+      Content-Type: application/json
+
+      {
+        "success": "False",
+        "error": " Sensor does not exist"
+      }
+
+   **Example response** (for failure):
+
+   .. sourcecode:: http
+
+      HTTP/1.1 200 OK
+      Content-Type: application/json
+
+      {
+        "success": "False",
+        "error": "Missing parameters"
+      }
+
+Delete a Sensor View
+********************
+
+This request deletes a sensor view of a sensor.
+
+.. http:delete:: /api/sensor/<uuid>/views/<view_uuid>
+
+   :param string uuid: UUID of the sensor.
+   :param string view_uuid: UUID of the view sensor.
+   :returns:
+      * **success** `(string)` -- Returns 'True' if the UserGroup is successfully deleted otherwise 'False'
+
+   :status 200: Success
+   :status 401: Unauthorized Credentials
+
+.. compound::
+
+   **Example request**:
+
+   .. sourcecode:: http
+
+      DELETE /api/sensor/8aac1048-aa9f-41c9-9c20-6dd81339c7de/views/22d807bf-af67-493a-80b7-2690d26c9244 HTTP/1.1
+      Accept: application/json; charset=utf-8
+
+   **Example response** (for success):
+
+   .. sourcecode:: http
+
+      HTTP/1.1 200 OK
+      Content-Type: application/json
+
+      {
+        "success": "True"
+      }
+
+   **Example response** (for failure):
+
+   .. sourcecode:: http
+
+      HTTP/1.1 200 OK
+      Content-Type: application/json
+
+      {
+        "success": "False",
+        "error": "Permission does not exist"
+      }
+
+   **Example response** (for failure):
+
+   .. sourcecode:: http
+
+      HTTP/1.1 200 OK
+      Content-Type: application/json
+
+      {
+        "success": "False",
+        "error": "Communication failure with DataService"
       }
 
 SensorGroups and UserGroups

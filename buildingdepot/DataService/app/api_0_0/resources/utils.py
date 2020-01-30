@@ -92,7 +92,7 @@ def permission(sensor_name, email=None):
 
     sensor = Sensor.objects(name=sensor_name).first()
     if sensor is None:
-        return 'invalid'
+        return 'u/d'
 
     # if admin or owner then give complete access or email in get_admins()
     if r.get('owner:{}'.format(sensor_name)) == email or check_if_super(email):
@@ -154,7 +154,7 @@ def batch_permission_check(sensors_list, email=None):
     # check if the owner:sensor key is present => sensor exists
     redis_sensor_keys = [''.join(['owner:', sensor]) for sensor in sensors_list]
     owners = dict(zip(redis_sensor_keys, r.mget(*redis_sensor_keys)))
-    for k, v in owners.iteritems():
+    for k, v in owners.items():
         if not v:
             sensors_missing_from_cache.append(k[6:])
 
@@ -169,7 +169,7 @@ def batch_permission_check(sensors_list, email=None):
             owners[''.join(['owner:', sensor.name])] = sensor.owner
 
     # Invalid sensors
-    for k, v in owners.iteritems():
+    for k, v in owners.items():
         if not v:
             del owners[k]
             permissions[k[6:]] = 'absent'
@@ -177,7 +177,7 @@ def batch_permission_check(sensors_list, email=None):
 
     # If the user is sensor owner or admin, give complete access and add to cache
     p = r.pipeline()
-    for k, v in owners.iteritems():
+    for k, v in owners.items():
         if check_if_super(email) or email == v:
             permissions[k[6:]] = 'r/w/p'
             r.hset(k[6:], email, 'r/w/p')

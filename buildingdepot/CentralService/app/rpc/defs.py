@@ -4,13 +4,21 @@ from ..models.cs_models import DataService
 from xmlrpclib import ServerProxy
 
 
-def create_sensor(sensor_id, email, building):
-    svr = get_remote(get_ds(sensor_id, building))
-    try:
-        svr.create_sensor(sensor_id, email)
-    except Exception as e:
-        return False
-    return True
+def create_sensor(sensor_id, email, building, fields = None, parent = None):
+    if not parent:
+        svr = get_remote(get_ds(sensor_id, building))
+        try:
+            svr.create_sensor(sensor_id, email)
+        except Exception as e:
+            return False
+        return True
+    else:
+        svr = get_remote(get_ds(parent, building))
+        try:
+            svr.create_sensor(sensor_id, email, fields, parent)
+        except Exception as e:
+            return False
+        return True
 
 
 def invalidate_sensor(sensor_id):
@@ -22,13 +30,21 @@ def invalidate_sensor(sensor_id):
     return True
 
 
-def delete_sensor(sensor_id):
-    svr = get_remote(get_ds(sensor_id))
-    try:
-        svr.delete_sensor(sensor_id)
-    except Exception as e:
-        return False
-    return True
+def delete_sensor(sensor_id, parent = None):
+    if not parent:
+        svr = get_remote(get_ds(sensor_id))
+        try:
+            svr.delete_sensor(sensor_id)
+        except Exception as e:
+            return False
+        return True
+    else:
+        svr = get_remote(get_ds(sensor_id))
+        try:
+            svr.delete_sensor(sensor_id, parent)
+        except Exception as e:
+            return False
+        return True
 
 
 def create_permission(user_group, sensor_group, email, permission):

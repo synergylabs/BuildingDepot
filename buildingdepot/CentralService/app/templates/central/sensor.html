@@ -114,28 +114,82 @@
                                 </table>
                             </div>
 
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Value</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr ng-repeat="tag in addedTags">
+                                    <td><select ng-model="addedTags[$index].name" class="form-control" ng-options="name for name in names | orderBy: name"></select></td>
+                                    <td><select ng-model="addedTags[$index].value" class="form-control" ng-options="value for value in values | valueFilter: this: addedTags[$index].name | orderBy: value"></select></td>
+                                    <td><button class="close" ng-click="root.removeTag($index)">&times;</button></td>
+                                </tr>
+                                </tbody>
+                            </table>
+
+
+                            <div class="btn-group">
+                                <button ng-click="root.addNewTag()" type="button" class="btn btn-info">Add a new tag</button>
+                                <button ng-click="root.updateTags()" type="button" class="btn btn-warning">Update</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" id="views">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title">Assigned Views for Sensor {[ sensorName ]} </h4>
+                        </div>
+                        <div class="modal-body">
+                            <div>
+                                <table class="table" ng-show="views_owned.length > 0">
+                                    <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Source Name</th>
+                                        <th>Fields</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr ng-repeat="view in views_owned">
+                                        <td><input disabled ng-model="views_owned[$index].id" type="text" class="form-control" value="{[ view.id ]}"></td>
+                                        <td><input disabled ng-model="views_owned[$index].source_name" type="text" class="form-control" value="{[ view.source_name ]}"></td>
+                                        <td><input disabled ng-model="views_owned[$index].fields" type="text" class="form-control" value="{[ view.fields ]}"></td>
+                                        <td><button class="close" ng-click="root.removeExistingView($index)">&times;</button></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
                             <div>
                                 <table class="table">
                                     <thead>
                                     <tr>
-                                        <th>Name</th>
-                                        <th>Value</th>
+                                        <th>Source Name</th>
+                                        <th>Fields</th>
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr ng-repeat="tag in addedTags">
-                                        <td><select ng-model="addedTags[$index].name" class="form-control" ng-options="name for name in names | orderBy: name"></select></td>
-                                        <td><select ng-model="addedTags[$index].value" class="form-control" ng-options="value for value in values | valueFilter: this: addedTags[$index].name | orderBy: value"></select></td>
-                                        <td><button class="close" ng-click="root.removeTag($index)">&times;</button></td>
-                                    </tr>
+                                        <tr ng-repeat="view in addedViews">
+                                            <td><input ng-model="addedViews[$index].source_name" class="form-control"></input></td>
+                                            <td><select multiple size="1" ng-model="addedViews[$index].fields" class="form-control" ng-options="item for item in availableFields"></select></td>
+                                            <td><button class="close" ng-click="root.removeView($index)">&times;</button></td>
+                                        </tr>
                                     </tbody>
                                 </table>
                             </div>
 
 
                             <div class="btn-group">
-                                <button ng-click="root.addNewTag()" type="button" class="btn btn-info">Add a new tag</button>
-                                <button ng-click="root.updateTags()" type="button" class="btn btn-warning">Update</button>
+                                <button ng-click="root.addNewView()" type="button" class="btn btn-info">Add a new view</button>
+                                <button ng-click="root.updateViews()" type="button" class="btn btn-warning">Update</button>
                             </div>
                         </div>
                     </div>
@@ -226,13 +280,18 @@
                             <td>
                                 <a ng-click="root.tags('{{ obj.name }}')" href="#tags" data-toggle="modal" class="btn btn-info">Tags</a>
                             </td>
+                            {% if obj.source_identifier !='SensorView' %}
+                                <td>
+                                    <a ng-click="root.views('{{ obj.name }}')" href="#views" data-toggle="modal" class="btn btn-info">Views</a>
+                                </td>
+                            {% endif %}
                             <!--<td>
                                 <a ng-click="root.selectSubscribers('{{ obj.name }}')" href="#subscribers" data-toggle="modal" class="btn btn-info">Subscribers</a>
                             </td>
                             <td>
                                 <a ng-click="root.selectWrite('{{ obj.name }}')" href="#write" data-toggle="modal" class="btn btn-info">Write</a>
                             </td>-->
-                            {% if obj.can_delete %}
+                            {% if obj.can_delete and obj.source_identifier !='SensorView' %}
                                 <td>
                                     <form action="{{ url_for('central.sensor_delete') }}" method="POST" onsubmit="return confirm('Are you sure you want to Delete?');">
                                         <input type="hidden" value="{{ obj.name }}" name="name">
@@ -253,6 +312,7 @@
     {{ super() }}
     <script type="application/javascript">
         //Javascript
+
         function insertParam(key, value) {
             key = escape(key); value = escape(value);
             var kvp = document.location.search.substr(1).split('&');
@@ -445,7 +505,6 @@
                     $scope.tags = data.tags;
                     $scope.tags_owned = data.tags_owned;
                     $scope.names = Object.keys($scope.tags);
-
                 });
                 res.error(function() {
                     $.notify("Ajax failed", { position:"top center",clickToHide: true,autoHideDelay:2000});
@@ -493,6 +552,84 @@
                 res.error(function() {
                     $.notify("Ajax failed", { position:"top center",clickToHide: true,autoHideDelay:2000});
                 });
+            };
+
+            $scope.root.views = function(sensorName) {
+                $scope.addedViews = [];
+                $scope.removedViews = [];
+                $scope.availableFields = [];
+                $scope.sensorName = sensorName;
+                var res = $http.get('/api/sensor/' + sensorName + '/views',{ headers: header });
+                res.success(function(data) {
+                    $scope.views_owned = data.views_owned;
+                    $scope.availableFields = data.available_fields;
+                });
+                res.error(function() {
+                    $.notify("Ajax failed", { position:"top center",clickToHide: true,autoHideDelay:2000});
+                });
+            };
+            $scope.root.addNewView = function() {
+                $scope.addedViews.push({'source_name': '', 'fields': '', 'id': ''});
+            };
+            $scope.root.removeExistingView = function(index) {
+                view = $scope.views_owned[index]
+                var res = $http.delete('/api/sensor/'+ $scope.sensorName + '/views/' + view.id, { headers: header });
+                res.success(function(data) {
+                    if (data["success"]==="False"){
+                        $.notify(data["error"], {
+                            position: "top center",
+                            clickToHide: true,
+                            autoHideDelay:2000
+                        });
+                    }
+                    else if (data["success"]==="True"){
+                       $scope.views_owned.splice(index, 1);
+                       $.notify("Success",{ globalPosition:'top center',clickToHide: true,autoHideDelay:2000, className:'success'});
+                    }
+                });
+                res.error(function() {
+                    $.notify("Ajax failed", { position:"top center",clickToHide: true,autoHideDelay:2000});
+                });
+            };
+            $scope.root.removeView = function(index) {
+                $scope.addedViews.splice(index, 1);
+            };
+            $scope.root.updateViews = function() {
+                views = $scope.addedViews;
+                if (views.length > 0) {
+                    var set = {};
+                    for (var i = 0; i < views.length; i++) {
+                        if (views[i].fields === '') {
+                            $.notify("Fields is not specified", { position:"top center",clickToHide: true,autoHideDelay:2000});
+                            return;
+                        }
+                        if (set[views[i].fields]) {
+                            $.notify("There is a view that is specified more than once (same fields)", { position:"top center",clickToHide: true,autoHideDelay:2000});
+                            return;
+                        }
+                        set[views[i].fields] = true;
+                    }
+
+                }
+                $scope.addedViews.forEach(view => {
+                    var res = $http.post('/api/sensor/'+ $scope.sensorName + '/views', {'data': {'source_name': view.source_name, 'fields': view.fields.join(', ')}},{ headers: header });
+                    res.success(function(data) {
+                        if (data["success"]==="False"){
+                            $.notify(data["error"], {
+                                position: "top center",
+                                clickToHide: true,
+                                autoHideDelay:2000
+                            });
+                        }
+                        else if (data["success"]==="True"){
+                           $.notify("Success",{ globalPosition:'top center',clickToHide: true,autoHideDelay:2000, className:'success'});
+                        }
+                    });
+                    res.error(function() {
+                        $.notify("Ajax failed", { position:"top center",clickToHide: true,autoHideDelay:2000});
+                    });
+                })
+                $scope.addedViews = []
             };
 
             /*$scope.root.addNewSubscriber = function() {

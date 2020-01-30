@@ -147,6 +147,8 @@ function install_packages {
     sudo service influxdb start
     sudo service mongod start
     sudo apt-get install rabbitmq-server
+    sudo apt-get install nodejs
+    sudo apt-get install npm
     sed -i -e 's/"inet_interfaces = all/"inet_interfaces = loopback-only"/g' /etc/postfix/main.cf
     service postfix restart
     systemctl enable mongod.service

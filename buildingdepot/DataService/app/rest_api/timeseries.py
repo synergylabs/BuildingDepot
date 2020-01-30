@@ -55,8 +55,10 @@ class TimeSeriesService(MethodView):
         end_time = request.args.get('end_time')
         resolution = request.args.get('resolution')
         fields= request.args.get('fields')
+        original_fields = fields
         if fields:
             fields = fields.split(';')
+            original_fields = fields
             fields = '"' + '", "'.join(fields) + '"'
         else:
             fields = '*'
@@ -64,24 +66,45 @@ class TimeSeriesService(MethodView):
         if not all([start_time, end_time]):
             return jsonify(responses.missing_parameters)
 
+        if r.sismember('views', name):
+            allowed_fields = [value.strip() for value in r.get('fields:{}'.format(name)).split(',')]
+            if original_fields:
+                fields = [field for field in original_fields if field in allowed_fields]
+                fields = ','.join(fields)
+            else:
+                fields = ','.join(allowed_fields)
+            name = r.get('parent:{}'.format(name))
+
         if resolution:
             if fields == '*':
                 return jsonify('TODO: Fields are not supported with resolution')
             try:
-                data = influx.query(
-                    'select mean(*) from "' + name + '" where (time>\'' + timestamp_to_time_string(
+                query = 'select mean(*) from "' + name + '" where (time>\'' + timestamp_to_time_string(
                         float(start_time)) \
                     + '\' and time<\'' + timestamp_to_time_string(
-                        float(end_time)) + '\')' + " GROUP BY time(" + resolution + ")")
+                        float(end_time)) + '\')' + " GROUP BY time(" + resolution + ")"
+                data = influx.query(query)
             except influxdb.exceptions.InfluxDBClientError:
                 return jsonify(responses.resolution_high)
-            #rawdata = data.raw
         else:
-            data = influx.query(
-                'select ' + fields + ' from "' + name + '" where time>\'' + timestamp_to_time_string(float(start_time)) \
-                + '\' and time<\'' + timestamp_to_time_string(float(end_time)) + '\'')
+            if fields is not '*':
+                fields = '"' + '", "'.join(fields.split(',')) + '"'
+            query = 'select ' + fields + ' from "' + name + '" where time>\'' + timestamp_to_time_string(float(start_time)) \
+                + '\' and time<\'' + timestamp_to_time_string(float(end_time)) + '\''
+
+            # # Log InfluxDB Query # #
+            # print ('\n\n' + '{s:{c}^{n}}'.format(s=' InfluxDB Query ', n=100, c='#'))
+            # print (query)
+            # print ('#' * 100 + '\n\n')
+            data = influx.query(query)
         response = dict(responses.success_true)
+
+        # # Log InfluxDB Query # #
+        # print ('\n\n' + '{s:{c}^{n}}'.format(s=' InfluxDB Data ', n=100, c='#'))
+        # print (data.raw)
+        # print ('#' * 100 + '\n\n')
         response.update({'data': data.raw})
+
         return jsonify(response)
 
     @check_oauth
@@ -123,6 +146,10 @@ class TimeSeriesService(MethodView):
             sensors_list = [sensor['sensor_id'] for sensor in json]
             permissions = batch_permission_check(sensors_list, get_email())
             # Check if there are any apps associated with the sensors
+            views_list = []
+            for sensor in sensors_list:
+                views_list = views_list + list(r.smembers('views:{}'.format(sensor)))
+            sensors_list = sensors_list + views_list
             pipeline = r.pipeline()
             for sensor in sensors_list:
                 pipeline.exists(''.join(['apps:', sensor]))
@@ -133,6 +160,12 @@ class TimeSeriesService(MethodView):
                 # If 'w' (write is in the permission), authorize
                 if 'w' in permissions[sensor['sensor_id']]:
                     for sample in sensor['samples']:
+                        for key in sample.keys():
+                            if type(sample[key]) is list:
+                                length = len(sample[key])
+                                for i in range(length):
+                                    sample.update({"%s-%d" % (key, i): sample[key][i]})
+                                del sample[key]
                         dic = {
                             'measurement': sensor['sensor_id'],
                             'time': timestamp_to_time_string(sample['time']),
@@ -142,13 +175,35 @@ class TimeSeriesService(MethodView):
                             }
                         }
                         del sample['time']
-                        # Key assertion TODO: need to raise appropriate error
-                        for k in sample.keys():
-                            assert k=='value' or \
-                                    '_'.join(k.split('_')[1:]) in \
-                                    ['hz_magnitude', 'hz_phase']
                         dic['fields'].update(sample)
                         points.append(dic)
+                    views = r.smembers('views:{}'.format(sensor['sensor_id']))
+                    for view in views:
+                        fields = []
+                        view_fields = r.get('fields:{}'.format(view))
+                        if view_fields:
+                            fields = [field.strip() for field in view_fields.split(',')]
+                        view_dic = dict(dic)
+                        view_fields = {k: v for k, v in dic['fields'].items() if k in fields }
+                        view_dic.update({'fields': view_fields})
+                        if apps[view]:
+                            if not pubsub:
+                                pubsub = connect_broker()
+
+                                if pubsub:
+                                    try:
+                                        channel = pubsub.channel()
+                                    except Exception as e:
+                                        print "Failed to open channel" + " error" + str(e)
+                            try:
+                                # print ('\n\n' + '{s:{c}^{n}}'.format(s=' view_dic ', n=100, c='#'))
+                                # print (view_dic)
+                                # print ('#' * 100 + '\n\n')
+                                channel.basic_publish(exchange=exchange, routing_key=view, body=str(view_dic))
+                            except Exception as e:
+                                print "except inside"
+                                print "Failed to write to broker " + str(e)
+
                     if apps[sensor['sensor_id']]:
                         if not pubsub:
                             pubsub = connect_broker()
@@ -159,6 +214,9 @@ class TimeSeriesService(MethodView):
                                 except Exception as e:
                                     print "Failed to open channel" + " error" + str(e)
                         try:
+                            # print ('\n\n' + '{s:{c}^{n}}'.format(s=' dic ', n=100, c='#'))
+                            # print (dic)
+                            # print ('#' * 100 + '\n\n')
                             channel.basic_publish(exchange=exchange, routing_key=sensor['sensor_id'], body=str(dic))
                         except Exception as e:
                             print "except inside"
@@ -168,6 +226,12 @@ class TimeSeriesService(MethodView):
         except KeyError:
             print json
             abort(400)
+
+        # # Log InfluxDB Query # #
+        # print ('\n\n' + '{s:{c}^{n}}'.format(s=' InfluxDB Data Points ', n=100, c='#'))
+        # print (points)
+        # print ('#' * 100 + '\n\n')
+
         result = influx.write_points(points)
         if result:
             if len(unauthorised_sensor) > 0:
