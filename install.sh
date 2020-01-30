@@ -135,20 +135,19 @@ function install_packages {
     apt-get update -y
     apt-get install
     apt-get -y install python-pip
-    #apt-get install -y mongodb-org
     apt-get install -y mongodb-org=4.0.5 mongodb-org-server=4.0.5 mongodb-org-shell=4.0.5 mongodb-org-mongos=4.0.5 mongodb-org-tools=4.0.5
     apt-get install -y openssl python-setuptools python-dev build-essential software-properties-common
     apt-get install -y nginx
     apt-get install -y supervisor
     apt-get install -y redis-server
     pip install --upgrade virtualenv
-    apt-get install wget
-    sudo apt-get install influxdb
-    sudo service influxdb start
-    sudo service mongod start
-    sudo apt-get install rabbitmq-server
-    sudo apt-get install nodejs
-    sudo apt-get install npm
+    apt-get install -y wget
+    apt-get install -y influxdb
+    service influxdb start
+    service mongod start
+    apt-get install -y rabbitmq-server
+    apt-get install -y nodejs
+    apt-get install -y npm
     sed -i -e 's/"inet_interfaces = all/"inet_interfaces = loopback-only"/g' /etc/postfix/main.cf
     service postfix restart
     systemctl enable mongod.service
