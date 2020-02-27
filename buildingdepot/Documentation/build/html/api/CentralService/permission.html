@@ -1,37 +1,188 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
-<html xmlns="http://www.w3.org/1999/xhtml">
-  <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Permission &#8212; BuildingDepot 3.2.8 documentation</title>
-    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
-    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-    <script type="text/javascript" src="../../_static/jquery.js"></script>
-    <script type="text/javascript" src="../../_static/underscore.js"></script>
-    <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <link rel="index" title="Index" href="../../genindex.html" />
-    <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="User" href="user.html" />
-    <link rel="prev" title="Usergroups" href="usergroup.html" />
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Permission &mdash; BuildingDepot 3.2.9 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../genindex.html"/>
+        <link rel="search" title="Search" href="../../search.html"/>
+    <link rel="top" title="BuildingDepot 3.2.9 documentation" href="../../index.html"/>
+        <link rel="up" title="CentralService APIs" href="index.html"/>
+        <link rel="next" title="User" href="user.html"/>
+        <link rel="prev" title="Usergroups" href="usergroup.html"/> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
    
-  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
-  
-  
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+  <div class="wy-grid-for-nav">
 
-  </head><body>
-  
-
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
           
 
-          <div class="body" role="main">
+          
+            <a href="../../index.html" class="icon icon-home"> BuildingDepot
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                3.2.9
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../centralservice.html">Central Service</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../dataservice.html">Data Service</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../install.html#configuration">Configuration</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">CentralService APIs</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="index.html#authentication">Authentication</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="oauth.html">OAuth</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tagtype.html">TagType</a></li>
+<li class="toctree-l3"><a class="reference internal" href="buildingtemplate.html">BuildingTemplate</a></li>
+<li class="toctree-l3"><a class="reference internal" href="building.html">Buildings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="dataservice.html">DataService</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sensor.html">Sensor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sensorgroup.html">SensorGroups</a></li>
+<li class="toctree-l3"><a class="reference internal" href="usergroup.html">Usergroups</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Permission</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#create-permission">Create Permission</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#read-permission">Read Permission</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#delete-permission">Delete Permission</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="user.html">User</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../DataService/index.html">DataService APIs</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">BuildingDepot</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="index.html">CentralService APIs</a> &raquo;</li>
+        
+      <li>Permission</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/api/CentralService/permission.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
             
   <div class="section" id="permission">
 <h1>Permission<a class="headerlink" href="#permission" title="Permalink to this headline">¶</a></h1>
@@ -39,29 +190,19 @@
 <div class="section" id="create-permission">
 <h2>Create Permission<a class="headerlink" href="#create-permission" title="Permalink to this headline">¶</a></h2>
 <p>This request creates a new Permission link between a UserGroup and a SensorGroup.</p>
-<dl class="post">
-<dt id="post--api-permission">
-<code class="descname">POST </code><code class="descname">/api/permission</code><a class="headerlink" href="#post--api-permission" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name" colspan="2">JSON Parameters:</th></tr>
-<tr class="field-odd field"><td>&#160;</td><td class="field-body"><ul class="first simple">
-<li><dl class="first docutils">
-<dt><strong>data</strong> <cite>(dictionary)</cite> – Contains the permission value for sensorgroup and usergroup</dt>
-<dd><ul class="first last">
-<li><strong>sensor_group</strong> <cite>(string)</cite> – Name of the sensor_group</li>
-<li><strong>user_group</strong> <cite>(string)</cite> – Name of the user_group</li>
-<li><dl class="first docutils">
-<dt><strong>permission</strong> <cite>(string)</cite> – Permission level</dt>
-<dd><ul class="first last">
-<li><strong>r</strong> <cite>(string)</cite> – Read - Will give read only access to the sensors</li>
-<li><strong>rw</strong> <cite>(string)</cite> – Read-Write - Will give read and write access to the sensors</li>
-<li><strong>dr</strong> <cite>(string)</cite> – Deny-read - Will deny any access to the sensors</li>
-<li><strong>rwp</strong> <cite>(string)</cite> – Read-Write-Permission - Highest level of permission that can be assigned. Will give read and write access to the sensors. In addition to this the user will be able to add/remove tags from the sensor.</li>
+<dl class="field-list">
+<dt class="field-odd">JSON Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><dl class="simple">
+<dt><strong>data</strong> <cite>(dictionary)</cite> – Contains the permission value for sensorgroup and usergroup</dt><dd><ul>
+<li><p><strong>sensor_group</strong> <cite>(string)</cite> – Name of the sensor_group</p></li>
+<li><p><strong>user_group</strong> <cite>(string)</cite> – Name of the user_group</p></li>
+<li><dl class="simple">
+<dt><strong>permission</strong> <cite>(string)</cite> – Permission level</dt><dd><ul>
+<li><p><strong>r</strong> <cite>(string)</cite> – Read - Will give read only access to the sensors</p></li>
+<li><p><strong>rw</strong> <cite>(string)</cite> – Read-Write - Will give read and write access to the sensors</p></li>
+<li><p><strong>dr</strong> <cite>(string)</cite> – Deny-read - Will deny any access to the sensors</p></li>
+<li><p><strong>rwp</strong> <cite>(string)</cite> – Read-Write-Permission - Highest level of permission that can be assigned. Will give read and write access to the sensors. In addition to this the user will be able to add/remove tags from the sensor.</p></li>
 </ul>
 </dd>
 </dl>
@@ -71,33 +212,27 @@
 </dl>
 </li>
 </ul>
-<blockquote class="last">
-<div><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">returns:</th><td class="field-body"><ul class="first simple">
-<li><strong>success</strong> <cite>(string)</cite> – Returns ‘True’ if data is posted successfully otherwise ‘False’</li>
-<li><strong>error</strong> <cite>(string)</cite> – An additional value that will be present only if the request fails specifying the cause for failure</li>
+<blockquote>
+<div><dl class="field-list simple">
+<dt class="field-odd">returns</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>success</strong> <cite>(string)</cite> – Returns ‘True’ if data is posted successfully otherwise ‘False’</p></li>
+<li><p><strong>error</strong> <cite>(string)</cite> – An additional value that will be present only if the request fails specifying the cause for failure</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">status 200:</th><td class="field-body"><p class="first">Success</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">status 401:</th><td class="field-body"><p class="first last">Unauthorized Credentials</p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt class="field-even">status 200</dt>
+<dd class="field-even"><p>Success</p>
+</dd>
+<dt class="field-odd">status 401</dt>
+<dd class="field-odd"><p>Unauthorized Credentials</p>
+</dd>
+</dl>
 </div></blockquote>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 <div class="compound">
 <p class="compound-first"><strong>Example request</strong>:</p>
-<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">POST</span> <span class="nn">/api/permission</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span class="nf">POST</span> <span class="nn">/api/permission</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
 <span class="na">Accept</span><span class="o">:</span> <span class="l">application/json; charset=utf-8</span>
 
 {
@@ -110,7 +245,7 @@
 </pre></div>
 </div>
 <p class="compound-middle"><strong>Example response</strong> (for success):</p>
-<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
 <span class="p">{</span>
@@ -119,7 +254,7 @@
 </pre></div>
 </div>
 <p class="compound-middle"><strong>Example response</strong> (for failure):</p>
-<div class="compound-last highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<div class="compound-last highlight-http notranslate"><div class="highlight"><pre><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
 <span class="p">{</span>
@@ -143,43 +278,14 @@
 <div class="section" id="read-permission">
 <h2>Read Permission<a class="headerlink" href="#read-permission" title="Permalink to this headline">¶</a></h2>
 <p>This request retrieves Permission level assigned for existing SensorGroup and UserGroup.</p>
-<dl class="get">
-<dt id="get--api-permission?user_group=-user_group-&amp;sensor_group=-sensor_group-">
-<code class="descname">GET </code><code class="descname">/api/permission?user_group=&lt;user_group&gt;&amp;sensor_group=&lt;sensor_group&gt;</code><a class="headerlink" href="#get--api-permission?user_group=-user_group-&sensor_group=-sensor_group-" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>user_group</strong> (<em>string</em>) – Name of UserGroup (compulsory)</li>
-<li><strong>sensor_group</strong> (<em>string</em>) – Name of SensorGroup (compulsory)</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><ul class="first simple">
-<li><strong>success</strong> <cite>(string)</cite> – Returns ‘True’ if a permission exists between the sensor and user group otherwise ‘False’</li>
-<li><strong>permission</strong> <cite>(string)</cite> – Contains the permission level that are attached to this SensorGroup and UserGroup</li>
-</ul>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
-<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> – Success</li>
-<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a> – Unauthorized Credentials</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
 <div class="compound">
 <p class="compound-first"><strong>Example request</strong>:</p>
-<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">GET</span> <span class="nn">/api/permission?user_group=Test_User_Group&amp;sensor_group=Test_Sensor_Group</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span class="nf">GET</span> <span class="nn">/api/permission?user_group=Test_User_Group&amp;sensor_group=Test_Sensor_Group</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
 <span class="na">Accept</span><span class="o">:</span> <span class="l">application/json; charset=utf-8</span>
 </pre></div>
 </div>
 <p class="compound-middle"><strong>Example response</strong>:</p>
-<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
 <span class="p">{</span>
@@ -189,7 +295,7 @@
 </pre></div>
 </div>
 <p class="compound-middle"><strong>Example response</strong> (for failure):</p>
-<div class="compound-last highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<div class="compound-last highlight-http notranslate"><div class="highlight"><pre><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
 <span class="p">{</span>
@@ -203,42 +309,14 @@
 <div class="section" id="delete-permission">
 <h2>Delete Permission<a class="headerlink" href="#delete-permission" title="Permalink to this headline">¶</a></h2>
 <p>This request deletes the permission link between the UserGroup and SensorGroup</p>
-<dl class="delete">
-<dt id="delete--api-permission?user_group=-user_group-&amp;sensor_group=-sensor_group-">
-<code class="descname">DELETE </code><code class="descname">/api/permission?user_group=&lt;user_group&gt;&amp;sensor_group=&lt;sensor_group&gt;</code><a class="headerlink" href="#delete--api-permission?user_group=-user_group-&sensor_group=-sensor_group-" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>user_group</strong> (<em>string</em>) – Name of UserGroup (compulsory)</li>
-<li><strong>sensor_group</strong> (<em>string</em>) – Name of SensorGroup (compulsory)</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><ul class="first simple">
-<li><strong>success</strong> <cite>(string)</cite> – Returns ‘True’ if a permission is deleted between the sensor and user group otherwise ‘False’</li>
-</ul>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
-<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> – Success</li>
-<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a> – Unauthorized Credentials</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
 <div class="compound">
 <p class="compound-first"><strong>Example request</strong>:</p>
-<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">DELETE</span> <span class="nn">/api/permission?user_group=Test_User_Group&amp;sensor_group=Test_Sensor_Group</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span class="nf">DELETE</span> <span class="nn">/api/permission?user_group=Test_User_Group&amp;sensor_group=Test_Sensor_Group</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
 <span class="na">Accept</span><span class="o">:</span> <span class="l">application/json; charset=utf-8</span>
 </pre></div>
 </div>
 <p class="compound-middle"><strong>Example response</strong>:</p>
-<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
 <span class="p">{</span>
@@ -247,7 +325,7 @@
 </pre></div>
 </div>
 <p class="compound-middle"><strong>Example response</strong> (for failure):</p>
-<div class="compound-last highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<div class="compound-last highlight-http notranslate"><div class="highlight"><pre><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
 <span class="p">{</span>
@@ -271,69 +349,73 @@
 </div>
 
 
+           </div>
           </div>
-          
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="user.html" class="btn btn-neutral float-right" title="User" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="usergroup.html" class="btn btn-neutral" title="Usergroups" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, SynergyLabs.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> and ❤️  using a custom <a href="https://github.com/LinxiFan/Sphinx-theme">theme</a> based on <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-  <h3><a href="../../index.html">Table Of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">Permission</a><ul>
-<li><a class="reference internal" href="#create-permission">Create Permission</a></li>
-<li><a class="reference internal" href="#read-permission">Read Permission</a></li>
-<li><a class="reference internal" href="#delete-permission">Delete Permission</a></li>
-</ul>
-</li>
-</ul>
-<div class="relations">
-<h3>Related Topics</h3>
-<ul>
-  <li><a href="../../index.html">Documentation overview</a><ul>
-  <li><a href="index.html">CentralService APIs</a><ul>
-      <li>Previous: <a href="usergroup.html" title="previous chapter">Usergroups</a></li>
-      <li>Next: <a href="user.html" title="next chapter">User</a></li>
-  </ul></li>
-  </ul></li>
-</ul>
-</div>
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="../../_sources/api/CentralService/permission.rst.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div>
-<div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="../../search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-    </div>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
-        </div>
-      </div>
-      <div class="clearer"></div>
-    </div>
-    <div class="footer">
-      &copy;2019, SynergyLabs.
-      
-      |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.7.5</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
-      
-      |
-      <a href="../../_sources/api/CentralService/permission.rst.txt"
-          rel="nofollow">Page source</a>
-    </div>
 
-    
+    </section>
 
-    
-  </body>
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'3.2.9',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+      <script type="text/javascript" src="../../_static/language_data.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
 </html>
