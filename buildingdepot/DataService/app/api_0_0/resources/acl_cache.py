@@ -8,7 +8,8 @@ def invalidate_permission(sensorgroup):
     pipe = r.pipeline()
     sensors_list = r.smembers('sensorgroup:{}'.format(sensor_group['name']))
     for sensor in sensors_list:
-        pipe.delete(sensor)
+        emails = list(r.hgetall(sensor).keys())
+        pipe.hdel(sensor, emails)
     pipe.execute()
 
 def invalidate_user(usergroup,email):
