@@ -22,13 +22,14 @@ from .. import r, influx, oauth, exchange, permissions
 from werkzeug.security import gen_salt
 import sys, time, influxdb, urllib, traceback, pika
 
-sys.path.append('/srv/buildingdepot')
+sys.path.append("/srv/buildingdepot")
 from utils import get_user_oauth
 from ..api_0_0.resources.utils import *
 from ..api_0_0.resources.acl_cache import invalidate_user, invalidate_permission
 from .helper import check_oauth
 
-@api.route('/sensor/list', methods=['GET'])
+
+@api.route("/sensor/list", methods=["GET"])
 @check_oauth
 def get_sensors_metadata():
     """ If request type is params all the sensors with the specified paramter key and values are returned,
@@ -68,24 +69,26 @@ def get_sensors_metadata():
           ]
         }
     """
-    request_type = request.args.get('filter')
+    request_type = request.args.get("filter")
     if (request_type is None) or (len(request.args) < 2):
         return jsonify(responses.missing_paramters)
 
     for key, val in request.args.iteritems():
-        if key != 'filter':
-            param = urllib.unquote(key).decode('utf8')
-            value = urllib.unquote(val).decode('utf8')
+        if key != "filter":
+            param = urllib.unquote(key).decode("utf8")
+            value = urllib.unquote(val).decode("utf8")
             print param, value
 
     if request_type == "params":
         list_sensors = Sensor._get_collection().find({param: value})
     elif request_type == "tags":
-        list_sensors = Sensor._get_collection().find({request_type: {'name': param, 'value': value}})
+        list_sensors = Sensor._get_collection().find(
+            {request_type: {"name": param, "value": value}}
+        )
     elif request_type == "metadata":
-        list_sensors = Sensor._get_collection().find({request_type + "." + param: value})
+        list_sensors = Sensor._get_collection().find(
+            {request_type + "." + param: value}
+        )
     response = dict(responses.success_true)
-    response.update({'data': create_response(list_sensors)})
+    response.update({"data": create_response(list_sensors)})
     return jsonify(response)
-
-

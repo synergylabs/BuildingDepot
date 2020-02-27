@@ -38,7 +38,7 @@ class Client(Document):
 
     @property
     def client_type(self):
-        return 'public'
+        return "public"
 
     @property
     def redirect_uris(self):
@@ -90,44 +90,45 @@ class Token(Document):
 
 
 def current_user():
-    if 'email' in session:
-        email = session['email']
+    if "email" in session:
+        email = session["email"]
         return get_user_oauth(email)
     return None
 
 
-@oauth_bd.route('/', methods=('GET', 'POST'))
+@oauth_bd.route("/", methods=("GET", "POST"))
 def home():
-    if request.method == 'POST':
-        email = request.form.get('username')
+    if request.method == "POST":
+        email = request.form.get("username")
         user = get_user_oauth(email)
         if not user:
-            return jsonify({'response': 'Access Denied'})
-        session['email'] = user
-        return redirect('/')
+            return jsonify({"response": "Access Denied"})
+        session["email"] = user
+        return redirect("/")
     user_current = current_user()
-    return render_template('home.html', user=user_current)
+    return render_template("home.html", user=user_current)
 
 
-@oauth_bd.route('/client')
+@oauth_bd.route("/client")
 def client():
     user_current = current_user()
     if not user_current:
-        return redirect('/')
+        return redirect("/")
     item = Client(
         client_id=gen_salt(40),
         client_secret=gen_salt(50),
-        _redirect_uris=' '.join([
-            'http://localhost:8000/authorized',
-            'http://127.0.0.1:8000/authorized',
-            'http://127.0.1:8000/authorized',
-            'http://127.1:8000/authorized']),
-        _default_scopes='email',
-        user=get_user_oauth(user_current)).save()
-    return jsonify(
-        client_id=item.client_id,
-        client_secret=item.client_secret
-    )
+        _redirect_uris=" ".join(
+            [
+                "http://localhost:8000/authorized",
+                "http://127.0.0.1:8000/authorized",
+                "http://127.0.1:8000/authorized",
+                "http://127.1:8000/authorized",
+            ]
+        ),
+        _default_scopes="email",
+        user=get_user_oauth(user_current),
+    ).save()
+    return jsonify(client_id=item.client_id, client_secret=item.client_secret)
 
 
 @oauth.clientgetter
@@ -137,8 +138,9 @@ def load_client(client_id):
 
 @oauth.grantgetter
 def load_grant(client_id, code):
-    return Grant.objects(client=Client.objects(client_id=client_id).first(),
-                         code=code).first()
+    return Grant.objects(
+        client=Client.objects(client_id=client_id).first(), code=code
+    ).first()
 
 
 @oauth.grantsetter
@@ -146,10 +148,12 @@ def save_grant(client_id, code, request, *args, **kwargs):
     expires = datetime.utcnow() + timedelta(seconds=100)
     grant = Grant(
         client=Client.objects(client_id=client_id).first(),
-        code=code['code'],
+        code=code["code"],
         redirect_uri=request.redirect_uri,
-        _scopes=' '.join(request.scopes),
-        user=get_user_oauth(current_user()), expires=expires)
+        _scopes=" ".join(request.scopes),
+        user=get_user_oauth(current_user()),
+        expires=expires,
+    )
     grant.save()
     return grant
 
@@ -165,27 +169,30 @@ def load_token(access_token=None, refresh_token=None):
 @oauth.tokensetter
 def save_token(token, request, *args, **kwargs):
     toks = Token.objects(client=request.client, user=request.user)
-    previous_tokens = ['oauth']
+    previous_tokens = ["oauth"]
     for t in toks:
-        previous_tokens.append(''.join(['oauth:', t.access_token]))
+        previous_tokens.append("".join(["oauth:", t.access_token]))
         t.delete()
     r.delete(*previous_tokens)
-    expires_in = token.pop('expires_in')
+    expires_in = token.pop("expires_in")
     expires = datetime.utcnow() + timedelta(seconds=expires_in)
     tok = Token(
-        access_token=token['access_token'],
-        refresh_token=token['refresh_token'],
-        token_type=token['token_type'],
-        _scopes=token['scope'],
+        access_token=token["access_token"],
+        refresh_token=token["refresh_token"],
+        token_type=token["token_type"],
+        _scopes=token["scope"],
         expires=expires,
         client=request.client,
         user=request.user,
-        email=request.user).save()
-    r.setex(''.join(['oauth:', tok.access_token]), client.user, expires_in)
+        email=request.user,
+    ).save()
+    r.setex("".join(["oauth:", tok.access_token]), client.user, expires_in)
     return tok
 
 
-@oauth_bd.route('/access_token/client_id=<client_id>/client_secret=<client_secret>', methods=['GET'])
+@oauth_bd.route(
+    "/access_token/client_id=<client_id>/client_secret=<client_secret>", methods=["GET"]
+)
 def get_access_token(client_id, client_secret):
     """ Generates and returns an access token to the user if the client_id and
         client_secret provided by them are valid"""
@@ -196,12 +203,13 @@ def get_access_token(client_id, client_secret):
         tok = Token(
             access_token=str(binascii.hexlify(os.urandom(16))),
             refresh_token=str(binascii.hexlify(os.urandom(16))),
-            token_type='Bearer',
-            _scopes='email',
+            token_type="Bearer",
+            _scopes="email",
             expires=expires,
             client=client,
             user=client.user,
-            email=client.user).save()
-        r.setex(''.join(['oauth:', tok.access_token]), client.user, expires_in)
-        return jsonify({'success': 'True', 'access_token': tok.access_token})
-    return jsonify({'success': 'False', 'access_token': 'Invalid credentials'})
+            email=client.user,
+        ).save()
+        r.setex("".join(["oauth:", tok.access_token]), client.user, expires_in)
+        return jsonify({"success": "True", "access_token": tok.access_token})
+    return jsonify({"success": "False", "access_token": "Invalid credentials"})

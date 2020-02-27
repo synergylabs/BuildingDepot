@@ -46,17 +46,22 @@ class SensorService(MethodView):
         sensor = Sensor.objects(name=name).first()
         if sensor is None:
             return jsonify(responses.invalid_uuid)
-        tags_owned = [{'name': tag.name, 'value': tag.value} for tag in sensor.tags]
-        metadata = Sensor._get_collection().find({'name': name}, {'metadata': 1, '_id': 0})[0]['metadata']
-        metadata = [{'name': key, 'value': val} for key, val in metadata.iteritems()]
+        tags_owned = [{"name": tag.name, "value": tag.value} for tag in sensor.tags]
+        metadata = Sensor._get_collection().find(
+            {"name": name}, {"metadata": 1, "_id": 0}
+        )[0]["metadata"]
+        metadata = [{"name": key, "value": val} for key, val in metadata.iteritems()]
         response = dict(responses.success_true)
-        response.update({'building': str(sensor.building),
-                         'name': str(sensor.name),
-                         'tags': tags_owned,
-                         'metadata': metadata,
-                         'source_identifier': str(sensor.source_identifier),
-                         'source_name': str(sensor.source_name)
-                         })
+        response.update(
+            {
+                "building": str(sensor.building),
+                "name": str(sensor.name),
+                "tags": tags_owned,
+                "metadata": metadata,
+                "source_identifier": str(sensor.source_identifier),
+                "source_name": str(sensor.source_name),
+            }
+        )
         return jsonify(response)
 
     @check_oauth
@@ -76,19 +81,19 @@ class SensorService(MethodView):
             "error": <details of an error if it happends>
         }
         """
-        data = request.get_json()['data']
+        data = request.get_json()["data"]
         try:
-            building = data['building']
+            building = data["building"]
         except KeyError:
             return jsonify(responses.missing_parameters)
 
-        sensor_name = data.get('name')
-        identifier = data.get('identifier')
-        uuid = data.get('uuid')
+        sensor_name = data.get("name")
+        identifier = data.get("identifier")
+        uuid = data.get("uuid")
         email = get_email()
-        fields = data.get('fields')
+        fields = data.get("fields")
         try:
-            tags = data.get('tags')
+            tags = data.get("tags")
         except:
             tags = []
 
@@ -101,15 +106,17 @@ class SensorService(MethodView):
             if not uuid:
                 uuid = str(uuid4())
             if defs.create_sensor(uuid, email, building):
-                Sensor(name=uuid,
-                       source_name=xstr(sensor_name),
-                       source_identifier=xstr(identifier),
-                       building=building,
-                       owner=email,
-                       tags=tags).save()
-                r.set('owner:{}'.format(uuid), email)
+                Sensor(
+                    name=uuid,
+                    source_name=xstr(sensor_name),
+                    source_identifier=xstr(identifier),
+                    building=building,
+                    owner=email,
+                    tags=tags,
+                ).save()
+                r.set("owner:{}".format(uuid), email)
                 response = dict(responses.success_true)
-                response.update({'uuid': uuid})
+                response.update({"uuid": uuid})
                 return jsonify(response)
             else:
                 return jsonify(responses.ds_error)
@@ -120,19 +127,21 @@ class SensorService(MethodView):
         if name is None:
             return jsonify(responses.missing_parameters)
         sensor = Sensor.objects(name=name).first()
-        if r.get('parent:{}'.format(name)):
-            return jsonify({'success': 'False', 'error': 'Sensor view can\'t be deleted.'})
-        views = r.smembers('views:{}'.format(sensor.name))
+        if r.get("parent:{}".format(name)):
+            return jsonify(
+                {"success": "False", "error": "Sensor view can't be deleted."}
+            )
+        views = r.smembers("views:{}".format(sensor.name))
         for view in views:
             if defs.delete_sensor(view):
-                r.delete('sensor:{}'.format(view))
-                r.delete('owner:{}'.format(view))
+                r.delete("sensor:{}".format(view))
+                r.delete("owner:{}".format(view))
                 # cache process done
                 Sensor.objects(name=view).delete()
         # cache process
         if defs.delete_sensor(name):
-            r.delete('sensor:{}'.format(sensor.name))
-            r.delete('owner:{}'.format(sensor.name))
+            r.delete("sensor:{}".format(sensor.name))
+            r.delete("owner:{}".format(sensor.name))
             # cache process done
             Sensor.objects(name=sensor.name).delete()
             response = dict(responses.success_true)

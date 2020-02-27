@@ -11,9 +11,9 @@ Buildings can also have metadata attached to them.
 @license: UCSD License. See License file for details.
 """
 
-from flask import jsonify,request,current_app
+from flask import jsonify, request, current_app
 from flask.views import MethodView
-from ...models.cs_models import Building,BuildingTemplate,DataService
+from ...models.cs_models import Building, BuildingTemplate, DataService
 from .. import responses
 from ..helper import gen_update, check_oauth
 from ... import oauth
@@ -22,64 +22,64 @@ from ...auth.access_control import super_required
 
 class BuildingService(MethodView):
 
-    params = ['name','template','description']
+    params = ["name", "template", "description"]
 
     @check_oauth
     @super_required
     def post(self):
         try:
-            data = request.get_json()['data']
+            data = request.get_json()["data"]
         except KeyError:
             return jsonify(responses.missing_data)
         try:
-            name = data['name']
-            template = data['template']
+            name = data["name"]
+            template = data["template"]
         except KeyError:
             return jsonify(responses.missing_parameters)
         if BuildingTemplate.objects(name=template).first() is None:
-                return jsonify(responses.invalid_template)
+            return jsonify(responses.invalid_template)
         if not name:
-            return jsonify({'success':'False', 'error': 'Invalid Building name.'})
+            return jsonify({"success": "False", "error": "Invalid Building name."})
         building = Building.objects(name=name).first()
         if building is None:
-            Building(**gen_update(self.params,data)).save()
+            Building(**gen_update(self.params, data)).save()
         else:
             collection = Building._get_collection()
-            collection.update({'name': name},{"$set":gen_update(self.params,data)})
+            collection.update({"name": name}, {"$set": gen_update(self.params, data)})
         return jsonify(responses.success_true)
 
     @check_oauth
-    def get(self,name):
-        if name == 'list':
+    def get(self, name):
+        if name == "list":
             building = []
             response = dict(responses.success_true)
             collection = Building.objects
             for i in collection:
                 building.append(i.name)
-            response.update({'buildings': building})
+            response.update({"buildings": building})
         else:
             building = Building.objects(name=name).first()
             if building is None:
                 return jsonify(responses.invalid_building)
             response = dict(responses.success_true)
-            response.update({'name': building['name'],
-                             'description': building['description'],
-                             'template': building['template']})
+            response.update(
+                {
+                    "name": building["name"],
+                    "description": building["description"],
+                    "template": building["template"],
+                }
+            )
         return jsonify(response)
 
     @check_oauth
     @super_required
-    def delete(self,name):
+    def delete(self, name):
         building = Building.objects(name=name).first()
         if building is None:
             return jsonify(responses.invalid_building)
         collection = DataService._get_collection()
-        if len(building.tags) == 0 and collection.count({'buildings': name}) == 0:
+        if len(building.tags) == 0 and collection.count({"buildings": name}) == 0:
             building.delete()
         else:
             return jsonify(responses.building_in_use)
         return jsonify(responses.success_true)
-
-
-
-

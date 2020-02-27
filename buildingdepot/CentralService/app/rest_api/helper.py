@@ -20,8 +20,10 @@ from . import responses
 from .. import r
 
 url = "https://www.googleapis.com/oauth2/v3/token"
-headers = {'content-type': 'application/x-www-form-urlencoded',
-           'user-agent': 'BuildingDepot'}
+headers = {
+    "content-type": "application/x-www-form-urlencoded",
+    "user-agent": "BuildingDepot",
+}
 
 
 def add_delete(old, now):
@@ -62,13 +64,20 @@ def gen_update(params, data):
 
 
 def send_local_smtp(user_name, to_email, password):
-    sender = current_app.config['EMAIL_ID']
+    sender = current_app.config["EMAIL_ID"]
     receivers = [to_email]
 
-    message = responses.registration_email % (sender, user_name, to_email, to_email, password, '/'.join(request.base_url.split('/')[:3]))
+    message = responses.registration_email % (
+        sender,
+        user_name,
+        to_email,
+        to_email,
+        password,
+        "/".join(request.base_url.split("/")[:3]),
+    )
 
     try:
-        smtpObj = smtplib.SMTP('localhost')
+        smtpObj = smtplib.SMTP("localhost")
         smtpObj.sendmail(sender, receivers, message)
     except smtplib.SMTPException:
         print "Failed to send registration mail to %s" % (to_email)
@@ -87,20 +96,20 @@ def GenerateOAuth2String(username, access_token, base64_encode=True):
     Returns:
     The SASL argument for the OAuth2 mechanism.
     """
-    auth_string = 'user=%s\1auth=Bearer %s\1\1' % (username, access_token)
+    auth_string = "user=%s\1auth=Bearer %s\1\1" % (username, access_token)
     if base64_encode:
         auth_string = base64.b64encode(auth_string)
     return auth_string
 
 
 def get_access_token():
-    params = "client_id=" + current_app.config['CLIENT_ID']
-    params += "&client_secret=" + current_app.config['CLIENT_SECRET']
-    params += "&refresh_token=" + current_app.config['REFRESH_TOKEN']
+    params = "client_id=" + current_app.config["CLIENT_ID"]
+    params += "&client_secret=" + current_app.config["CLIENT_SECRET"]
+    params += "&refresh_token=" + current_app.config["REFRESH_TOKEN"]
     params += "&grant_type=refresh_token"
     try:
         r = requests.post(url, params, headers=headers)
-        access_token = r.json()['access_token']
+        access_token = r.json()["access_token"]
         return access_token
     except Exception as e:
         print "Failed to obtain access token " + str(e)
@@ -111,16 +120,28 @@ def send_mail_gmail(user_name, to_email, password):
     access_token = get_access_token()
     if access_token is None:
         return
-    sender = current_app.config['EMAIL_ID']
+    sender = current_app.config["EMAIL_ID"]
     print access_token
     print sender
     try:
-        smtp_conn = smtplib.SMTP('smtp.gmail.com', 587)
-        smtp_conn.ehlo('test')
+        smtp_conn = smtplib.SMTP("smtp.gmail.com", 587)
+        smtp_conn.ehlo("test")
         smtp_conn.starttls()
-        smtp_conn.docmd('AUTH',
-                        'XOAUTH2 ' + base64.b64encode(GenerateOAuth2String(sender, access_token, base64_encode=False)))
-        msg = responses.registration_email % (sender, user_name, to_email, to_email, password, '/'.join(request.base_url.split('/')[:3]))
+        smtp_conn.docmd(
+            "AUTH",
+            "XOAUTH2 "
+            + base64.b64encode(
+                GenerateOAuth2String(sender, access_token, base64_encode=False)
+            ),
+        )
+        msg = responses.registration_email % (
+            sender,
+            user_name,
+            to_email,
+            to_email,
+            password,
+            "/".join(request.base_url.split("/")[:3]),
+        )
         smtp_conn.sendmail(sender, to_email, msg)
     except Exception as e:
         print "Failed to send registration email to " + to_email + " " + str(e)
@@ -135,8 +156,8 @@ def get_email():
         E-mail id of the user making the request
     """
     headers = request.headers
-    token = headers['Authorization'][7:]
-    user = r.get(''.join(['oauth:', token]))
+    token = headers["Authorization"][7:]
+    user = r.get("".join(["oauth:", token]))
     if user:
         return user
     token = Token.objects(access_token=token).first()
@@ -146,10 +167,10 @@ def get_email():
 def check_if_super(email=None):
     if email is None:
         email = get_email()
-    if r.sismember('superusers', email):
+    if r.sismember("superusers", email):
         return True
-    if User.objects(email=email).first().role == 'super':
-        r.sadd('superusers', email)
+    if User.objects(email=email).first().role == "super":
+        r.sadd("superusers", email)
         return True
     return False
 
@@ -171,27 +192,29 @@ def get_building_choices(call_type=None):
 
 def get_building_tags(building):
     """Get all the tags that this building has associated with it"""
-    tags = Building._get_collection().find({'name': building}, {'tags.name': 1, 'tags.value': 1, '_id': 0})[0]['tags']
+    tags = Building._get_collection().find(
+        {"name": building}, {"tags.name": 1, "tags.value": 1, "_id": 0}
+    )[0]["tags"]
     res = {}
     for tag in tags:
-        if tag['name'] in res:
-            res[tag['name']]['values'].append(tag['value'])
+        if tag["name"] in res:
+            res[tag["name"]]["values"].append(tag["value"])
         else:
             tagtype_dict = {}
-            tagtype_dict['values'] = [tag['value']]
-            tagtype_dict['acl_tag'] = TagType.objects(name=tag['name']).first().acl_tag
-            res[tag['name']] = tagtype_dict
+            tagtype_dict["values"] = [tag["value"]]
+            tagtype_dict["acl_tag"] = TagType.objects(name=tag["name"]).first().acl_tag
+            res[tag["name"]] = tagtype_dict
     return res
 
 
 def form_query(param, values, args, operation):
     res = []
-    if param == 'tags':
+    if param == "tags":
         for tag in values:
             key_value = tag.split(":", 1)
             current_tag = {"tags.name": key_value[0], "tags.value": key_value[1]}
             res.append(current_tag)
-    elif param == 'metadata':
+    elif param == "metadata":
         for meta in values:
             key_value = meta.split(":", 1)
             current_meta = {"metadata." + key_value[0]: key_value[1]}
@@ -214,13 +237,14 @@ def create_json(sensor):
             Formatted sensor object as below
         }
     """
-    json_object = {'building': sensor.get('building'),
-                   'name': sensor.get('name'),
-                   'tags': sensor.get('tags'),
-                   'metadata': sensor.get('metadata'),
-                   'source_identifier': sensor.get('source_identifier'),
-                   'source_name': sensor.get('source_name')
-                   }
+    json_object = {
+        "building": sensor.get("building"),
+        "name": sensor.get("name"),
+        "tags": sensor.get("tags"),
+        "metadata": sensor.get("metadata"),
+        "source_identifier": sensor.get("source_identifier"),
+        "source_name": sensor.get("source_name"),
+    }
     return json_object
 
 
@@ -244,7 +268,7 @@ def validate_users(emails, list_format=False):
     """Check if user exists"""
     for email in emails:
         if not list_format:
-            if User.objects(email=email['user_id']).first() is None:
+            if User.objects(email=email["user_id"]).first() is None:
                 return False
         else:
             if User.objects(email=email).first() is None:
@@ -263,16 +287,18 @@ def get_admins(name):
 def add_delete_users(old, now):
     user_old, user_new = [], []
     for user in old:
-        user_old.append(user['user_id'])
+        user_old.append(user["user_id"])
     for user in now:
-        user_new.append(user['user_id'])
+        user_new.append(user["user_id"])
     old, now = set(user_old), set(user_new)
     return now - old, old - now
 
 
 def get_ds(sensor, building=None):
     args = {}
-    args['buildings__all'] = [building if building else Sensor.objects(name=sensor).first().building]
+    args["buildings__all"] = [
+        building if building else Sensor.objects(name=sensor).first().building
+    ]
     dataservices = DataService.objects(**args)
     return dataservices.first().name
 
@@ -280,7 +306,7 @@ def get_ds(sensor, building=None):
 def get_sg_ds(sensor_group):
     args = {}
     sg = SensorGroup.objects(name=sensor_group).first()
-    args['buildings__all'] = [sg.building]
+    args["buildings__all"] = [sg.building]
     dataservices = DataService.objects(**args)
     return dataservices.first().name
     # sg = SensorGroup.objects(name=sensor_group).first()
@@ -294,7 +320,7 @@ def check_oauth(f):
             abort(401)
         access_token = request.headers.get("Authorization")[7:]
         if request.headers.get("Authorization") is not None:
-            user = r.get(''.join(['oauth:', access_token]))
+            user = r.get("".join(["oauth:", access_token]))
             if user is not None:
                 return f(*args, **kwargs)
             else:
@@ -305,10 +331,15 @@ def check_oauth(f):
                     expires_in = (token.expires - datetime.now()).total_seconds()
                     if expires_in > 0:
                         # Still valid, adding to redis
-                        r.setex(''.join(['oauth:', access_token]), token.user, int(expires_in))
+                        r.setex(
+                            "".join(["oauth:", access_token]),
+                            token.user,
+                            int(expires_in),
+                        )
                         return f(*args, **kwargs)
                     else:
                         # Invalid, deleting
                         token.delete()
         abort(401)
+
     return secure

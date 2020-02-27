@@ -24,11 +24,11 @@ class DataserviceBuildingsService(MethodView):
     @super_required
     def post(self, name):
         try:
-            data = request.get_json()['data']
+            data = request.get_json()["data"]
         except KeyError:
             return jsonify(responses.missing_data)
 
-        buildings = data.get('buildings')
+        buildings = data.get("buildings")
         if buildings is None:
             return jsonify(responses.missing_parameters)
 
@@ -49,14 +49,14 @@ class DataserviceBuildingsService(MethodView):
         if dataservice is None:
             return jsonify(responses.invalid_dataservice)
         response = dict(responses.success_true)
-        response.update({'buildings': dataservice.buildings})
+        response.update({"buildings": dataservice.buildings})
         return jsonify(response)
 
     @check_oauth
     @super_required
     def delete(self, name):
         try:
-            data = request.get_json()['data']
+            data = request.get_json()["data"]
         except KeyError:
             return jsonify(responses.missing_data)
 
@@ -64,11 +64,10 @@ class DataserviceBuildingsService(MethodView):
         if dataservice is None:
             return jsonify(responses.invalid_dataservice)
 
-        buildings = data.get('buildings')
+        buildings = data.get("buildings")
         if buildings is None:
             return jsonify(responses.missing_parameters)
 
         collection = DataService._get_collection()
-        collection.update({'name': name},
-                          {'$pullAll': {'buildings': buildings}})
+        collection.update({"name": name}, {"$pullAll": {"buildings": buildings}})
         return jsonify(responses.success_true)

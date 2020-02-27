@@ -35,10 +35,10 @@ class User(Document):
         return self.email
 
     def is_super(self):
-        return self.role.type == 'super'
+        return self.role.type == "super"
 
     def is_default(self):
-        return self.role.type == 'default'
+        return self.role.type == "default"
 
 
 class Sensor(Document):

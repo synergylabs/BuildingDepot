@@ -4,7 +4,7 @@ from ..models.cs_models import DataService
 from xmlrpclib import ServerProxy
 
 
-def create_sensor(sensor_id, email, building, fields = None, parent = None):
+def create_sensor(sensor_id, email, building, fields=None, parent=None):
     if not parent:
         svr = get_remote(get_ds(sensor_id, building))
         try:
@@ -30,7 +30,7 @@ def invalidate_sensor(sensor_id):
     return True
 
 
-def delete_sensor(sensor_id, parent = None):
+def delete_sensor(sensor_id, parent=None):
     if not parent:
         svr = get_remote(get_ds(sensor_id))
         try:

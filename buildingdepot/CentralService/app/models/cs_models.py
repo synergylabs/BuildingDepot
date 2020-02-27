@@ -37,6 +37,7 @@ class TagType(Document):
     children = ListField(StringField())
     acl_tag = BooleanField()
 
+
 class BuildingTemplate(Document):
     name = StringField(required=True, unique=True)
     description = StringField()
@@ -87,30 +88,30 @@ class User(UserMixin, Document):
         return check_password_hash(self.password, password)
 
     def generate_auth_token(self, expiration):
-        s = Serializer(current_app.config['SECRET_KEY'],
-                       expires_in=expiration)
-        return s.dumps({'email': self.email})
+        s = Serializer(current_app.config["SECRET_KEY"], expires_in=expiration)
+        return s.dumps({"email": self.email})
 
     @staticmethod
     def verify_auth_token(token):
-        s = Serializer(current_app.config['SECRET_KEY'])
+        s = Serializer(current_app.config["SECRET_KEY"])
         try:
             data = s.loads(token)
         except:
             return None
 
-        return User.objects(email=data['email']).first()
+        return User.objects(email=data["email"]).first()
 
     def is_super(self):
-        return self.role.type == 'super'
+        return self.role.type == "super"
 
     def is_local(self):
-        return self.role.type == 'local'
+        return self.role.type == "local"
 
 
 class UserGroupNode(EmbeddedDocument):
     user_id = StringField()
     manager = BooleanField()
+
 
 class Sensor(Document):
     name = StringField(required=True, unique=True)
@@ -131,6 +132,7 @@ class SensorGroup(Document):
     building = StringField()
     tags = ListField(EmbeddedDocumentField(Node))
     owner = StringField()
+
 
 class UserGroup(Document):
     name = StringField(required=True, unique=True)

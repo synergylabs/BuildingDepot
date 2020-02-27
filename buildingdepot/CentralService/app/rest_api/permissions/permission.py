@@ -12,14 +12,14 @@ import sys
 from flask.views import MethodView
 from ..helper import get_email, check_oauth
 from .. import responses
-from flask import request,jsonify
-from ...models.cs_models import UserGroup,SensorGroup,Permission
-from ... import r,oauth,permissions
+from flask import request, jsonify
+from ...models.cs_models import UserGroup, SensorGroup, Permission
+from ... import r, oauth, permissions
 from ...auth.acl_cache import invalidate_permission
 from ...rpc import defs
 
-class PermissionService(MethodView):
 
+class PermissionService(MethodView):
     @check_oauth
     def get(self):
         """
@@ -33,17 +33,19 @@ class PermissionService(MethodView):
                 "error" : <If False then error will be returned>
             }
         """
-        user_group = request.args.get('user_group')
-        sensor_group = request.args.get('sensor_group')
+        user_group = request.args.get("user_group")
+        sensor_group = request.args.get("sensor_group")
         if not all([user_group, sensor_group]):
             return jsonify(responses.missing_parameters)
         else:
-            permission = Permission.objects(user_group=user_group, sensor_group=sensor_group).first()
+            permission = Permission.objects(
+                user_group=user_group, sensor_group=sensor_group
+            ).first()
             if permission is None:
                 return jsonify(responses.no_permission)
             else:
                 response = dict(responses.success_true)
-                response['permission'] = permission.permission
+                response["permission"] = permission.permission
                 return jsonify(response)
 
     @check_oauth
@@ -60,13 +62,13 @@ class PermissionService(MethodView):
             }
         """
         try:
-            data = request.get_json()['data']
+            data = request.get_json()["data"]
         except:
             return jsonify(responses.missing_data)
         try:
-            sensor_group = data['sensor_group']
-            user_group = data['user_group']
-            permission = data['permission']
+            sensor_group = data["sensor_group"]
+            user_group = data["user_group"]
+            permission = data["permission"]
         except KeyError:
             return jsonify(responses.missing_parameters)
 
@@ -80,21 +82,33 @@ class PermissionService(MethodView):
         if not len(sg.tags):
             return jsonify(responses.no_sensorgroup_tags)
         email = get_email()
-        if defs.create_permission(user_group,sensor_group,email,permissions.get(permission)):
-            curr_permission = Permission.objects(user_group=user_group, sensor_group=sensor_group).first()
+        if defs.create_permission(
+            user_group, sensor_group, email, permissions.get(permission)
+        ):
+            curr_permission = Permission.objects(
+                user_group=user_group, sensor_group=sensor_group
+            ).first()
             if curr_permission is not None:
-                if email == curr_permission['owner'] :
-                    Permission.objects(user_group=user_group,
-                                       sensor_group=sensor_group).first().update(set__permission=permissions.get(permission))
+                if email == curr_permission["owner"]:
+                    Permission.objects(
+                        user_group=user_group, sensor_group=sensor_group
+                    ).first().update(set__permission=permissions.get(permission))
                 else:
                     return jsonify(responses.permission_authorization)
             else:
-                Permission(user_group=user_group, sensor_group=sensor_group,
-                           permission=permissions.get(permission),
-                           owner=email).save()
+                Permission(
+                    user_group=user_group,
+                    sensor_group=sensor_group,
+                    permission=permissions.get(permission),
+                    owner=email,
+                ).save()
             invalidate_permission(sensor_group)
-            r.hset('permission:{}:{}'.format(user_group, sensor_group),"permission",permissions.get(permission))
-            r.hset('permission:{}:{}'.format(user_group, sensor_group),"owner",email)
+            r.hset(
+                "permission:{}:{}".format(user_group, sensor_group),
+                "permission",
+                permissions.get(permission),
+            )
+            r.hset("permission:{}:{}".format(user_group, sensor_group), "owner", email)
         else:
             return jsonify(responses.ds_error)
         return jsonify(responses.success_true)
@@ -111,19 +125,21 @@ class PermissionService(MethodView):
                 "error": <details of an error if unsuccessful>
             }
         """
-        user_group = request.args.get('user_group')
-        sensor_group = request.args.get('sensor_group')
+        user_group = request.args.get("user_group")
+        sensor_group = request.args.get("sensor_group")
         if not all([user_group, sensor_group]):
             return jsonify(responses.missing_parameters)
         else:
-            permission = Permission.objects(user_group=user_group, sensor_group=sensor_group).first()
+            permission = Permission.objects(
+                user_group=user_group, sensor_group=sensor_group
+            ).first()
             if permission is None:
                 return jsonify(responses.permission_not_defined)
             else:
-                if permission['owner'] == get_email():
-                    if defs.delete_permission(user_group,sensor_group):
+                if permission["owner"] == get_email():
+                    if defs.delete_permission(user_group, sensor_group):
                         permission.delete()
-                        r.delete('permission:{}:{}'.format(user_group, sensor_group))
+                        r.delete("permission:{}:{}".format(user_group, sensor_group))
                         invalidate_permission(sensor_group)
                     else:
                         return jsonify(responses.ds_error)

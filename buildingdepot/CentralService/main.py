@@ -18,15 +18,17 @@ from app.models.cs_models import User
 from flask_script import Manager, Shell, Server
 from app.rest_api.register import register_view
 
-app = create_app('deploy')
+app = create_app("deploy")
 manager = Manager(app)
 register_view(app)
+
 
 def make_shell_context():
     return dict(app=app, User=User)
 
-if __name__ == '__main__':
-    server = Server('0.0.0.0', threaded=True)
+
+if __name__ == "__main__":
+    server = Server("0.0.0.0", threaded=True)
     manager.add_command("shell", Shell(make_context=make_shell_context))
-    manager.add_command('runserver', server)
-    manager.run(default_command='runserver')
+    manager.add_command("runserver", server)
+    manager.run(default_command="runserver")
