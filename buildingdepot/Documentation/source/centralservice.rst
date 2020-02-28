@@ -1,3 +1,6 @@
+.. image:: images/GIOTTO.png
+   :width: 800
+
 Central Service
 ###############
 
