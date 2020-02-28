@@ -12,17 +12,17 @@ for acl's and other purposes.
 @license: UCSD License. See License file for details.
 """
 from flask.views import MethodView
-from flask import request,jsonify,current_app
+from flask import request, jsonify, current_app
 
 from ...rpc import defs
 from .. import responses
 from ...models.cs_models import SensorGroup
-from ... import r,oauth
+from ... import r, oauth
 from ..helper import xstr, get_building_choices, get_email, check_oauth
 import sys
 
-class SensorGroupService(MethodView):
 
+class SensorGroupService(MethodView):
     @check_oauth
     def post(self):
         """
@@ -57,14 +57,16 @@ class SensorGroupService(MethodView):
         buildings_list = get_building_choices('rest_api')
         for item in buildings_list:
             if building in item:
-                SensorGroup(name=xstr(name), building=xstr(building),
-                            description=xstr(description), owner=xstr(owner)).save()
+                SensorGroup(name=xstr(name),
+                            building=xstr(building),
+                            description=xstr(description),
+                            owner=xstr(owner)).save()
                 return jsonify(responses.success_true)
 
         return jsonify(responses.invalid_building)
 
     @check_oauth
-    def get(self,name):
+    def get(self, name):
         """
         Args as data:
             name = <name of sensor group>
@@ -82,13 +84,15 @@ class SensorGroupService(MethodView):
             return jsonify(responses.invalid_sensorgroup)
 
         response = dict(responses.success_true)
-        response.update({"name":sensor_group['name'],
-                        "building":sensor_group['building'],
-                        "description":sensor_group['description']})
+        response.update({
+            "name": sensor_group['name'],
+            "building": sensor_group['building'],
+            "description": sensor_group['description']
+        })
         return jsonify(response)
 
     @check_oauth
-    def delete(self,name):
+    def delete(self, name):
         """
         Args as data:
             name = <name of sensor group>
@@ -103,7 +107,8 @@ class SensorGroupService(MethodView):
         if sensor_group is None:
             return jsonify(responses.invalid_usergroup)
         if email == sensor_group.owner and defs.invalidate_permission(name):
-            SensorGroup._get_collection().remove({"name":sensor_group['name']})
+            SensorGroup._get_collection().remove(
+                {"name": sensor_group['name']})
             response = dict(responses.success_true)
         else:
             response = dict(responses.sensorgroup_delete_authorization)

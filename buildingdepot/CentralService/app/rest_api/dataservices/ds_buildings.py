@@ -70,5 +70,7 @@ class DataserviceBuildingsService(MethodView):
 
         collection = DataService._get_collection()
         collection.update({'name': name},
-                          {'$pullAll': {'buildings': buildings}})
+                          {'$pullAll': {
+                              'buildings': buildings
+                          }})
         return jsonify(responses.success_true)

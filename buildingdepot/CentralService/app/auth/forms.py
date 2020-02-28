@@ -15,6 +15,7 @@ from wtforms.validators import DataRequired, Email, Length, EqualTo
 from wtforms import ValidationError
 from ..models.cs_models import User
 
+
 class LoginForm(Form):
     email = StringField('Email', validators=[DataRequired(), Email()])
     password = PasswordField('Password', validators=[DataRequired()])
@@ -24,11 +25,14 @@ class LoginForm(Form):
 
 class RegistrationForm(Form):
     password = PasswordField('Password',
-                             validators=[DataRequired(), EqualTo('password2', message='Passwords must match')])
+                             validators=[
+                                 DataRequired(),
+                                 EqualTo('password2',
+                                         message='Passwords must match')
+                             ])
     password2 = PasswordField('Confirm password', validators=[DataRequired()])
     submit = SubmitField('Register')
 
     def validate_email(self, field):
         if User.objects(email=field.data).first() is not None:
             raise ValidationError('Email already registered.')
-

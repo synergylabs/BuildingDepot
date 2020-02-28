@@ -76,6 +76,7 @@ class TagOwned(EmbeddedDocument):
     building = StringField()
     tags = ListField(EmbeddedDocumentField(Node))
 
+
 class User(Document):
     email = StringField(required=True, unique=True)
     password = StringField(required=True)
@@ -91,8 +92,7 @@ class User(Document):
         return check_password_hash(self.password, password)
 
     def generate_auth_token(self, expiration):
-        s = Serializer(current_app.config['SECRET_KEY'],
-                       expires_in=expiration)
+        s = Serializer(current_app.config['SECRET_KEY'], expires_in=expiration)
         return s.dumps({'email': self.email})
 
     @staticmethod
@@ -110,6 +110,7 @@ class User(Document):
 
     def is_local(self):
         return self.role.type == 'local'
+
 
 class Sensor(Document):
     name = StringField(required=True, unique=True)
@@ -130,7 +131,3 @@ class SensorGroup(Document):
     building = StringField()
     tags = ListField(EmbeddedDocumentField(Node))
     owner = StringField()
-
-
-
-

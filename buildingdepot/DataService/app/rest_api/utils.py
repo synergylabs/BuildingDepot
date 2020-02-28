@@ -34,7 +34,7 @@ def validate_users(emails):
 
 
 def get_add_delete(old, now):
-    user_old,user_new = [],[]
+    user_old, user_new = [], []
     for user in old:
         user_old.append(user['user_id'])
     for user in new:

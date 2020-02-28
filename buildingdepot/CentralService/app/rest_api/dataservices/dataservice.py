@@ -36,7 +36,10 @@ class DataserviceService(MethodView):
             return jsonify(responses.missing_parameters)
 
         if not name:
-            return jsonify({'success':'False', 'error': 'Invalid Data Service name.'})
+            return jsonify({
+                'success': 'False',
+                'error': 'Invalid Data Service name.'
+            })
         dataservice = DataService.objects(name=name).first()
         if dataservice is None:
             DataService(name=name,
@@ -45,14 +48,15 @@ class DataserviceService(MethodView):
                         port=str(data.get('port'))).save()
         else:
             collection = DataService._get_collection()
-            collection.update({'name': name}, {'$set': gen_update(self.params, data)})
+            collection.update({'name': name},
+                              {'$set': gen_update(self.params, data)})
         return jsonify(responses.success_true)
 
     @check_oauth
     def get(self, name):
         print "Name :", name
         if name == "list":
-            all_dataservices=[]
+            all_dataservices = []
             collection = DataService.objects
             for i in collection:
                 all_dataservices.append(i.name)
@@ -63,10 +67,12 @@ class DataserviceService(MethodView):
             if dataservice is None:
                 return jsonify(responses.invalid_dataservice)
             response = dict(responses.success_true)
-            response.update({'name': name,
-                         'description': xstr(dataservice.description),
-                         'host': xstr(dataservice.host),
-                         'port': xstr(dataservice.port)})
+            response.update({
+                'name': name,
+                'description': xstr(dataservice.description),
+                'host': xstr(dataservice.host),
+                'port': xstr(dataservice.port)
+            })
         return jsonify(response)
 
     @check_oauth

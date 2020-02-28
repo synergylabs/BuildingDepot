@@ -114,20 +114,17 @@ def client():
     user_current = current_user()
     if not user_current:
         return redirect('/')
-    item = Client(
-        client_id=gen_salt(40),
-        client_secret=gen_salt(50),
-        _redirect_uris=' '.join([
-            'http://localhost:8000/authorized',
-            'http://127.0.0.1:8000/authorized',
-            'http://127.0.1:8000/authorized',
-            'http://127.1:8000/authorized']),
-        _default_scopes='email',
-        user=get_user_oauth(user_current)).save()
-    return jsonify(
-        client_id=item.client_id,
-        client_secret=item.client_secret
-    )
+    item = Client(client_id=gen_salt(40),
+                  client_secret=gen_salt(50),
+                  _redirect_uris=' '.join([
+                      'http://localhost:8000/authorized',
+                      'http://127.0.0.1:8000/authorized',
+                      'http://127.0.1:8000/authorized',
+                      'http://127.1:8000/authorized'
+                  ]),
+                  _default_scopes='email',
+                  user=get_user_oauth(user_current)).save()
+    return jsonify(client_id=item.client_id, client_secret=item.client_secret)
 
 
 @oauth.clientgetter
@@ -144,12 +141,12 @@ def load_grant(client_id, code):
 @oauth.grantsetter
 def save_grant(client_id, code, request, *args, **kwargs):
     expires = datetime.utcnow() + timedelta(seconds=100)
-    grant = Grant(
-        client=Client.objects(client_id=client_id).first(),
-        code=code['code'],
-        redirect_uri=request.redirect_uri,
-        _scopes=' '.join(request.scopes),
-        user=get_user_oauth(current_user()), expires=expires)
+    grant = Grant(client=Client.objects(client_id=client_id).first(),
+                  code=code['code'],
+                  redirect_uri=request.redirect_uri,
+                  _scopes=' '.join(request.scopes),
+                  user=get_user_oauth(current_user()),
+                  expires=expires)
     grant.save()
     return grant
 
@@ -172,36 +169,37 @@ def save_token(token, request, *args, **kwargs):
     r.delete(*previous_tokens)
     expires_in = token.pop('expires_in')
     expires = datetime.utcnow() + timedelta(seconds=expires_in)
-    tok = Token(
-        access_token=token['access_token'],
-        refresh_token=token['refresh_token'],
-        token_type=token['token_type'],
-        _scopes=token['scope'],
-        expires=expires,
-        client=request.client,
-        user=request.user,
-        email=request.user).save()
+    tok = Token(access_token=token['access_token'],
+                refresh_token=token['refresh_token'],
+                token_type=token['token_type'],
+                _scopes=token['scope'],
+                expires=expires,
+                client=request.client,
+                user=request.user,
+                email=request.user).save()
     r.setex(''.join(['oauth:', tok.access_token]), client.user, expires_in)
     return tok
 
 
-@oauth_bd.route('/access_token/client_id=<client_id>/client_secret=<client_secret>', methods=['GET'])
+@oauth_bd.route(
+    '/access_token/client_id=<client_id>/client_secret=<client_secret>',
+    methods=['GET'])
 def get_access_token(client_id, client_secret):
     """ Generates and returns an access token to the user if the client_id and
         client_secret provided by them are valid"""
-    client = Client.objects(client_id=client_id, client_secret=client_secret).first()
+    client = Client.objects(client_id=client_id,
+                            client_secret=client_secret).first()
     if client != None:
         # Set token expiry period and create it
         expires = datetime.utcnow() + timedelta(seconds=expires_in)
-        tok = Token(
-            access_token=str(binascii.hexlify(os.urandom(16))),
-            refresh_token=str(binascii.hexlify(os.urandom(16))),
-            token_type='Bearer',
-            _scopes='email',
-            expires=expires,
-            client=client,
-            user=client.user,
-            email=client.user).save()
+        tok = Token(access_token=str(binascii.hexlify(os.urandom(16))),
+                    refresh_token=str(binascii.hexlify(os.urandom(16))),
+                    token_type='Bearer',
+                    _scopes='email',
+                    expires=expires,
+                    client=client,
+                    user=client.user,
+                    email=client.user).save()
         r.setex(''.join(['oauth:', tok.access_token]), client.user, expires_in)
         return jsonify({'success': 'True', 'access_token': tok.access_token})
     return jsonify({'success': 'False', 'access_token': 'Invalid credentials'})

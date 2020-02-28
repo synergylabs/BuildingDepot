@@ -32,7 +32,10 @@ class TagTypeService(MethodView):
         name = data.get('name')
         acl_tag = data.get('acl_tag')
         if not name:
-            return jsonify({'success':'False', 'error': 'Invalid TagType name.'})
+            return jsonify({
+                'success': 'False',
+                'error': 'Invalid TagType name.'
+            })
         tagtype = TagType.objects(name=data.get('name')).first()
         if not tagtype:
             if name is None:
@@ -48,27 +51,35 @@ class TagTypeService(MethodView):
         else:
             collection = TagType._get_collection()
             if parents:
-                added, deleted = add_delete([str(child_tag) for child_tag in tagtype['parents']], data['parents'])
+                added, deleted = add_delete(
+                    [str(child_tag) for child_tag in tagtype['parents']],
+                    data['parents'])
                 self.add_children(added, name)
                 for tag in deleted:
                     collection = TagType._get_collection()
                     collection.update({'name': tag},
-                                      {'$pull': {'children': name}},
+                                      {'$pull': {
+                                          'children': name
+                                      }},
                                       multi=True)
             user_check = check_if_super(get_email())
             if (acl_tag is None) or (acl_tag is not None and not user_check):
                 data['acl_tag'] = user_check
-            collection.update({'name': name}, {'$set': gen_update(self.params, data)})
+            collection.update({'name': name},
+                              {'$set': gen_update(self.params, data)})
         return jsonify(responses.success_true)
 
     @check_oauth
     def get(self, name):
         tagtype = TagType.objects(name=name).first()
         if tagtype:
-            return jsonify({'success': 'True', 'name': tagtype['name'],
-                            'description': tagtype['description'],
-                            'parents': tagtype['parents'],
-                            'children': tagtype['children']})
+            return jsonify({
+                'success': 'True',
+                'name': tagtype['name'],
+                'description': tagtype['description'],
+                'parents': tagtype['parents'],
+                'children': tagtype['children']
+            })
         else:
             return jsonify(responses.invalid_tagtype)
 
@@ -79,11 +90,16 @@ class TagTypeService(MethodView):
         if not tagtype:
             return jsonify(responses.invalid_tagtype)
 
-        if not tagtype.children and BuildingTemplate._get_collection().find({'tag_types': tagtype.name}).count() == 0:
+        if not tagtype.children and BuildingTemplate._get_collection().find({
+                'tag_types':
+                tagtype.name
+        }).count() == 0:
             tagtype.delete()
             collection = TagType._get_collection()
             collection.update({'children': name},
-                              {'$pull': {'children': name}},
+                              {'$pull': {
+                                  'children': name
+                              }},
                               multi=True)
             return jsonify(responses.success_true)
         else:
@@ -92,7 +108,7 @@ class TagTypeService(MethodView):
     def add_children(self, parents, name):
         for parent in parents:
             collection = TagType._get_collection()
-            collection.update(
-                {'name': parent},
-                {'$addToSet': {'children': str(name)}}
-            )
+            collection.update({'name': parent},
+                              {'$addToSet': {
+                                  'children': str(name)
+                              }})

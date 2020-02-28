@@ -38,18 +38,18 @@ enable_instrumentation = True
 # Set the sampling rate here (0 to 1 - float). e.g. sampling rate 0.7 means
 # that only 70% of the logs are collected (uniformly randomly) and rest are dropped.
 sampling_rate = 1
-
-
 """A unique ID needs to be generated for every request so that all the 
    calls made by it can be tracked sequentially. The unique ID is generated 
    using a Cantor pairing function. 
 """
+
+
 def compute_request_id():
     global process_unique_id
     pid = os.getpid()
     # Using Cantor pairing function
     val = process_unique_id + pid
-    request_id = process_unique_id + (((val)*(val + 1))/2)
+    request_id = process_unique_id + (((val) * (val + 1)) / 2)
     return str(request_id)
 
 
@@ -75,17 +75,18 @@ def instrument(func):
         seq_dict[request_id] = seq + 1
 
         # Time the function execution
-        start = (time.time() - beginningOfTime)*1000
+        start = (time.time() - beginningOfTime) * 1000
         ret = func(*args, **kwargs)
-        end = (time.time() - beginningOfTime)*1000
-        
+        end = (time.time() - beginningOfTime) * 1000
+
         # Format the log string
         logString = request_id + "," + str(seq) + "," + func.__name__ + ","
 
-        for i in range(0,seq):
+        for i in range(0, seq):
             logString = "\t" + logString
 
-        logString = logString + "%0.2f,%0.2f,%0.2f\n" % (start, end, end-start)
+        logString = logString + "%0.2f,%0.2f,%0.2f\n" % (start, end,
+                                                         end - start)
         logs.append(logString)
 
         # Flush logs to file
@@ -96,4 +97,5 @@ def instrument(func):
                     file.write(item)
             del logs[:]
         return ret
+
     return func_wrapper

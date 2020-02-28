@@ -86,8 +86,10 @@ class AppService(MethodView):
 
         if apps.count() == 0:
             Application(user=email,
-                        apps=[{'name': name,
-                               'value': result.method.queue}]).save()
+                        apps=[{
+                            'name': name,
+                            'value': result.method.queue
+                        }]).save()
         else:
             app_list.append({'name': name, 'value': result.method.queue})
             Application.objects(user=email).update(set__apps=app_list)
@@ -153,8 +155,8 @@ class AppService(MethodView):
             if 'value' in app_to_be_deleted.keys():
                 result = channel.queue_delete(queue=app_to_be_deleted['value'])
 
-            new_app_list = list(filter(lambda x: x['name'] != name,
-                                       apps[0]['apps']))
+            new_app_list = list(
+                filter(lambda x: x['name'] != name, apps[0]['apps']))
             Application.objects(user=email).update(set__apps=new_app_list)
 
         except Exception as e:

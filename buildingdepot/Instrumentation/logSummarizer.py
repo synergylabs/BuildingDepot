@@ -7,8 +7,7 @@ import csv
 import sys
 
 filename = sys.argv[1]
-averages = {} # Mapping between function and total time taken + elements seen
-
+averages = {}  # Mapping between function and total time taken + elements seen
 """
 LOG FORMAT (comma separated):
 [depth number of '\t's] <UNIQUE_CALL_ID>,<call_stack_depth>,<func_name>,<begin_time>,<end_time>,<time_taken>
@@ -22,17 +21,15 @@ f = open(filename, 'rb')
 reader = csv.reader(f)
 logs = list(reader)
 for log in logs:
-	if log[2] in averages.keys():
-		averages[log[2]][0] += float(log[5])
-		averages[log[2]][1] += 1
-	else:
-		averages[log[2]] = [float(log[5]), 1]
+    if log[2] in averages.keys():
+        averages[log[2]][0] += float(log[5])
+        averages[log[2]][1] += 1
+    else:
+        averages[log[2]] = [float(log[5]), 1]
 
 print "\nAVERAGES FOR TIME TAKEN (Function wise): "
 for key, value in averages.iteritems():
-	print "  " + key + "(): "  + str(value[0]/value[1]) + "ms (" + str(value[1]) + " calls)"
+    print "  " + key + "(): " + str(value[0] / value[1]) + "ms (" + str(
+        value[1]) + " calls)"
 
 print
-
-
-

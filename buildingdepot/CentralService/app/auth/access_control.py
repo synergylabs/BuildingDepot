@@ -27,7 +27,6 @@ def super_required(f):
 def authenticate_acl(permission_required):
     """This is the function that defines the acl's and what level of access
        the user has to the specified sensor"""
-
     def authenticate_write(f):
         def decorated_function(*args, **kwargs):
             try:
@@ -38,15 +37,25 @@ def authenticate_acl(permission_required):
             response = permission(sensor_name)
             if response == 'u/d':
                 if Sensor.objects(name=sensor_name).first() is None:
-                    return jsonify({'success': 'False',
-                                    'error': 'Sensor does not exist'})
+                    return jsonify({
+                        'success': 'False',
+                        'error': 'Sensor does not exist'
+                    })
                 else:
-                    return jsonify({'success': 'False', 'error': 'Permission not defined'})
-            elif permissions_val[response] <= permissions_val[permission_required]:
+                    return jsonify({
+                        'success': 'False',
+                        'error': 'Permission not defined'
+                    })
+            elif permissions_val[response] <= permissions_val[
+                    permission_required]:
                 return f(*args, **kwargs)
             else:
-                return jsonify({'success': 'False',
-                                'error': 'You are not authenticated for this operation on the sensor'})
+                return jsonify({
+                    'success':
+                    'False',
+                    'error':
+                    'You are not authenticated for this operation on the sensor'
+                })
 
         return decorated_function
 
@@ -105,13 +114,18 @@ def check_db(sensor, email):
         for sensorgroup in sensorgroups:
             # Multiple permissions may exists for the same user and sensor relation.
             # This one chooses the most restrictive one by counting the number of tags
-            res = r.hget('permission:{}:{}'.format(usergroup['name'], sensorgroup['name']), "permission")
+            res = r.hget(
+                'permission:{}:{}'.format(usergroup['name'],
+                                          sensorgroup['name']), "permission")
             if res is None:
-                permission_val = Permission.objects(sensor_group=sensorgroup['name'],
-                                                    user_group=usergroup['name'])
+                permission_val = Permission.objects(
+                    sensor_group=sensorgroup['name'],
+                    user_group=usergroup['name'])
                 if permission_val:
                     res = permission_val.first()['permission']
-            owner_email = r.hget('permission:{}:{}'.format(usergroup['name'], sensorgroup['name']), "owner")
+            owner_email = r.hget(
+                'permission:{}:{}'.format(usergroup['name'],
+                                          sensorgroup['name']), "owner")
             if res is not None and permission(sensor, owner_email) == 'r/w/p':
                 if permissions_val[res] > permissions_val[current_res]:
                     current_res = res

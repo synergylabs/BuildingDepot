@@ -61,7 +61,7 @@ class UserService(MethodView):
         email = data.get('email')
         role = data.get('role')
 
-        # check whether all the parameters are appropriately received 
+        # check whether all the parameters are appropriately received
         if not all((email, first_name, last_name, role)):
             return jsonify(responses.missing_parameters)
 
@@ -123,10 +123,12 @@ class UserService(MethodView):
 
         # send out information
         response = dict(responses.success_true)
-        response.update({'email': user.email,
-                         'first_name': user.first_name,
-                         'last_name': user.last_name,
-                         'role': user.role})
+        response.update({
+            'email': user.email,
+            'first_name': user.first_name,
+            'last_name': user.last_name,
+            'role': user.role
+        })
 
         return jsonify(response)
 
@@ -160,10 +162,10 @@ class UserService(MethodView):
             return jsonify(responses.invalid_user)
 
         # Remove client object
-        Client._get_collection().remove({'user':email})
+        Client._get_collection().remove({'user': email})
 
         # Find token objects
-        tokens = Token._get_collection().find({'email':email})
+        tokens = Token._get_collection().find({'email': email})
 
         p = r.pipeline()
         if user.role == 'super':
@@ -194,8 +196,10 @@ class UserService(MethodView):
         password = str(uuid.uuid4())
 
         # create a user with given information
-        User(email=email, first_name=first_name,
-             last_name=last_name, role=role,
+        User(email=email,
+             first_name=first_name,
+             last_name=last_name,
+             role=role,
              password=generate_password_hash(password)).save()
 
         # if email client is specified, send an email to the new user

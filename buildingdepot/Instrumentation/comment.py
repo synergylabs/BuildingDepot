@@ -10,7 +10,7 @@ filename = sys.argv[1]
 f = open(filename, 'rb')
 
 for line in f:
-	if line == '@instrument\n':
-		print "# " + line,
-	else:
-		print line,
+    if line == '@instrument\n':
+        print "# " + line,
+    else:
+        print line,

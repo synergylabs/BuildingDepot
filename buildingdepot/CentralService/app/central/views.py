@@ -13,7 +13,7 @@ of BD will call the tagtype() function
 @license: UCSD License. See License file for details.
 """
 
-import json,requests,math
+import json, requests, math
 from app.common import PAGE_SIZE
 from uuid import uuid4
 from flask import render_template, request, redirect, url_for, jsonify, session, flash
@@ -27,10 +27,11 @@ from ..rpc import defs
 from ..models.cs_models import *
 from .utils import get_choices, get_tag_descendant_pairs
 from ..oauth_bd.views import Client
-from ..rest_api.helper import check_if_super,get_building_choices
-from ..rest_api.helper import validate_users,form_query
-from ..auth.access_control import authorize_addition,permission
+from ..rest_api.helper import check_if_super, get_building_choices
+from ..rest_api.helper import validate_users, form_query
+from ..auth.access_control import authorize_addition, permission
 from ..auth.acl_cache import invalidate_permission
+
 
 @central.route('/tagtype', methods=['GET', 'POST'])
 @login_required
@@ -42,7 +43,10 @@ def tagtype():
     objs = TagType.objects().skip(skip_size).limit(PAGE_SIZE)
     # Can be deleted only if no child has a dependency on it
     for obj in objs:
-        if not obj.children and BuildingTemplate._get_collection().find({'tag_types': obj.name}).count() == 0:
+        if not obj.children and BuildingTemplate._get_collection().find({
+                'tag_types':
+                obj.name
+        }).count() == 0:
             obj.can_delete = True
         else:
             obj.can_delete = False
@@ -50,13 +54,16 @@ def tagtype():
     form.parents.choices = get_choices(TagType)
     if form.validate_on_submit():
         # Create the tag
-        payload = {'data': {
-            "name": str(form.name.data),
-            "description": str(form.description.data),
-            "parents": [str(parent) for parent in form.parents.data],
-            "acl_tag": check_if_super(session['email'])
-        }}
-        res = requests.post(request.url_root + "api/tagtype", data=json.dumps(payload),
+        payload = {
+            'data': {
+                "name": str(form.name.data),
+                "description": str(form.description.data),
+                "parents": [str(parent) for parent in form.parents.data],
+                "acl_tag": check_if_super(session['email'])
+            }
+        }
+        res = requests.post(request.url_root + "api/tagtype",
+                            data=json.dumps(payload),
                             headers=session['headers']).json()
         if res['success'] == 'False':
             flash(res['error'])
@@ -69,7 +76,8 @@ def tagtype():
 def tagtype_delete():
     """Deletes a tag"""
     name = request.form.get('name')
-    res = requests.delete(request.url_root + "api/tagtype/" + name, headers=session['headers']).json()
+    res = requests.delete(request.url_root + "api/tagtype/" + name,
+                          headers=session['headers']).json()
     if res['success'] == 'False':
         flash(res['error'])
     return redirect(url_for('central.tagtype'))
@@ -93,24 +101,30 @@ def buildingtemplate():
     # Get list of tags that this building can use
     form.tag_types.choices = get_choices(TagType)
     if form.validate_on_submit():
-        payload = {'data': {
-            "name": str(form.name.data),
-            "description": str(form.description.data),
-            "tag_types": form.tag_types.data
-        }}
-        res = requests.post(request.url_root + "api/template", data=json.dumps(payload),
+        payload = {
+            'data': {
+                "name": str(form.name.data),
+                "description": str(form.description.data),
+                "tag_types": form.tag_types.data
+            }
+        }
+        res = requests.post(request.url_root + "api/template",
+                            data=json.dumps(payload),
                             headers=session['headers']).json()
         if res['success'] == 'False':
             flash(res['error'])
         return redirect(url_for('central.buildingtemplate'))
-    return render_template('central/buildingtemplate.html', objs=objs, form=form)
+    return render_template('central/buildingtemplate.html',
+                           objs=objs,
+                           form=form)
 
 
 @central.route('/buildingtemplate_delete', methods=['POST'])
 @login_required
 def buildingtemplate_delete():
     name = request.form.get('name')
-    res = requests.delete(request.url_root + "api/template/" + name, headers=session['headers']).json()
+    res = requests.delete(request.url_root + "api/template/" + name,
+                          headers=session['headers']).json()
     if res['success'] == 'False':
         flash(res['error'])
     return redirect(url_for('central.buildingtemplate'))
@@ -123,7 +137,7 @@ def building():
        the system"""
     page = request.args.get('page', 1, type=int)
     skip_size = (page - 1) * PAGE_SIZE
-    objs = Building.objects[skip_size:skip_size+PAGE_SIZE]
+    objs = Building.objects[skip_size:skip_size + PAGE_SIZE]
     #objs = Building.objects().skip(skip_size).limit(PAGE_SIZE)
     # If the building doesn't have any tags associated to it then mark
     # it as can be deleted
@@ -136,12 +150,15 @@ def building():
     form.template.choices = get_choices(BuildingTemplate)
     if form.validate_on_submit():
         # Create the building
-        payload = {'data': {
-            "name": str(form.name.data),
-            "description": str(form.description.data),
-            "template": form.template.data
-        }}
-        res = requests.post(request.url_root + "api/building", data=json.dumps(payload),
+        payload = {
+            'data': {
+                "name": str(form.name.data),
+                "description": str(form.description.data),
+                "template": form.template.data
+            }
+        }
+        res = requests.post(request.url_root + "api/building",
+                            data=json.dumps(payload),
                             headers=session['headers']).json()
         if res['success'] == 'False':
             flash(res['error'])
@@ -153,7 +170,8 @@ def building():
 @login_required
 def building_delete():
     name = request.form.get('name')
-    res = requests.delete(request.url_root + "api/building/" + name, headers=session['headers']).json()
+    res = requests.delete(request.url_root + "api/building/" + name,
+                          headers=session['headers']).json()
     if res['success'] == 'False':
         flash(res['error'])
     return redirect(url_for('central.building'))
@@ -166,12 +184,21 @@ def building_metadata(name):
     """If the request is a GET then retrieve the metadata associated with it. If it is a POST
        then update the metadata"""
     if request.method == 'GET':
-        metadata = Building._get_collection().find({'name': name}, {'metadata': 1, '_id': 0})[0]['metadata']
-        metadata = [{'name': key, 'value': val} for key, val in metadata.iteritems()]
+        metadata = Building._get_collection().find({'name': name}, {
+            'metadata': 1,
+            '_id': 0
+        })[0]['metadata']
+        metadata = [{
+            'name': key,
+            'value': val
+        } for key, val in metadata.iteritems()]
         return jsonify({'data': metadata})
     else:
         # Update the metadata
-        metadata = {pair['name']: pair['value'] for pair in request.get_json()['data']}
+        metadata = {
+            pair['name']: pair['value']
+            for pair in request.get_json()['data']
+        }
         Building.objects(name=name).update(set__metadata=metadata)
         return jsonify({'success': 'True'})
 
@@ -179,22 +206,28 @@ def building_metadata(name):
 @central.route('/building/<building_name>/tags', methods=['GET'])
 @login_required
 def building_tags(building_name):
-    return render_template('central/buildingtags.html', building_name=building_name)
+    return render_template('central/buildingtags.html',
+                           building_name=building_name)
 
 
 @central.route('/building/<building_name>/tags_delete', methods=['POST'])
 @login_required
 def building_tags_delete(building_name):
     """Delete specific tags associated with the building"""
-    data = {'data': {
-        'name': request.form.get('tag_name'),
-        'value': request.form.get('tag_value')
-    }}
-    res = requests.delete(request.url_root + "api/building/" + building_name + "/tags", data=json.dumps(data),
+    data = {
+        'data': {
+            'name': request.form.get('tag_name'),
+            'value': request.form.get('tag_value')
+        }
+    }
+    res = requests.delete(request.url_root + "api/building/" + building_name +
+                          "/tags",
+                          data=json.dumps(data),
                           headers=session['headers']).json()
     if res['success'] == 'False':
         flash(res['error'])
-    return redirect(url_for('central.building_tags', building_name=building_name))
+    return redirect(
+        url_for('central.building_tags', building_name=building_name))
 
 
 @central.route('/user', methods=['GET'])
@@ -202,7 +235,9 @@ def building_tags_delete(building_name):
 def user():
     default = User.objects(role='default')
     super = User.objects(role='super')
-    return render_template('central/user.html', super_user=super, default=default)
+    return render_template('central/user.html',
+                           super_user=super,
+                           default=default)
 
 
 @central.route('/user/<email>/tags_owned', methods=['GET', 'POST'])
@@ -216,8 +251,11 @@ def user_tags_owned(email):
         # Iterate over each building that this user is associated with and obtain the
         # building specific tags
         for building in buildings:
-            tags = Building._get_collection().find(
-                {'name': building}, {'tags.name': 1, 'tags.value': 1, '_id': 0})[0]['tags']
+            tags = Building._get_collection().find({'name': building}, {
+                'tags.name': 1,
+                'tags.value': 1,
+                '_id': 0
+            })[0]['tags']
             sub = {}
             for tag in tags:
                 if tag['name'] in sub:
@@ -227,9 +265,14 @@ def user_tags_owned(email):
             data[building] = sub
         # Form a list of dicts containing the building name and the tags which the user has for
         # that building
-        triples = [{'building': item.building,
-                    'tags': [{'name': elem.name, 'value': elem.value} for elem in item.tags]}
-                   for item in user.tags_owned]
+        triples = [{
+            'building':
+            item.building,
+            'tags': [{
+                'name': elem.name,
+                'value': elem.value
+            } for elem in item.tags]
+        } for item in user.tags_owned]
         print triples, data
         return jsonify({'data': data, 'triples': triples})
     else:
@@ -249,13 +292,16 @@ def dataservice():
     form = DataServiceForm()
     if form.validate_on_submit():
         # Create the DataService
-        payload = {'data': {
-            "name": str(form.name.data),
-            "description": str(form.description.data),
-            "host": str(form.host.data),
-            "port": str(form.port.data)
-        }}
-        res = requests.post(request.url_root + "api/dataservice", data=json.dumps(payload),
+        payload = {
+            'data': {
+                "name": str(form.name.data),
+                "description": str(form.description.data),
+                "host": str(form.host.data),
+                "port": str(form.port.data)
+            }
+        }
+        res = requests.post(request.url_root + "api/dataservice",
+                            data=json.dumps(payload),
                             headers=session['headers']).json()
         if res['success'] == 'False':
             flash(res['error'])
@@ -268,11 +314,18 @@ def dataservice():
 def dataservice_buildings(name):
     """Retreive or update the list of buildings that are attached to this DataService"""
     if request.method == 'GET':
-        buildings = DataService._get_collection().find({'name': name}, {'buildings': 1, '_id': 0})[0]['buildings']
+        buildings = DataService._get_collection().find({'name': name}, {
+            'buildings': 1,
+            '_id': 0
+        })[0]['buildings']
         building_names = [building.name for building in Building.objects]
-        return jsonify({'buildings': buildings, 'building_names': building_names})
+        return jsonify({
+            'buildings': buildings,
+            'building_names': building_names
+        })
     else:
-        DataService.objects(name=name).update(set__buildings=request.get_json()['data'])
+        DataService.objects(name=name).update(
+            set__buildings=request.get_json()['data'])
         return jsonify({'success': 'True'})
 
 
@@ -281,11 +334,15 @@ def dataservice_buildings(name):
 def dataservice_admins(name):
     """ Retrieve or update the list of admins for this DataService"""
     if request.method == 'GET':
-        admins = DataService._get_collection().find({'name': name}, {'admins': 1, '_id': 0})[0]['admins']
+        admins = DataService._get_collection().find({'name': name}, {
+            'admins': 1,
+            '_id': 0
+        })[0]['admins']
         user_emails = [user.email for user in User.objects]
         return jsonify({'admins': admins, 'user_emails': user_emails})
     else:
-        DataService.objects(name=name).update(set__admins=request.get_json()['data'])
+        DataService.objects(name=name).update(
+            set__admins=request.get_json()['data'])
         return jsonify({'success': 'True'})
 
 
@@ -293,7 +350,8 @@ def dataservice_admins(name):
 @login_required
 def dataservice_delete():
     name = request.form.get('name')
-    res = requests.delete(request.url_root + "api/dataservice/" + name, headers=session['headers']).json()
+    res = requests.delete(request.url_root + "api/dataservice/" + name,
+                          headers=session['headers']).json()
     if res['success'] == 'False':
         flash(res['error'])
     return redirect(url_for('central.dataservice'))
@@ -307,16 +365,16 @@ def oauth_gen():
        that the user can use later to generate an OAuth token"""
     if request.method == 'POST':
         keys.append({"client_id": gen_salt(40), "client_secret": gen_salt(50)})
-        item = Client(
-            client_id=keys[0]['client_id'],
-            client_secret=keys[0]['client_secret'],
-            _redirect_uris=' '.join([
-                'http://localhost:8000/authorized',
-                'http://127.0.0.1:8000/authorized',
-                'http://127.0.1:8000/authorized',
-                'http://127.1:8000/authorized']),
-            _default_scopes='email',
-            user=request.form.get('name')).save()
+        item = Client(client_id=keys[0]['client_id'],
+                      client_secret=keys[0]['client_secret'],
+                      _redirect_uris=' '.join([
+                          'http://localhost:8000/authorized',
+                          'http://127.0.0.1:8000/authorized',
+                          'http://127.0.1:8000/authorized',
+                          'http://127.1:8000/authorized'
+                      ]),
+                      _default_scopes='email',
+                      user=request.form.get('name')).save()
     clientkeys = Client.objects(user=session['email'])
     return render_template('central/oauth_gen.html', keys=clientkeys)
 
@@ -328,13 +386,15 @@ def oauth_delete():
         Client.objects(client_id=request.form.get('client_id')).delete()
         return redirect(url_for('central.oauth_gen'))
 
+
 @central.route('/sensor', methods=['GET', 'POST'])
 @login_required
 def sensor():
     # Show the user PAGE_SIZE number of sensors on each page
     page = request.args.get('page', 1, type=int)
     skip_size = (page - 1) * PAGE_SIZE
-    objs = Sensor.objects(source_identifier__ne='SensorView').skip(skip_size).limit(PAGE_SIZE)
+    objs = Sensor.objects(
+        source_identifier__ne='SensorView').skip(skip_size).limit(PAGE_SIZE)
     for obj in objs:
         obj.can_delete = not r.get('parent:{}'.format(obj.name))
     total = Sensor.objects(source_identifier__ne='SensorView').count()
@@ -348,7 +408,7 @@ def sensor():
     # Create a Sensor
     if form.validate_on_submit():
         uuid = str(uuid4())
-        if defs.create_sensor(uuid,session['email'],form.building.data):
+        if defs.create_sensor(uuid, session['email'], form.building.data):
             Sensor(name=uuid,
                    source_name=str(form.source_name.data),
                    source_identifier=str(form.source_identifier.data),
@@ -358,8 +418,13 @@ def sensor():
             return redirect(url_for('central.sensor'))
         else:
             flash('Unable to communicate with the DataService')
-    return render_template('central/sensor.html', objs=objs, form=form, total=total,
-                           pages=pages, current_page=page, pagesize=PAGE_SIZE)
+    return render_template('central/sensor.html',
+                           objs=objs,
+                           form=form,
+                           total=total,
+                           pages=pages,
+                           current_page=page,
+                           pagesize=PAGE_SIZE)
 
 
 @central.route('/sensor_delete', methods=['POST'])
@@ -386,6 +451,7 @@ def sensor_delete():
         flash('Unable to communicate with the DataService')
     return redirect(url_for('central.sensor'))
 
+
 @central.route('/sensorgroup', methods=['GET', 'POST'])
 @login_required
 def sensorgroup():
@@ -405,9 +471,10 @@ def sensorgroup():
         SensorGroup(name=str(form.name.data),
                     description=str(form.description.data),
                     building=str(form.building.data),
-                    owner = session['email']).save()
+                    owner=session['email']).save()
         return redirect(url_for('central.sensorgroup'))
     return render_template('central/sensorgroup.html', objs=objs, form=form)
+
 
 @central.route('/sensorgroup_delete', methods=['POST'])
 @login_required
@@ -422,6 +489,7 @@ def sensorgroup_delete():
     else:
         flash('You are not authorized to delete this sensor group')
     return redirect(url_for('central.sensorgroup'))
+
 
 @central.route('/usergroup', methods=['GET', 'POST'])
 @login_required
@@ -439,20 +507,22 @@ def usergroup():
     if form.validate_on_submit():
         UserGroup(name=str(form.name.data),
                   description=str(form.description.data),
-                  owner = session['email']).save()
+                  owner=session['email']).save()
         return redirect(url_for('central.usergroup'))
     return render_template('central/usergroup.html', objs=objs, form=form)
+
 
 @central.route('/usergroup_delete', methods=['POST'])
 @login_required
 def usergroup_delete():
     # cahce process
     name = request.form.get('name')
-    if authorize_addition(name,session['email']):
+    if authorize_addition(name, session['email']):
         UserGroup.objects(name=name).delete()
     else:
         flash('You are not authorized to delete this user group')
     return redirect(url_for('central.usergroup'))
+
 
 @central.route('/permission', methods=['GET', 'POST'], endpoint="permission")
 @login_required
@@ -464,26 +534,39 @@ def permission_create():
         obj.can_delete = True
 
     form = PermissionForm()
-    form.user_group.choices = sorted([(obj.name, obj.name) for obj in UserGroup.objects])
-    form.sensor_group.choices = sorted([(obj.name, obj.name) for obj in SensorGroup.objects])
+    form.user_group.choices = sorted([(obj.name, obj.name)
+                                      for obj in UserGroup.objects])
+    form.sensor_group.choices = sorted([(obj.name, obj.name)
+                                        for obj in SensorGroup.objects])
     if form.validate_on_submit():
         # Doesn't allow duplicate permissions
-        if Permission.objects(user_group=form.user_group.data, sensor_group=form.sensor_group.data).first() is not None:
+        if Permission.objects(
+                user_group=form.user_group.data,
+                sensor_group=form.sensor_group.data).first() is not None:
             flash('There is already permission pair {} - {} specified'.format(
                 form.user_group.data, form.sensor_group.data))
             return redirect(url_for('central.permission'))
-        if defs.create_permission(form.user_group.data,form.sensor_group.data,session['email'],form.permission.data):
-            if not len(SensorGroup.objects(name=form.sensor_group.data).first().tags):
+        if defs.create_permission(form.user_group.data, form.sensor_group.data,
+                                  session['email'], form.permission.data):
+            if not len(
+                    SensorGroup.objects(
+                        name=form.sensor_group.data).first().tags):
                 flash('No tags present in the SensorGroup')
                 return redirect(url_for('central.permission'))
             # If permission doesn't exist then create it
             Permission(user_group=str(form.user_group.data),
                        sensor_group=str(form.sensor_group.data),
                        permission=str(form.permission.data),
-                       owner = session['email']).save()
+                       owner=session['email']).save()
             invalidate_permission(str(form.sensor_group.data))
-            r.hset('permission:{}:{}'.format(form.user_group.data,form.sensor_group.data),"permission",form.permission.data)
-            r.hset('permission:{}:{}'.format(form.user_group.data,form.sensor_group.data),"owner",session['email'])
+            r.hset(
+                'permission:{}:{}'.format(form.user_group.data,
+                                          form.sensor_group.data),
+                "permission", form.permission.data)
+            r.hset(
+                'permission:{}:{}'.format(form.user_group.data,
+                                          form.sensor_group.data), "owner",
+                session['email'])
         else:
             flash('Unable to communicate with the DataService')
         return redirect(url_for('central.permission'))
@@ -494,9 +577,10 @@ def permission_create():
 @login_required
 def permission_delete():
     code = request.form.get('name').split(':-:')
-    permission = Permission.objects(user_group=code[0], sensor_group=code[1]).first()
+    permission = Permission.objects(user_group=code[0],
+                                    sensor_group=code[1]).first()
     if permission['owner'] == session['email']:
-        if defs.delete_permission(code[0],code[1]):
+        if defs.delete_permission(code[0], code[1]):
             permission.delete()
             r.delete('permission:{}:{}'.format(code[0], code[1]))
             invalidate_permission(code[1])
@@ -505,6 +589,7 @@ def permission_delete():
     else:
         flash('You are not authorized to delete this permission')
     return redirect(url_for('central.permission'))
+
 
 @central.route('/permission_query', methods=['GET', 'POST'])
 @login_required
@@ -515,7 +600,7 @@ def permission_query():
     form = PermissionQueryForm()
     res = None
     if form.validate_on_submit():
-        if not validate_users([form.user.data],True):
+        if not validate_users([form.user.data], True):
             flash('User {} does not exist'.format(form.user.data))
             return render_template('central/query.html', form=form, res=res)
 
@@ -528,6 +613,7 @@ def permission_query():
 
     return render_template('central/query.html', form=form, res=res)
 
+
 @central.route('/sensor/search', methods=['GET', 'POST'])
 @login_required
 def sensors_search():
@@ -535,19 +621,19 @@ def sensors_search():
     args = {}
     for key, values in data.iteritems():
         if key == 'Building':
-            form_query('building',values,args,"$or")
+            form_query('building', values, args, "$or")
         elif key == 'SourceName':
-            form_query('source_name',values,args,"$or")
+            form_query('source_name', values, args, "$or")
         elif key == 'SourceIdentifier':
-            form_query('source_identifier',values,args,"$or")
+            form_query('source_identifier', values, args, "$or")
         elif key == 'Owner':
             form_query('owner', values, args, "$or")
         elif key == 'ID':
-            form_query('name',values,args,"$or")
+            form_query('name', values, args, "$or")
         elif key == 'Tags':
-            form_query('tags',values,args,"$and")
+            form_query('tags', values, args, "$and")
         elif key == 'MetaData':
-            form_query('metadata',values,args,"$and")
+            form_query('metadata', values, args, "$and")
     print args
     # Show the user PAGE_SIZE number of sensors on each page
     page = request.args.get('page', 1, type=int)
@@ -561,7 +647,12 @@ def sensors_search():
     form = SensorForm()
     # Get the list of valid buildings for this DataService
     form.building.choices = get_building_choices()
-    return render_template('central/sensor.html', objs=sensors, form=form, total=total_cnt,
-    #return render_template('central/sensor.html', objs=sensor_list, form=form, total=total,
-                           pages=pages, current_page=page, pagesize=PAGE_SIZE)
-
+    return render_template(
+        'central/sensor.html',
+        objs=sensors,
+        form=form,
+        total=total_cnt,
+        #return render_template('central/sensor.html', objs=sensor_list, form=form, total=total,
+        pages=pages,
+        current_page=page,
+        pagesize=PAGE_SIZE)

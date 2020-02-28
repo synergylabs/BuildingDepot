@@ -22,17 +22,25 @@ class Subscription(Resource):
 
     @validate_email
     def get(self, email):
-        return {'subscribed_sensors': list(r.smembers('subscribed_sensors:{}'.format(email)))}
+        return {
+            'subscribed_sensors':
+            list(r.smembers('subscribed_sensors:{}'.format(email)))
+        }
 
     def process(self, email, handler_name):
         parser = reqparse.RequestParser()
-        parser.add_argument('sensors', type=subscribed_sensors_validator, required=True, location='json')
+        parser.add_argument('sensors',
+                            type=subscribed_sensors_validator,
+                            required=True,
+                            location='json')
         args = parser.parse_args()
 
         sensors = args['sensors']
         for sensor_name in sensors:
             if permission(g.user, sensor_name) == 'undefined':
-                return not_allowed('You do not have read permission to sensor {}'.format(sensor_name))
+                return not_allowed(
+                    'You do not have read permission to sensor {}'.format(
+                        sensor_name))
 
         pipe = r.pipeline()
         for sensor_name in sensors:
@@ -62,7 +70,12 @@ class SubscriptionChanges(Resource):
             point = r.get('latest_point:{}:{}'.format(sensor_name, email))
             if point is not None:
                 time, value = point.split('-')
-                res.append({'sensor': sensor_name, 'latest_point': {time: value}})
+                res.append({
+                    'sensor': sensor_name,
+                    'latest_point': {
+                        time: value
+                    }
+                })
         return {'changes': res}
 
 

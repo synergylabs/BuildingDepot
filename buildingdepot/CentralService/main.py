@@ -22,8 +22,10 @@ app = create_app('deploy')
 manager = Manager(app)
 register_view(app)
 
+
 def make_shell_context():
     return dict(app=app, User=User)
+
 
 if __name__ == '__main__':
     server = Server('0.0.0.0', threaded=True)

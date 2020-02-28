@@ -28,6 +28,7 @@ from ..api_0_0.resources.utils import *
 from ..api_0_0.resources.acl_cache import invalidate_user, invalidate_permission
 from .helper import check_oauth
 
+
 @api.route('/sensor/list', methods=['GET'])
 @check_oauth
 def get_sensors_metadata():
@@ -81,11 +82,14 @@ def get_sensors_metadata():
     if request_type == "params":
         list_sensors = Sensor._get_collection().find({param: value})
     elif request_type == "tags":
-        list_sensors = Sensor._get_collection().find({request_type: {'name': param, 'value': value}})
+        list_sensors = Sensor._get_collection().find(
+            {request_type: {
+                'name': param,
+                'value': value
+            }})
     elif request_type == "metadata":
-        list_sensors = Sensor._get_collection().find({request_type + "." + param: value})
+        list_sensors = Sensor._get_collection().find(
+            {request_type + "." + param: value})
     response = dict(responses.success_true)
     response.update({'data': create_response(list_sensors)})
     return jsonify(response)
-
-

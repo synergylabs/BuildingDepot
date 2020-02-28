@@ -44,7 +44,7 @@ class BuildingTagsService(MethodView):
         collection = Building._get_collection()
         metadata = data.get('metadata')
         parents = data.get('parents')
-        if parents and len(parents)!=0:
+        if parents and len(parents) != 0:
             search_list = []
             for element in parents:
                 search_list.append({'$elemMatch': element})
@@ -56,22 +56,48 @@ class BuildingTagsService(MethodView):
             'metadata': metadata if metadata else [],
             'parents': parents if parents else [],
         }
-        tag_exists = collection.find({'name': building_name,
-                                      'tags':
-                                          {"$elemMatch": {"name": name, "value": value}}})
+        tag_exists = collection.find({
+            'name': building_name,
+            'tags': {
+                "$elemMatch": {
+                    "name": name,
+                    "value": value
+                }
+            }
+        })
         if tag_exists.count() == 0:
-            collection.update(
-                {'name': building_name},
-                {'$addToSet': {'tags': tag}}
-            )
+            collection.update({'name': building_name},
+                              {'$addToSet': {
+                                  'tags': tag
+                              }})
         else:
             if parents:
-                collection.update({'name': building_name,
-                                   'tags': {"$elemMatch": {"name": name, "value": value}}},
-                                  {"$set": {"tags.$.parents": []}})
-                collection.update({'name': building_name,
-                                   'tags': {"$elemMatch": {"name": name, "value": value}}},
-                                  {"$push": {"tags.$.parents": {"$each": parents}}})
+                collection.update(
+                    {
+                        'name': building_name,
+                        'tags': {
+                            "$elemMatch": {
+                                "name": name,
+                                "value": value
+                            }
+                        }
+                    }, {"$set": {
+                        "tags.$.parents": []
+                    }})
+                collection.update(
+                    {
+                        'name': building_name,
+                        'tags': {
+                            "$elemMatch": {
+                                "name": name,
+                                "value": value
+                            }
+                        }
+                    }, {"$push": {
+                        "tags.$.parents": {
+                            "$each": parents
+                        }
+                    }})
         return jsonify(responses.success_true)
 
     @check_oauth
@@ -81,12 +107,20 @@ class BuildingTagsService(MethodView):
             return jsonify(responses.invalid_building)
         template = building['template']
         names = BuildingTemplate.objects(name=template).first().tag_types
-        pairs = {name: TagType.objects(name=name).first().parents for name in names}
-        tags = Building._get_collection().find(
-            {'name': building_name},
-            {'_id': 0, 'tags.name': 1, 'tags.value': 1, 'tags.parents': 1}
-        )[0]['tags']
-        parents = set([pair['name'] + pair['value'] for tag in tags for pair in tag['parents']])
+        pairs = {
+            name: TagType.objects(name=name).first().parents
+            for name in names
+        }
+        tags = Building._get_collection().find({'name': building_name}, {
+            '_id': 0,
+            'tags.name': 1,
+            'tags.value': 1,
+            'tags.parents': 1
+        })[0]['tags']
+        parents = set([
+            pair['name'] + pair['value'] for tag in tags
+            for pair in tag['parents']
+        ])
         # Response contains parameters that define whether tag can be deleted or not
         for tag in tags:
             tag['can_delete'] = tag['name'] + tag['value'] not in parents
@@ -110,14 +144,29 @@ class BuildingTagsService(MethodView):
             return jsonify(responses.missing_parameters)
 
         collection = Building._get_collection()
-        tag_exists = collection.find({'tags':
-                                          {"$elemMatch": {"name": name, "value": value}}})
+        tag_exists = collection.find(
+            {'tags': {
+                "$elemMatch": {
+                    "name": name,
+                    "value": value
+                }
+            }})
         if tag_exists.count() == 0:
             return jsonify(responses.invalid_tag_value)
-        tag_use = collection.find({'tags.parents':
-                                       {"$elemMatch": {"name": name, "value": value}}})
+        tag_use = collection.find(
+            {'tags.parents': {
+                "$elemMatch": {
+                    "name": name,
+                    "value": value
+                }
+            }})
         if tag_use.count() > 0:
             return jsonify(responses.tagtype_referenced)
         collection.update({'name': building_name},
-                          {'$pull': {'tags': {'name': name, 'value': value}}})
+                          {'$pull': {
+                              'tags': {
+                                  'name': name,
+                                  'value': value
+                              }
+                          }})
         return jsonify(responses.success_true)

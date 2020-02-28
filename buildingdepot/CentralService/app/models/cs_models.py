@@ -37,6 +37,7 @@ class TagType(Document):
     children = ListField(StringField())
     acl_tag = BooleanField()
 
+
 class BuildingTemplate(Document):
     name = StringField(required=True, unique=True)
     description = StringField()
@@ -87,8 +88,7 @@ class User(UserMixin, Document):
         return check_password_hash(self.password, password)
 
     def generate_auth_token(self, expiration):
-        s = Serializer(current_app.config['SECRET_KEY'],
-                       expires_in=expiration)
+        s = Serializer(current_app.config['SECRET_KEY'], expires_in=expiration)
         return s.dumps({'email': self.email})
 
     @staticmethod
@@ -112,6 +112,7 @@ class UserGroupNode(EmbeddedDocument):
     user_id = StringField()
     manager = BooleanField()
 
+
 class Sensor(Document):
     name = StringField(required=True, unique=True)
     source_name = StringField()
@@ -131,6 +132,7 @@ class SensorGroup(Document):
     building = StringField()
     tags = ListField(EmbeddedDocumentField(Node))
     owner = StringField()
+
 
 class UserGroup(Document):
     name = StringField(required=True, unique=True)

@@ -11,16 +11,16 @@ or deleting an existing one.
 """
 import sys
 from flask.views import MethodView
-from flask import request,jsonify
+from flask import request, jsonify
 
 from ...auth.access_control import authorize_addition
 from .. import responses
 from ...models.cs_models import UserGroup
-from ... import r,oauth
-from ..helper import xstr,get_email,get_building_choices, check_oauth
+from ... import r, oauth
+from ..helper import xstr, get_email, get_building_choices, check_oauth
+
 
 class UserGroupService(MethodView):
-
     @check_oauth
     def post(self):
         """
@@ -47,11 +47,11 @@ class UserGroupService(MethodView):
 
         UserGroup(name=xstr(name),
                   description=xstr(description),
-                  owner = get_email()).save()
+                  owner=get_email()).save()
         return jsonify(responses.success_true)
 
     @check_oauth
-    def get(self,name):
+    def get(self, name):
         """
         Args as data:
             name = <name of user group>
@@ -68,12 +68,14 @@ class UserGroupService(MethodView):
             return jsonify(responses.invalid_usergroup)
 
         response = dict(responses.success_true)
-        response.update({"name":user_group['name'],
-                        "description":user_group['description']})
+        response.update({
+            "name": user_group['name'],
+            "description": user_group['description']
+        })
         return jsonify(response)
 
     @check_oauth
-    def delete(self,name):
+    def delete(self, name):
         """
         Args as data:
             name = <name of user group>
@@ -87,9 +89,8 @@ class UserGroupService(MethodView):
         if user_group is None:
             return jsonify(responses.invalid_usergroup)
         if authorize_addition(name, get_email()):
-            UserGroup._get_collection().remove({"name":user_group['name']})
+            UserGroup._get_collection().remove({"name": user_group['name']})
             response = dict(responses.success_true)
         else:
             response = dict(responses.usergroup_delete_authorization)
         return jsonify(response)
-

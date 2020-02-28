@@ -26,6 +26,7 @@ def is_managed_by_local(local_admin, user):
         return True
     return False
 
+
 def success():
     response = jsonify({'success': 'True'})
     response.status_code = 200
@@ -36,7 +37,8 @@ def page_validator(page_num):
     try:
         page_num = int(page_num)
         if page_num <= 0:
-            raise ValueError('Please input positive integer number for page number')
+            raise ValueError(
+                'Please input positive integer number for page number')
     except:
         raise ValueError('Please input integer number for page number')
     return page_num
@@ -44,18 +46,19 @@ def page_validator(page_num):
 
 def pagination_get(document_class, res_fields, api_class):
     parser = reqparse.RequestParser()
-    parser.add_argument('page', type=page_validator, default=1, location='args')
+    parser.add_argument('page',
+                        type=page_validator,
+                        default=1,
+                        location='args')
 
     page = parser.parse_args()['page']
-    skip_size = (page-1) * PAGE_SIZE
+    skip_size = (page - 1) * PAGE_SIZE
     objs = document_class.objects().skip(skip_size).limit(PAGE_SIZE)
 
     from ... import api
     res = {'data': [marshal(obj, res_fields) for obj in objs]}
     if page > 1:
-        res['prev'] = api.url_for(api_class, _external=True, page=page-1)
+        res['prev'] = api.url_for(api_class, _external=True, page=page - 1)
     if len(res['data']) == PAGE_SIZE:
-        res['next'] = api.url_for(api_class, _external=True, page=page+1)
+        res['next'] = api.url_for(api_class, _external=True, page=page + 1)
     return res
-
-

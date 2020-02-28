@@ -49,21 +49,29 @@ class SensorViewService(MethodView):
         available_fields = []
         for tag in sensor.tags:
             if tag['name'] == 'fields':
-                available_fields += [field.strip() for field in tag['value'].split(",")]
+                available_fields += [
+                    field.strip() for field in tag['value'].split(",")
+                ]
         all_views = []
         for view in views:
-            tags_owned = [{'name': tag.name, 'value': tag.value} for tag in view.tags]
+            tags_owned = [{
+                'name': tag.name,
+                'value': tag.value
+            } for tag in view.tags]
             fields = []
             for tag in tags_owned:
                 if tag['name'] == 'field':
                     fields.append(tag['value'])
             all_views.append({
-                             'id': str(view.name),
-                             'fields': ', '.join(sorted(fields)),
-                             'source_name': xstr(view.source_name)
-                             })
+                'id': str(view.name),
+                'fields': ', '.join(sorted(fields)),
+                'source_name': xstr(view.source_name)
+            })
         response = dict(responses.success_true)
-        response.update({"views_owned": all_views, 'available_fields': available_fields})
+        response.update({
+            "views_owned": all_views,
+            'available_fields': available_fields
+        })
         return jsonify(response)
 
     @check_oauth
@@ -86,7 +94,10 @@ class SensorViewService(MethodView):
         if sensor is None:
             return jsonify(responses.invalid_uuid)
         if r.get('parent:{}'.format(name)):
-            return jsonify({"success": "False", "error": "Sensor views can't have sub-views."})
+            return jsonify({
+                "success": "False",
+                "error": "Sensor views can't have sub-views."
+            })
         data = request.get_json()['data']
         try:
             view_name = data.get('source_name')
@@ -103,18 +114,42 @@ class SensorViewService(MethodView):
         except:
             tags = []
         fields_list = fields.split(',')
-        field_tags = [{"name": "field", "value": field.strip()} for field in fields_list]
+        field_tags = [{
+            "name": "field",
+            "value": field.strip()
+        } for field in fields_list]
         available_tags = Building.objects(name=building).first().tags
-        available_tags = [{"name": tag.name, "value": tag.value} for tag in available_tags]
-        tags = tags + [{"name": tag.name, "value": tag.value} for tag in sensor.tags] + [{"name": "parent", "value": sensor.name}] + field_tags
+        available_tags = [{
+            "name": tag.name,
+            "value": tag.value
+        } for tag in available_tags]
+        tags = tags + [{
+            "name": tag.name,
+            "value": tag.value
+        } for tag in sensor.tags] + [{
+            "name": "parent",
+            "value": sensor.name
+        }] + field_tags
         if any(tag not in available_tags for tag in tags):
-            missing_tags = set([(tag['name'], tag['value']) for tag in tags]) - set([(tag['name'], tag['value']) for tag in available_tags])
-            missing_tags = [{'name': name, 'value': value} for name, value in missing_tags]
-            return jsonify({'success': 'False', 'building_tags_required': missing_tags, 'error': 'Cannot create '
-                                                                                                 'sensor views '
-                                                                                                 'without the '
-                                                                                                 'required building '
-                                                                                                 'tags.'})
+            missing_tags = set([
+                (tag['name'], tag['value']) for tag in tags
+            ]) - set([(tag['name'], tag['value']) for tag in available_tags])
+            missing_tags = [{
+                'name': name,
+                'value': value
+            } for name, value in missing_tags]
+            return jsonify({
+                'success':
+                'False',
+                'building_tags_required':
+                missing_tags,
+                'error':
+                'Cannot create '
+                'sensor views '
+                'without the '
+                'required building '
+                'tags.'
+            })
         uuid = str(uuid4())
         if defs.create_sensor(uuid, email, building, fields, name):
             Sensor(name=uuid,

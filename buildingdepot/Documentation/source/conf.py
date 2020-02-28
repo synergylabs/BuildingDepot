@@ -29,9 +29,7 @@ import shlex
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-extensions = [
-    'sphinx.ext.autodoc', 'sphinxcontrib.httpdomain'
-]
+extensions = ['sphinx.ext.autodoc', 'sphinxcontrib.httpdomain']
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -254,19 +252,15 @@ latex_documents = [
 # If false, no module index is generated.
 # latex_domain_indices = True
 
-
 # -- Options for manual page output ---------------------------------------
 
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
-man_pages = [
-    (master_doc, 'buildingdepot', u'BuildingDepot Documentation',
-     [author], 1)
-]
+man_pages = [(master_doc, 'buildingdepot', u'BuildingDepot Documentation',
+              [author], 1)]
 
 # If true, show URL addresses after external links.
 # man_show_urls = False
-
 
 # -- Options for Texinfo output -------------------------------------------
 
@@ -274,9 +268,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'BuildingDepot', u'BuildingDepot Documentation',
-     author, 'BuildingDepot', 'One line description of project.',
-     'Miscellaneous'),
+    (master_doc, 'BuildingDepot', u'BuildingDepot Documentation', author,
+     'BuildingDepot', 'One line description of project.', 'Miscellaneous'),
 ]
 
 # Documents to append as an appendix to all manuals.

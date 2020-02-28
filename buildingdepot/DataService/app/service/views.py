@@ -19,7 +19,7 @@ from . import service
 from ..models.ds_models import *
 from .forms import *
 from ..rest_api.utils import *
-from ..rest_api.helper import form_query,get_building_tags
+from ..rest_api.helper import form_query, get_building_tags
 from ..rest_api import responses
 from uuid import uuid4
 from .. import r, influx, permissions
@@ -36,7 +36,8 @@ def sensor():
     # Show the user PAGE_SIZE number of sensors on each page
     page = request.args.get('page', 1, type=int)
     skip_size = (page - 1) * PAGE_SIZE
-    objs = Sensor.objects(source_identifier__ne='SensorView').skip(skip_size).limit(PAGE_SIZE)
+    objs = Sensor.objects(
+        source_identifier__ne='SensorView').skip(skip_size).limit(PAGE_SIZE)
     for obj in objs:
         obj.can_delete = True
     total = Sensor.objects(source_identifier__ne='SensorView').count()
@@ -44,8 +45,12 @@ def sensor():
         pages = int(math.ceil(float(total) / PAGE_SIZE))
     else:
         pages = 0
-    return render_template('service/sensor.html', objs=objs, total=total,
-                           pages=pages, current_page=page, pagesize=PAGE_SIZE)
+    return render_template('service/sensor.html',
+                           objs=objs,
+                           total=total,
+                           pages=pages,
+                           current_page=page,
+                           pagesize=PAGE_SIZE)
 
 
 @service.route('/sensor/search', methods=['GET', 'POST'])
@@ -84,8 +89,13 @@ def sensors_search():
         pages = int(math.ceil(float(total) / PAGE_SIZE))
     else:
         pages = 0
-    return render_template('service/sensor.html', objs=sensor_list, total=total,
-                           pages=pages, current_page=page, pagesize=PAGE_SIZE)
+    return render_template('service/sensor.html',
+                           objs=sensor_list,
+                           total=total,
+                           pages=pages,
+                           current_page=page,
+                           pagesize=PAGE_SIZE)
+
 
 @service.route('/sensor/<name>/tags')
 def get_sensor_tags(name):
@@ -96,6 +106,7 @@ def get_sensor_tags(name):
     response.update({'tags': tags, 'tags_owned': tags_owned})
     return jsonify(response)
 
+
 @service.route('/graph/<name>')
 @service.route('/sensor/graph/<name>')
 def graph(name):
@@ -104,9 +115,18 @@ def graph(name):
         if obj.name == name:
             temp = obj
             break
-    metadata = Sensor._get_collection().find({'name': name}, {'metadata': 1, '_id': 0})[0]['metadata']
-    metadata = [{'name': key, 'value': val} for key, val in metadata.iteritems()]
+    metadata = Sensor._get_collection().find({'name': name}, {
+        'metadata': 1,
+        '_id': 0
+    })[0]['metadata']
+    metadata = [{
+        'name': key,
+        'value': val
+    } for key, val in metadata.iteritems()]
     obj = Sensor.objects(name=name).first()
     tags_owned = [{'name': tag.name, 'value': tag.value} for tag in obj.tags]
-    return render_template('service/graph.html', name=name, obj=temp, metadata=metadata, tags=tags_owned)
-
+    return render_template('service/graph.html',
+                           name=name,
+                           obj=temp,
+                           metadata=metadata,
+                           tags=tags_owned)

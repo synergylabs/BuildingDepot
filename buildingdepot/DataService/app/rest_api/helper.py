@@ -59,7 +59,8 @@ def jsonString(obj, pretty=False):
         JSON object corresponding to the input object
        """
     if pretty == True:
-        return json.dumps(obj, sort_keys=True, indent=4, separators=(',', ': ')) + '\n'
+        return json.dumps(
+            obj, sort_keys=True, indent=4, separators=(',', ': ')) + '\n'
     else:
         return json.dumps(obj)
 
@@ -89,13 +90,14 @@ def create_json(sensor):
             Formatted sensor object as below
         }
     """
-    json_object = {'building': sensor.get('building'),
-                   'name': sensor.get('name'),
-                   'tags': sensor.get('tags'),
-                   'metadata': sensor.get('metadata'),
-                   'source_identifier': sensor.get('source_identifier'),
-                   'source_name': sensor.get('source_name')
-                   }
+    json_object = {
+        'building': sensor.get('building'),
+        'name': sensor.get('name'),
+        'tags': sensor.get('tags'),
+        'metadata': sensor.get('metadata'),
+        'source_identifier': sensor.get('source_identifier'),
+        'source_name': sensor.get('source_name')
+    }
     return json_object
 
 
@@ -117,7 +119,8 @@ def timestamp_to_time_string(t):
     Returns
         A string representation of the timestamp
     """
-    return time.strftime("%Y-%m-%dT%H:%M:%S", time.gmtime(t)) + str(t - int(t))[1:10] + 'Z'
+    return time.strftime("%Y-%m-%dT%H:%M:%S",
+                         time.gmtime(t)) + str(t - int(t))[1:10] + 'Z'
 
 
 def connect_broker():
@@ -128,7 +131,8 @@ def connect_broker():
         pubsub: object corresponding to the connection with the broker
     """
     try:
-        pubsub = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
+        pubsub = pika.BlockingConnection(
+            pika.ConnectionParameters(host='localhost'))
         channel = pubsub.channel()
         channel.exchange_declare(exchange=exchange, type='direct')
         channel.close()
@@ -158,7 +162,10 @@ def form_query(param, values, args, operation):
     if param == 'tags':
         for tag in values:
             key_value = tag.split(":", 1)
-            current_tag = {"tags.name": key_value[0], "tags.value": key_value[1]}
+            current_tag = {
+                "tags.name": key_value[0],
+                "tags.value": key_value[1]
+            }
             res.append(current_tag)
     elif param == 'metadata':
         for meta in values:
@@ -176,7 +183,11 @@ def form_query(param, values, args, operation):
 
 def get_building_tags(building):
     """Get all the tags that this building has associated with it"""
-    tags = Building._get_collection().find({'name': building}, {'tags.name': 1, 'tags.value': 1, '_id': 0})[0]['tags']
+    tags = Building._get_collection().find({'name': building}, {
+        'tags.name': 1,
+        'tags.value': 1,
+        '_id': 0
+    })[0]['tags']
     res = {}
     for tag in tags:
         if tag['name'] in res:
@@ -184,7 +195,8 @@ def get_building_tags(building):
         else:
             tagtype_dict = {}
             tagtype_dict['values'] = [tag['value']]
-            tagtype_dict['acl_tag'] = TagType.objects(name=tag['name']).first().acl_tag
+            tagtype_dict['acl_tag'] = TagType.objects(
+                name=tag['name']).first().acl_tag
             res[tag['name']] = tagtype_dict
     return res
 
@@ -204,13 +216,16 @@ def check_oauth(f):
                 token = Token.objects(access_token=access_token).first()
                 if token:
                     # Calculate time to expire in seconds using timedelta
-                    expires_in = (token.expires - datetime.now()).total_seconds()
+                    expires_in = (token.expires -
+                                  datetime.now()).total_seconds()
                     if expires_in > 0:
                         # Still valid, adding to redis
-                        r.setex(''.join(['oauth:', access_token]), token.user, int(expires_in))
+                        r.setex(''.join(['oauth:', access_token]), token.user,
+                                int(expires_in))
                         return f(*args, **kwargs)
                     else:
                         # Invalid, deleting
                         token.delete()
         abort(401)
+
     return secure

@@ -12,18 +12,18 @@ user group. This list is further used for acl's and other purposes.
 """
 import sys
 from flask.views import MethodView
-from flask import request,jsonify
+from flask import request, jsonify
 from .. import responses
 from ...models.cs_models import UserGroup
-from ..helper import add_delete_users,get_email,validate_users, check_oauth
-from ... import r,oauth
-from ...auth.access_control import authenticate_acl,authorize_addition
+from ..helper import add_delete_users, get_email, validate_users, check_oauth
+from ... import r, oauth
+from ...auth.access_control import authenticate_acl, authorize_addition
 from ...auth.acl_cache import invalidate_user
 
-class UserGroupUsersService(MethodView):
 
+class UserGroupUsersService(MethodView):
     @check_oauth
-    def get(self,name):
+    def get(self, name):
         """
         Args as data:
             name = <name of user group>
@@ -36,11 +36,16 @@ class UserGroupUsersService(MethodView):
         if obj is None:
             return jsonify(responses.invalid_usergroup)
         response = dict(responses.success_true)
-        response.update({'users':[{'user_id': user.user_id, 'manager': user.manager} for user in obj.users]})
+        response.update({
+            'users': [{
+                'user_id': user.user_id,
+                'manager': user.manager
+            } for user in obj.users]
+        })
         return jsonify(response)
 
     @check_oauth
-    def post(self,name):
+    def post(self, name):
         """
         Args as data:
             name = <name of user group>
@@ -60,11 +65,10 @@ class UserGroupUsersService(MethodView):
         if UserGroup.objects(name=name).first() is None:
             return jsonify(responses.invalid_usergroup)
         if validate_users(emails):
-            if authorize_addition(name,get_email()):
+            if authorize_addition(name, get_email()):
                 user_group = UserGroup.objects(name=name).first()
                 UserGroup.objects(name=name).update(set__users=emails)
                 return jsonify(responses.success_true)
             else:
                 return jsonify(responses.usergroup_add_authorization)
         return jsonify(responses.user_not_registered)
-

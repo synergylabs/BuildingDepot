@@ -32,7 +32,6 @@ def success():
 
 def validate_email(f):
     """Checks if user exists in the system"""
-
     def decorated_function(*args, **kwargs):
         email = [kwargs['email']]
         if not validate_users(email):
@@ -44,7 +43,6 @@ def validate_email(f):
 
 def validate_sensor(f):
     """Validates the uuid of the given sensor to see if it exists"""
-
     def decorated_function(*args, **kwargs):
         sensor_name = kwargs['sensor_name']
         if Sensor.objects(name=sensor_name).first() is None:
@@ -57,7 +55,6 @@ def validate_sensor(f):
 def authenticate_acl(permission_required):
     """This is the function that defines the acl's and what level of access
        the user has to the specified sensor"""
-
     def authenticate_write(f):
         def decorated_function(*args, **kwargs):
             try:
@@ -68,15 +65,25 @@ def authenticate_acl(permission_required):
             response = permission(sensor_name)
             if response == 'u/d':
                 if Sensor.objects(name=sensor_name).first() is None:
-                    return jsonify({'success': 'False',
-                                    'error': 'Sensor does not exist'})
+                    return jsonify({
+                        'success': 'False',
+                        'error': 'Sensor does not exist'
+                    })
                 else:
-                    return jsonify({'success': 'False', 'error': 'Permission not defined'})
-            elif permissions_val[response] <= permissions_val[permission_required]:
+                    return jsonify({
+                        'success': 'False',
+                        'error': 'Permission not defined'
+                    })
+            elif permissions_val[response] <= permissions_val[
+                    permission_required]:
                 return f(*args, **kwargs)
             else:
-                return jsonify({'success': 'False',
-                                'error': 'You are not authenticated for this operation on the sensor'})
+                return jsonify({
+                    'success':
+                    'False',
+                    'error':
+                    'You are not authenticated for this operation on the sensor'
+                })
 
         return decorated_function
 
@@ -111,10 +118,13 @@ def permission(sensor_name, email=None):
         for sensorgroup in sensorgroups:
             # Multiple permissions may exists for the same user and sensor relation.
             # This one chooses the most restrictive one by counting the number of tags
-            res = r.hget('permission:{}:{}'.format(usergroup, sensorgroup), "permission")
-            owner_email = r.hget('permission:{}:{}'.format(usergroup, sensorgroup), "owner")
+            res = r.hget('permission:{}:{}'.format(usergroup, sensorgroup),
+                         "permission")
+            owner_email = r.hget(
+                'permission:{}:{}'.format(usergroup, sensorgroup), "owner")
             print res
-            if res is not None and permission(sensor_name, owner_email) == 'r/w/p':
+            if res is not None and permission(sensor_name,
+                                              owner_email) == 'r/w/p':
                 if permissions_val[res] > permissions_val[current_res]:
                     current_res = res
     # If permission couldn't be calculated from cache go to MongoDB
@@ -129,7 +139,8 @@ def batch_permission_check(sensors_list, email=None):
     permissions = {}  # dict to store permissions
     missing_from_cache = []  # permission not found in cache
     sensors_missing = []  # sensors not foun
-    sensors_missing_from_cache = []  # sensor info not found in cache (owner:sensor)
+    sensors_missing_from_cache = [
+    ]  # sensor info not found in cache (owner:sensor)
     not_owner_sensors = []  # sensors which the user does not own
 
     if not email:
@@ -152,7 +163,9 @@ def batch_permission_check(sensors_list, email=None):
         return permissions
 
     # check if the owner:sensor key is present => sensor exists
-    redis_sensor_keys = [''.join(['owner:', sensor]) for sensor in sensors_list]
+    redis_sensor_keys = [
+        ''.join(['owner:', sensor]) for sensor in sensors_list
+    ]
     owners = dict(zip(redis_sensor_keys, r.mget(*redis_sensor_keys)))
     for k, v in owners.items():
         if not v:
@@ -160,11 +173,10 @@ def batch_permission_check(sensors_list, email=None):
 
     # for sensors not found, query MongoDB
     if sensors_missing_from_cache:
-        sensors = Sensor._get_collection().find({
-            'name': {
+        sensors = Sensor._get_collection().find(
+            {'name': {
                 '$in': sensors_missing_from_cache
-            }
-        })
+            }})
         for sensor in sensors:
             owners[''.join(['owner:', sensor.name])] = sensor.owner
 
@@ -194,8 +206,10 @@ def batch_permission_check(sensors_list, email=None):
         sensorgroups = r.smembers(''.join(['sensor:', sensor]))
         for usergroup in usergroups:
             for sensorgroup in sensorgroups:
-                res = r.hget('permission:{}:{}'.format(usergroup, sensorgroup), "permission")
-                owner_email = r.hget('permission:{}:{}'.format(usergroup, sensorgroup), "owner")
+                res = r.hget('permission:{}:{}'.format(usergroup, sensorgroup),
+                             "permission")
+                owner_email = r.hget(
+                    'permission:{}:{}'.format(usergroup, sensorgroup), "owner")
                 if res and permission(sensor, owner_email) == 'r/w/p':
                     if permissions_val[res] > permissions_val[current_res]:
                         current_res = res
@@ -234,7 +248,8 @@ def check_db(sensor, email):
                                             user_group=user_group['name'])
             if permission.first() is not None:
                 curr_permission = permission.first()['permission']
-                if permissions_val[curr_permission] > permissions_val[current_res]:
+                if permissions_val[curr_permission] > permissions_val[
+                        current_res]:
                     current_res = curr_permission
     return current_res
 

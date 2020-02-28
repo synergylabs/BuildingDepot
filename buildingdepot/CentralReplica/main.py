@@ -17,17 +17,18 @@ from mongoengine import connect
 from config import Config
 
 connect(db=Config.MONGODB_DATABASE,
-            host=Config.MONGODB_HOST,
-            port=Config.MONGODB_PORT,
-            username=Config.MONGODB_USERNAME,
-            password=Config.MONGODB_PWD,
-            authentication_source='admin'
-            )
+        host=Config.MONGODB_HOST,
+        port=Config.MONGODB_PORT,
+        username=Config.MONGODB_USERNAME,
+        password=Config.MONGODB_PWD,
+        authentication_source='admin')
 
-r = redis.Redis(host=Config.REDIS_HOST,password=Config.REDIS_PWD)
+r = redis.Redis(host=Config.REDIS_HOST, password=Config.REDIS_PWD)
+
 
 class ThreadXMLRPCServer(ThreadingMixIn, SimpleXMLRPCServer):
     pass
+
 
 def get_user(email, password):
     user = User.objects(email=email).first()
@@ -35,7 +36,8 @@ def get_user(email, password):
         return True
     return False
 
-def create_sensor(sensor_id, email, fields = None, parent = None):
+
+def create_sensor(sensor_id, email, fields=None, parent=None):
     r.set('owner:{}'.format(sensor_id), email)
     if parent:
         r.set('owner:{}'.format(sensor_id), email)
@@ -51,7 +53,8 @@ def create_sensor(sensor_id, email, fields = None, parent = None):
 def invalidate_sensor(sensor_id):
     r.delete('sensor:{}'.format(sensor_id))
 
-def delete_sensor(sensor_id, parent = None):
+
+def delete_sensor(sensor_id, parent=None):
     r.delete('sensor:{}'.format(sensor_id))
     r.delete('owner:{}'.format(sensor_id))
     if parent:
@@ -72,12 +75,15 @@ def delete_sensor(sensor_id, parent = None):
 
 def create_permission(user_group, sensor_group, email, permission):
     invalidate_permission(sensor_group)
-    r.hset('permission:{}:{}'.format(user_group, sensor_group), "permission", permission)
+    r.hset('permission:{}:{}'.format(user_group, sensor_group), "permission",
+           permission)
     r.hset('permission:{}:{}'.format(user_group, sensor_group), "owner", email)
+
 
 def delete_permission(user_group, sensor_group):
     invalidate_permission(sensor_group)
     r.delete('permission:{}:{}'.format(user_group, sensor_group))
+
 
 def invalidate_permission(sensorgroup):
     """ Takes the name of a sensor group and invalidates all the sensors
@@ -93,6 +99,7 @@ def invalidate_permission(sensorgroup):
         pipe.hdel(name, emails)
     pipe.execute()
 
+
 def invalidate_user(usergroup, email):
     """Takes the id of the user that made the request and invalidates
        all the entries for this user (in redis) in every sensor in the
@@ -100,11 +107,13 @@ def invalidate_user(usergroup, email):
     pipe = r.pipeline()
     permissions = Permission.objects(user_group=usergroup)
     for permission in permissions:
-        sg_tags = SensorGroup.objects(name=permission['sensor_group']).first()['tags']
+        sg_tags = SensorGroup.objects(
+            name=permission['sensor_group']).first()['tags']
         collection = Sensor._get_collection().find(form_query(sg_tags))
         for sensor in collection:
             pipe.hdel(name, email)
         pipe.execute()
+
 
 def form_query(values):
     res = []
@@ -114,6 +123,7 @@ def form_query(values):
         res.append(current_tag)
     args["$and"] = res
     return args
+
 
 def get_admins(name):
     """Get the list of admins in the DataService"""

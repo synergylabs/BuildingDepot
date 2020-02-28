@@ -35,14 +35,13 @@ permissions = {"rw": "r/w", "r": "r", "dr": "d/r", "rwp": "r/w/p"}
 
 exchange = 'master_exchange'
 
-influx = InfluxDBClient(app.config['INFLUXDB_HOST'], 
-                        app.config['INFLUXDB_PORT'], 
+influx = InfluxDBClient(app.config['INFLUXDB_HOST'],
+                        app.config['INFLUXDB_PORT'],
                         app.config['INFLUXDB_USERNAME'],
-                        app.config['INFLUXDB_PWD'],
-                        app.config['INFLUXDB_DB']
-                        )
+                        app.config['INFLUXDB_PWD'], app.config['INFLUXDB_DB'])
 
-r = redis.Redis(host=app.config['REDIS_HOST'],password=app.config['REDIS_PWD'])
+r = redis.Redis(host=app.config['REDIS_HOST'],
+                password=app.config['REDIS_PWD'])
 
 bootstrap = Bootstrap()
 svr = ServerProxy("http://127.0.0.1:8080")

@@ -54,7 +54,7 @@ class TimeSeriesService(MethodView):
         start_time = request.args.get('start_time')
         end_time = request.args.get('end_time')
         resolution = request.args.get('resolution')
-        fields= request.args.get('fields')
+        fields = request.args.get('fields')
         original_fields = fields
         if fields:
             fields = fields.split(';')
@@ -67,9 +67,15 @@ class TimeSeriesService(MethodView):
             return jsonify(responses.missing_parameters)
 
         if r.sismember('views', name):
-            allowed_fields = [value.strip() for value in r.get('fields:{}'.format(name)).split(',')]
+            allowed_fields = [
+                value.strip()
+                for value in r.get('fields:{}'.format(name)).split(',')
+            ]
             if original_fields:
-                fields = [field for field in original_fields if field in allowed_fields]
+                fields = [
+                    field for field in original_fields
+                    if field in allowed_fields
+                ]
                 fields = ','.join(fields)
             else:
                 fields = ','.join(allowed_fields)
@@ -77,7 +83,8 @@ class TimeSeriesService(MethodView):
 
         if resolution:
             if fields == '*':
-                return jsonify('TODO: Fields are not supported with resolution')
+                return jsonify(
+                    'TODO: Fields are not supported with resolution')
             try:
                 query = 'select mean(*) from "' + name + '" where (time>\'' + timestamp_to_time_string(
                         float(start_time)) \
@@ -148,7 +155,8 @@ class TimeSeriesService(MethodView):
             # Check if there are any apps associated with the sensors
             views_list = []
             for sensor in sensors_list:
-                views_list = views_list + list(r.smembers('views:{}'.format(sensor)))
+                views_list = views_list + list(
+                    r.smembers('views:{}'.format(sensor)))
             sensors_list = sensors_list + views_list
             pipeline = r.pipeline()
             for sensor in sensors_list:
@@ -164,13 +172,15 @@ class TimeSeriesService(MethodView):
                             if type(sample[key]) is list:
                                 length = len(sample[key])
                                 for i in range(length):
-                                    sample.update({"%s-%d" % (key, i): sample[key][i]})
+                                    sample.update(
+                                        {"%s-%d" % (key, i): sample[key][i]})
                                 del sample[key]
                         dic = {
                             'measurement': sensor['sensor_id'],
                             'time': timestamp_to_time_string(sample['time']),
                             'fields': {
-                                'inserted_at': timestamp_to_time_string(time.time()),
+                                'inserted_at':
+                                timestamp_to_time_string(time.time()),
                                 #'value': sample['value']
                             }
                         }
@@ -182,9 +192,15 @@ class TimeSeriesService(MethodView):
                         fields = []
                         view_fields = r.get('fields:{}'.format(view))
                         if view_fields:
-                            fields = [field.strip() for field in view_fields.split(',')]
+                            fields = [
+                                field.strip()
+                                for field in view_fields.split(',')
+                            ]
                         view_dic = dict(dic)
-                        view_fields = {k: v for k, v in dic['fields'].items() if k in fields }
+                        view_fields = {
+                            k: v
+                            for k, v in dic['fields'].items() if k in fields
+                        }
                         view_dic.update({'fields': view_fields})
                         if apps[view]:
                             if not pubsub:
@@ -194,12 +210,15 @@ class TimeSeriesService(MethodView):
                                     try:
                                         channel = pubsub.channel()
                                     except Exception as e:
-                                        print "Failed to open channel" + " error" + str(e)
+                                        print "Failed to open channel" + " error" + str(
+                                            e)
                             try:
                                 # print ('\n\n' + '{s:{c}^{n}}'.format(s=' view_dic ', n=100, c='#'))
                                 # print (view_dic)
                                 # print ('#' * 100 + '\n\n')
-                                channel.basic_publish(exchange=exchange, routing_key=view, body=str(view_dic))
+                                channel.basic_publish(exchange=exchange,
+                                                      routing_key=view,
+                                                      body=str(view_dic))
                             except Exception as e:
                                 print "except inside"
                                 print "Failed to write to broker " + str(e)
@@ -212,12 +231,16 @@ class TimeSeriesService(MethodView):
                                 try:
                                     channel = pubsub.channel()
                                 except Exception as e:
-                                    print "Failed to open channel" + " error" + str(e)
+                                    print "Failed to open channel" + " error" + str(
+                                        e)
                         try:
                             # print ('\n\n' + '{s:{c}^{n}}'.format(s=' dic ', n=100, c='#'))
                             # print (dic)
                             # print ('#' * 100 + '\n\n')
-                            channel.basic_publish(exchange=exchange, routing_key=sensor['sensor_id'], body=str(dic))
+                            channel.basic_publish(
+                                exchange=exchange,
+                                routing_key=sensor['sensor_id'],
+                                body=str(dic))
                         except Exception as e:
                             print "except inside"
                             print "Failed to write to broker " + str(e)
@@ -236,8 +259,10 @@ class TimeSeriesService(MethodView):
         if result:
             if len(unauthorised_sensor) > 0:
                 response = dict(responses.success_false)
-                response.update({'unauthorised_sensor': unauthorised_sensor,
-                                 'error': 'Unauthorised sensors present'})
+                response.update({
+                    'unauthorised_sensor': unauthorised_sensor,
+                    'error': 'Unauthorised sensors present'
+                })
             else:
                 response = dict(responses.success_true)
         else:

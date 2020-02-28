@@ -28,7 +28,6 @@ class Client(Document):
     _redirect_uris = StringField()
     _default_scopes = StringField()
 
-
     @property
     def client_type(self):
         return 'public'
@@ -60,7 +59,6 @@ class Token(Document):
     _scopes = StringField()
     email = StringField()
 
-
     @property
     def scopes(self):
         if self._scopes:
@@ -69,7 +67,8 @@ class Token(Document):
 
 
 def token_gen(client_id, client_secret):
-    client = Client.objects(client_id=client_id, client_secret=client_secret).first()
+    client = Client.objects(client_id=client_id,
+                            client_secret=client_secret).first()
     if client is not None:
         toks = Token.objects(client=client)
         previous_tokens = ['oauth']
@@ -80,31 +79,30 @@ def token_gen(client_id, client_secret):
         # Set token expiry period and create it
         expires_in = 864000
         expires = datetime.utcnow() + timedelta(seconds=expires_in)
-        tok = Token(
-            access_token=str(binascii.hexlify(os.urandom(16))),
-            refresh_token=str(binascii.hexlify(os.urandom(16))),
-            token_type='Bearer',
-            _scopes='email',
-            expires=expires,
-            client=client,
-            user=client.user,
-            email=client.user).save()
+        tok = Token(access_token=str(binascii.hexlify(os.urandom(16))),
+                    refresh_token=str(binascii.hexlify(os.urandom(16))),
+                    token_type='Bearer',
+                    _scopes='email',
+                    expires=expires,
+                    client=client,
+                    user=client.user,
+                    email=client.user).save()
     r.setex(''.join(['oauth:', tok.access_token]), client.user, expires_in)
     return tok.access_token
 
 
 def oauth_gen(email):
     keys = [{"client_id": gen_salt(40), "client_secret": gen_salt(50)}]
-    item = Client(
-        client_id=keys[0]['client_id'],
-        client_secret=keys[0]['client_secret'],
-        _redirect_uris=' '.join([
-            'http://localhost:8000/authorized',
-            'http://127.0.0.1:8000/authorized',
-            'http://127.0.1:8000/authorized',
-            'http://127.1:8000/authorized']),
-        _default_scopes='email',
-        user=email).save()
+    item = Client(client_id=keys[0]['client_id'],
+                  client_secret=keys[0]['client_secret'],
+                  _redirect_uris=' '.join([
+                      'http://localhost:8000/authorized',
+                      'http://127.0.0.1:8000/authorized',
+                      'http://127.0.1:8000/authorized',
+                      'http://127.1:8000/authorized'
+                  ]),
+                  _default_scopes='email',
+                  user=email).save()
     token = token_gen(keys[0]['client_id'], keys[0]['client_secret'])
     return token
 
@@ -118,7 +116,8 @@ def login():
             session['email'] = form.email.data
             if len(Client.objects(user=session['email'])) > 0:
                 clientkeys = Client.objects(user=session['email']).first()
-                token = token_gen(clientkeys.client_id, clientkeys.client_secret)
+                token = token_gen(clientkeys.client_id,
+                                  clientkeys.client_secret)
             else:
                 token = oauth_gen(form.email.data)
             resp = make_response(redirect(url_for('service.sensor')))

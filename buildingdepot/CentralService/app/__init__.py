@@ -23,10 +23,9 @@ from flask_oauthlib.provider import OAuth2Provider
 from xmlrpclib import ServerProxy
 import redis
 
-
 app = Flask(__name__)
 app.config.from_envvar('CS_SETTINGS')
-permissions = {"rw": "r/w", "r": "r", "dr": "d/r","rwp":"r/w/p"}
+permissions = {"rw": "r/w", "r": "r", "dr": "d/r", "rwp": "r/w/p"}
 
 login_manager = LoginManager()
 login_manager.session_protection = 'strong'
@@ -35,10 +34,11 @@ login_manager.login_view = 'auth.login'
 bootstrap = Bootstrap()
 oauth = OAuth2Provider()
 svr = ServerProxy("http://localhost:8080")
-r = redis.Redis(host=app.config['REDIS_HOST'],password=app.config['REDIS_PWD'])
+r = redis.Redis(host=app.config['REDIS_HOST'],
+                password=app.config['REDIS_PWD'])
 
 
-def create_app(config_mode): # TODO: remove config_mode
+def create_app(config_mode):  # TODO: remove config_mode
 
     connect(db=app.config['MONGODB_DATABASE'],
             host=app.config['MONGODB_HOST'],
@@ -46,7 +46,7 @@ def create_app(config_mode): # TODO: remove config_mode
             username=app.config['MONGODB_USERNAME'],
             password=app.config['MONGODB_PWD'],
             authentication_source='admin')
-    
+
     login_manager.init_app(app)
     bootstrap.init_app(app)
     oauth.init_app(app)
