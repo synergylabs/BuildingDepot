@@ -97,19 +97,16 @@
 </ul>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">CentralService APIs</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#authentication">Authentication</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="oauth.html">OAuth</a></li>
-<li class="toctree-l3"><a class="reference internal" href="tagtype.html">TagType</a></li>
-<li class="toctree-l3"><a class="reference internal" href="buildingtemplate.html">BuildingTemplate</a></li>
-<li class="toctree-l3"><a class="reference internal" href="building.html">Buildings</a></li>
-<li class="toctree-l3"><a class="reference internal" href="dataservice.html">DataService</a></li>
-<li class="toctree-l3"><a class="reference internal" href="sensor.html">Sensor</a></li>
-<li class="toctree-l3"><a class="reference internal" href="sensorgroup.html">SensorGroups</a></li>
-<li class="toctree-l3"><a class="reference internal" href="usergroup.html">Usergroups</a></li>
-<li class="toctree-l3"><a class="reference internal" href="permission.html">Permission</a></li>
-<li class="toctree-l3"><a class="reference internal" href="user.html">User</a></li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="oauth.html">OAuth</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tagtype.html">TagType</a></li>
+<li class="toctree-l2"><a class="reference internal" href="buildingtemplate.html">BuildingTemplate</a></li>
+<li class="toctree-l2"><a class="reference internal" href="building.html">Buildings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dataservice.html">DataService</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sensor.html">Sensor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sensorgroup.html">SensorGroups</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usergroup.html">Usergroups</a></li>
+<li class="toctree-l2"><a class="reference internal" href="permission.html">Permission</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user.html">User</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../DataService/index.html">DataService APIs</a></li>
@@ -179,9 +176,7 @@
   <div class="section" id="centralservice-apis">
 <h1>CentralService APIs<a class="headerlink" href="#centralservice-apis" title="Permalink to this headline">¶</a></h1>
 <p>All urls in this chapter are with respect to the base url of the CentralService. For example: If the CentralService is at <a class="reference external" href="http://www.example.com:81">http://www.example.com:81</a> then a url such as /service/tagtype refers to <a class="reference external" href="http://www.example.com:81/api/tagtype">http://www.example.com:81/api/tagtype</a> account.</p>
-<div class="section" id="authentication">
-<h2>Authentication<a class="headerlink" href="#authentication" title="Permalink to this headline">¶</a></h2>
-<p>In order to access the CentralService all users will first have to generate an OAuth Token using the Client ID and secret Client Key that they obtain from their account at the CentralService. Once logged into the CentralService users can go to the OAuth tab and generate a Client ID and Key that should never be shared with any other users.</p>
+<p><strong>Note:</strong> In order to access the CentralService all users will first have to generate an OAuth Token using the Client ID and secret Client Key that they obtain from their account at the CentralService. Once logged into the CentralService users can go to the OAuth tab and generate a Client ID and Key that should never be shared with any other users.</p>
 <p>Once the Client ID and Key have been generated the user can request BuildingDepot for the access token. The access token will be valid for the next 24 hours after which another access token will have to be generated.The OAuth token should also never be shared publicly.</p>
 <p>This OAuth token will have to be sent in the headers of all the requests made to BuildingDepot.</p>
 <div class="toctree-wrapper compound">
@@ -190,10 +185,6 @@
 <li class="toctree-l2"><a class="reference internal" href="oauth.html#generating-access-tokens">Generating access tokens</a></li>
 </ul>
 </li>
-</ul>
-</div>
-<div class="toctree-wrapper compound">
-<ul>
 <li class="toctree-l1"><a class="reference internal" href="tagtype.html">TagType</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="tagtype.html#add-tagtype">Add TagType</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tagtype.html#get-tagtype">Get TagType</a></li>
@@ -268,7 +259,6 @@
 </ul>
 </li>
 </ul>
-</div>
 </div>
 </div>
 
