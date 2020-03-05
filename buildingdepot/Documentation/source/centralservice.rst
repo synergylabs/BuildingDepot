@@ -49,6 +49,17 @@ between a user and a point then the one that is most restrictive is chosen. The 
 permission level, in particular, is important for maintaining privacy of data for various groups
 simultaneously using BuildingDepot for a building.
 
+
+Different evels of permission access:
+ - **d/r**: Deny/Read will deny any access to the points
+ - **r**: Read will give read only access to the points
+ - **r/w**: Read/Write will give read and write access to the points (such as changing values of actuators)
+ - **r/w/p**: Read/Write/Permission is the highest level of permission that can be assigned. Will give read and write access to the points. This permission also allows users to alter permissions for the points (see above).
+
+**Note:**
+ - The *ownership* level of permission is assigned at the point of creation. It has all privileges of r/w/p. Additionally, it cannot be revoked or changed under any circumstances.
+ - The *super* users of BuildingDepot have r/w/p access to all the points.
+
 When a r/w/p permission link is created between the UserGroup “Home_usergroup” and Sensor
 Group “Home”. All users in UserGroup get r/w/p access to points in SensorGroup. Any user can
 create any permission link that they want but the set of points that the users in the UserGroup
