@@ -1,4 +1,4 @@
-.. image:: images/GIOTTO.svg
+.. image:: images/BuildingDepot.svg
    :width: 800
 
 Central Service
@@ -13,23 +13,23 @@ sensors/actuators, as well as virtual sensors/actuators created in the Central S
 abstractions of RealWorld sensors/actuators (such as a ‘building average temperature sensor’).
 Virtual and RealWorld points are treated identically within the CentralService, with differences
 occurring at the level of connectors (see Connectors document for interfacing between the
-CentralService and sensors). In Giotto, each point is given a UUID (universally unique ID) and
+CentralService and sensors). In BuildingDepot, each point is given a UUID (universally unique ID) and
 metadata is associated with it using tags.
 
 Tags are key value pairs associated with a point. For example, an office temperature sensor
 would be associated with tags like “Room = 300”, “Type = Temperature Sensor”, “Unit =
 Fahrenheit” and so on. Tags themselves can refer to complex entities and be associated with
 other tags. For example, Room 300 can be associated with its metadata such as area and
-usage type . Tags form the core of Giotto metadata, and are used for searching and defining permissions.
+usage type . Tags form the core of BuildingDepot metadata, and are used for searching and defining permissions.
 
-Giotto supports pre­defined tag types that acts as a template for a user to start tagging entities
+BuildingDepot supports pre­defined tag types that acts as a template for a user to start tagging entities
 in a building. These templates are provided to support standard naming convention, such as the
 tags defined by Project Haystack2. These tags are also used as the key search mechanism
-within Giotto. Using REST APIs, users can query for individual entities based on single tag
+within BuildingDepot. Using REST APIs, users can query for individual entities based on single tag
 (such as a Room = 300) or based on more complex combinations of tags (Room = 300 and
 Type = Occupancy and Building = Example_Building). All entities which meet the requirements
 of the search are returned as JSON objects which contain their UUID, tags, and Metadata.
-In addition to tags on entities, Giotto also utilizes context based tags for Users. Depending on
+In addition to tags on entities, BuildingDepot also utilizes context based tags for Users. Depending on
 how a user logs in (e.g. with or without admin privileges) they will have a context tag added to
 determine the privileges that they enjoy (user credentials). Users groups are created by
 assigning a user­group tag to each user which is part of the group. This is of particular
@@ -41,13 +41,13 @@ While creating a Sensor group each individual points that the user wants to put 
 not have to be manually added. Simply selecting the tag will automatically add at the backend
 all the points containing that tag into this group.
 Sensor groups and User groups come together to form the access control lists. Access control
-lists are a key element in GioTTO to facilitate both privacy and security. For pairs of User
+lists are a key element in BuildingDepot to facilitate both privacy and security. For pairs of User
 Groups and Sensor Groups, we choose a permission value with which we want to associate.
-There are four levels of permission defined in Giotto which are ‘d/r’ (deny read) ,’r’ (read) , ‘r/w’
+There are four levels of permission defined in BuildingDepot which are ‘d/r’ (deny read) ,’r’ (read) , ‘r/w’
 (read write) and ‘r/w/p’ (read write permission). If there are multiple permission mappings
 between a user and a point then the one that is most restrictive is chosen. The deny read
 permission level, in particular, is important for maintaining privacy of data for various groups
-simultaneously using Giotto for a building.
+simultaneously using BuildingDepot for a building.
 
 When a r/w/p permission link is created between the UserGroup “Home_usergroup” and Sensor
 Group “Home”. All users in UserGroup get r/w/p access to points in SensorGroup. Any user can

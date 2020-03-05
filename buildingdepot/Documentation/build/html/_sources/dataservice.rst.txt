@@ -1,4 +1,4 @@
-.. image:: images/GIOTTO.svg
+.. image:: images/BuildingDepot.svg
    :width: 800
 
 Data Service
