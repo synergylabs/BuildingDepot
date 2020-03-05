@@ -67,6 +67,9 @@ get access to in the SensorGroup that they have been given permission to will de
 user that has created the permission. Only the points that the creator of this permission has
 r/w/p access to will be the points that the users will gain access to based on this permission link.
 
+.. image:: images/CSComponents.svg
+   :width: 800
+
 OAuth
 *****
 

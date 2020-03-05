@@ -21,6 +21,9 @@ CentralService in a master­slave mode. The master CentralService only accepts w
 and each of its replicas undertakes read requests from a single DataService. In this way, the
 request traffic load can be balanced on all replicas.
 
+.. image:: images/DSComponents.svg
+   :width: 800
+
 Sensor
 ******
 
