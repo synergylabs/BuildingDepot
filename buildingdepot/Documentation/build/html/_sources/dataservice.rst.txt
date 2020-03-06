@@ -27,5 +27,9 @@ request traffic load can be balanced on all replicas.
 Sensor
 ******
 
-Individual sensor points are defined here. After adding a sensor a UUID is generated which will be the unique identifier used in all further transactions with BuildingDepot whether it be reading a datapoint from a sensor or posting a bunch of datapoints to a sensor. Each sensor can also have a set of tags attached to it that not only help in categorising them in a meaningful way but also are critical for defining the access control lists later on. The option to attach metadata that is specific to this sensor is also provided. Sensors can be searched for using either the tags or metadata as a filter.
+The time-series data of all the points in buildings associated with the Data Service is stored here. The sensor UUID(s) are used in all further time-series transactions with BuildingDepot whether it be reading a datapoint from a sensor or posting a bunch of datapoints to a sensor.The time-series data of all the points in buildings associated with a certain Data Service is stored here. The sensor UUID(s) are used in all further time-series transactions with BuildingDepot whether it be reading a datapoint from a sensor or posting a bunch of datapoints to a sensor.
 
+Apps
+******
+
+BuildingDepot allows users to subscribe to sensors' time-series data. This can be done by registering a new app and associating it with the desired sensor UUIDs. All the information about a user's apps is located here.
