@@ -1,0 +1,22 @@
+language: python
+python:
+  - "3.6"
+  - "3.7"
+
+services:
+  - docker
+
+before_install:
+  - docker pull openlink/virtuoso-opensource-7:7.2
+  - mkdir virtdb
+  - pushd virtdb
+  - docker run --name virtdb --env DBA_PASSWORD=mysecret --publish 1111:1111 --publish 8890:8890 --volume `pwd`:/database openlink/virtuoso-opensource-7:7.2 &
+
+install:
+  - popd
+  - pip install -r requirements.txt
+
+script:
+  - while [[ ! $(curl localhost:8890) ]]; do sleep 5; done
+  - export DBA_PASSWORD=mysecret
+  - pytest -s -vvvv

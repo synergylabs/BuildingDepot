@@ -1,0 +1,5 @@
+rdflib
+rdflib-jsonld
+SPARQLWrapper
+requests
+pytest
