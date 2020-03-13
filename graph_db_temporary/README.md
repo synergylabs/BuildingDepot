@@ -1,8 +1,8 @@
-`connectDB.py`: Demo code to select/insert/delete triples using the sparqlWrapper package as database user dba.
+`examples/connectDB.py`: Demo code to select/insert/delete triples using the sparqlWrapper package as database user dba.
 Also contains examples to create a graph with a turtle file's URI, create a graph using RDF's graph object and
 delete a graph.  Tested against Virtuoso 7.2 and 7.2.5.
 
-`brickEndpoint.py`: Class for basic operations against a graph database.  Tested against Virtuoso 7.2 and 7.2.5.  Usage examples can be found in `../tests/test_BrickEndpoint.py'.
+`graph_db_wrapper/brickEndpoint.py`: Class for basic operations against a graph database.  Tested against Virtuoso 7.2 and 7.2.5.  Usage examples can be found in `tests/test_BrickEndpoint.py'.
 
 **Note**: With blank nodes (BNode) in the graph parsed from a .ttl file,
 the database side loading method (LOAD INTO) should be used.
@@ -29,7 +29,7 @@ sudo virtuoso-t -fd &
 curl localhost:8890
 ```
 
-**Use Virtuoso container for quick tests:** See `../.travis.yml'.
+**Use Virtuoso container for quick tests:** See `.travis.yml'.
 
 **Note**: For Virtuoso 6.1, the following permissions are explicitly needed.  Grant them
 to `SPARQL` using Virtuoso's web interface `DBhost:8890`.  Unnecessary for Virtuoso 7.2.5.
