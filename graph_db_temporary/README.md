@@ -29,6 +29,13 @@ sudo virtuoso-t -fd &
 curl localhost:8890
 ```
 
+**Change default dba user password:**
+```
+isql -U dba -P dba
+SQL>  set password dba yourSecurePassword;
+exit;
+```
+
 **Use Virtuoso container for quick tests:** See `.travis.yml'.
 
 **Note**: For Virtuoso 6.1, the following permissions are explicitly needed.  Grant them
