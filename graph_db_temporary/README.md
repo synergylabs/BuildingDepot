@@ -28,6 +28,27 @@ sudo virtuoso-t -fd &
 # test server response
 curl localhost:8890
 ```
+**Make Virtuoso a service with systemd:**
+
+Stop virtuoso server first.  Create service unit file `/lib/systemd/system/virtuoso.service`:
+
+```
+[Unit]
+Description=Virtuoso Graph Database
+After=network.target
+[Service]
+ExecStart=/usr/local/bin/virtuoso-t -fd
+Restart=always
+WorkingDirectory=/usr/local/var/lib/virtuoso/db
+[Install]
+WantedBy=multi-user.target
+```
+
+```
+sudo ln -s /lib/systemd/system/virtuoso.service /etc/systemd/system/virtuoso.service 
+sudo systemctl start virtuoso
+sudo systemctl enable virtuoso
+```
 
 **Change default dba user password:**
 ```
