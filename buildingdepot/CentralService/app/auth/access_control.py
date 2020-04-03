@@ -156,3 +156,20 @@ def get_email():
         return user
     token = Token.objects(access_token=token).first()
     return token.email
+
+
+def permission_allowed(sensorgroup, email=get_email()):
+    sensorgroup_obj = SensorGroup.objects(name=sensorgroup).first()
+    args = {}
+    tag_list = []
+    # Retrieve sensor tags and form search query for Sensors
+    for tag in sensorgroup_obj['tags']:
+        current_tag = {"name": tag['name'], "value": tag['value']}
+        tag_list.append(current_tag)
+    args["tags__size"] = len(tag_list)
+    args["tags__all"] = tag_list
+    sensors = Sensor.objects(**args)
+    for sensor in sensors:
+        if permission(sensor.name, email) == 'r/w/p':
+            return True
+    return False
