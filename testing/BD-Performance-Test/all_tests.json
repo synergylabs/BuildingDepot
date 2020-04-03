@@ -1,0 +1,371 @@
+{
+  "create a tagtype": {
+    "url": "cs",
+    "path": "/api/tagtype",
+    "method": "POST",
+    "idReplacement": true,
+    "json": "{\"data\":{\"name\":\"tag-~id~\",\"description\":\"testing\"}}"
+  },
+  "get a tagtype": {
+    "url": "cs",
+    "path": "/api/tagtype/tag-~id~",
+    "idReplacement": true
+  },
+  "create a template": {
+    "url": "cs",
+    "path": "/api/template",
+    "method": "POST",
+    "idReplacement": true,
+    "json": "{\"data\":{\"name\":\"template-~id~\",\"description\":\"testing\",\"tag_types\":[\"testing\"]}}"
+  },
+  "get a template": {
+    "url": "cs",
+    "path": "/api/template/template-~id~",
+    "idReplacement": true
+  },
+  "create a building": {
+    "url": "cs",
+    "path": "/api/building",
+    "method": "POST",
+    "idReplacement": true,
+    "json": "{\"data\":{\"name\":\"building-~id~\",\"description\":\"testing\",\"template\":\"testing\"}}"
+  },
+  "create a sensor view": {
+    "url": "cs",
+    "path": "/api/sensor/8aac1048-aa9f-41c9-9c20-6dd81339c7de/views",
+    "method": "POST",
+    "idReplacement": true,
+    "json": "{\"data\":{\"fields\":\"EMI-1, Temp-2\",\"source_name\":\"Important Values\"}}"
+  },
+  "get sensor views": {
+    "url": "cs",
+    "path": "/api/sensor/8aac1048-aa9f-41c9-9c20-6dd81339c7de/views",
+    "method": "GET"
+  },
+  "delete a sensor view": {
+    "url": "cs",
+    "path": "/api/sensor/8aac1048-aa9f-41c9-9c20-6dd81339c7de/views/c130772e-fa1b-46e8-a891-2dabe1f5cb3b",
+    "method": "DELETE"
+  },
+  "get a building": {
+    "url": "cs",
+    "path": "/api/building/building-~id~",
+    "idReplacement": true
+  },
+  "create a dataservice": {
+    "url": "cs",
+    "path": "/api/dataservice",
+    "method": "POST",
+    "idReplacement": true,
+    "json": "{\"data\":{\"name\":\"dataservice-~id~\",\"description\":\"testing\",\"host\":\"127.0.0.1\",\"port\":83}}"
+  },
+  "get a dataservice": {
+    "url": "cs",
+    "path": "/api/dataservice/testing",
+    "idReplacement": true
+  },
+  "create a user": {
+    "url": "cs",
+    "path": "/api/user",
+    "method": "POST",
+    "idReplacement": true,
+    "json": "{\"data\":{\"first_name\":\"testing\",\"last_name\":\"testing\",\"email\":\"shreyas.nagare@live.com\",\"role\":\"default\"}}"
+  },
+  "get a user": {
+    "url": "cs",
+    "path": "/api/user/admin@buildingdepot.org"
+  },
+  "create a user_group": {
+    "url": "cs",
+    "path": "/api/user_group",
+    "method": "POST",
+    "idReplacement": true,
+    "json": "{\"data\":{\"name\":\"user_group-~id~\",\"description\":\"testing\"}}"
+  },
+  "add users to a user_group": {
+    "url": "cs",
+    "path": "/api/user_group/testing/users",
+    "method": "POST",
+    "idReplacement": true,
+    "json": "{\"data\":{\"users\":[{\"user_id\":\"shreyas.nagare@live.com\",\"manager\":\"true\"}]}}"
+  },
+  "get users from a user_group": {
+    "url": "cs",
+    "path": "/api/user_group/testing/users"
+  },
+  "set admins for a dataservice": {
+    "url": "cs",
+    "path": "/api/dataservice/testing/admins",
+    "method": "POST",
+    "idReplacement": true,
+    "json": "{\"data\":{\"admins\":[\"shreyas.nagare@live.com\"]}}"
+  },
+  "get admins from a dataservice": {
+    "url": "cs",
+    "path": "/api/dataservice/testing/admins",
+    "method": "GET"
+  },
+  "add buildings to a dataservice": {
+    "url": "cs",
+    "path": "/api/dataservice/testing/buildings",
+    "method": "POST",
+    "idReplacement": true,
+    "json": "{\"data\":{\"buildings\":[\"wean\"]}}"
+  },
+  "get buildings from a dataservice": {
+    "url": "cs",
+    "path": "/api/dataservice/testing/buildings",
+    "method": "GET"
+  },
+  "create a sensor": {
+    "url": "cs",
+    "path": "/api/sensor",
+    "method": "POST",
+    "idReplacement": true,
+    "json": "{\"data\":{\"name\":\"sensor-~id~\",\"building\":\"testing\"}}"
+  },
+  "create a sensor_group": {
+    "url": "cs",
+    "path": "/api/sensor_group",
+    "method": "POST",
+    "idReplacement": true,
+    "json": "{\"data\":{\"name\":\"sensor_group-~id~\",\"building\":\"testing\",\"description\":\"testing\"}}"
+  },
+  "add tags to a sensor_group": {
+    "url": "cs",
+    "path": "/api/sensor_group/testing/tags",
+    "method": "POST",
+    "idReplacement": true,
+    "json": "{\"data\":[{\"name\":\"testing\",\"value\":\"1\"}]}"
+  },
+  "get tags from a sensor_group": {
+    "url": "cs",
+    "path": "/api/sensor_group/testing/tags"
+  },
+  "create a permission": {
+    "url": "cs",
+    "path": "/api/permission",
+    "method": "POST",
+    "idReplacement": true,
+    "json": "{\"data\":{\"sensor_group\":\"testing\",\"user_group\":\"testing\",\"permission\":\"rwp\"}}"
+  },
+  "read a permission": {
+    "url": "cs",
+    "path": "/api/permission?user_group=testing&sensor_group=testing"
+  },
+  "add metadata": {
+    "url": "cs",
+    "path": "/api/sensor/bbc83cba-e17f-46fd-adf9-5ad45126f5f0/metadata",
+    "method": "POST",
+    "idReplacement": true,
+    "json": "{\"data\":[{\"name\":\"MAC\",\"value\":\"01:02:03:04:05:06\"},{\"name\":\"Type\",\"value\":\"Temperature\"}]}"
+  },
+  "get metadata": {
+    "url": "cs",
+    "path": "/api/sensor/bbc83cba-e17f-46fd-adf9-5ad45126f5f0/metadata"
+  },
+  "get a sensor": {
+    "url": "cs",
+    "path": "/api/sensor/bbc83cba-e17f-46fd-adf9-5ad45126f5f0",
+    "idReplacement": true
+  },
+  "search sensors": {
+    "url": "cs",
+    "path": "/api/sensor/search",
+    "method": "POST",
+    "idReplacement": true,
+    "json": "{\"data\":{\"Building\":[\"testing\"]}}"
+  },
+  "register an app": {
+    "url": "ds",
+    "path": "/api/apps",
+    "method": "POST",
+    "idReplacement": true,
+    "json": "{\"data\":{\"name\":\"app-~id~\"}}"
+  },
+  "get all apps": {
+    "url": "ds",
+    "path": "/api/apps"
+  },
+  "subscribe to a sensor": {
+    "url": "ds",
+    "path": "/api/apps/subscription",
+    "method": "POST",
+    "idReplacement": true,
+    "json": "{\"data\":{\"app\":\"amq.gen-D5QmN_uO9DTUo1TLqzRzEg\",\"sensor\":\"f3f0ab1b-a84a-4d05-8a69-38215e410c35\"}}"
+  },
+  "post time-series data": {
+    "url": "ds",
+    "path": "/api/sensor/timeseries",
+    "method": "POST",
+    "idReplacement": true,
+    "formData": {
+      "saveFile": "postlog.json",
+      "totalSensors": 1,
+      "totalSamples": 2,
+      "totalValues": 1,
+      "dynamic": true
+    }
+  },
+  "read time-series data": {
+    "url": "ds",
+    "path": "/api/sensor/bbc83cba-e17f-46fd-adf9-5ad45126f5f0/timeseries?start_time=0&end_time=1000000000"
+  },
+  "unsubscribe to a sensor": {
+    "url": "ds",
+    "path": "/api/apps/subscription",
+    "method": "DELETE",
+    "idReplacement": true,
+    "json": "{\"data\":{\"app\":\"amq.gen-5eVgg24BecmMfwN4Nu6tpg\",\"sensor\":\"f3f0ab1b-a84a-4d05-8a69-38215e410c35\"}}"
+  },
+  "delete an app": {
+    "url": "ds",
+    "path": "/api/apps",
+    "method": "DELETE",
+    "idReplacement": true,
+    "json": "{\"data\":{\"name\":\"app-~id~\"}}"
+  },
+  "delete a permission": {
+    "url": "cs",
+    "path": "/api/permission?user_group=testing&sensor_group=testing",
+    "method": "DELETE"
+  },
+  "delete a sensor_group": {
+    "url": "cs",
+    "path": "/api/sensor_group/sensor_group-~id~",
+    "method": "DELETE",
+    "idReplacement": true
+  },
+  "delete a sensor": {
+    "url": "cs",
+    "path": "/api/sensor/zzzzzzzz-e17f-46fd-adf9-5ad45126f5f0",
+    "method": "DELETE",
+    "idReplacement": true
+  },
+  "delete buildings from a dataservice": {
+    "url": "cs",
+    "path": "/api/dataservice/testing/buildings",
+    "method": "DELETE",
+    "idReplacement": true,
+    "json": "{\"data\":{\"buildings\":[\"wean\"]}}"
+  },
+  "delete a user_group": {
+    "url": "cs",
+    "path": "/api/user_group/user_group-~id~",
+    "method": "DELETE",
+    "idReplacement": true
+  },
+  "delete admins from a dataservice": {
+    "url": "cs",
+    "path": "/api/dataservice/testing/admins",
+    "method": "DELETE",
+    "idReplacement": true,
+    "json": "{\"data\":{\"admins\":[\"shreyas.nagare@live.com\"]}}"
+  },
+  "delete a user": {
+    "url": "cs",
+    "path": "/api/user/shreyas.nagare@live.com",
+    "method": "DELETE",
+    "idReplacement": true
+  },
+  "delete a dataservice": {
+    "url": "cs",
+    "path": "/api/dataservice/dataservice-~id~",
+    "method": "DELETE",
+    "idReplacement": true
+  },
+  "delete a building tag": {
+    "url": "cs",
+    "path": "/api/building/testing/tags",
+    "method": "DELETE",
+    "idReplacement": true
+  },
+  "delete a building": {
+    "url": "cs",
+    "path": "/api/building/building-~id~",
+    "method": "DELETE",
+    "idReplacement": true
+  },
+  "delete a template": {
+    "url": "cs",
+    "path": "/api/template/template-~id~",
+    "method": "DELETE",
+    "idReplacement": true
+  },
+  "delete a tagtype": {
+    "url": "cs",
+    "path": "/api/tagtype/tagtype-~id~",
+    "method": "DELETE",
+    "idReplacement": true
+  },
+  "create testing tagtype": {
+    "url": "cs",
+    "path": "/api/tagtype",
+    "method": "POST",
+    "json": "{\"data\":{\"name\":\"testing\",\"description\":\"required\"}}",
+    "connections": 1,
+    "amount": 1
+  },
+  "create testing template": {
+    "url": "cs",
+    "path": "/api/template",
+    "method": "POST",
+    "json": "{\"data\":{\"name\":\"testing\",\"description\":\"required\",\"tag_types\":[\"testing\"]}}",
+    "connections": 1,
+    "amount": 1
+  },
+  "create testing building": {
+    "url": "cs",
+    "path": "/api/building",
+    "method": "POST",
+    "json": "{\"data\":{\"name\":\"testing\",\"description\":\"required\",\"template\":\"testing\"}}",
+    "connections": 1,
+    "amount": 1
+  },
+  "create testing dataservice": {
+    "url": "cs",
+    "path": "/api/dataservice",
+    "method": "POST",
+    "json": "{\"data\":{\"name\":\"testing\",\"description\":\"required\",\"host\":\"127.0.0.1\",\"port\":83}}",
+    "connections": 1,
+    "amount": 1
+  },
+  "create testing user_group": {
+    "url": "cs",
+    "path": "/api/user_group",
+    "method": "POST",
+    "json": "{\"data\":{\"name\":\"testing\",\"description\":\"required\"}}",
+    "connections": 1,
+    "amount": 1
+  },
+  "add buildings to testing dataservice": {
+    "url": "cs",
+    "path": "/api/dataservice/testing/buildings",
+    "method": "POST",
+    "json": "{\"data\":{\"buildings\":[\"testing\"]}}",
+    "connections": 1,
+    "amount": 1
+  },
+  "create testing sensor": {
+    "url": "cs",
+    "path": "/api/sensor",
+    "method": "POST",
+    "json": "{\"data\":{\"name\":\"testing\",\"building\":\"testing\"}}",
+    "connections": 1,
+    "amount": 1
+  },
+  "create testing sensor_group": {
+    "url": "cs",
+    "path": "/api/sensor_group",
+    "method": "POST",
+    "json": "{\"data\":{\"name\":\"testing\",\"building\":\"testing\",\"description\":\"required\"}}",
+    "connections": 1,
+    "amount": 1
+  },
+  "create sensors for performance-testing": {
+    "url": "cs",
+    "path": "/api/sensor",
+    "method": "POST",
+    "json": "{\"data\":{\"name\":\"performance-testing\",\"building\":\"testing\"}}"
+  }
+}

@@ -1,0 +1,150 @@
+{
+  "title":"All tests",
+  "tests":[{
+    "test": "create a tagtype"
+  },
+    {
+      "test": "get a tagtype"
+    },
+    {
+      "test": "create a template"
+    },
+    {
+      "test": "get a template"
+    },
+    {
+      "test": "create a building"
+    },
+    {
+      "test": "get a building"
+    },
+    {
+      "test": "create a dataservice"
+    },
+    {
+      "test": "get a dataservice"
+    },
+    {
+      "test": "create a user"
+    },
+    {
+      "test": "get a user"
+    },
+    {
+      "test": "create a user_group"
+    },
+    {
+      "test": "add users to a user_group"
+    },
+    {
+      "test": "get users from a user_group"
+    },
+    {
+      "test": "set admins for a dataservice"
+    },
+    {
+      "test": "get admins from a dataservice"
+    },
+    {
+      "test": "add buildings to a dataservice"
+    },
+    {
+      "test": "get buildings from a dataservice"
+    },
+    {
+      "test": "create a sensor"
+    },
+    {
+      "test": "create a sensor view"
+    },
+    {
+      "test": "get sensor views"
+    },
+    {
+      "test": "delete a sensor view"
+    },
+    {
+      "test": "create a sensor_group"
+    },
+    {
+      "test": "add tags to a sensor_group"
+    },
+    {
+      "test": "get tags from a sensor_group"
+    },
+    {
+      "test": "create a permission"
+    },
+    {
+      "test": "read a permission"
+    },
+    {
+      "test": "add metadata"
+    },
+    {
+      "test": "get metadata"
+    },
+    {
+      "test": "get a sensor"
+    },
+    {
+      "test": "search sensors"
+    },
+    {
+      "test": "register an app"
+    },
+    {
+      "test": "get all apps"
+    },
+    {
+      "test": "subscribe to a sensor"
+    },
+    {
+      "test": "post time-series data"
+    },
+    {
+      "test": "read time-series data"
+    },
+    {
+      "test": "unsubscribe to a sensor"
+    },
+    {
+      "test": "delete an app"
+    },
+    {
+      "test": "delete a permission"
+    },
+    {
+      "test": "delete a sensor_group"
+    },
+    {
+      "test": "delete a sensor"
+    },
+    {
+      "test": "delete buildings from a dataservice"
+    },
+    {
+      "test": "delete admins from a dataservice"
+    },
+    {
+      "test": "delete a user_group"
+    },
+    {
+      "test": "delete a user"
+    },
+    {
+      "test": "delete a dataservice"
+    },
+    {
+      "test": "delete a building tag"
+    },
+    {
+      "test": "delete a building"
+    },
+    {
+      "test": "delete a template"
+    },
+    {
+      "test": "delete a tagtype"
+    }]
+}
