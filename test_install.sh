@@ -177,7 +177,7 @@ function setup_packages {
     echo "--------------------"
     echo "Auto-generating credentials for packages (MongoDB,InfluxDB & Redis)..."
     ## Add MongoDB Admin user
-    mongoUsername=$(openssl rand -hex 16)
+    mongoUsername="user$(openssl rand -hex 16)"
     mongoPassword=$(openssl rand -hex 32)
     echo "MONGODB_USERNAME = '$mongoUsername'" >> $BD/CentralService/cs_config
     echo "MONGODB_PWD = '$mongoPassword'" >> $BD/CentralService/cs_config
@@ -194,7 +194,7 @@ function setup_packages {
     sleep 2
 
     ## Add InfluxDB Admin user
-    influxUsername=$(openssl rand -hex 16)
+    influxUsername="user$(openssl rand -hex 16)"
     influxPassword=$(openssl rand -hex 32)
     echo "INFLUXDB_USERNAME = '$influxUsername'">> $BD/DataService/ds_config
     echo "INFLUXDB_PWD = '$influxPassword'">> $BD/DataService/ds_config
