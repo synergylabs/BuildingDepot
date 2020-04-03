@@ -16,6 +16,7 @@ from flask import request,jsonify
 from ...models.cs_models import UserGroup,SensorGroup,Permission
 from ... import r,oauth,permissions
 from ...auth.acl_cache import invalidate_permission
+from ...auth.access_control import permission_allowed
 from ...rpc import defs
 
 class PermissionService(MethodView):
@@ -80,23 +81,27 @@ class PermissionService(MethodView):
         if not len(sg.tags):
             return jsonify(responses.no_sensorgroup_tags)
         email = get_email()
-        if defs.create_permission(user_group,sensor_group,email,permissions.get(permission)):
-            curr_permission = Permission.objects(user_group=user_group, sensor_group=sensor_group).first()
-            if curr_permission is not None:
-                if email == curr_permission['owner'] :
-                    Permission.objects(user_group=user_group,
-                                       sensor_group=sensor_group).first().update(set__permission=permissions.get(permission))
+        if permission_allowed(sensor_group, email):
+            if defs.create_permission(user_group, sensor_group, email, permissions.get(permission)):
+                curr_permission = Permission.objects(user_group=user_group, sensor_group=sensor_group).first()
+                if curr_permission is not None:
+                    if email == curr_permission['owner']:
+                        Permission.objects(user_group=user_group,
+                                           sensor_group=sensor_group).first().update(
+                            set__permission=permissions.get(permission))
+                    else:
+                        return jsonify(responses.permission_authorization)
                 else:
-                    return jsonify(responses.permission_authorization)
+                    Permission(user_group=user_group, sensor_group=sensor_group,
+                               permission=permissions.get(permission),
+                               owner=email).save()
+                invalidate_permission(sensor_group)
+                r.hset('permission:{}:{}'.format(user_group, sensor_group), "permission", permissions.get(permission))
+                r.hset('permission:{}:{}'.format(user_group, sensor_group), "owner", email)
             else:
-                Permission(user_group=user_group, sensor_group=sensor_group,
-                           permission=permissions.get(permission),
-                           owner=email).save()
-            invalidate_permission(sensor_group)
-            r.hset('permission:{}:{}'.format(user_group, sensor_group),"permission",permissions.get(permission))
-            r.hset('permission:{}:{}'.format(user_group, sensor_group),"owner",email)
+                return jsonify(responses.ds_error)
         else:
-            return jsonify(responses.ds_error)
+            return jsonify(responses.permission_not_allowed)
         return jsonify(responses.success_true)
 
     @check_oauth

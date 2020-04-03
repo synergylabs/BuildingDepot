@@ -45,6 +45,7 @@ ds_invalid_admin = {'success': 'False', 'error': 'One of the users does not exis
 ds_invalid_building = {'success': 'False', 'error': 'One of the buildings does not exist'}
 
 # ACL permissions API responses:
+permission_not_allowed = {'success': 'False', 'error': 'Not authorized to create permissions for the specified SensorGroup tags'}
 no_permission = {'success': 'False', 'error': 'Permission does not exist'}
 no_usergroup = {'success': 'False', 'error': 'User group does not exist'}
 no_sensorgroup = {'success': 'False', 'error': 'Sensor group does not exist'}
