@@ -158,7 +158,9 @@ def get_email():
     return token.email
 
 
-def permission_allowed(sensorgroup, email=get_email()):
+def permission_allowed(sensorgroup, email):
+    if not email:
+        email = get_email()
     sensorgroup_obj = SensorGroup.objects(name=sensorgroup).first()
     args = {}
     tag_list = []
