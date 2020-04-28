@@ -51,6 +51,33 @@ class UserGroupService(MethodView):
         return jsonify(responses.success_true)
 
     @check_oauth
+    def get(self):
+        """
+        Returns (JSON):
+        {
+            "result": [{
+                "success" : <True or False>
+                "error" : <If False then error will be returned>
+                "name" : <name of user group>
+                "description" : <description attached to user group>
+            }]
+        }
+        """
+        user_groups = UserGroup.objects(owner=get_email())
+
+        if user_groups is None:
+            return jsonify(responses.invalid_usergroup)
+
+        response = dict(responses.success_true)
+        result = []
+        
+        for user_group in user_groups:
+            result.append({"name":user_group['name'], "description":user_group['description'], "users":user_group['users']})
+
+        response.update({"result":result})
+        return jsonify(response)
+
+    @check_oauth
     def get(self,name):
         """
         Args as data:
