@@ -53,7 +53,7 @@ def authenticate_acl(permission_required):
     return authenticate_write
 
 
-def permission(sensor_name, email=None):
+def permission(sensor_name, email=None, omit_sensorgroup=None):
     if email is None: email = get_email()
 
     # Check if permission already cached
@@ -74,13 +74,13 @@ def permission(sensor_name, email=None):
         r.hset(sensor_name, email, 'r/w/p')
         return 'r/w/p'
 
-    current_res = check_db(sensor_name, email)
+    current_res = check_db(sensor_name, email, omit_sensorgroup=omit_sensorgroup)
     # cache the latest permission
     r.hset(sensor_name, email, current_res)
     return current_res
 
 
-def check_db(sensor, email):
+def check_db(sensor, email, omit_sensorgroup=None):
     sensor_obj = Sensor.objects(name=sensor).first()
     if sensor_obj.owner == email:
         return 'r/w/p'
@@ -103,6 +103,8 @@ def check_db(sensor, email):
     # resultant permission
     for usergroup in usergroups:
         for sensorgroup in sensorgroups:
+            if omit_sensorgroup and omit_sensorgroup == sensorgroup['name']:
+                continue
             # Multiple permissions may exists for the same user and sensor relation.
             # This one chooses the most restrictive one by counting the number of tags
             res = r.hget('permission:{}:{}'.format(usergroup['name'], sensorgroup['name']), "permission")
@@ -172,6 +174,6 @@ def permission_allowed(sensorgroup, email):
     args["tags__all"] = tag_list
     sensors = Sensor.objects(**args)
     for sensor in sensors:
-        if permission(sensor.name, email) == 'r/w/p':
+        if permission(sensor.name, email, sensorgroup) == 'r/w/p':
             return True
     return False
