@@ -52,6 +52,8 @@ no_permission_val = {'success': 'False', 'error': 'Permission value does not exi
 permission_authorization = {'success': 'False', 'error': 'Not authorized to modify this permission'}
 permission_not_defined = {'success': 'False', 'error': 'Permission is not defined'}
 permission_del_authorization = {'success': 'False', 'error': 'Not authorized to delete this permission'}
+permission_modify_authorization = {'success': 'False', 'error': 'Not authorized to modify this permission'}
+permission_invalid_setting = {'success': 'False', 'error': 'Invalid permission setting value'}
 
 # SensorGroup API responses
 sensorgroup_exists = {'success': 'False', 'error': 'Sensorgroup already exists'}

@@ -108,7 +108,7 @@ def register_view(app_obj):
     permission_view = permission.PermissionService.as_view('permission_service')
     # get the permission of a permission-pair (user_group/sensor_group pair)
     # post sets the value of the permission-pair to an eligable value: r r/w r/w/p d/w
-    app_obj.add_url_rule('/api/permission', view_func=permission_view, methods=['GET', 'POST', 'DELETE'])
+    app_obj.add_url_rule('/api/permission', view_func=permission_view, methods=['GET', 'POST', 'DELETE', 'PUT'])
 
     search_view = search.SearchService.as_view('search_service')
     # sensor search - search for sensors using the following keywords
