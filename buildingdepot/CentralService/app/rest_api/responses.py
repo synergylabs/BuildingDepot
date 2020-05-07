@@ -80,6 +80,10 @@ invalid_user = {'success': 'False', 'error': 'User does not exist'}
 user_exists = {'success': 'False', 'error': 'User already exists'}
 super_user_required = {'success': 'False', 'error': 'Super user privileges required. Not authorized for this '
                                                     'operation'}
+
+# RabbitMQ error responses
+rabbit_mq_bind_error = {'success': 'False', 'error': 'Unable to bind rabbitmq queue. Check params are valid'}
+
 # not used
 missing_template = {'success': 'False', 'error': 'Template is not specified'}
 tagtype_name_change_invalid = {'success': 'False', 'error': 'Cannot change name as TagType is already in use'}

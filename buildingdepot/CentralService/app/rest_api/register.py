@@ -6,7 +6,7 @@ from .users import user
 from .sensorgroups import sensorgroup, sg_tags
 from .usergroups import ug_users, usergroup
 from .sensors import sensor, search, sensor_tags, sensor_views
-from .permissions import permission
+from .permissions import permission, permission_request
 
 
 def register_view(app_obj):
@@ -109,6 +109,10 @@ def register_view(app_obj):
     # get the permission of a permission-pair (user_group/sensor_group pair)
     # post sets the value of the permission-pair to an eligable value: r r/w r/w/p d/w
     app_obj.add_url_rule('/api/permission', view_func=permission_view, methods=['GET', 'POST', 'DELETE'])
+
+    permission_request_view = permission_request.PermissionRequestService.as_view('permission_request_service')
+    # Push a notification to a mite owner that the user making this request wants permission to their mites
+    app_obj.add_url_rule('/api/permission/request', view_func=permission_request_view, methods=['POST'])
 
     search_view = search.SearchService.as_view('search_service')
     # sensor search - search for sensors using the following keywords
