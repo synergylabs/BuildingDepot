@@ -56,7 +56,6 @@ class UserGroupService(MethodView):
         Returns (JSON):
         {
             "result": [{
-                "success" : <True or False>
                 "error" : <If False then error will be returned>
                 "name" : <name of user group>
                 "description" : <description attached to user group>
@@ -119,4 +118,3 @@ class UserGroupService(MethodView):
         else:
             response = dict(responses.usergroup_delete_authorization)
         return jsonify(response)
-
