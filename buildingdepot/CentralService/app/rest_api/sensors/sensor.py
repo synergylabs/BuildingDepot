@@ -62,13 +62,13 @@ class SensorService(MethodView):
             for user_group in user_groups:
                 user_group_names.append(user_group['name'])
 
-            user_group_clause = {'user_group':{$in:user_group_names}}
-            r_permission = {'permission':{$eq:'r'}}
-            rw_permission = {'permission':{$eq:'r/w'}}
-            rwp_permission = {'permission'{$eq:'r/w/p'}}
+            user_group_clause = {'user_group':{'$in':user_group_names}}
+            r_permission = {'permission':{'$eq':'r'}}
+            rw_permission = {'permission':{'$eq':'r/w'}}
+            rwp_permission = {'permission':{'$eq':'r/w/p'}}
 
-            permission_clause = {$or:[r_permission, rw_permission, rwp_permission]}
-            search_clause = {$and:[user_group_clause, permission_clause]}
+            permission_clause = {'$or':[r_permission, rw_permission, rwp_permission]}
+            search_clause = {'$and':[user_group_clause, permission_clause]}
 
             permissions = Permission._get_collection().find(search_clause)
             
@@ -78,7 +78,7 @@ class SensorService(MethodView):
                 for permission in permissions:
                     sensor_group_names.append(permission.sensor_group)
 
-                sensor_groups = SensorGroup._get_collection().find({'name':{$in:sensor_group_names}})
+                sensor_groups = SensorGroup._get_collection().find({'name':{'$in':sensor_group_names}})
 
                 if sensor_groups is not None:
                     for sensor_group in sensor_groups:
