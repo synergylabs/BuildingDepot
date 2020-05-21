@@ -38,17 +38,24 @@ class PermissionRequestService(MethodView):
     @check_oauth
     def post(self):
         sensor_owner = request.args.get('owner')
+        requested_views = request.args.get('views')
 
-        if sensor_owner is None:
+        if sensor_owner is None or requested_views is None:
             return jsonify(responses.missing_parameters)
 
+        email = get_email()
         pubsub = connect_broker()
         requester = User._get_collection().find({"email":get_email()})
 
         try:
+            headers = request.headers
+            token = headers['Authorization'][7:]
+            token = Token.objects(access_token=token).first()
+            user = token.user
+
             channel = pubsub.channel()
-            permission_request_data = json.dumps({ "requester_name": "", "requester_email": get_email() })
-            key = (requester.).hexdigest()
+            permission_request_data = json.dumps({ "requester_name": user.first_name + " " user.last_name, "requester_email": email, "requested_views": requested_views })
+            key = (sensor_owner + token.client.client_id + token.client.client_secret).hexdigest()
             channel.basic_publish(exchange='permission_requests', routing_key=key, body=permission_request_data)
         except Exception as e:
             traceback.print_exc()
