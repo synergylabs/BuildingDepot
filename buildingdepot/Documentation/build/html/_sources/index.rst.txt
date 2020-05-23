@@ -1,13 +1,13 @@
-.. BuildingDepot 3.2.8 documentation master file.
+.. BuildingDepot 3.2.9 documentation master file.
 
 =====================
-Building Depot v3.2.8
+Building Depot v3.2.9
 =====================
 
 Overview
 ########
 
-This is the official documentation of BuildingDepot v3.2.8. BuildingDepot is essentialy an Extensible and Distributed Architecture for Sensor Data Storage, Access and Sharing.
+This is the official documentation of BuildingDepot v3.2.9. BuildingDepot is essentialy an Extensible and Distributed Architecture for Sensor Data Storage, Access and Sharing.
 
 
 Building Depot has two essential components a Central Service and a Data Service :

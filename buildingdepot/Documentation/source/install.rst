@@ -79,7 +79,7 @@ Configuration
 
 The BD :ref:`Installer <BuildingDepot Installation>` configures BD with some default values.
 
-The CentralService can be accessed on port 81 and the DataService on port 81.
+The CentralService can be accessed on port 81 and the DataService on port 82.
 
 .. _Access DataService:
 
