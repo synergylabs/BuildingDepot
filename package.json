@@ -1,0 +1,38 @@
+{
+  "name": "performance-testing",
+  "version": "1.0.0",
+  "description": "A performance testing tool based on autocannon",
+  "main": "run.js",
+  "scripts": {
+    "test": "npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shreyasnagare/BD-Performance-Test.git"
+  },
+  "keywords": [
+    "api",
+    "performance",
+    "testing",
+    "test",
+    "http",
+    "https",
+    "variable",
+    "request",
+    "body"
+  ],
+  "author": "Shreyas Nagare",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/shreyasnagare/BD-Performance-Test/issues"
+  },
+  "homepage": "https://github.com/shreyasnagare/BD-Performance-Test#readme",
+  "dependencies": {
+    "autocannon": "shreyasnagare/autocannon",
+    "consecutive": "^5.0.4",
+    "nano-fs": "^1.2.5",
+    "node-fetch": "^2.3.0",
+    "request": "^2.88.0",
+    "xtend": "^4.0.2"
+  }
+}

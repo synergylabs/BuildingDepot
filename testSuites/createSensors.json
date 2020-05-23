@@ -1,0 +1,8 @@
+{ "title":"create sensors:",
+  "test": "create sensors for performance-testing",
+  "tests": [
+    {
+      "amount": 500,
+      "connections": 5
+    }]
+}
