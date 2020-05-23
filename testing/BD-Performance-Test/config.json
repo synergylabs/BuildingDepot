@@ -1,0 +1,19 @@
+{
+	"uri":{
+		"cs":"https://localhost:81",
+		"ds":"https://localhost:82"
+	},
+	"credentials":{
+		"clientId" : "",
+		"clientSecret" : ""
+	},
+	"defaults":{
+		"oauth":true,
+		"connections":1,
+		"amount":1
+	},
+	"testSuite":"./testSuites/post-time-series.json",
+	"headers":{
+		"content-type":"application/json"
+	}
+}
