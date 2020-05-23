@@ -1,0 +1,33 @@
+# This workflow will install Python dependencies, run tests and lint with a single version of Python
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-python-with-github-actions
+
+name: BuildingDepot
+
+on:
+  push:
+    branches: [ github-actions ]
+  pull_request:
+    branches: [ develop ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-18.04
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python 2.7
+      uses: actions/setup-python@v1
+      with:
+        python-version: 2.7
+    - name: Install BuildingDepot
+      run: |
+        sudo bash -x ./test_install.sh
+    - name: Initialize tests
+      run: |
+        cd testing/functional-testing-tool
+        npm install
+    - name: Run tests
+      run: |
+        cd testing/functional-testing-tool
+        npm test ./tests/all.js
