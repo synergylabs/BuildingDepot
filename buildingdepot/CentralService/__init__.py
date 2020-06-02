@@ -11,10 +11,10 @@ config file or falls back to the default one.
 """
 
 import os
-from app import create_app
-from app.models.cs_models import User
+from .app import create_app
+from .app.models.cs_models import User
 from flask_script import Manager, Shell
-from app.rest_api.register import register_view
+from .app.rest_api.register import register_view
 
 app = create_app(os.getenv('FLASK_CONFIG') or 'dev')
 manager = Manager(app)

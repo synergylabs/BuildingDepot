@@ -13,10 +13,10 @@ config file or falls back to the default one.
 # This is for BD docker container only
 
 import os
-from app import create_app
-from app.models.cs_models import User
+from .app import create_app
+from .app.models.cs_models import User
 from flask_script import Manager, Shell, Server
-from app.rest_api.register import register_view
+from .app.rest_api.register import register_view
 
 app = create_app('deploy')
 manager = Manager(app)
