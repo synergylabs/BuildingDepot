@@ -9,20 +9,20 @@ The two forms that are used are for login and for creating a new user.
 @license: CMU License. See License file for details.
 """
 
-from flask_wtf import Form
+from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField
 from wtforms.validators import DataRequired, Email, Length, EqualTo
 from wtforms import ValidationError
 from ..models.cs_models import User
 
-class LoginForm(Form):
+class LoginForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()])
     password = PasswordField('Password', validators=[DataRequired()])
     remember_me = BooleanField('Keep me logged in')
     submit = SubmitField('Log In')
 
 
-class RegistrationForm(Form):
+class RegistrationForm(FlaskForm):
     password = PasswordField('Password',
                              validators=[DataRequired(), EqualTo('password2', message='Passwords must match')])
     password2 = PasswordField('Confirm password', validators=[DataRequired()])
