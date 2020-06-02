@@ -1,7 +1,7 @@
 from functools import wraps
 
 from flask import g, jsonify
-from app.common import PAGE_SIZE
+from ..common import PAGE_SIZE
 from ..errors import not_allowed
 from ...rest_api.helper import get_email
 from ...rest_api import responses

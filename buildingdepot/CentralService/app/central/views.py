@@ -14,7 +14,7 @@ of BD will call the tagtype() function
 """
 
 import json,requests,math
-from app.common import PAGE_SIZE
+from ..common import PAGE_SIZE
 from uuid import uuid4
 from flask import render_template, request, redirect, url_for, jsonify, session, flash
 from flask_login import login_required
