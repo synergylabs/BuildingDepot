@@ -9,8 +9,8 @@ functions that renders a html page.
 For example opening up http://localhost:81/central/tagtype on your installation
 of BD will call the tagtype() function
 
-@copyright: (c) 2016 SynergyLabs
-@license: UCSD License. See License file for details.
+@copyright: (c) 2020 SynergyLabs
+@license: CMU License. See License file for details.
 """
 
 import json,requests,math

@@ -6,8 +6,8 @@ Contains the definitions for all the various decorator functions that are
 called to authenticate,validate email,define what level of access the user
 has to the specified sensor.
 
-@copyright: (c) 2016 SynergyLabs
-@license: UCSD License. See License file for details.
+@copyright: (c) 2020 SynergyLabs
+@license: CMU License. See License file for details.
 """
 
 from ...service.utils import validate_users, get_permission, get_admins

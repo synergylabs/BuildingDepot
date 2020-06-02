@@ -6,8 +6,8 @@ This module handles the search functionality, enabling users to
 search for Sensors based on a combination of the parameters that
 a sensor contains such as Tags,Building,Source identifier,uuid etc.
 
-@copyright: (c) 2016 SynergyLabs
-@license: UCSD License. See License file for details.
+@copyright: (c) 2020 SynergyLabs
+@license: CMU License. See License file for details.
 """
 
 from flask import request, jsonify

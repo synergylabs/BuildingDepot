@@ -5,8 +5,8 @@ CentralService.oauth_bd.views
 Contains all the class and method definitions required for the OAuth
 token generation and verification
 
-@copyright: (c) 2016 SynergyLabs
-@license: UCSD License. See License file for details.
+@copyright: (c) 2020 SynergyLabs
+@license: CMU License. See License file for details.
 """
 
 from . import oauth_bd

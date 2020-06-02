@@ -4,8 +4,8 @@ DataService.rest_api.errors
 
 Function definitions for various HTTP errors than can be thrown.
 
-@copyright: (c) 2016 SynergyLabs
-@license: UCSD License. See License file for details.
+@copyright: (c) 2020 SynergyLabs
+@license: CMU License. See License file for details.
 """
 from flask import jsonify
 

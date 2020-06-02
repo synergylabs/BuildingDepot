@@ -5,8 +5,8 @@ DataService.rest_api.helper
 This module contains all the helper functions needed for the api's
 such as conversion of timestamps, strings etc.
 
-@copyright: (c) 2016 SynergyLabs
-@license: UCSD License. See License file for details.
+@copyright: (c) 2020 SynergyLabs
+@license: CMU License. See License file for details.
 """
 from datetime import datetime
 from functools import wraps

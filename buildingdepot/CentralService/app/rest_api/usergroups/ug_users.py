@@ -7,8 +7,8 @@ add and remove users from them. Whenever users are added or deleted from a group
 it updates the cache where a list is maintained of the users that fall in each
 user group. This list is further used for acl's and other purposes.
 
-@copyright: (c) 2016 SynergyLabs
-@license: UCSD License. See License file for details.
+@copyright: (c) 2020 SynergyLabs
+@license: CMU License. See License file for details.
 """
 import sys
 from flask.views import MethodView

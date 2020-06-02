@@ -5,8 +5,8 @@ CentralService.app.utils
 Contains the definitions for all helper functions that are used by
 the main CentralService.
 
-@copyright: (c) 2016 SynergyLabs
-@license: UCSD License. See License file for details.
+@copyright: (c) 2020 SynergyLabs
+@license: CMU License. See License file for details.
 """
 
 from ..models.cs_models import TagType

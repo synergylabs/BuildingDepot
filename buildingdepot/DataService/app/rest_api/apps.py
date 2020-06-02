@@ -5,8 +5,8 @@ DataService.rest_api.apps
 This module handles interacting with the underlying app models.
 It handles the registration and deletion of apps from the system.
 
-@copyright: (c) 2016 SynergyLabs
-@license: UCSD License. See License file for details.
+@copyright: (c) 2020 SynergyLabs
+@license: CMU License. See License file for details.
 """
 
 from flask.views import MethodView

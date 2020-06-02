@@ -6,7 +6,7 @@ This module handles the interactions with the tagtypes. Takes care
 of all the CRUD operations on the tagtypes. Each tagtype can have
 parent and children tagtypes specifed for it.
 
-@copyright: (c) 2016 SynergyLabs
+@copyright: (c) 2020 SynergyLabs
 @license: See License file for details.
 """
 

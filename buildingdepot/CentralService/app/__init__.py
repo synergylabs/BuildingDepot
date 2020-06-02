@@ -11,8 +11,8 @@ The flask application is also created here and all the different
 services such as the main centralservice,auth service are
 registered as blueprints.
 
-@copyright: (c) 2016 SynergyLabs
-@license: UCSD License. See License file for details.
+@copyright: (c) 2020 SynergyLabs
+@license: CMU License. See License file for details.
 """
 
 from flask import Flask

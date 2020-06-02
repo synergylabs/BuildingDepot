@@ -8,7 +8,7 @@ will have to have r/w/p permission to the sensor in order to be able to
 update/remove tags from a sensor
 
 
-@copyright: (c) 2016 SynergyLabs
+@copyright: (c) 2020 SynergyLabs
 @license: See License file for details.
 """
 import sys

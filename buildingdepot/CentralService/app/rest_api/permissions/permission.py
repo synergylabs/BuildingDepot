@@ -5,8 +5,8 @@ DataService.rest_api.permission
 This module handles interacting with the underlying permission models.
 It handles the required CRUD operations for permissions.
 
-@copyright: (c) 2016 SynergyLabs
-@license: UCSD License. See License file for details.
+@copyright: (c) 2020 SynergyLabs
+@license: CMU License. See License file for details.
 """
 import sys
 from flask.views import MethodView

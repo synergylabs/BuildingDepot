@@ -7,8 +7,8 @@ It handles the common services for sensors, such as making a new one or
 retrieving sensor details. It manages the underlying cache, and will
 ensure that the cache gets updated as needed.
 
-@copyright: (c) 2016 SynergyLabs
-@license: UCSD License. See License file for details.
+@copyright: (c) 2020 SynergyLabs
+@license: CMU License. See License file for details.
 """
 
 from flask import request, jsonify

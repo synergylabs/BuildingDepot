@@ -6,8 +6,8 @@ All the constants i.e.  the responses that will be returned
 to the user under certain failure and success conditions are
 defined here in this file
 
-@copyright: (c) 2016 SynergyLabs
-@license: UCSD License. See License file for details.
+@copyright: (c) 2020 SynergyLabs
+@license: CMU License. See License file for details.
 """
 
 # common responses

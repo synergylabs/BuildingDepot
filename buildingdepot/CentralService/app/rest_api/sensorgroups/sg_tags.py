@@ -7,8 +7,8 @@ add and remove tags from them. Whenever tags are added or deleted from a group
 it updates the cache where a list is maintained of the sensors that fall in each
 group.
 
-@copyright: (c) 2016 SynergyLabs
-@license: UCSD License. See License file for details.
+@copyright: (c) 2020 SynergyLabs
+@license: CMU License. See License file for details.
 """
 
 import sys

@@ -6,8 +6,8 @@ Contains all the definitions for the CentralService authroization functions.
 The functionalities available are for registering a new user,logging in and
 logging out.
 
-@copyright: (c) 2016 SynergyLabs
-@license: UCSD License. See License file for details.
+@copyright: (c) 2020 SynergyLabs
+@license: CMU License. See License file for details.
 """
 
 import sys, os, binascii

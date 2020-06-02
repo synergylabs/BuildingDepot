@@ -8,8 +8,8 @@ or deleting an existing one. Whenever a new group is created it caches a
 list of the sensors that fall in this group. This list is further used
 for acl's and other purposes.
 
-@copyright: (c) 2016 SynergyLabs
-@license: UCSD License. See License file for details.
+@copyright: (c) 2020 SynergyLabs
+@license: CMU License. See License file for details.
 """
 from flask.views import MethodView
 from flask import request,jsonify,current_app

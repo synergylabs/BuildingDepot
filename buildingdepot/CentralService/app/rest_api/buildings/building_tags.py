@@ -7,8 +7,8 @@ of all the CRUD operations on building tags.
 For each of the tagtypes present in the template on which this building is
 based on, can have multiple unique values defined for them.
 
-@copyright: (c) 2016 SynergyLabs
-@license: UCSD License. See License file for details.
+@copyright: (c) 2020 SynergyLabs
+@license: CMU License. See License file for details.
 """
 
 from flask.views import MethodView

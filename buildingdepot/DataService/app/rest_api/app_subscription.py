@@ -6,8 +6,8 @@ This module handles interacting with the underlying app models to
 subscribe the sensors that the user requests to the app id specified.
 It also accordingly handles the unsubscription of sensors from the apps.
 
-@copyright: (c) 2016 SynergyLabs
-@license: UCSD License. See License file for details.
+@copyright: (c) 2020 SynergyLabs
+@license: CMU License. See License file for details.
 """
 
 from flask.views import MethodView
