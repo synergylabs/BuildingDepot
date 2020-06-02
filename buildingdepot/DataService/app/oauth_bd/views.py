@@ -181,7 +181,7 @@ def save_token(token, request, *args, **kwargs):
         client=request.client,
         user=request.user,
         email=request.user).save()
-    r.setex(''.join(['oauth:', tok.access_token]), client.user, expires_in)
+    r.setex(''.join(['oauth:', tok.access_token]), expires_in, client.user)
     return tok
 
 
@@ -202,6 +202,6 @@ def get_access_token(client_id, client_secret):
             client=client,
             user=client.user,
             email=client.user).save()
-        r.setex(''.join(['oauth:', tok.access_token]), client.user, expires_in)
+        r.setex(''.join(['oauth:', tok.access_token]), expires_in, client.user)
         return jsonify({'success': 'True', 'access_token': tok.access_token})
     return jsonify({'success': 'False', 'access_token': 'Invalid credentials'})

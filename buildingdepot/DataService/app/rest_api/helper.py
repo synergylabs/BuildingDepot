@@ -207,7 +207,7 @@ def check_oauth(f):
                     expires_in = (token.expires - datetime.now()).total_seconds()
                     if expires_in > 0:
                         # Still valid, adding to redis
-                        r.setex(''.join(['oauth:', access_token]), token.user, int(expires_in))
+                        r.setex(''.join(['oauth:', access_token]), int(expires_in), token.user)
                         return f(*args, **kwargs)
                     else:
                         # Invalid, deleting

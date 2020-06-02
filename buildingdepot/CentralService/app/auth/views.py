@@ -89,7 +89,7 @@ def token_gen(client_id, client_secret):
             client=client,
             user=client.user,
             email=client.user).save()
-    r.setex(''.join(['oauth:', tok.access_token]), client.user, expires_in)
+    r.setex(''.join(['oauth:', tok.access_token]), expires_in, client.user)
     return tok.access_token
 
 
