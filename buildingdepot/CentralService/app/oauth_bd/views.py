@@ -18,7 +18,7 @@ from flask import render_template, redirect, jsonify
 from flask_oauthlib.client import OAuth
 from werkzeug.security import gen_salt
 from bson.objectid import ObjectId
-from xmlrpclib import ServerProxy
+from xmlrpc.client import ServerProxy
 from ..rest_api import responses
 import sys, os, binascii
 

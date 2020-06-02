@@ -20,7 +20,7 @@ from mongoengine import connect
 from flask_login import LoginManager
 from flask_bootstrap import Bootstrap
 from flask_oauthlib.provider import OAuth2Provider
-from xmlrpclib import ServerProxy
+from xmlrpc.client import ServerProxy
 import redis
 
 

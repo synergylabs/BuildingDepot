@@ -21,7 +21,7 @@ registered as blueprints.
 from flask import Flask
 from mongoengine import connect, register_connection
 from flask_bootstrap import Bootstrap
-from xmlrpclib import ServerProxy
+from xmlrpc.client import ServerProxy
 from flask_oauthlib.provider import OAuth2Provider
 
 import redis

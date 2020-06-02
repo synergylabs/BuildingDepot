@@ -1,7 +1,7 @@
 from .. import svr
 from ..rest_api.helper import get_ds, get_sg_ds
 from ..models.cs_models import DataService
-from xmlrpclib import ServerProxy
+from xmlrpc.client import ServerProxy
 
 
 def create_sensor(sensor_id, email, building, fields = None, parent = None):

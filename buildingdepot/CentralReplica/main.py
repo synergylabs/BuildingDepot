@@ -10,9 +10,9 @@ calls in order to avoid talking to the CentralService all the time.
 """
 
 import redis
-from SimpleXMLRPCServer import SimpleXMLRPCServer
-from SocketServer import ThreadingMixIn
-from models import *
+from xmlrpc.server import SimpleXMLRPCServer
+from socketserver import ThreadingMixIn
+from .models import *
 from mongoengine import connect
 from .config import Config
 
