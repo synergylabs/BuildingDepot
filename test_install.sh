@@ -30,11 +30,11 @@ function setup_venv {
     virtualenv ./venv
     source venv/bin/activate
 
-    pip install --upgrade pip
-    pip install --upgrade setuptools
-    pip install --upgrade -r pip_packages.list
+    pip3 install --upgrade pip
+    pip3 install --upgrade setuptools
+    pip3 install --upgrade -r pip_packages.list
 
-    pip install --upgrade uWSGI
+    pip3 install --upgrade uWSGI
     mkdir -p /etc/uwsgi/apps-available/
 
     deactivate
@@ -119,13 +119,13 @@ function install_packages {
     fi
     apt-get update -y
     apt-get install
-    apt-get install -y python-pip
+    apt-get install -y python3-pip
     apt-get install -y mongodb-org=4.0.5 mongodb-org-server=4.0.5 mongodb-org-shell=4.0.5 mongodb-org-mongos=4.0.5 mongodb-org-tools=4.0.5
-    apt-get install -y openssl python-setuptools python-dev build-essential software-properties-common
+    apt-get install -y openssl python3-setuptools python3-dev build-essential software-properties-common
     apt-get install -y nginx
     apt-get install -y supervisor
     apt-get install -y redis-server
-    pip install --upgrade virtualenv
+    pip3 install --upgrade virtualenv
     apt-get install -y wget
     apt-get install -y influxdb
     service influxdb start

@@ -142,19 +142,19 @@ function install_packages {
     sleep 10
     apt-get update
     apt-get install
-    apt-get -y install python-pip
+    apt-get -y install python3-pip
     apt-get install -y mongodb
-    apt-get install -y openssl python-setuptools python-dev build-essential
+    apt-get install -y openssl python3-setuptools python3-dev build-essential
     if [ "$OS_VER" = "18.04" ];
     then
       apt-get install -y software-properties-common
     else
-      apt-get install -y python-software-properties
+      apt-get install -y python3-software-properties
     fi
     apt-get install -y nginx
     apt-get install -y supervisor
     apt-get install -y redis-server
-    pip install --upgrade virtualenv
+    pip3 install --upgrade virtualenv
     apt-get install -y wget
     sudo apt-get install -y influxdb
     sudo service influxdb start
@@ -171,11 +171,11 @@ function setup_venv {
     virtualenv ./venv
     source venv/bin/activate
 
-    pip install --upgrade pip
-    pip install --upgrade setuptools
-    pip install --upgrade -r pip_packages.list
+    pip3 install --upgrade pip
+    pip3 install --upgrade setuptools
+    pip3 install --upgrade -r pip_packages.list
 
-    pip install --upgrade uWSGI
+    pip3 install --upgrade uWSGI
     mkdir -p /etc/uwsgi/apps-available/
 
     deactivate
