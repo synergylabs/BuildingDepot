@@ -12,9 +12,9 @@ calls in order to avoid talking to the CentralService all the time.
 import redis
 from xmlrpc.server import SimpleXMLRPCServer
 from socketserver import ThreadingMixIn
-from .models import *
+from models import *
 from mongoengine import connect
-from .config import Config
+from config import Config
 
 connect(db=Config.MONGODB_DATABASE,
             host=Config.MONGODB_HOST,
