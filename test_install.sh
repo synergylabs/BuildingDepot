@@ -251,7 +251,7 @@ setup_email
 # Create Database on InfluxDB
 curl -d "q=CREATE DATABASE buildingdepot" -X POST http://localhost:8086/query
 setup_packages
-/srv/buildingdepot/venv/bin/python2.7 setup_bd.py "test"
+/srv/buildingdepot/venv/bin/python setup_bd.py "test"
 #
 echo -e "\nInstallation Finished..\n"
 supervisorctl restart all

@@ -299,7 +299,7 @@ setup_gmail
 
 #curl -G http://localhost:8086/query --data-urlencode "q=CREATE DATABASE buildingdepot" #TODO: Implement this with admin account
 echo -e "\nInstallation Finished..\n"
-/srv/buildingdepot/venv/bin/python2.7 setup_bd.py "bd_install"
+/srv/buildingdepot/venv/bin/python setup_bd.py "bd_install"
 echo -e "Created a super user with following credentials. Please login and change password immediately \n user id : admin@buildingdepot.org \n password: admin"
 
 supervisorctl restart cs
