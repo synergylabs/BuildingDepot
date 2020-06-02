@@ -153,14 +153,14 @@ class TimeSeriesService(MethodView):
             pipeline = r.pipeline()
             for sensor in sensors_list:
                 pipeline.exists(''.join(['apps:', sensor]))
-            apps = dict(zip(sensors_list, pipeline.execute()))
+            apps = dict(list(zip(sensors_list, pipeline.execute())))
             for sensor in json:
                 # check a user has permission
                 unauthorised_sensor = []
                 # If 'w' (write is in the permission), authorize
                 if 'w' in permissions[sensor['sensor_id']]:
                     for sample in sensor['samples']:
-                        for key in sample.keys():
+                        for key in list(sample.keys()):
                             if type(sample[key]) is list:
                                 length = len(sample[key])
                                 for i in range(length):
@@ -184,7 +184,7 @@ class TimeSeriesService(MethodView):
                         if view_fields:
                             fields = [field.strip() for field in view_fields.split(',')]
                         view_dic = dict(dic)
-                        view_fields = {k: v for k, v in dic['fields'].items() if k in fields }
+                        view_fields = {k: v for k, v in list(dic['fields'].items()) if k in fields }
                         view_dic.update({'fields': view_fields})
                         if apps[view]:
                             if not pubsub:
@@ -194,15 +194,15 @@ class TimeSeriesService(MethodView):
                                     try:
                                         channel = pubsub.channel()
                                     except Exception as e:
-                                        print "Failed to open channel" + " error" + str(e)
+                                        print("Failed to open channel" + " error" + str(e))
                             try:
                                 # print ('\n\n' + '{s:{c}^{n}}'.format(s=' view_dic ', n=100, c='#'))
                                 # print (view_dic)
                                 # print ('#' * 100 + '\n\n')
                                 channel.basic_publish(exchange=exchange, routing_key=view, body=str(view_dic))
                             except Exception as e:
-                                print "except inside"
-                                print "Failed to write to broker " + str(e)
+                                print("except inside")
+                                print("Failed to write to broker " + str(e))
 
                     if apps[sensor['sensor_id']]:
                         if not pubsub:
@@ -212,19 +212,19 @@ class TimeSeriesService(MethodView):
                                 try:
                                     channel = pubsub.channel()
                                 except Exception as e:
-                                    print "Failed to open channel" + " error" + str(e)
+                                    print("Failed to open channel" + " error" + str(e))
                         try:
                             # print ('\n\n' + '{s:{c}^{n}}'.format(s=' dic ', n=100, c='#'))
                             # print (dic)
                             # print ('#' * 100 + '\n\n')
                             channel.basic_publish(exchange=exchange, routing_key=sensor['sensor_id'], body=str(dic))
                         except Exception as e:
-                            print "except inside"
-                            print "Failed to write to broker " + str(e)
+                            print("except inside")
+                            print("Failed to write to broker " + str(e))
                 else:
                     unauthorised_sensor.append(sensor['sensor_id'])
         except KeyError:
-            print json
+            print(json)
             abort(400)
 
         # # Log InfluxDB Query # #
@@ -249,6 +249,6 @@ class TimeSeriesService(MethodView):
                 channel.close()
                 pubsub.close()
             except Exception as e:
-                print "Failed to end RabbitMQ session" + str(e)
+                print("Failed to end RabbitMQ session" + str(e))
 
         return jsonify(response)

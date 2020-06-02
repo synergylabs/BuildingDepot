@@ -48,8 +48,8 @@ class AppSubscriptionService(MethodView):
                         channel.queue_unbind(exchange=exchange, queue=app['value'], routing_key=sensor)
                         r.srem(''.join(['apps:', sensor]), app['value'])
                 except Exception as e:
-                    print "Failed to bind queue " + str(e)
-                    print traceback.print_exc()
+                    print("Failed to bind queue " + str(e))
+                    print(traceback.print_exc())
                     return jsonify({'success': 'False', 'error': 'Failed to bind queue'})
 
                 if pubsub:
@@ -57,7 +57,7 @@ class AppSubscriptionService(MethodView):
                         channel.close()
                         pubsub.close()
                     except Exception as e:
-                        print "Failed to end RabbitMQ session" + str(e)
+                        print("Failed to end RabbitMQ session" + str(e))
 
                 return jsonify({'success': 'True'})
 

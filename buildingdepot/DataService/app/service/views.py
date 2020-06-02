@@ -51,9 +51,9 @@ def sensor():
 @service.route('/sensor/search', methods=['GET', 'POST'])
 def sensors_search():
     data = json.loads(request.args.get('q'))
-    print data, type(data)
+    print(data, type(data))
     args = {}
-    for key, values in data.iteritems():
+    for key, values in data.items():
         if key == 'Building':
             form_query('building', values, args, "$or")
         elif key == 'SourceName':
@@ -66,7 +66,7 @@ def sensors_search():
             form_query('tags', values, args, "$and")
         elif key == 'MetaData':
             form_query('metadata', values, args, "$and")
-    print args
+    print(args)
     # Show the user PAGE_SIZE number of sensors on each page
     page = request.args.get('page', 1, type=int)
     skip_size = (page - 1) * PAGE_SIZE
@@ -105,7 +105,7 @@ def graph(name):
             temp = obj
             break
     metadata = Sensor._get_collection().find({'name': name}, {'metadata': 1, '_id': 0})[0]['metadata']
-    metadata = [{'name': key, 'value': val} for key, val in metadata.iteritems()]
+    metadata = [{'name': key, 'value': val} for key, val in metadata.items()]
     obj = Sensor.objects(name=name).first()
     tags_owned = [{'name': tag.name, 'value': tag.value} for tag in obj.tags]
     return render_template('service/graph.html', name=name, obj=temp, metadata=metadata, tags=tags_owned)

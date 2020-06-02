@@ -219,10 +219,10 @@ def get_access_token(client_id, client_secret):
 @oauth_bd.route('/generate', methods=['POST'])
 def generate_credentials():
     cred = request.get_json()['data']
-    print cred['email'], type(cred)
+    print(cred['email'], type(cred))
     email = cred['email']
     password = cred['password']
-    print email, password
+    print(email, password)
     user = User.objects(email=email).first()
     if user is not None and user.first_login and user.verify_password(password):
         response = dict(responses.success_true)

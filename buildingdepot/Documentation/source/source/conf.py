@@ -19,14 +19,14 @@
 
 # -- Project information -----------------------------------------------------
 
-project = u"BuildingDepot v3.2.9"
-copyright = u"2020, Shreyas Nagare"
-author = u"Shreyas Nagare"
+project = "BuildingDepot v3.3.0"
+copyright = "2020, SynergyLabs@CMU"
+author = "Shreyas Nagare"
 
 # The short X.Y version
-version = u""
+version = ""
 # The full version, including alpha/beta/rc tags
-release = u""
+release = ""
 
 
 # -- General configuration ---------------------------------------------------
@@ -127,8 +127,8 @@ latex_documents = [
     (
         master_doc,
         "BuildingDepotv329.tex",
-        u"BuildingDepot v3.2.9 Documentation",
-        u"Shreyas Nagare",
+        "BuildingDepot v3.2.9 Documentation",
+        "Shreyas Nagare",
         "manual",
     ),
 ]
@@ -142,7 +142,7 @@ man_pages = [
     (
         master_doc,
         "buildingdepotv329",
-        u"BuildingDepot v3.2.9 Documentation",
+        "BuildingDepot v3.2.9 Documentation",
         [author],
         1,
     )
@@ -158,7 +158,7 @@ texinfo_documents = [
     (
         master_doc,
         "BuildingDepotv329",
-        u"BuildingDepot v3.2.9 Documentation",
+        "BuildingDepot v3.2.9 Documentation",
         author,
         "BuildingDepotv329",
         "One line description of project.",

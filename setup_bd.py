@@ -1,11 +1,11 @@
 #!/srv/buildingdepot/venv/bin/python2.7
 import json,sys
-import StringIO,os,ConfigParser
+import io,os,configparser
 import string,random
 from pymongo import MongoClient
 from werkzeug.security import generate_password_hash
 
-print "Setting up BuildingDepot.. "
+print("Setting up BuildingDepot.. ")
 
 option = sys.argv[1:][0] #get arguments
 
@@ -14,11 +14,11 @@ tempPwd = ''.join(random.choice(string.ascii_uppercase + string.digits + string.
 
 # Get Username and Password for MongoDB
 if (option == "install"):
-    configBuffer = StringIO.StringIO()
+    configBuffer = io.StringIO()
     configBuffer.write('[dummysection]\n')
     configBuffer.write(open('/srv/buildingdepot/CentralService/cs_config').read())
     configBuffer.seek(0, os.SEEK_SET)
-    config = ConfigParser.ConfigParser()
+    config = configparser.ConfigParser()
     config.readfp(configBuffer)
     user=config.get('dummysection','MONGODB_USERNAME').strip("'").strip('"')
     pwd = config.get('dummysection','MONGODB_PWD').strip("'").strip('"')
@@ -29,11 +29,11 @@ elif(option == "bd_install"):
     pwd = configs['mongo_pwd']
 
 elif(option == "test"):
-    configBuffer = StringIO.StringIO()
+    configBuffer = io.StringIO()
     configBuffer.write('[dummysection]\n')
     configBuffer.write(open('/srv/buildingdepot/CentralService/cs_config').read())
     configBuffer.seek(0, os.SEEK_SET)
-    config = ConfigParser.ConfigParser()
+    config = configparser.ConfigParser()
     config.readfp(configBuffer)
     user=config.get('dummysection','MONGODB_USERNAME').strip("'").strip('"')
     pwd = config.get('dummysection','MONGODB_PWD').strip("'").strip('"')
@@ -63,5 +63,5 @@ db.data_service.insert({'name':'ds1',
                         'buildings':[],
                         'admins':[]})
 
-print "\n Created a super user with following credentials. Please login and change password immediately \n user id "\
-      ": admin@buildingdepot.org \n password: " + tempPwd
+print("\n Created a super user with following credentials. Please login and change password immediately \n user id "\
+      ": admin@buildingdepot.org \n password: " + tempPwd)

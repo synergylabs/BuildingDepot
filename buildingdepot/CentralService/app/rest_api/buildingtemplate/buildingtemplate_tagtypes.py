@@ -65,6 +65,6 @@ class BuildingTemplateTagtypeService(MethodView):
             return jsonify(responses.invalid_template)
         data = request.get_json()['data']
         tagtype_exists = lambda tagtype: TagType.objects(name=tagtype).first()
-        valid_tagtypes = filter(tagtype_exists, data['tagtypes'])
+        valid_tagtypes = list(filter(tagtype_exists, data['tagtypes']))
         return jsonify({'success': 'True', 'invalid_tagtypes': list(set(data['tagtypes']) - set(valid_tagtypes))}) if buildingtemplate.update(set__tag_types=valid_tagtypes)\
             else jsonify({'success': 'False'})

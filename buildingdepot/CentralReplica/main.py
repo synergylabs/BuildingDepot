@@ -14,7 +14,7 @@ from SimpleXMLRPCServer import SimpleXMLRPCServer
 from SocketServer import ThreadingMixIn
 from models import *
 from mongoengine import connect
-from config import Config
+from .config import Config
 
 connect(db=Config.MONGODB_DATABASE,
             host=Config.MONGODB_HOST,

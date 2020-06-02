@@ -99,7 +99,7 @@ def permission(sensor_name, email=None):
         r.hset(sensor_name, email, 'r/w/p')
         return 'r/w/p'
 
-    print "Not owner or admin"
+    print("Not owner or admin")
 
     current_res = 'u/d'
     usergroups = r.smembers('user:{}'.format(email))
@@ -113,7 +113,7 @@ def permission(sensor_name, email=None):
             # This one chooses the most restrictive one by counting the number of tags
             res = r.hget('permission:{}:{}'.format(usergroup, sensorgroup), "permission")
             owner_email = r.hget('permission:{}:{}'.format(usergroup, sensorgroup), "owner")
-            print res
+            print(res)
             if res is not None and permission(sensor_name, owner_email) == 'r/w/p':
                 if permissions_val[res] > permissions_val[current_res]:
                     current_res = res
@@ -153,8 +153,8 @@ def batch_permission_check(sensors_list, email=None):
 
     # check if the owner:sensor key is present => sensor exists
     redis_sensor_keys = [''.join(['owner:', sensor]) for sensor in sensors_list]
-    owners = dict(zip(redis_sensor_keys, r.mget(*redis_sensor_keys)))
-    for k, v in owners.items():
+    owners = dict(list(zip(redis_sensor_keys, r.mget(*redis_sensor_keys))))
+    for k, v in list(owners.items()):
         if not v:
             sensors_missing_from_cache.append(k[6:])
 
@@ -169,7 +169,7 @@ def batch_permission_check(sensors_list, email=None):
             owners[''.join(['owner:', sensor.name])] = sensor.owner
 
     # Invalid sensors
-    for k, v in owners.items():
+    for k, v in list(owners.items()):
         if not v:
             del owners[k]
             permissions[k[6:]] = 'absent'
@@ -177,7 +177,7 @@ def batch_permission_check(sensors_list, email=None):
 
     # If the user is sensor owner or admin, give complete access and add to cache
     p = r.pipeline()
-    for k, v in owners.items():
+    for k, v in list(owners.items()):
         if check_if_super(email) or email == v:
             permissions[k[6:]] = 'r/w/p'
             r.hset(k[6:], email, 'r/w/p')
@@ -251,7 +251,7 @@ def authorize_user(user_group, sensorgroup_name, email=None):
     args['tags__all'] = tag_list
     sensors = Sensor.objects(**args)
     for sensor in sensors:
-        print sensor['name']
+        print(sensor['name'])
         if permission(sensor['name'], email) != 'r/w/p':
             return False
     return True
@@ -263,7 +263,7 @@ def authorize_addition(usergroup_name, email):
         return True
 
     for user in user_group.users:
-        print type(user['manager'])
+        print(type(user['manager']))
         if user['user_id'] == email and user['manager']:
             return True
     return False

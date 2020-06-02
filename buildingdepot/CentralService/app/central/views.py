@@ -88,7 +88,7 @@ def buildingtemplate():
             obj.can_delete = False
         else:
             obj.can_delete = True
-        obj.tag_types = map(str, obj.tag_types)
+        obj.tag_types = list(map(str, obj.tag_types))
     form = BuildingTemplateForm()
     # Get list of tags that this building can use
     form.tag_types.choices = get_choices(TagType)
@@ -167,7 +167,7 @@ def building_metadata(name):
        then update the metadata"""
     if request.method == 'GET':
         metadata = Building._get_collection().find({'name': name}, {'metadata': 1, '_id': 0})[0]['metadata']
-        metadata = [{'name': key, 'value': val} for key, val in metadata.iteritems()]
+        metadata = [{'name': key, 'value': val} for key, val in metadata.items()]
         return jsonify({'data': metadata})
     else:
         # Update the metadata
@@ -230,7 +230,7 @@ def user_tags_owned(email):
         triples = [{'building': item.building,
                     'tags': [{'name': elem.name, 'value': elem.value} for elem in item.tags]}
                    for item in user.tags_owned]
-        print triples, data
+        print(triples, data)
         return jsonify({'data': data, 'triples': triples})
     else:
         tags_owned = request.get_json()['data']
@@ -400,7 +400,7 @@ def sensorgroup():
     form = SensorGroupForm()
     # Get list of valid buildings for this DataService and create a sensorgroup
     form.building.choices = get_building_choices()
-    print "Got building choices"
+    print("Got building choices")
     if form.validate_on_submit():
         SensorGroup(name=str(form.name.data),
                     description=str(form.description.data),
@@ -538,7 +538,7 @@ def permission_query():
 def sensors_search():
     data = json.loads(request.args.get('q'))
     args = {}
-    for key, values in data.iteritems():
+    for key, values in data.items():
         if key == 'Building':
             form_query('building',values,args,"$or")
         elif key == 'SourceName':
@@ -553,7 +553,7 @@ def sensors_search():
             form_query('tags',values,args,"$and")
         elif key == 'MetaData':
             form_query('metadata',values,args,"$and")
-    print args
+    print(args)
     # Show the user PAGE_SIZE number of sensors on each page
     page = request.args.get('page', 1, type=int)
     skip_size = (page - 1) * PAGE_SIZE

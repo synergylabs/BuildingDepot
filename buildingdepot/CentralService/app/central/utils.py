@@ -15,7 +15,7 @@ from ..models.cs_models import TagType
 def get_choices(cls):
     """Given a class type retrieve all its instances from MongoDB"""
     names = [obj['name'] for obj in cls._get_collection().find({}, {'_id': 0, 'name': 1})]
-    return zip(names, names)
+    return list(zip(names, names))
 
 
 graph = {tag_type.name: tag_type.children for tag_type in TagType.objects}

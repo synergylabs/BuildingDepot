@@ -20,10 +20,10 @@ from ..service.utils import *
 from uuid import uuid4
 from .. import r, influx, oauth, exchange, permissions
 from werkzeug.security import gen_salt
-import sys, time, influxdb, urllib, traceback, pika
+import sys, time, influxdb, urllib.request, urllib.parse, urllib.error, traceback, pika
 
 sys.path.append('/srv/buildingdepot')
-from utils import get_user_oauth
+from .utils import get_user_oauth
 from ..api_0_0.resources.utils import *
 from ..api_0_0.resources.acl_cache import invalidate_user, invalidate_permission
 from .helper import check_oauth
@@ -72,11 +72,11 @@ def get_sensors_metadata():
     if (request_type is None) or (len(request.args) < 2):
         return jsonify(responses.missing_paramters)
 
-    for key, val in request.args.iteritems():
+    for key, val in request.args.items():
         if key != 'filter':
-            param = urllib.unquote(key).decode('utf8')
-            value = urllib.unquote(val).decode('utf8')
-            print param, value
+            param = urllib.parse.unquote(key).decode('utf8')
+            value = urllib.parse.unquote(val).decode('utf8')
+            print(param, value)
 
     if request_type == "params":
         list_sensors = Sensor._get_collection().find({param: value})

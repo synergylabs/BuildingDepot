@@ -99,14 +99,14 @@ class SensorGroupTagsService(MethodView):
 
     def check_tags(self,tags,building):
         building_tags = get_building_tags(building)
-        print building_tags
-        print tags
+        print(building_tags)
+        print(tags)
         for tag in tags:
             tagtype = building_tags.get(tag.get('name'))
-            print tagtype
+            print(tagtype)
             if tagtype is None:
                 return jsonify(responses.invalid_tagtype)
-            print tag.get('value')
+            print(tag.get('value'))
             tag_values = tagtype.get('values')
             if tag.get('value') not in tag_values:
                 return jsonify(responses.invalid_tag_value)

@@ -14,7 +14,7 @@
             185618305,1,write_timeseries_data,41105.2598953,41124.270916,19.0110206604 
 """
 
-import thread
+import _thread
 import time
 from functools import wraps
 import traceback

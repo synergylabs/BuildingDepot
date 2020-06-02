@@ -50,7 +50,7 @@ class DataserviceService(MethodView):
 
     @check_oauth
     def get(self, name):
-        print "Name :", name
+        print("Name :", name)
         if name == "list":
             all_dataservices=[]
             collection = DataService.objects

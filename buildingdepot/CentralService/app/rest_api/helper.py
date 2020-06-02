@@ -55,7 +55,7 @@ def gen_update(params, data):
            in the params list
     """
     result = {}
-    for key, value in data.iteritems():
+    for key, value in data.items():
         if key in params:
             result[key] = value
     return result
@@ -71,7 +71,7 @@ def send_local_smtp(user_name, to_email, password):
         smtpObj = smtplib.SMTP('localhost')
         smtpObj.sendmail(sender, receivers, message)
     except smtplib.SMTPException:
-        print "Failed to send registration mail to %s" % (to_email)
+        print("Failed to send registration mail to %s" % (to_email))
 
 
 def GenerateOAuth2String(username, access_token, base64_encode=True):
@@ -103,17 +103,17 @@ def get_access_token():
         access_token = r.json()['access_token']
         return access_token
     except Exception as e:
-        print "Failed to obtain access token " + str(e)
+        print("Failed to obtain access token " + str(e))
 
 
 def send_mail_gmail(user_name, to_email, password):
-    print "getting access_token"
+    print("getting access_token")
     access_token = get_access_token()
     if access_token is None:
         return
     sender = current_app.config['EMAIL_ID']
-    print access_token
-    print sender
+    print(access_token)
+    print(sender)
     try:
         smtp_conn = smtplib.SMTP('smtp.gmail.com', 587)
         smtp_conn.ehlo('test')
@@ -123,7 +123,7 @@ def send_mail_gmail(user_name, to_email, password):
         msg = responses.registration_email % (sender, user_name, to_email, to_email, password, '/'.join(request.base_url.split('/')[:3]))
         smtp_conn.sendmail(sender, to_email, msg)
     except Exception as e:
-        print "Failed to send registration email to " + to_email + " " + str(e)
+        print("Failed to send registration email to " + to_email + " " + str(e))
 
 
 def get_email():
@@ -160,11 +160,11 @@ def get_building_choices(call_type=None):
     buildings_list = []
     for dataservice in dataservices:
         for building in dataservice.buildings:
-            print building
+            print(building)
             if building not in buildings_list:
                 buildings_list.append(building)
     if not call_type:
-        return zip(buildings_list, buildings_list)
+        return list(zip(buildings_list, buildings_list))
     else:
         return buildings_list
 

@@ -7,7 +7,7 @@ from ..errors import not_allowed
 
 
 def subscribed_sensors_validator(sensors):
-    if isinstance(sensors, (unicode, str)):
+    if isinstance(sensors, str):
         sensors = [sensors]
     if not isinstance(sensors, list):
         raise ValueError('Sensors field must be string or list')

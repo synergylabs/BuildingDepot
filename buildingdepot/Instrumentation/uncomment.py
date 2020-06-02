@@ -11,6 +11,6 @@ f = open(filename, 'rb')
 
 for line in f:
 	if line == '# @instrument\n':
-		print "@instrument\n",
+		print("@instrument\n", end=' ')
 	else:
-		print line,
+		print(line, end=' ')

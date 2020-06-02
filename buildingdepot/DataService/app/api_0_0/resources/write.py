@@ -42,7 +42,7 @@ class Write(Resource):
         parser.add_argument('timeseries', type=timeseries_validator, required=True, location='json')
         args = parser.parse_args()
 
-        points = [[int(pair.keys()[0]), pair.values()[0]] for pair in args['timeseries']]
+        points = [[int(list(pair.keys())[0]), list(pair.values())[0]] for pair in args['timeseries']]
         max_point = max(points)
 
         # sub_s = time()
@@ -59,15 +59,15 @@ class Write(Resource):
             'columns': ['time', 'value'],
             'points': points
         }]
-        print 'I am here'
-        print data
+        print('I am here')
+        print(data)
         # series_s = time()
         try:
             influx.write_points(data)
         except Exception as e:
-            print 'wrong ', e
+            print('wrong ', e)
         # series_e = time()
-        print 'I am ther'
+        print('I am ther')
         # all_e = time()
         # print 'permission: ', permission_e - permission_s
         # print 'sub: ', sub_e - sub_s

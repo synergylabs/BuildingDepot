@@ -48,7 +48,7 @@ class SensorService(MethodView):
             return jsonify(responses.invalid_uuid)
         tags_owned = [{'name': tag.name, 'value': tag.value} for tag in sensor.tags]
         metadata = Sensor._get_collection().find({'name': name}, {'metadata': 1, '_id': 0})[0]['metadata']
-        metadata = [{'name': key, 'value': val} for key, val in metadata.iteritems()]
+        metadata = [{'name': key, 'value': val} for key, val in metadata.items()]
         response = dict(responses.success_true)
         response.update({'building': str(sensor.building),
                          'name': str(sensor.name),
