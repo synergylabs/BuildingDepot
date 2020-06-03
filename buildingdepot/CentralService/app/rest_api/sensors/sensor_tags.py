@@ -96,8 +96,7 @@ class SensorTagsService(MethodView):
                 if defs.invalidate_sensor(view.name):
                     view.update(add_to_set__tags=[{'name': tag[0], 'value': tag[1]} for tag in tags_added])
                     view.update(pull_all__tags=[{'name': tag[0], 'value': tag[1]} for tag in tags_removed])
-                    emails = list(r.hgetall(view.name).keys())
-                    r.hdel(view.name, emails)
+                    r.delete(view.name)
             if sensor.source_identifier == 'SensorView':
                 for tag in tags:
                     if tag['name'] == 'parent':
@@ -108,8 +107,7 @@ class SensorTagsService(MethodView):
                         break
 
             Sensor.objects(name=name).update(set__tags=tags)
-            emails = list(r.hgetall(name).keys())
-            r.hdel(name, emails)
+            r.delete(name)
         else:
             return jsonify(responses.ds_error)
         return jsonify(responses.success_true)

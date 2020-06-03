@@ -9,8 +9,7 @@ def invalidate_permission(sensorgroup):
     try:
         pipe = r.pipeline()
         for sensor in collection:
-            emails = list(r.hgetall(sensor.get('name')).keys())
-            pipe.hdel(sensor.get('name'), emails)
+            pipe.delete(sensor.get('name'))
         pipe.execute()
     except Exception as e:
         print (e)

@@ -63,8 +63,7 @@ def delete_sensor(sensor_id, parent = None):
                 r.srem('{}:{}'.format(parent, field), sensor_id)
         r.delete('fields:{}'.format(sensor_id))
         r.delete('parent:{}'.format(sensor_id))
-        emails = list(r.hgetall(sensor_id).keys())
-        r.hdel(sensor_id, emails)
+        r.delete(sensor_id)
         r.srem('views', sensor_id)
         # cache process done
         Sensor.objects(name=sensor_id).delete()
@@ -86,12 +85,7 @@ def invalidate_permission(sensorgroup):
     if len(sg_tags) == 0:
         return
     collection = Sensor._get_collection().find(form_query(sg_tags))
-    pipe = r.pipeline()
-    for sensor in collection:
-        name = sensor.get('name')
-        emails = list(r.hgetall(name).keys())
-        pipe.hdel(name, emails)
-    pipe.execute()
+    r.delete(name)
 
 def invalidate_user(usergroup, email):
     """Takes the id of the user that made the request and invalidates
@@ -103,7 +97,7 @@ def invalidate_user(usergroup, email):
         sg_tags = SensorGroup.objects(name=permission['sensor_group']).first()['tags']
         collection = Sensor._get_collection().find(form_query(sg_tags))
         for sensor in collection:
-            pipe.hdel(name, email)
+            pipe.hdel(sensor.get('name'), email)
         pipe.execute()
 
 def form_query(values):
