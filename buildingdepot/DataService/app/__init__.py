@@ -42,7 +42,7 @@ influx = InfluxDBClient(app.config['INFLUXDB_HOST'],
                         app.config['INFLUXDB_DB']
                         )
 
-r = redis.Redis(host=app.config['REDIS_HOST'],password=app.config['REDIS_PWD'])
+r = redis.Redis(host=app.config['REDIS_HOST'],password=app.config['REDIS_PWD'],decode_responses=True)
 
 bootstrap = Bootstrap()
 svr = ServerProxy("http://127.0.0.1:8080")

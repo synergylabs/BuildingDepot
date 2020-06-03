@@ -24,7 +24,7 @@ connect(db=Config.MONGODB_DATABASE,
             authentication_source='admin'
             )
 
-r = redis.Redis(host=Config.REDIS_HOST,password=Config.REDIS_PWD)
+r = redis.Redis(host=Config.REDIS_HOST,password=Config.REDIS_PWD,decode_responses=True)
 
 class ThreadXMLRPCServer(ThreadingMixIn, SimpleXMLRPCServer):
     pass
