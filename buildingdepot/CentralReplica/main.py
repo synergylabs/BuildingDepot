@@ -85,7 +85,10 @@ def invalidate_permission(sensorgroup):
     if len(sg_tags) == 0:
         return
     collection = Sensor._get_collection().find(form_query(sg_tags))
-    r.delete(name)
+    pipe = r.pipeline()
+    for sensor in collection:
+        pipe.delete(sensor.get('name'))
+    pipe.execute()
 
 def invalidate_user(usergroup, email):
     """Takes the id of the user that made the request and invalidates
