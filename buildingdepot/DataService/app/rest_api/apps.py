@@ -76,7 +76,7 @@ class AppService(MethodView):
 
         try:
             channel = pubsub.channel()
-            result = channel.queue_declare(durable=True)
+            result = channel.queue_declare(durable=True, queue="")
         except Exception as e:
             print("Failed to create queue " + str(e))
             print(traceback.print_exc())

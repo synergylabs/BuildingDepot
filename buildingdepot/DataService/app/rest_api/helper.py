@@ -130,7 +130,7 @@ def connect_broker():
     try:
         pubsub = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
         channel = pubsub.channel()
-        channel.exchange_declare(exchange=exchange, type='direct')
+        channel.exchange_declare(exchange=exchange, exchange_type='direct')
         channel.close()
         return pubsub
     except Exception as e:
