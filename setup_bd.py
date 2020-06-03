@@ -1,4 +1,4 @@
-#!/srv/buildingdepot/venv/bin/python2.7
+#!/srv/buildingdepot/venv/bin/python
 import json,sys
 import io,os,configparser
 import string,random
