@@ -17,6 +17,9 @@ missing_parameters = {'success': 'False', 'error': 'Missing parameters'}
 invalid_building = {'success': 'False', 'error': 'Building does not exist'}
 ds_error = {'success': 'False', 'error': 'Communication failure with DataService'}
 
+# user-related responses:
+inactive_user = {'success': 'False', 'error': 'The user you are attempting to interact with is not active'}
+
 # building API common responses:
 invalid_tagtype = {'success': 'False', 'error': 'TagType does not exist'}
 invalid_template = {'success': 'False', 'error': 'BuildingTemplate does not exist'}
