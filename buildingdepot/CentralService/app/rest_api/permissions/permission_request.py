@@ -55,7 +55,7 @@ class PermissionRequestService(MethodView):
                 return jsonify(responses.inactive_user)
 
             channel = pubsub.channel()
-            permission_request_data = json.dumps({ "requester_name": requester.first_name + " " requester.last_name, "requester_email": email, "requested_sensors": target_sensors })
+            permission_request_data = json.dumps({ "requester_name": requester.first_name + " " requester.last_name, "requester_email": email, "parent_device": parent_sensor,"requested_sensors": target_sensors })
             key = (sensor_owner + token.client.client_id + token.client.client_secret).hexdigest()
             channel.basic_publish(exchange='permission_requests', routing_key=key, body=permission_request_data)
         except Exception as e:
