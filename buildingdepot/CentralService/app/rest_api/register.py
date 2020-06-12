@@ -62,12 +62,14 @@ def register_view(app_obj):
     app_obj.add_url_rule('/api/dataservice/<name>/admins', view_func=ds_admins_view, methods=['POST', 'GET', 'DELETE'])
 
     sensor_view = sensor.SensorService.as_view('sensor_api')
-    # get all sensors owned and have permission to
-    app_obj.add_url_rule('/api/sensor', view_func=sensor_view, methods=['GET'])
     # get sensor by name
     app_obj.add_url_rule('/api/sensor/<name>', view_func=sensor_view, methods=['GET', 'DELETE'])
     # create a new sensor
     app_obj.add_url_rule('/api/sensor', view_func=sensor_view, methods=['POST'])
+    
+    sensor_owned_view = sensor.SensorOwnedService.as_view('sensor_owned_api')
+    # get all sensors owned and have permission to
+    app_obj.add_url_rule('/api/sensor', view_func=sensor_owned_view, methods=['GET'])
 
     sensor_view_view = sensor_views.SensorViewService.as_view('sensor_view_api')
     # get views of sensor by name
