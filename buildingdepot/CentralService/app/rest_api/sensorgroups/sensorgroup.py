@@ -64,34 +64,6 @@ class SensorGroupService(MethodView):
         return jsonify(responses.invalid_building)
 
     @check_oauth
-    def get(self):
-        """
-        Returns (JSON):
-            {
-                "result": [{
-                    "success": <True or False>
-                    "error": <If False then error will be returned>
-                    "name": <name of sensor group>
-                    "building": <building in which sensor group is located>
-                    "description": <description attached to sensor group>
-                }]
-            }
-        """
-        sensor_groups = SensorGroup.objects(owner=get_email())
-        result = []
-
-        if sensor_groups is None:
-            return jsonify(responses.invalid_sensorgroup)
-
-        response = dict(responses.success_true)
-
-        for sensor_group in sensor_groups:
-            result.append({"name":sensor_group['name'], "building":sensor_group['building'], "description":sensor_group['description'], "tags":sensor_group['tags']})
-
-        response.update({"result":result})
-        return jsonify(response)
-
-    @check_oauth
     def get(self,name):
         """
         Args as data:
@@ -135,4 +107,32 @@ class SensorGroupService(MethodView):
             response = dict(responses.success_true)
         else:
             response = dict(responses.sensorgroup_delete_authorization)
+        return jsonify(response)
+    
+
+class SensorGroupOwnedService(MethodView):
+    @check_oauth
+    def get(self):
+        """
+        Returns (JSON):
+            {
+                "result": [{
+                    "success": <True or False>
+                    "error": <If False then error will be returned>
+                    "result": <list of owned sensor group>
+                }]
+            }
+        """
+        sensor_groups = SensorGroup.objects(owner=get_email())
+        result = []
+
+        if sensor_groups is None:
+            return jsonify(responses.invalid_sensorgroup)
+
+        response = dict(responses.success_true)
+
+        for sensor_group in sensor_groups:
+            result.append({"name":sensor_group['name'], "building":sensor_group['building'], "description":sensor_group['description'], "tags":[{'name': tag.name, 'value': tag.value} for tag in sensor_group.tags]})
+
+        response.update({"result":result})
         return jsonify(response)
