@@ -130,3 +130,45 @@ class PermissionService(MethodView):
                     return jsonify(responses.success_true)
                 else:
                     return jsonify(responses.permission_del_authorization)
+
+    @check_oauth
+    def put(self):
+        """
+        Args as data:
+            "user_group": "name of user group"
+            "sensor_group": "name of sensor group"
+            "permission": "value of permission"
+        Returns (JSON):
+            {
+                "success": <True or False>,
+                "error": <details of an error if unsuccessful>
+            }
+        """
+        user_group = request.args.get('user_group')
+        sensor_group = request.args.get('sensor_group')
+        permission_setting = request.args.get('permission')
+        email = get_email()
+        if not all([user_group, sensor_group, permission_setting]):
+            return jsonify(responses.missing_parameters)
+        else:
+            permission = Permission.objects(user_group=user_group, sensor_group=sensor_group).first()
+            if permission is None:
+                return jsonify(responses.permission_not_defined)
+            elif not(self.permission_is_valid(permission_setting)):
+                return jsonify(responses.permission_invalid_setting)
+            else:
+                if permission['owner'] == email:
+                    if permission_allowed(sensor_group, email):
+                        if defs.delete_permission(user_group,sensor_group) and defs.create_permission(user_group, sensor_group, email, permissions.get(permission_setting)):
+                            permission.permission = permissions.get(permission_setting)
+                            permission.save()
+                            return jsonify(responses.success_true)
+                        else:
+                            return jsonify(responses.ds_error)
+                    else:
+                        return jsonify(responses.permission_not_allowed)
+                else:
+                    return jsonify(responses.permission_modify_authorization)
+
+    def permission_is_valid(self, permission_setting):
+        return permission_setting == 'r' or permission_setting == 'rw' or permission_setting == 'dr' or permission_setting == 'rwp'
