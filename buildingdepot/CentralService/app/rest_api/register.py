@@ -104,6 +104,10 @@ def register_view(app_obj):
     # delete a user group
     app_obj.add_url_rule('/api/user_group/<name>', view_func=usergroup_view, methods=['DELETE'])
 
+    usergroup_owned_view = usergroup.UserGroupOwnedService.as_view('usergroup_owned_api')
+    # get all user groups owned by the requester
+    app_obj.add_url_rule('/api/user_group', view_func=usergroup_owned_view, methods=['GET'])
+
     ugusers_view = ug_users.UserGroupUsersService.as_view('ugusers_api')
     # get a list of users in the user group
     # post add/change users in a usergroup
