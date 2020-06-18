@@ -108,3 +108,31 @@ class SensorGroupService(MethodView):
         else:
             response = dict(responses.sensorgroup_delete_authorization)
         return jsonify(response)
+    
+
+class SensorGroupOwnedService(MethodView):
+    @check_oauth
+    def get(self):
+        """
+        Returns (JSON):
+            {
+                "result": [{
+                    "success": <True or False>
+                    "error": <If False then error will be returned>
+                    "result": <list of owned sensor group>
+                }]
+            }
+        """
+        sensor_groups = SensorGroup.objects(owner=get_email())
+        result = []
+
+        if sensor_groups is None:
+            return jsonify(responses.invalid_sensorgroup)
+
+        response = dict(responses.success_true)
+
+        for sensor_group in sensor_groups:
+            result.append({"name":sensor_group['name'], "building":sensor_group['building'], "description":sensor_group['description'], "tags":[{'name': tag.name, 'value': tag.value} for tag in sensor_group.tags]})
+
+        response.update({"result":result})
+        return jsonify(response)
