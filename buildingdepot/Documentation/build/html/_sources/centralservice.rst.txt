@@ -1,7 +1,74 @@
+.. image:: images/BuildingDepot.svg
+   :width: 800
+
 Central Service
 ###############
 
 The Central Service within BuildingDepot is the part of the system that holds all the core metadata. Starting from the structures of the Buildings to the DataServices that lie in an installation the CentralService plays a very important role in organising the data within BuildingDepot in a meaningful way. A brief explanation will be provided here of each of the options available in the CentralService.
+
+We define any entity to which a timeseries can be associated with as a Point. A Point can be
+measurements from sensors, or commands to turn a light on/off, or a configuration parameter
+such as cycle type in a washing machine or even a fault indicator. This includes both real­world
+sensors/actuators, as well as virtual sensors/actuators created in the Central Service as
+abstractions of RealWorld sensors/actuators (such as a ‘building average temperature sensor’).
+Virtual and RealWorld points are treated identically within the CentralService, with differences
+occurring at the level of connectors (see Connectors document for interfacing between the
+CentralService and sensors). In BuildingDepot, each point is given a UUID (universally unique ID) and
+metadata is associated with it using tags.
+
+Tags are key value pairs associated with a point. For example, an office temperature sensor
+would be associated with tags like “Room = 300”, “Type = Temperature Sensor”, “Unit =
+Fahrenheit” and so on. Tags themselves can refer to complex entities and be associated with
+other tags. For example, Room 300 can be associated with its metadata such as area and
+usage type . Tags form the core of BuildingDepot metadata, and are used for searching and defining permissions.
+
+BuildingDepot supports pre­defined tag types that acts as a template for a user to start tagging entities
+in a building. These templates are provided to support standard naming convention, such as the
+tags defined by Project Haystack2. These tags are also used as the key search mechanism
+within BuildingDepot. Using REST APIs, users can query for individual entities based on single tag
+(such as a Room = 300) or based on more complex combinations of tags (Room = 300 and
+Type = Occupancy and Building = Example_Building). All entities which meet the requirements
+of the search are returned as JSON objects which contain their UUID, tags, and Metadata.
+In addition to tags on entities, BuildingDepot also utilizes context based tags for Users. Depending on
+how a user logs in (e.g. with or without admin privileges) they will have a context tag added to
+determine the privileges that they enjoy (user credentials). Users groups are created by
+assigning a user­group tag to each user which is part of the group. This is of particular
+importance later when determining permissions.
+
+In addition to User Groups, Sensor groups are as the name suggests a set of points that have
+been grouped together on the basis of the tags that the user selected while creating the group.
+While creating a Sensor group each individual points that the user wants to put in the group do
+not have to be manually added. Simply selecting the tag will automatically add at the backend
+all the points containing that tag into this group.
+Sensor groups and User groups come together to form the access control lists. Access control
+lists are a key element in BuildingDepot to facilitate both privacy and security. For pairs of User
+Groups and Sensor Groups, we choose a permission value with which we want to associate.
+There are four levels of permission defined in BuildingDepot which are ‘d/r’ (deny read) ,’r’ (read) , ‘r/w’
+(read write) and ‘r/w/p’ (read write permission). If there are multiple permission mappings
+between a user and a point then the one that is most restrictive is chosen. The deny read
+permission level, in particular, is important for maintaining privacy of data for various groups
+simultaneously using BuildingDepot for a building.
+
+
+Different evels of permission access:
+ - **d/r**: Deny/Read will deny any access to the points
+ - **r**: Read will give read only access to the points
+ - **r/w**: Read/Write will give read and write access to the points (such as changing values of actuators)
+ - **r/w/p**: Read/Write/Permission is the highest level of permission that can be assigned. Will give read and write access to the points. This permission also allows users to alter permissions for the points (see above).
+
+**Note:**
+ - The *ownership* level of permission is assigned at the point of creation. It has all privileges of r/w/p. Additionally, it cannot be revoked or changed under any circumstances.
+ - The *super* users of BuildingDepot have r/w/p access to all the points.
+
+When a r/w/p permission link is created between the UserGroup “Home_usergroup” and Sensor
+Group “Home”. All users in UserGroup get r/w/p access to points in SensorGroup. Any user can
+create any permission link that they want but the set of points that the users in the UserGroup
+get access to in the SensorGroup that they have been given permission to will depend on the
+user that has created the permission. Only the points that the creator of this permission has
+r/w/p access to will be the points that the users will gain access to based on this permission link.
+
+.. image:: images/CSComponents.svg
+   :width: 800
 
 OAuth
 *****

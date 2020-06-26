@@ -1,0 +1,16 @@
+{
+  "title": "1000 sensors:",
+  "test": "post time-series data",
+  "tests": [
+    {
+      "title": "Post Time-series : 1000 sensors",
+      "formData": {
+        "saveFile": "post 1000.json",
+        "totalSensors": 1000,
+        "totalSamples": 1,
+        "totalValues": 1,
+        "dynamic": true
+      }
+    }
+  ]
+}

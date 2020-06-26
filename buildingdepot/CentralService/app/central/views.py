@@ -29,7 +29,7 @@ from .utils import get_choices, get_tag_descendant_pairs
 from ..oauth_bd.views import Client
 from ..rest_api.helper import check_if_super,get_building_choices
 from ..rest_api.helper import validate_users,form_query
-from ..auth.access_control import authorize_addition,permission
+from ..auth.access_control import authorize_addition,permission, permission_allowed
 from ..auth.acl_cache import invalidate_permission
 
 @central.route('/tagtype', methods=['GET', 'POST'])
@@ -477,13 +477,18 @@ def permission_create():
                 flash('No tags present in the SensorGroup')
                 return redirect(url_for('central.permission'))
             # If permission doesn't exist then create it
-            Permission(user_group=str(form.user_group.data),
-                       sensor_group=str(form.sensor_group.data),
-                       permission=str(form.permission.data),
-                       owner = session['email']).save()
-            invalidate_permission(str(form.sensor_group.data))
-            r.hset('permission:{}:{}'.format(form.user_group.data,form.sensor_group.data),"permission",form.permission.data)
-            r.hset('permission:{}:{}'.format(form.user_group.data,form.sensor_group.data),"owner",session['email'])
+            if permission_allowed(form.sensor_group.data, session['email']):
+                Permission(user_group=str(form.user_group.data),
+                           sensor_group=str(form.sensor_group.data),
+                           permission=str(form.permission.data),
+                           owner=session['email']).save()
+                invalidate_permission(str(form.sensor_group.data))
+                r.hset('permission:{}:{}'.format(form.user_group.data, form.sensor_group.data), "permission",
+                       form.permission.data)
+                r.hset('permission:{}:{}'.format(form.user_group.data, form.sensor_group.data), "owner",
+                       session['email'])
+            else:
+                flash('Not authorized to create permissions for the specified SensorGroup tags')
         else:
             flash('Unable to communicate with the DataService')
         return redirect(url_for('central.permission'))

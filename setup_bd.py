@@ -9,6 +9,9 @@ print "Setting up BuildingDepot.. "
 
 option = sys.argv[1:][0] #get arguments
 
+# Create a temporary password
+tempPwd = ''.join(random.choice(string.ascii_uppercase + string.digits + string.ascii_lowercase) for _ in range(16))
+
 # Get Username and Password for MongoDB
 if (option == "install"):
     configBuffer = StringIO.StringIO()
@@ -25,6 +28,21 @@ elif(option == "bd_install"):
     user = configs['mongo_user']
     pwd = configs['mongo_pwd']
 
+elif(option == "test"):
+    configBuffer = StringIO.StringIO()
+    configBuffer.write('[dummysection]\n')
+    configBuffer.write(open('/srv/buildingdepot/CentralService/cs_config').read())
+    configBuffer.seek(0, os.SEEK_SET)
+    config = ConfigParser.ConfigParser()
+    config.readfp(configBuffer)
+    user=config.get('dummysection','MONGODB_USERNAME').strip("'").strip('"')
+    pwd = config.get('dummysection','MONGODB_PWD').strip("'").strip('"')
+    configs = json.load(open('testing/functional-testing-tool/tests/config.json', 'r'))
+    test_config = dict(configs)
+    test_config['password'] = tempPwd
+    with open('testing/functional-testing-tool/tests/config.json', 'w') as output:
+        json.dump(test_config, output)
+
 else:
     exit(0)
 
@@ -33,7 +51,6 @@ client = MongoClient(username=user,
                      password=pwd,
                      authSource='admin')
 db = client.buildingdepot
-tempPwd = ''.join(random.choice(string.ascii_uppercase + string.digits + string.ascii_lowercase) for _ in range(16))
 db.user.insert({"email":"admin@buildingdepot.org",
                 "password":generate_password_hash(tempPwd),
                 "first_name":"Admin",

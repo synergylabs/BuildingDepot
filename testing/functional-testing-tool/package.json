@@ -1,0 +1,34 @@
+{
+  "name": "functional-testing-tool",
+  "version": "1.0.0",
+  "description": "Functional Testing with Mocha",
+  "main": "index.js",
+  "scripts": {
+    "test": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shreyasnagare/functional-testing-tool.git"
+  },
+  "keywords": [
+    "mocha",
+    "testing",
+    "functional",
+    "programmatically"
+  ],
+  "author": "shreyasnagare@gmail.com",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/shreyasnagare/functional-testing-tool/issues"
+  },
+  "homepage": "https://github.com/shreyasnagare/functional-testing-tool#readme",
+  "dependencies": {
+    "chai": "^4.2.0",
+    "glob": "^7.1.4",
+    "mocha": "^6.2.0",
+    "path": "^0.12.7",
+    "store": "^2.0.12",
+    "supertest": "^4.0.2",
+    "uuid": "^3.3.3"
+  }
+}
