@@ -13,22 +13,23 @@ from flask import request, jsonify
 from flask.views import MethodView
 from .. import responses
 from ...models.cs_models import Sensor, User
-from ..helper import form_query, create_response, check_oauth
-from ... import oauth
+from ...auth.views import Client, Token
+from ..helper import form_query, create_response, check_oauth, get_email, timestamp_to_time_string
+from ... import oauth, influx
+import traceback, json, hashlib, pika
 
 class PermissionRequestService(MethodView):
-
     def connect_broker(self):
         """
         Args:
             None:
-        Returns:
+        Returns:    
             pubsub: object corresponding to the connection with the broker
         """
         try:
             pubsub = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
             channel = pubsub.channel()
-            channel.exchange_declare(exchange='test', exchange_type='direct')
+            channel.exchange_declare(exchange='permission_requests', type='direct')
             channel.close()
             return pubsub
         except Exception as e:
@@ -37,27 +38,45 @@ class PermissionRequestService(MethodView):
 
     @check_oauth
     def post(self):
-        parent_sensor = request.args.get('parent_sensor')
-        target_sensors = request.args.get('target_sensors')
+        data = request.get_json()['data']
+        parent_sensor = data['parent_sensor']
+        target_sensors = data['target_sensors']
+        timestamp = data['timestamp']
 
-        if parent_sensor is None or target_sensors is None:
+        if parent_sensor is None or target_sensors is None or timestamp is None:
             return jsonify(responses.missing_parameters)
 
         email = get_email()
-        pubsub = connect_broker()
-        requester = User._get_collection().find({"email":get_email()})
-        sensor_owner = Sensor._get_collection().find({'name':parent_sensor}).owner
+        pubsub = self.connect_broker()
+        requester = User.objects(email=get_email()).first()
+        sensor_tags = Sensor.objects(name=parent_sensor).first().tags
+
+        sensor_owner = None
+
+        for tag in sensor_tags:
+            if tag.name == "claimed":
+                sensor_owner = tag.value
+
+        if sensor_owner is None:
+            return jsonify(responses.device_not_claimed)
 
         try:
-            token = Token.objects(email=sensor_owner).first()
+            clients = Client.objects(user=sensor_owner).order_by('_id')
+            client = None
 
-            if token is None:
+            for curr_client in clients:
+                client = curr_client
+
+            if client is None:
                 return jsonify(responses.inactive_user)
 
             channel = pubsub.channel()
-            permission_request_data = json.dumps({ "requester_name": requester.first_name + " " + requester.last_name, "requester_email": email, "parent_device": parent_sensor,"requested_sensors": target_sensors })
-            key = (sensor_owner + token.client.client_id + token.client.client_secret).hexdigest()
-            channel.basic_publish(exchange='permission_requests', routing_key=key, body=permission_request_data)
+            permission_request_data = { "requester_name": str(requester.first_name) + " " + str(requester.last_name), "requester_email": str(email), "parent_device": str(parent_sensor), "requested_sensors": str(target_sensors) }
+            permission_request_json = json.dumps(permission_request_data)
+            key = hashlib.sha256("1dX0ff43nPt".encode() + sensor_owner.encode() + client.client_id.encode()).hexdigest()
+            
+            channel.basic_publish(exchange='permission_requests', routing_key=str(key), body=permission_request_json)
+            influx.write_points([{'measurement': sensor_owner + "_permission_requests", 'time': int(timestamp), 'fields': permission_request_data}], time_precision="ms")
         except Exception as e:
             traceback.print_exc()
             print str(repr(e))
