@@ -43,7 +43,7 @@ class PermissionRequestService(MethodView):
         target_sensors = data['target_sensors']
         timestamp = data['timestamp']
 
-        if parent_sensor is None or target_sensors is None or timestamp is None:
+        if all([parent_sensor, target_sensors, timestamp]):
             return jsonify(responses.missing_parameters)
 
         email = get_email()
