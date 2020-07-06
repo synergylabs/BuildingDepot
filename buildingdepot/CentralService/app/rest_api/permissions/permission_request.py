@@ -38,6 +38,14 @@ class PermissionRequestService(MethodView):
 
     @check_oauth
     def post(self):
+        """
+        Args:
+            parent_sensor the device containing sensors to request permission to, or just the single sensor
+            target_sensors the individual sensors on a device to request permission, or just the single sensor
+            timestamp the local time that a permission request occurred
+        Returns:
+            Success if the operation could be completed
+        """
         data = request.get_json()['data']
         parent_sensor = data['parent_sensor']
         target_sensors = data['target_sensors']
