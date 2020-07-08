@@ -16,35 +16,61 @@ from ...models.cs_models import Sensor, User
 from ...auth.views import Client, Token
 from ..helper import form_query, create_response, check_oauth, get_email
 from ... import oauth, influx
+from datetime import datetime
 import json
 
 class PermissionRequestService(MethodView):
 
+    def to_list_of_strings(self, unicode_string):
+        return unicode_string.replace("u'", "").replace("'", "").replace("[", "").replace("]", "").encode(encoding="ascii").split(", ")
+
     @check_oauth
     def get(self):
-        data = request.get_json()['data']
-        timestamp_filter = data['timestamp_filter']
+        """
+        Get log of permission requests. Takes optional query param timestamp_filter. If no param is provided, all requests are returned.
+
+        Args as query param:
+        timestamp_filter : <unix timestamp in milliseconds to start getting requests>
+
+        Returns (JSON):
+        {
+            'requests': [{
+                'parent_device': str(UUID of device that contains sensors to get permission),
+                'requested_sensors': ['UUID of requested sensor'],
+                'requester_email': str(email of person requesting permission to sensors),
+                'requester_name': str(first and last name of person requesting permission to sensors)
+            }]
+        }
+        """
         email = get_email()
+        timestamp_filter = 0
 
-        query = "SELECT parent_device, requested_sensors, requester_email, requester_name FROM $email_permission_requests"
+        if request.args.get('timestamp_filter') is not None:
+            timestamp_filter = int(request.args.get('timestamp_filter'))
 
-        if timestamp_filter is not None:
-            query += " WHERE time >= $time_filter"
-        else:
-            timestamp_filter = 0
+        #timestamp_filter = datetime.fromtimestamp(float(timestamp_filter) / 100).isoformat("T") + "Z"
+        ns_in_ms = 1000000
+        timestamp_filter = str(timestamp_filter * ns_in_ms)
 
-        results = influx.query(query, params={}, bind_params={'email': email, 'time_filter': timestamp_filter})
-
+        query = 'SELECT parent_device, requested_sensors, requester_email, requester_name FROM "' + email + '_permission_requests" WHERE time >= ' + timestamp_filter
         request_results = {'requests': []}
 
-        for result in results['results']:
-            print str(result)
-            for timeseries in result['series']:
-                parent_device = timeseries[1]
-                requested_sensors = timeseries[2]
-                requester_email = timeseries[3]
-                requester_name = timeseries[4]
-                request_results['requests'].add({'requester_email': requester_email, 'requested_sensors': requested_sensors, 'requester_name': requester_name, 'parent_device': parent_device})
+        results = influx.query(query)
+
+        try:
+            items = results.items()[0]
+
+            for result in items[1]:
+                print str(result)
+                parent_device = result["parent_device"]
+                requested_sensors = self.to_list_of_strings(result["requested_sensors"])
+                requester_email = result["requester_email"]
+                requester_name = result["requester_name"]
+                request_results['requests'].append({'requester_email': requester_email, 'requested_sensors': requested_sensors, 'requester_name': requester_name, 'parent_device': parent_device})
+        except Exception as e:
+            print str(e)
+            #No items to process - empty query
+            pass
 
         response = dict(responses.success_true)
         response.update(request_results)
