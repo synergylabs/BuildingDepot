@@ -6,7 +6,7 @@ from .users import user
 from .sensorgroups import sensorgroup, sg_tags
 from .usergroups import ug_users, usergroup
 from .sensors import sensor, search, sensor_tags, sensor_views
-from .permissions import permission, permission_request
+from .permissions import permission, permission_request, permission_uuid
 
 
 def register_view(app_obj):
@@ -112,7 +112,11 @@ def register_view(app_obj):
 
     permission_request_view = permission_request.PermissionRequestService.as_view('permission_request_service')
     # Push a notification to a mite owner that the user making this request wants permission to their mites
-    app_obj.add_url_rule('/api/permission/request', view_func=permission_request_view, methods=['POST'])
+    app_obj.add_url_rule('/api/permission/request', view_func=permission_request_view, methods=['GET', 'POST'])
+
+    permission_uuid_request_view = permission_uuid.PermissionRequestUUIDService.as_view('permission_request_uuid_service')
+    # Get or create UUIDs for permission request RabbitMQ queues
+    app_obj.add_url_rule('/api/permission/request/uuid', view_func=permission_uuid_request_view, methods=['GET'])
 
     search_view = search.SearchService.as_view('search_service')
     # sensor search - search for sensors using the following keywords
