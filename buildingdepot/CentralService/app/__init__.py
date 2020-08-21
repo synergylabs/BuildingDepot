@@ -22,6 +22,7 @@ from flask_bootstrap import Bootstrap
 from flask_oauthlib.provider import OAuth2Provider
 from xmlrpclib import ServerProxy
 import redis
+from influxdb import InfluxDBClient
 
 
 app = Flask(__name__)
@@ -37,6 +38,12 @@ oauth = OAuth2Provider()
 svr = ServerProxy("http://localhost:8080")
 r = redis.Redis(host=app.config['REDIS_HOST'],password=app.config['REDIS_PWD'])
 
+influx = InfluxDBClient(app.config['INFLUXDB_HOST'], 
+                        app.config['INFLUXDB_PORT'], 
+                        app.config['INFLUXDB_USERNAME'],
+                        app.config['INFLUXDB_PWD'],
+                        app.config['INFLUXDB_DB']
+                        )
 
 def create_app(config_mode): # TODO: remove config_mode
 
