@@ -124,10 +124,6 @@ def register_view(app_obj):
 
     permission_request_view = permission_request.PermissionRequestService.as_view('permission_request_service')
     # Push a notification to a mite owner that the user making this request wants permission to their mites
-    app_obj.add_url_rule('/api/permission/request', view_func=permission_request_view, methods=['GET'])
-
-    permission_request_view = permission_request.PermissionRequestService.as_view('permission_request_service')
-    # Push a notification to a mite owner that the user making this request wants permission to their mites
     app_obj.add_url_rule('/api/permission/request', view_func=permission_request_view, methods=['GET', 'POST'])
 
     permission_uuid_request_view = permission_uuid.PermissionRequestUUIDService.as_view('permission_request_uuid_service')
