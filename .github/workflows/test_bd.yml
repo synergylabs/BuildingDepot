@@ -5,7 +5,7 @@ name: BuildingDepot
 
 on:
   push:
-    branches: [ github-actions ]
+    branches: [ beta ]
   pull_request:
     branches: [ develop ]
 
@@ -22,7 +22,7 @@ jobs:
         python-version: 2.7
     - name: Install BuildingDepot
       run: |
-        sudo bash -x ./test_install.sh
+        sudo bash -x ./script_for_github_actions.sh
     - name: Initialize tests
       run: |
         cd testing/functional-testing-tool
