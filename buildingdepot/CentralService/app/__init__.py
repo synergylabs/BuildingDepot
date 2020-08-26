@@ -37,7 +37,6 @@ oauth = OAuth2Provider()
 svr = ServerProxy("http://localhost:8080")
 r = redis.Redis(host=app.config['REDIS_HOST'],password=app.config['REDIS_PWD'])
 
-
 def create_app(config_mode): # TODO: remove config_mode
 
     connect(db=app.config['MONGODB_DATABASE'],

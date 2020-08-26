@@ -1,37 +1,180 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
-<html xmlns="http://www.w3.org/1999/xhtml">
-  <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Timeseries &#8212; BuildingDepot 3.2.8 documentation</title>
-    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
-    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-    <script type="text/javascript" src="../../_static/jquery.js"></script>
-    <script type="text/javascript" src="../../_static/underscore.js"></script>
-    <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <link rel="index" title="Index" href="../../genindex.html" />
-    <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Apps" href="pubsub.html" />
-    <link rel="prev" title="DataService APIs" href="index.html" />
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Timeseries &mdash; BuildingDepot 3.2.9 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../genindex.html"/>
+        <link rel="search" title="Search" href="../../search.html"/>
+    <link rel="top" title="BuildingDepot 3.2.9 documentation" href="../../index.html"/>
+        <link rel="up" title="DataService APIs" href="index.html"/>
+        <link rel="next" title="Apps" href="pubsub.html"/>
+        <link rel="prev" title="DataService APIs" href="index.html"/> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
    
-  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
-  
-  
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+  <div class="wy-grid-for-nav">
 
-  </head><body>
-  
-
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
           
 
-          <div class="body" role="main">
+          
+            <a href="../../index.html" class="icon icon-home"> BuildingDepot
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                3.2.9
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../centralservice.html">Central Service</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../dataservice.html">Data Service</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../install.html#configuration">Configuration</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../CentralService/index.html">CentralService APIs</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">DataService APIs</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="index.html#authentication">Authentication</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../CentralService/oauth.html">OAuth</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Timeseries</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#post-timeseries-datapoints">Post Timeseries Datapoints</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#read-timeseries-datapoints">Read Timeseries Datapoints</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pubsub.html">Apps</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">BuildingDepot</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="index.html">DataService APIs</a> &raquo;</li>
+        
+      <li>Timeseries</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/api/DataService/sensordata.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
             
   <div class="section" id="timeseries">
 <h1>Timeseries<a class="headerlink" href="#timeseries" title="Permalink to this headline">¶</a></h1>
@@ -41,54 +184,9 @@ Sensor access is restricted to Central Service <cite>Users</cite> with permissio
 <span id="datas-list-sensors"></span><h2>Post Timeseries Datapoints<a class="headerlink" href="#post-timeseries-datapoints" title="Permalink to this headline">¶</a></h2>
 <p>This stores datapoints in the timeseries of the specified Sensorpoint.</p>
 <p>The first datapoint that is posted to the uuid defines the datatype for all further timeseries datapoints e.g. if the first datapoint posted to a certain uuid is a int then all further datapoints have to be ints.</p>
-<dl class="post">
-<dt id="post--api-sensor-timeseries">
-<code class="descname">POST </code><code class="descname">/api/sensor/timeseries</code><a class="headerlink" href="#post--api-sensor-timeseries" title="Permalink to this definition">¶</a></dt>
-<dd><p>Within a singe POST request data can be posted to multiple sensor points. The format for each sensor point in the list should be as follows.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name" colspan="2">JSON Parameters:</th></tr>
-<tr class="field-odd field"><td>&#160;</td><td class="field-body"><ul class="first simple">
-<li><dl class="first docutils">
-<dt><strong>data</strong> <cite>(list of dictionaries)</cite> – Contains the information of the tag to be added to the sensor.</dt>
-<dd><ul class="first last">
-<li><strong>sensor_id</strong> <cite>(string)</cite> – UUID of the sensor to which data has to be posted</li>
-<li><dl class="first docutils">
-<dt><strong>samples</strong> <cite>(list)</cite> – A list of the data points that have to be added to the time-series of the sensor point given by sensor_id. Each item in the list has the following information:</dt>
-<dd><ul class="first last">
-<li><strong>time</strong> <cite>(timestamp)</cite> – Unix timestamp of a sampling</li>
-<li><strong>value</strong> <cite>(int/float)</cite> – Sensor value</li>
-</ul>
-</dd>
-</dl>
-</li>
-</ul>
-</dd>
-</dl>
-</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><ul class="first simple">
-<li><strong>success</strong> <cite>(string)</cite> – Returns ‘True’ if data is posted successfully otherwise ‘False’</li>
-</ul>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
-<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> – Success</li>
-<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a> – Unauthorized Credentials</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
 <div class="compound">
 <p class="compound-first"><strong>Example request</strong>:</p>
-<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">POST</span> <span class="nn">/api/sensor/timeseries</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span class="nf">POST</span> <span class="nn">/api/sensor/timeseries</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
 <span class="na">Accept</span><span class="o">:</span> <span class="l">application/json; charset=utf-8</span>
 
 { &quot;data&quot;:     [
@@ -123,7 +221,7 @@ Sensor access is restricted to Central Service <cite>Users</cite> with permissio
 </pre></div>
 </div>
 <p class="compound-middle"><strong>Example response</strong>:</p>
-<div class="compound-last highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<div class="compound-last highlight-http notranslate"><div class="highlight"><pre><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
 <span class="p">{</span>
@@ -136,56 +234,15 @@ Sensor access is restricted to Central Service <cite>Users</cite> with permissio
 <div class="section" id="read-timeseries-datapoints">
 <h2>Read Timeseries Datapoints<a class="headerlink" href="#read-timeseries-datapoints" title="Permalink to this headline">¶</a></h2>
 <p>This retreives a list of datapoints for the timeseries of the specified Sensorpoint</p>
-<dl class="get">
-<dt id="get--sensor--sensor-uuid--timeseries?start_time=-start_timestamp-&amp;end_time=-end_timestamp-&amp;resolution=-resolution_units-">
-<code class="descname">GET </code><code class="descname">/sensor/&lt;sensor-uuid&gt;/timeseries?start_time=&lt;start_timestamp&gt;&amp;end_time=&lt;end_timestamp&gt;&amp;resolution=&lt;resolution_units&gt;</code><a class="headerlink" href="#get--sensor--sensor-uuid--timeseries?start_time=-start_timestamp-&end_time=-end_timestamp-&resolution=-resolution_units-" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>sensor-uuid</strong> (<em>string</em>) – UUID associated with Sensor (compulsory)</li>
-<li><strong>start_time</strong> (<em>integer</em>) – The starting point of time from which the timeseries data of this sensor point is desired. Has to be a UNIX timestamp. (compulsory)</li>
-<li><strong>end_time</strong> (<em>integer</em>) – The ending point of time till which the timeseries data of this sensor point is desired. Has to be a UNIX timestamp.(compulsory)</li>
-<li><strong>resolution</strong> (<em>string</em>) – The resolution of the data required. If not specified will retrieve all the datapoints over the specified interval. Has to be specified in the format time units as an integer + unit identifier e.g. 10s,1m,1h etc. (optional)</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><ul class="first simple">
-<li><strong>success</strong> <cite>(string)</cite> – Returns ‘True’ if data is retrieved succesfully otherwise ‘False’</li>
-<li><dl class="first docutils">
-<dt><strong>data</strong> <cite>(struct)</cite> – Contains the series</dt>
-<dd><ul class="first last">
-<li><strong>series</strong> <cite>(list)</cite> – Contains the timeseries data, uuid of the sensor and the column names for the timeseries data</li>
-<li><strong>columns</strong> <cite>(list)</cite> – Contains the names of the columns of the data that is present in the timeseries</li>
-<li><strong>name</strong> <cite>(string)</cite> – uuid of the sensor whose data is being retrieved</li>
-<li><strong>values</strong> <cite>(list)</cite> – Contains the list of timeseries data that has been requested in the order represented by the columns.</li>
-</ul>
-</dd>
-</dl>
-</li>
-</ul>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
-<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> – Success</li>
-<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a> – Unauthorized Credentials</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
 <p>Note: Both interval and resolution are specified with the time value appended by the type of the value e.g. 10s for 10 seconds or 10m for 10 minutes.</p>
 <div class="compound">
 <p class="compound-first"><strong>Example request</strong>:</p>
-<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">GET</span> <span class="nn">/sensor/&lt;sensor-uuid&gt;/timeseries?start_time=1445535722&amp;end_time=1445789516&amp;resolution=10s</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span class="nf">GET</span> <span class="nn">/sensor/&lt;sensor-uuid&gt;/timeseries?start_time=1445535722&amp;end_time=1445789516&amp;resolution=10s</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
 <span class="na">Accept</span><span class="o">:</span> <span class="l">application/json; charset=utf-8</span>
 </pre></div>
 </div>
 <p class="compound-middle"><strong>Example response</strong>:</p>
-<div class="compound-last highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<div class="compound-last highlight-http notranslate"><div class="highlight"><pre><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
 <span class="p">{</span>
@@ -227,68 +284,73 @@ Sensor access is restricted to Central Service <cite>Users</cite> with permissio
 </div>
 
 
+           </div>
           </div>
-          
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="pubsub.html" class="btn btn-neutral float-right" title="Apps" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="index.html" class="btn btn-neutral" title="DataService APIs" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, SynergyLabs.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> and ❤️  using a custom <a href="https://github.com/LinxiFan/Sphinx-theme">theme</a> based on <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-  <h3><a href="../../index.html">Table Of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">Timeseries</a><ul>
-<li><a class="reference internal" href="#post-timeseries-datapoints">Post Timeseries Datapoints</a></li>
-<li><a class="reference internal" href="#read-timeseries-datapoints">Read Timeseries Datapoints</a></li>
-</ul>
-</li>
-</ul>
-<div class="relations">
-<h3>Related Topics</h3>
-<ul>
-  <li><a href="../../index.html">Documentation overview</a><ul>
-  <li><a href="index.html">DataService APIs</a><ul>
-      <li>Previous: <a href="index.html" title="previous chapter">DataService APIs</a></li>
-      <li>Next: <a href="pubsub.html" title="next chapter">Apps</a></li>
-  </ul></li>
-  </ul></li>
-</ul>
-</div>
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="../../_sources/api/DataService/sensordata.rst.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div>
-<div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="../../search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-    </div>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
-        </div>
-      </div>
-      <div class="clearer"></div>
-    </div>
-    <div class="footer">
-      &copy;2019, SynergyLabs.
-      
-      |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.7.5</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
-      
-      |
-      <a href="../../_sources/api/DataService/sensordata.rst.txt"
-          rel="nofollow">Page source</a>
-    </div>
 
-    
+    </section>
 
-    
-  </body>
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'3.2.9',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+      <script type="text/javascript" src="../../_static/language_data.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
 </html>

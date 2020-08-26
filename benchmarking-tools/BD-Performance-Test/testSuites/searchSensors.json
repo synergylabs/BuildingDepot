@@ -1,0 +1,8 @@
+{
+  "tests": [
+    {
+      "title": "search sensors",
+      "amount": 1,
+      "connections": 1
+    }]
+}

@@ -141,7 +141,7 @@ This deletes an app of the current user.
       * **error** `(string)` -- Details of an error if unsuccessful
 
    :status 200: Success
-   :status 401: Unauthorized Credentials  
+   :status 401: Unauthorized Credentials
 
 .. compound::
 
@@ -190,3 +190,148 @@ This deletes an app of the current user.
         "success": "False",
         "error": "Failed to delete queue"
       }
+
+Subscribe to a Sensor
+*********************
+
+This is used to subscribes to the sensor data.
+
+.. http:post:: /api/apps/subscription
+
+   :JSON Parameters:
+      * **data** `(dict)` -- Contains the information about the subscription.
+         * **app** `(string)` -- The name of the application.
+         * **sensor** `(string)` -- The name of the sensor to subscribe to.
+
+   :returns:
+      * **success** `(string)` -- Returns 'True' if subscription was successful. Otherwise 'False'
+
+   :status 200: Success
+   :status 401: Unauthorized Credentials
+
+.. compound::
+
+   **Example request**:
+
+   .. sourcecode:: http
+
+      POST /api/apps HTTP/1.1
+      Accept: application/json; charset=utf-8
+
+      {
+        "data": {
+          "app": "app_name"
+          "sensor": "sensor_uuid"
+        }
+      }
+
+   **Example response** (for success):
+
+   .. sourcecode:: http
+
+      HTTP/1.1 200 OK
+      Content-Type: application/json
+
+      {
+         "success": "True"
+      }
+
+   **Example response** (for failure):
+
+   .. sourcecode:: http
+
+      HTTP/1.1 200 OK
+      Content-Type: application/json
+
+      {
+        "success": "False",
+        "error": "Missing Parameters"
+      }
+
+      {
+        "success": "False",
+        "error": "Failed to connect to broker"
+      }
+
+      {
+        "success": "False",
+        "error": "Failed to bind queue"
+      }
+
+      {
+        "success": "False",
+        "error": "App id doesn't exist"
+      }
+
+Unsubscribe from a Sensor
+*************************
+
+This is used to unsubscribes from the sensor data.
+
+.. http:delete:: /api/apps/subscription
+
+   :JSON Parameters:
+      * **data** `(dict)` -- Contains the information about the unsubscription.
+         * **app** `(string)` -- The name of the application.
+         * **sensor** `(string)` -- The name of the sensor to unsubscribe from.
+
+   :returns:
+      * **success** `(string)` -- Returns 'True' if unsubscription was successful. Otherwise 'False'
+
+   :status 200: Success
+   :status 401: Unauthorized Credentials
+
+.. compound::
+
+   **Example request**:
+
+   .. sourcecode:: http
+
+      DELETE /api/apps HTTP/1.1
+      Accept: application/json; charset=utf-8
+
+      {
+        "data": {
+          "app": "app_name"
+          "sensor": "sensor_uuid"
+        }
+      }
+
+   **Example response** (for success):
+
+   .. sourcecode:: http
+
+      HTTP/1.1 200 OK
+      Content-Type: application/json
+
+      {
+         "success": "True"
+      }
+
+   **Example response** (for failure):
+
+   .. sourcecode:: http
+
+      HTTP/1.1 200 OK
+      Content-Type: application/json
+
+      {
+        "success": "False",
+        "error": "Missing Parameters"
+      }
+
+      {
+        "success": "False",
+        "error": "Failed to connect to broker"
+      }
+
+      {
+        "success": "False",
+        "error": "Failed to bind queue"
+      }
+
+      {
+        "success": "False",
+        "error": "App id doesn't exist"
+      }
+

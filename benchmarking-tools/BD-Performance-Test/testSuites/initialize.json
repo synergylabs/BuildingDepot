@@ -1,0 +1,45 @@
+{
+  "title": "Required Insert",
+  "tests": [
+    {
+      "title": "create testing tagtype",
+      "amount": 1,
+      "connections": 1
+    },
+    {
+      "title": "create testing template",
+      "amount": 1,
+      "connections": 1
+    },
+    {
+      "title": "create testing building",
+      "amount": 1,
+      "connections": 1
+    },
+    {
+      "title": "create testing dataservice",
+      "amount": 1,
+      "connections": 1
+    },
+    {
+      "title": "create testing user_group",
+      "amount": 1,
+      "connections": 1
+    },
+    {
+      "title": "add buildings to testing dataservice",
+      "amount": 1,
+      "connections": 1
+    },
+    {
+      "title": "create testing sensor",
+      "amount": 1,
+      "connections": 1
+    },
+    {
+      "title": "create testing sensor_group",
+      "amount": 1,
+      "connections": 1
+    }
+  ]
+}
