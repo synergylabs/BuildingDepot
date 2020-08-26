@@ -25,9 +25,9 @@ jobs:
         sudo bash -x ./script_for_github_actions.sh
     - name: Initialize tests
       run: |
-        cd testing/functional-testing-tool
+        cd benchmarking-tools/functional-testing-tool
         npm install
     - name: Run tests
       run: |
-        cd testing/functional-testing-tool
+        cd benchmarking-tools/functional-testing-tool
         npm test ./tests/all.js
