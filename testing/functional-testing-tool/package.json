@@ -19,9 +19,9 @@
   "author": "shreyasnagare@gmail.com",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/shreyasnagare/functional-testing-tool/issues"
+    "url": "https://github.com/IoT-Expedition/functional-testing-tool/issues"
   },
-  "homepage": "https://github.com/shreyasnagare/functional-testing-tool#readme",
+  "homepage": "https://github.com/IoT-Expedition/functional-testing-tool#readme",
   "dependencies": {
     "chai": "^4.2.0",
     "glob": "^7.1.4",
