@@ -19,7 +19,7 @@ We have created BuildingDepot as a successful IoT ecology.This includes a core b
 The [Getting started](https://docs.google.com/document/d/1XESPZSIt0lIMrCbVb-Uoopa-_t0yNx6uo-d2IBZGLyk/view) document will help you guide through the initial setup after installing BuildingDepot.
 
 ### API Documentation
-The [BuildingDepot v3.2.7 API](https://buildingdepot.andrew.cmu.edu/) documentation will help you guide through the list of APIs after the initial setup of BuildingDepot.
+The [BuildingDepot v3.2.9 API](https://buildingdepot.andrew.cmu.edu/) documentation will help you guide through the list of APIs after the initial setup of BuildingDepot.
 
 ### Authors and Contributors
 * **Carnegie Mellon University** : 
@@ -33,4 +33,4 @@ The [BuildingDepot v3.2.7 API](https://buildingdepot.andrew.cmu.edu/) documentat
 * [Bharathan Balaji](http://www.synergylabs.org/bharath/)
 
 ### License and Copyright
- ©2019, [Synergy Labs](http://www.synergylabs.org/)
+ ©2020, [Synergy Labs](http://www.synergylabs.org/)
