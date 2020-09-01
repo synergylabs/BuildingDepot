@@ -36,7 +36,7 @@
     <link rel="top" title="BuildingDepot 3.2.9 documentation" href="../../index.html"/>
         <link rel="up" title="DataService APIs" href="index.html"/>
         <link rel="next" title="Apps" href="pubsub.html"/>
-        <link rel="prev" title="DataService APIs" href="index.html"/> 
+        <link rel="prev" title="OAuth" href="oauth.html"/> 
 
   
   <script src="../../_static/js/modernizr.min.js"></script>
@@ -99,16 +99,13 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../CentralService/index.html">CentralService APIs</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">DataService APIs</a><ul class="current">
-<li class="toctree-l2 current"><a class="reference internal" href="index.html#authentication">Authentication</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="../CentralService/oauth.html">OAuth</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">Timeseries</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#post-timeseries-datapoints">Post Timeseries Datapoints</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#read-timeseries-datapoints">Read Timeseries Datapoints</a></li>
+<li class="toctree-l2"><a class="reference internal" href="oauth.html">OAuth</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Timeseries</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#post-timeseries-datapoints">Post Timeseries Datapoints</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#read-timeseries-datapoints">Read Timeseries Datapoints</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="pubsub.html">Apps</a></li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="pubsub.html">Apps</a></li>
 </ul>
 </li>
 </ul>
@@ -186,7 +183,7 @@ Sensor access is restricted to Central Service <cite>Users</cite> with permissio
 <p>The first datapoint that is posted to the uuid defines the datatype for all further timeseries datapoints e.g. if the first datapoint posted to a certain uuid is a int then all further datapoints have to be ints.</p>
 <div class="compound">
 <p class="compound-first"><strong>Example request</strong>:</p>
-<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span class="nf">POST</span> <span class="nn">/api/sensor/timeseries</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">POST</span> <span class="nn">/api/sensor/timeseries</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
 <span class="na">Accept</span><span class="o">:</span> <span class="l">application/json; charset=utf-8</span>
 
 { &quot;data&quot;:     [
@@ -221,7 +218,7 @@ Sensor access is restricted to Central Service <cite>Users</cite> with permissio
 </pre></div>
 </div>
 <p class="compound-middle"><strong>Example response</strong>:</p>
-<div class="compound-last highlight-http notranslate"><div class="highlight"><pre><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<div class="compound-last highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
 <span class="p">{</span>
@@ -237,12 +234,12 @@ Sensor access is restricted to Central Service <cite>Users</cite> with permissio
 <p>Note: Both interval and resolution are specified with the time value appended by the type of the value e.g. 10s for 10 seconds or 10m for 10 minutes.</p>
 <div class="compound">
 <p class="compound-first"><strong>Example request</strong>:</p>
-<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span class="nf">GET</span> <span class="nn">/sensor/&lt;sensor-uuid&gt;/timeseries?start_time=1445535722&amp;end_time=1445789516&amp;resolution=10s</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">GET</span> <span class="nn">/sensor/&lt;sensor-uuid&gt;/timeseries?start_time=1445535722&amp;end_time=1445789516&amp;resolution=10s</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
 <span class="na">Accept</span><span class="o">:</span> <span class="l">application/json; charset=utf-8</span>
 </pre></div>
 </div>
 <p class="compound-middle"><strong>Example response</strong>:</p>
-<div class="compound-last highlight-http notranslate"><div class="highlight"><pre><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<div class="compound-last highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
 <span class="p">{</span>
@@ -293,7 +290,7 @@ Sensor access is restricted to Central Service <cite>Users</cite> with permissio
         <a href="pubsub.html" class="btn btn-neutral float-right" title="Apps" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="index.html" class="btn btn-neutral" title="DataService APIs" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="oauth.html" class="btn btn-neutral" title="OAuth" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -334,7 +331,6 @@ Sensor access is restricted to Central Service <cite>Users</cite> with permissio
       <script type="text/javascript" src="../../_static/jquery.js"></script>
       <script type="text/javascript" src="../../_static/underscore.js"></script>
       <script type="text/javascript" src="../../_static/doctools.js"></script>
-      <script type="text/javascript" src="../../_static/language_data.js"></script>
 
   
 
