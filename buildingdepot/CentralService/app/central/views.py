@@ -29,7 +29,7 @@ from .utils import get_choices, get_tag_descendant_pairs
 from ..oauth_bd.views import Client
 from ..rest_api.helper import check_if_super,get_building_choices
 from ..rest_api.helper import validate_users,form_query
-from ..auth.access_control import authorize_addition,permission
+from ..auth.access_control import authorize_addition,permission, permission_allowed
 from ..auth.acl_cache import invalidate_permission
 
 @central.route('/tagtype', methods=['GET', 'POST'])
@@ -334,10 +334,10 @@ def sensor():
     # Show the user PAGE_SIZE number of sensors on each page
     page = request.args.get('page', 1, type=int)
     skip_size = (page - 1) * PAGE_SIZE
-    objs = Sensor.objects().skip(skip_size).limit(PAGE_SIZE)
+    objs = Sensor.objects(source_identifier__ne='SensorView').skip(skip_size).limit(PAGE_SIZE)
     for obj in objs:
-        obj.can_delete = True
-    total = Sensor.objects.count()
+        obj.can_delete = not r.get('parent:{}'.format(obj.name))
+    total = Sensor.objects(source_identifier__ne='SensorView').count()
     if (total):
         pages = int(math.ceil(float(total) / PAGE_SIZE))
     else:
@@ -366,6 +366,16 @@ def sensor():
 @login_required
 def sensor_delete():
     sensor = Sensor.objects(name=request.form.get('name')).first()
+    if r.get('parent:{}'.format(request.form.get('name'))):
+        flash('Sensor view can\'t be deleted.')
+        return redirect(url_for('central.sensor'))
+    views = r.smembers('views:{}'.format(sensor.name))
+    for view in views:
+        if defs.delete_sensor(view):
+            r.delete('sensor:{}'.format(view))
+            r.delete('owner:{}'.format(view))
+            # cache process done
+            Sensor.objects(name=view).delete()
     # cache process
     if defs.delete_sensor(request.form.get('name')):
         r.delete('sensor:{}'.format(sensor.name))
@@ -463,14 +473,22 @@ def permission_create():
                 form.user_group.data, form.sensor_group.data))
             return redirect(url_for('central.permission'))
         if defs.create_permission(form.user_group.data,form.sensor_group.data,session['email'],form.permission.data):
+            if not len(SensorGroup.objects(name=form.sensor_group.data).first().tags):
+                flash('No tags present in the SensorGroup')
+                return redirect(url_for('central.permission'))
             # If permission doesn't exist then create it
-            Permission(user_group=str(form.user_group.data),
-                       sensor_group=str(form.sensor_group.data),
-                       permission=str(form.permission.data),
-                       owner = session['email']).save()
-            invalidate_permission(str(form.sensor_group.data))
-            r.hset('permission:{}:{}'.format(form.user_group.data,form.sensor_group.data),"permission",form.permission.data)
-            r.hset('permission:{}:{}'.format(form.user_group.data,form.sensor_group.data),"owner",session['email'])
+            if permission_allowed(form.sensor_group.data, session['email']):
+                Permission(user_group=str(form.user_group.data),
+                           sensor_group=str(form.sensor_group.data),
+                           permission=str(form.permission.data),
+                           owner=session['email']).save()
+                invalidate_permission(str(form.sensor_group.data))
+                r.hset('permission:{}:{}'.format(form.user_group.data, form.sensor_group.data), "permission",
+                       form.permission.data)
+                r.hset('permission:{}:{}'.format(form.user_group.data, form.sensor_group.data), "owner",
+                       session['email'])
+            else:
+                flash('Not authorized to create permissions for the specified SensorGroup tags')
         else:
             flash('Unable to communicate with the DataService')
         return redirect(url_for('central.permission'))
@@ -522,15 +540,15 @@ def sensors_search():
     args = {}
     for key, values in data.iteritems():
         if key == 'Building':
-            form_query('building',values,args,"$or")
+            form_query('building',values,args,"$and")
         elif key == 'SourceName':
-            form_query('source_name',values,args,"$or")
+            form_query('source_name',values,args,"$and")
         elif key == 'SourceIdentifier':
-            form_query('source_identifier',values,args,"$or")
+            form_query('source_identifier',values,args,"$and")
         elif key == 'Owner':
-            form_query('owner', values, args, "$or")
+            form_query('owner', values, args, "$and")
         elif key == 'ID':
-            form_query('name',values,args,"$or")
+            form_query('name',values,args,"$and")
         elif key == 'Tags':
             form_query('tags',values,args,"$and")
         elif key == 'MetaData':

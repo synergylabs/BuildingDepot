@@ -249,3 +249,105 @@ def generate_credentials():
     else:
         response = dict({'success': 'False', 'error': 'Wrong Username and Password'})
         return jsonify(response)
+
+@oauth_bd.route('/fetch', methods=['POST'])
+def fetch_credentials():
+    """This API will fetch client ID/key if there exists at least one key/secret, or
+    generate a new one if there are no ID/key"""
+    cred = request.get_json()['data']
+    email = cred['email']
+    password = cred['password']
+    user = User.objects(email=email).first()
+    # TODO: disable change password for first login feature
+    if user is not None and user.verify_password(password):
+        creds = Client.objects(user=email)
+        creds_size = len(creds)
+        if creds_size > 0:
+            creds = Client.objects(user=email)
+            response = dict(responses.success_true)
+            response.update({'client_id': creds[creds_size - 1]['client_id'],
+                             'client_key': creds[creds_size - 1]['client_secret']})
+            return jsonify(response)
+        else:
+            # generate new credentials
+            keys = [{"client_id": gen_salt(40), "client_secret": gen_salt(50)}]
+            item = Client(
+                client_id=keys[0]['client_id'],
+                client_secret=keys[0]['client_secret'],
+                _redirect_uris=' '.join([
+                    'http://localhost:8000/authorized',
+                    'http://127.0.0.1:8000/authorized',
+                    'http://127.0.1:8000/authorized',
+                    'http://127.1:8000/authorized']),
+                _default_scopes='email',
+                user=email).save()
+            response = dict(responses.success_true)
+            response.update({'client_id': keys[0]['client_id'],
+                             'client_key': keys[0]['client_secret']})
+            return jsonify(response)
+    else:
+        response = dict({'success': 'False', 'error': 'Wrong Username and Password'})
+        return jsonify(response)
+
+@oauth_bd.route('/login', methods=['POST'])
+def login_credentials():
+    """This API will fetch client ID/key if there exists at least one key/secret, or
+    generate a new one if there are no ID/key"""
+    cred = request.get_json()['data']
+    email = cred['email']
+    password = cred['password']
+    user = User.objects(email=email).first()
+    if user is not None and user.verify_password(password):
+        creds = Client.objects(user=email)
+        creds_size = len(creds)
+        if creds_size > 0:
+            client = Client.objects(client_id=creds[creds_size - 1]['client_id'], client_secret=creds[creds_size - 1]['client_secret']).first()
+            if client != None:
+                # Set token expiry period and create it
+                expires = datetime.utcnow() + timedelta(seconds=expires_in)
+                tok = Token(
+                             access_token=str(binascii.hexlify(os.urandom(16))),
+                             refresh_token=str(binascii.hexlify(os.urandom(16))),
+                             token_type='Bearer',
+                             _scopes='email',
+                             expires=expires,
+                             client=client,
+                             user=client.user,
+                             email=client.user).save()
+                response = dict(responses.success_true)
+                response.update({'access_token': tok.access_token})
+                return jsonify(response)
+        else:
+            # generate new credentials
+            keys = [{"client_id": gen_salt(40), "client_secret": gen_salt(50)}]
+            item = Client(
+                client_id=keys[0]['client_id'],
+                client_secret=keys[0]['client_secret'],
+                _redirect_uris=' '.join([
+                    'http://localhost:8000/authorized',
+                    'http://127.0.0.1:8000/authorized',
+                    'http://127.0.1:8000/authorized',
+                    'http://127.1:8000/authorized']),
+                _default_scopes='email',
+                user=email).save()
+
+            client = Client.objects(client_id=keys[0]['client_id'],
+                                    client_secret=keys[0]['client_secret']).first()
+            if client != None:
+                # Set token expiry period and create it
+                expires = datetime.utcnow() + timedelta(seconds=expires_in)
+                tok = Token(
+                    access_token=str(binascii.hexlify(os.urandom(16))),
+                    refresh_token=str(binascii.hexlify(os.urandom(16))),
+                    token_type='Bearer',
+                    _scopes='email',
+                    expires=expires,
+                    client=client,
+                    user=client.user,
+                    email=client.user).save()
+                response = dict(responses.success_true)
+                response.update({'access_token': tok.access_token})
+                return jsonify(response)
+    else:
+        response = dict({'success': 'False', 'error': 'Wrong Username and Password'})
+        return jsonify(response)

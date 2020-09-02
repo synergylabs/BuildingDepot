@@ -17,6 +17,9 @@ missing_parameters = {'success': 'False', 'error': 'Missing parameters'}
 invalid_building = {'success': 'False', 'error': 'Building does not exist'}
 ds_error = {'success': 'False', 'error': 'Communication failure with DataService'}
 
+# user-related responses:
+inactive_user = {'success': 'False', 'error': 'The user you are attempting to interact with is not active'}
+
 # building API common responses:
 invalid_tagtype = {'success': 'False', 'error': 'TagType does not exist'}
 invalid_template = {'success': 'False', 'error': 'BuildingTemplate does not exist'}
@@ -45,6 +48,7 @@ ds_invalid_admin = {'success': 'False', 'error': 'One of the users does not exis
 ds_invalid_building = {'success': 'False', 'error': 'One of the buildings does not exist'}
 
 # ACL permissions API responses:
+permission_not_allowed = {'success': 'False', 'error': 'Not authorized to create permissions for the specified SensorGroup tags'}
 no_permission = {'success': 'False', 'error': 'Permission does not exist'}
 no_usergroup = {'success': 'False', 'error': 'User group does not exist'}
 no_sensorgroup = {'success': 'False', 'error': 'Sensor group does not exist'}
@@ -52,9 +56,13 @@ no_permission_val = {'success': 'False', 'error': 'Permission value does not exi
 permission_authorization = {'success': 'False', 'error': 'Not authorized to modify this permission'}
 permission_not_defined = {'success': 'False', 'error': 'Permission is not defined'}
 permission_del_authorization = {'success': 'False', 'error': 'Not authorized to delete this permission'}
+permission_modify_authorization = {'success': 'False', 'error': 'Not authorized to modify this permission'}
+permission_invalid_setting = {'success': 'False', 'error': 'Invalid permission setting value'}
+no_permission_id = {'success': 'False', 'error': 'User does not have an ID to begin listening for permission requests'}
 
 # SensorGroup API responses
 sensorgroup_exists = {'success': 'False', 'error': 'Sensorgroup already exists'}
+no_sensorgroup_tags = {'success': 'False', 'error': 'Cannot create permissions for a SensorGroup with no tags'}
 invalid_sensorgroup = {'success': 'False', 'error': 'Sensorgroup does not exist'}
 sensorgroup_used = {'success': 'False', 'error': 'Sensor group tags cannot be edited. Already being used for '
                                                  'permissions'}
@@ -79,6 +87,10 @@ invalid_user = {'success': 'False', 'error': 'User does not exist'}
 user_exists = {'success': 'False', 'error': 'User already exists'}
 super_user_required = {'success': 'False', 'error': 'Super user privileges required. Not authorized for this '
                                                     'operation'}
+
+# RabbitMQ error responses
+rabbit_mq_bind_error = {'success': 'False', 'error': 'Unable to bind rabbitmq queue. Check params are valid'}
+
 # not used
 missing_template = {'success': 'False', 'error': 'Template is not specified'}
 tagtype_name_change_invalid = {'success': 'False', 'error': 'Cannot change name as TagType is already in use'}
@@ -91,6 +103,7 @@ Subject: Password for BuildingDepot account
 Account details:
 User id : %s
 Password : %s
+Hostname: %s
 
 Please register and change your password immediately.
 '''

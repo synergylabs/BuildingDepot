@@ -6,10 +6,14 @@ def invalidate_permission(sensorgroup):
         in redis that belong to this sensor group"""
     sg_tags = SensorGroup.objects(name=sensorgroup).first()['tags']
     collection = Sensor._get_collection().find(form_query(sg_tags))
-    pipe = r.pipeline()
-    for sensor in collection:
-        pipe.delete(sensor.get('name'))
-    pipe.execute()
+    try:
+        pipe = r.pipeline()
+        for sensor in collection:
+            emails = list(r.hgetall(sensor.get('name')).keys())
+            pipe.hdel(sensor.get('name'), emails)
+        pipe.execute()
+    except Exception as e:
+        print (e)
 
 def invalidate_user(usergroup,email):
     """Takes the id of the user that made the request and invalidates
@@ -21,7 +25,7 @@ def invalidate_user(usergroup,email):
         sg_tags = SensorGroup.objects(name=permission['sensor_group']).first()['tags']
         collection = Sensor._get_collection().find(form_query(sg_tags))
         for sensor in collection:
-            pipe.hdel(sensor.get('name',email))
+            pipe.hdel(sensor.get('name'),email)
         pipe.execute()
 
 def form_query(values):

@@ -1,41 +1,243 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
-<html xmlns="http://www.w3.org/1999/xhtml">
-  <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Central Service &#8212; BuildingDepot 3.2.8 documentation</title>
-    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-    <script type="text/javascript" src="_static/jquery.js"></script>
-    <script type="text/javascript" src="_static/underscore.js"></script>
-    <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="index" title="Index" href="genindex.html" />
-    <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Data Service" href="dataservice.html" />
-    <link rel="prev" title="Building Depot v3.2.8" href="index.html" />
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Central Service &mdash; BuildingDepot 3.2.9 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="BuildingDepot 3.2.9 documentation" href="index.html"/>
+        <link rel="next" title="Data Service" href="dataservice.html"/>
+        <link rel="prev" title="Building Depot v3.2.9" href="index.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
    
-  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
-  
-  
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+  <div class="wy-grid-for-nav">
 
-  </head><body>
-  
-
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
           
 
-          <div class="body" role="main">
+          
+            <a href="index.html" class="icon icon-home"> BuildingDepot
+          
+
+          
+          </a>
+
+          
             
-  <div class="section" id="central-service">
+            
+              <div class="version">
+                3.2.9
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Central Service</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#oauth">OAuth</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#tagtype">TagType</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#buildingtemplate">BuildingTemplate</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#building">Building</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#data-services">Data Services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#sensor">Sensor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#sensor-group">Sensor Group</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#user-group">User Group</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#permission">Permission</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="dataservice.html">Data Service</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="install.html#configuration">Configuration</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api/CentralService/index.html">CentralService APIs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/DataService/index.html">DataService APIs</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">BuildingDepot</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Central Service</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/centralservice.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <a class="reference internal image-reference" href="_images/BuildingDepot.svg"><img alt="_images/BuildingDepot.svg" src="_images/BuildingDepot.svg" width="800" /></a>
+<div class="section" id="central-service">
 <h1>Central Service<a class="headerlink" href="#central-service" title="Permalink to this headline">¶</a></h1>
 <p>The Central Service within BuildingDepot is the part of the system that holds all the core metadata. Starting from the structures of the Buildings to the DataServices that lie in an installation the CentralService plays a very important role in organising the data within BuildingDepot in a meaningful way. A brief explanation will be provided here of each of the options available in the CentralService.</p>
+<p>We define any entity to which a timeseries can be associated with as a Point. A Point can be
+measurements from sensors, or commands to turn a light on/off, or a configuration parameter
+such as cycle type in a washing machine or even a fault indicator. This includes both real­world
+sensors/actuators, as well as virtual sensors/actuators created in the Central Service as
+abstractions of RealWorld sensors/actuators (such as a ‘building average temperature sensor’).
+Virtual and RealWorld points are treated identically within the CentralService, with differences
+occurring at the level of connectors (see Connectors document for interfacing between the
+CentralService and sensors). In BuildingDepot, each point is given a UUID (universally unique ID) and
+metadata is associated with it using tags.</p>
+<p>Tags are key value pairs associated with a point. For example, an office temperature sensor
+would be associated with tags like “Room = 300”, “Type = Temperature Sensor”, “Unit =
+Fahrenheit” and so on. Tags themselves can refer to complex entities and be associated with
+other tags. For example, Room 300 can be associated with its metadata such as area and
+usage type . Tags form the core of BuildingDepot metadata, and are used for searching and defining permissions.</p>
+<p>BuildingDepot supports pre­defined tag types that acts as a template for a user to start tagging entities
+in a building. These templates are provided to support standard naming convention, such as the
+tags defined by Project Haystack2. These tags are also used as the key search mechanism
+within BuildingDepot. Using REST APIs, users can query for individual entities based on single tag
+(such as a Room = 300) or based on more complex combinations of tags (Room = 300 and
+Type = Occupancy and Building = Example_Building). All entities which meet the requirements
+of the search are returned as JSON objects which contain their UUID, tags, and Metadata.
+In addition to tags on entities, BuildingDepot also utilizes context based tags for Users. Depending on
+how a user logs in (e.g. with or without admin privileges) they will have a context tag added to
+determine the privileges that they enjoy (user credentials). Users groups are created by
+assigning a user­group tag to each user which is part of the group. This is of particular
+importance later when determining permissions.</p>
+<p>In addition to User Groups, Sensor groups are as the name suggests a set of points that have
+been grouped together on the basis of the tags that the user selected while creating the group.
+While creating a Sensor group each individual points that the user wants to put in the group do
+not have to be manually added. Simply selecting the tag will automatically add at the backend
+all the points containing that tag into this group.
+Sensor groups and User groups come together to form the access control lists. Access control
+lists are a key element in BuildingDepot to facilitate both privacy and security. For pairs of User
+Groups and Sensor Groups, we choose a permission value with which we want to associate.
+There are four levels of permission defined in BuildingDepot which are ‘d/r’ (deny read) ,’r’ (read) , ‘r/w’
+(read write) and ‘r/w/p’ (read write permission). If there are multiple permission mappings
+between a user and a point then the one that is most restrictive is chosen. The deny read
+permission level, in particular, is important for maintaining privacy of data for various groups
+simultaneously using BuildingDepot for a building.</p>
+<dl class="docutils">
+<dt>Different evels of permission access:</dt>
+<dd><ul class="first last simple">
+<li><strong>d/r</strong>: Deny/Read will deny any access to the points</li>
+<li><strong>r</strong>: Read will give read only access to the points</li>
+<li><strong>r/w</strong>: Read/Write will give read and write access to the points (such as changing values of actuators)</li>
+<li><strong>r/w/p</strong>: Read/Write/Permission is the highest level of permission that can be assigned. Will give read and write access to the points. This permission also allows users to alter permissions for the points (see above).</li>
+</ul>
+</dd>
+<dt><strong>Note:</strong></dt>
+<dd><ul class="first last simple">
+<li>The <em>ownership</em> level of permission is assigned at the point of creation. It has all privileges of r/w/p. Additionally, it cannot be revoked or changed under any circumstances.</li>
+<li>The <em>super</em> users of BuildingDepot have r/w/p access to all the points.</li>
+</ul>
+</dd>
+</dl>
+<p>When a r/w/p permission link is created between the UserGroup “Home_usergroup” and Sensor
+Group “Home”. All users in UserGroup get r/w/p access to points in SensorGroup. Any user can
+create any permission link that they want but the set of points that the users in the UserGroup
+get access to in the SensorGroup that they have been given permission to will depend on the
+user that has created the permission. Only the points that the creator of this permission has
+r/w/p access to will be the points that the users will gain access to based on this permission link.</p>
+<a class="reference internal image-reference" href="_images/CSComponents.svg"><img alt="_images/CSComponents.svg" src="_images/CSComponents.svg" width="800" /></a>
 <div class="section" id="oauth">
 <h2>OAuth<a class="headerlink" href="#oauth" title="Permalink to this headline">¶</a></h2>
 <p>To generate an OAuth token a client id and client secret key are required. These are generated within the DataService by the user through the GUI. These values will be valid until the user regenerates them for that certain account. The process to generate an OAuth token after these values have been obtained is defined in the REST API Documentation.</p>
@@ -76,73 +278,72 @@
 </div>
 
 
+           </div>
           </div>
-          
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="dataservice.html" class="btn btn-neutral float-right" title="Data Service" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="index.html" class="btn btn-neutral" title="Building Depot v3.2.9" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, SynergyLabs.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> and ❤️  using a custom <a href="https://github.com/LinxiFan/Sphinx-theme">theme</a> based on <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-  <h3><a href="index.html">Table Of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">Central Service</a><ul>
-<li><a class="reference internal" href="#oauth">OAuth</a></li>
-<li><a class="reference internal" href="#tagtype">TagType</a></li>
-<li><a class="reference internal" href="#buildingtemplate">BuildingTemplate</a></li>
-<li><a class="reference internal" href="#building">Building</a></li>
-<li><a class="reference internal" href="#data-services">Data Services</a></li>
-<li><a class="reference internal" href="#sensor">Sensor</a></li>
-<li><a class="reference internal" href="#sensor-group">Sensor Group</a></li>
-<li><a class="reference internal" href="#user-group">User Group</a></li>
-<li><a class="reference internal" href="#permission">Permission</a></li>
-</ul>
-</li>
-</ul>
-<div class="relations">
-<h3>Related Topics</h3>
-<ul>
-  <li><a href="index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="index.html" title="previous chapter">Building Depot v3.2.8</a></li>
-      <li>Next: <a href="dataservice.html" title="next chapter">Data Service</a></li>
-  </ul></li>
-</ul>
-</div>
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="_sources/centralservice.rst.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div>
-<div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-    </div>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
-        </div>
-      </div>
-      <div class="clearer"></div>
-    </div>
-    <div class="footer">
-      &copy;2019, SynergyLabs.
-      
-      |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.7.5</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
-      
-      |
-      <a href="_sources/centralservice.rst.txt"
-          rel="nofollow">Page source</a>
-    </div>
 
-    
+    </section>
 
-    
-  </body>
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'3.2.9',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
 </html>

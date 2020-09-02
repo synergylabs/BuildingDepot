@@ -1,90 +1,194 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
-<html xmlns="http://www.w3.org/1999/xhtml">
-  <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>SensorGroups &#8212; BuildingDepot 3.2.8 documentation</title>
-    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
-    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-    <script type="text/javascript" src="../../_static/jquery.js"></script>
-    <script type="text/javascript" src="../../_static/underscore.js"></script>
-    <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <link rel="index" title="Index" href="../../genindex.html" />
-    <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Usergroups" href="usergroup.html" />
-    <link rel="prev" title="Sensor" href="sensor.html" />
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>SensorGroups &mdash; BuildingDepot 3.2.9 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../genindex.html"/>
+        <link rel="search" title="Search" href="../../search.html"/>
+    <link rel="top" title="BuildingDepot 3.2.9 documentation" href="../../index.html"/>
+        <link rel="up" title="CentralService APIs" href="index.html"/>
+        <link rel="next" title="Usergroups" href="usergroup.html"/>
+        <link rel="prev" title="Sensor" href="sensor.html"/> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
    
-  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
-  
-  
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+  <div class="wy-grid-for-nav">
 
-  </head><body>
-  
-
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
           
 
-          <div class="body" role="main">
+          
+            <a href="../../index.html" class="icon icon-home"> BuildingDepot
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                3.2.9
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../centralservice.html">Central Service</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../dataservice.html">Data Service</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../install.html#configuration">Configuration</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">CentralService APIs</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="oauth.html">OAuth</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tagtype.html">TagType</a></li>
+<li class="toctree-l2"><a class="reference internal" href="buildingtemplate.html">BuildingTemplate</a></li>
+<li class="toctree-l2"><a class="reference internal" href="building.html">Buildings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dataservice.html">DataService</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sensor.html">Sensor</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">SensorGroups</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#create-sensorgroup">Create SensorGroup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#get-sensorgroup-details">Get SensorGroup Details</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#delete-sensorgroup">Delete SensorGroup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#add-tags-to-sensorgroup">Add tags to SensorGroup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#get-list-of-tags-in-sensorgroup">Get list of tags in SensorGroup</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="usergroup.html">Usergroups</a></li>
+<li class="toctree-l2"><a class="reference internal" href="permission.html">Permission</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user.html">User</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../DataService/index.html">DataService APIs</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">BuildingDepot</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="index.html">CentralService APIs</a> &raquo;</li>
+        
+      <li>SensorGroups</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/api/CentralService/sensorgroup.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
             
   <div class="section" id="sensorgroups">
 <h1>SensorGroups<a class="headerlink" href="#sensorgroups" title="Permalink to this headline">¶</a></h1>
-<p>SensorGroups are a virtual collection of sensors that are created based on the tags that are specified. The list of sensors that belong to a SensorGroup can be changed by modifying the tags attached to this SensorGroup. All sensors having the current tags will fall under this SensorGroup automatically for any subsequent operations.SensorGroups can be defined in the CentralService at <a class="reference external" href="http://www.example.com:81/api/sensorgroup">http://www.example.com:81/api/sensorgroup</a>.</p>
+<p>SensorGroups are a virtual collection of sensors that are created based on the tags that are specified. Each sensor may consist a set of tags. The list of sensors that belong to a SensorGroup can be changed by modifying the tags attached to this SensorGroup. All sensors having the current tags will fall under this SensorGroup automatically for any subsequent operations. SensorGroups can be defined in the CentralService at <a class="reference external" href="http://www.example.com:81/api/sensorgroup">http://www.example.com:81/api/sensorgroup</a>.</p>
 <div class="section" id="create-sensorgroup">
 <h2>Create SensorGroup<a class="headerlink" href="#create-sensorgroup" title="Permalink to this headline">¶</a></h2>
 <p>This request creates a new SensorGroup with the name and description in the building specified by the user.</p>
-<dl class="post">
-<dt id="post--api-sensor_group">
-<code class="descname">POST </code><code class="descname">/api/sensor_group</code><a class="headerlink" href="#post--api-sensor_group" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name" colspan="2">JSON Parameters:</th></tr>
-<tr class="field-odd field"><td>&#160;</td><td class="field-body"><ul class="first last simple">
-<li><dl class="first docutils">
-<dt><strong>data</strong> <cite>(dictionary)</cite> – Contains the information about the SensorGroup</dt>
-<dd><ul class="first last">
-<li><strong>name</strong> <cite>(string)</cite> – Name of the SensorGroup</li>
-<li><strong>building</strong> <cite>(string)</cite> – Building to which this sensor group belongs</li>
-<li><strong>description</strong> <cite>(string)</cite> – Description of the SensorGroup</li>
-</ul>
-</dd>
-</dl>
-</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-</div></blockquote>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><ul class="first simple">
-<li><strong>success</strong> <cite>(string)</cite> – Returns ‘True’ if data is posted successfully otherwise ‘False’</li>
-<li><strong>error</strong> <cite>(string)</cite> – An additional value that will be present only if the request fails specifying the cause for failure</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
-<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> – Success</li>
-<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a> – Unauthorized Credentials</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
 <div class="compound">
 <p class="compound-first"><strong>Example request</strong>:</p>
 <div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">POST</span> <span class="nn">/api/sensor_group</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
@@ -122,35 +226,6 @@
 <div class="section" id="get-sensorgroup-details">
 <h2>Get SensorGroup Details<a class="headerlink" href="#get-sensorgroup-details" title="Permalink to this headline">¶</a></h2>
 <p>This request retrieves the details of a SensorGroup</p>
-<dl class="get">
-<dt id="get--api-sensor_group--name-">
-<code class="descname">GET </code><code class="descname">/api/sensor_group/&lt;name&gt;</code><a class="headerlink" href="#get--api-sensor_group--name-" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>name</strong> (<em>string</em>) – Name of Sensor group (compulsory)</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><ul class="first simple">
-<li><strong>name</strong> <cite>(string)</cite> – Contains the name of the SensorGroup</li>
-<li><strong>description</strong> <cite>(string)</cite> – Contains the description of the SensorGroup</li>
-<li><strong>building</strong> <cite>(string)</cite> – Contains the name of the building of the SensorGroup</li>
-</ul>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
-<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> – Success</li>
-<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a> – Unauthorized Credentials</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
 <div class="compound">
 <p class="compound-first"><strong>Example request</strong>:</p>
 <div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">GET</span> <span class="nn">/api/sensor_group/Test</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
@@ -184,33 +259,6 @@
 <div class="section" id="delete-sensorgroup">
 <h2>Delete SensorGroup<a class="headerlink" href="#delete-sensorgroup" title="Permalink to this headline">¶</a></h2>
 <p>This request deletes the SensorGroup</p>
-<dl class="delete">
-<dt id="delete--api-sensor_group--name-">
-<code class="descname">DELETE </code><code class="descname">/api/sensor_group/&lt;name&gt;</code><a class="headerlink" href="#delete--api-sensor_group--name-" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>email</strong> (<em>string</em>) – Name of the SensorGroup</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><ul class="first simple">
-<li><strong>success</strong> <cite>(string)</cite> – Returns ‘True’ if the SensorGroup is successfully deleted otherwise ‘False’</li>
-</ul>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
-<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> – Success</li>
-<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a> – Unauthorized Credentials</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
 <div class="compound">
 <p class="compound-first"><strong>Example request</strong>:</p>
 <div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">DELETE</span> <span class="nn">/api/sensor_group/Test</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
@@ -242,54 +290,6 @@
 <h2>Add tags to SensorGroup<a class="headerlink" href="#add-tags-to-sensorgroup" title="Permalink to this headline">¶</a></h2>
 <p>This request adds the tags specified in the request to the SensorGroup</p>
 <p>Note: The list of tags sent in this request will overwrite the previous list.</p>
-<dl class="post">
-<dt id="post--api-sensor_group--name--tags">
-<code class="descname">POST </code><code class="descname">/api/sensor_group/&lt;name&gt;/tags</code><a class="headerlink" href="#post--api-sensor_group--name--tags" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>name</strong> (<em>string</em>) – Name of SensorGroup</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name" colspan="2">JSON Parameters:</th></tr>
-<tr class="field-even field"><td>&#160;</td><td class="field-body"><ul class="first simple">
-<li><dl class="first docutils">
-<dt><strong>data</strong> <cite>(dictionary)</cite> – Contains the information of the tag to be added to the SensorGroup.</dt>
-<dd><ul class="first last">
-<li><dl class="first docutils">
-<dt><strong>tags</strong> <cite>(list)</cite> – Contains the list of tag key-value pairs</dt>
-<dd><ul class="first last">
-<li><strong>name</strong> <cite>(string)</cite> – Name of the tag point</li>
-<li><strong>value</strong> <cite>(string)</cite> – Value of the tag point</li>
-</ul>
-</dd>
-</dl>
-</li>
-</ul>
-</dd>
-</dl>
-</li>
-</ul>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><ul class="first simple">
-<li><strong>success</strong> <cite>(string)</cite> – Returns ‘True’ if data is posted successfully otherwise ‘False’</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
-<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> – Success</li>
-<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a> – Unauthorized Credentials</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
 <div class="compound">
 <p class="compound-first"><strong>Example request</strong>:</p>
 <div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">POST</span> <span class="nn">/api/sensor_group/test/tags</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
@@ -326,50 +326,6 @@
 <div class="section" id="get-list-of-tags-in-sensorgroup">
 <h2>Get list of tags in SensorGroup<a class="headerlink" href="#get-list-of-tags-in-sensorgroup" title="Permalink to this headline">¶</a></h2>
 <p>This request retrieves two lists of key-value pairs, one list contains the array of eligible tags that can be attached to this SensorGroup and the other list contains the array of tags that are currently attached to this SensorGroup.</p>
-<dl class="get">
-<dt id="get--api-sensor_group--name--tags">
-<code class="descname">GET </code><code class="descname">/api/sensor_group/&lt;name&gt;/tags</code><a class="headerlink" href="#get--api-sensor_group--name--tags" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>name</strong> (<em>string</em>) – Name of SensorGroup (compulsory)</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><ul class="first simple">
-<li><dl class="first docutils">
-<dt><strong>tags</strong> <cite>(list)</cite> – Contains the list of tag key-value pairs that are available for the building in which this SensorGroup is located</dt>
-<dd><ul class="first last">
-<li><strong>name</strong> <cite>(string)</cite> – Name of the tag point</li>
-<li><strong>value</strong> <cite>(list)</cite> – List of eligible values for this certain tag</li>
-</ul>
-</dd>
-</dl>
-</li>
-<li><dl class="first docutils">
-<dt><strong>tags_owned</strong> <cite>(list)</cite> – Contains the list of tag key-value pairs that are attached to this SensorGroup</dt>
-<dd><ul class="first last">
-<li><strong>name</strong> <cite>(string)</cite> – Name of the tag point</li>
-<li><strong>value</strong> <cite>(string)</cite> – Value for this tag</li>
-</ul>
-</dd>
-</dl>
-</li>
-</ul>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
-<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> – Success</li>
-<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a> – Unauthorized Credentials</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
 <div class="compound">
 <p class="compound-first"><strong>Example request</strong>:</p>
 <div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">GET</span> <span class="nn">/api/sensor_group/test/tags</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
@@ -416,71 +372,72 @@
 </div>
 
 
+           </div>
           </div>
-          
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="usergroup.html" class="btn btn-neutral float-right" title="Usergroups" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="sensor.html" class="btn btn-neutral" title="Sensor" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, SynergyLabs.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> and ❤️  using a custom <a href="https://github.com/LinxiFan/Sphinx-theme">theme</a> based on <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-  <h3><a href="../../index.html">Table Of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">SensorGroups</a><ul>
-<li><a class="reference internal" href="#create-sensorgroup">Create SensorGroup</a></li>
-<li><a class="reference internal" href="#get-sensorgroup-details">Get SensorGroup Details</a></li>
-<li><a class="reference internal" href="#delete-sensorgroup">Delete SensorGroup</a></li>
-<li><a class="reference internal" href="#add-tags-to-sensorgroup">Add tags to SensorGroup</a></li>
-<li><a class="reference internal" href="#get-list-of-tags-in-sensorgroup">Get list of tags in SensorGroup</a></li>
-</ul>
-</li>
-</ul>
-<div class="relations">
-<h3>Related Topics</h3>
-<ul>
-  <li><a href="../../index.html">Documentation overview</a><ul>
-  <li><a href="index.html">CentralService APIs</a><ul>
-      <li>Previous: <a href="sensor.html" title="previous chapter">Sensor</a></li>
-      <li>Next: <a href="usergroup.html" title="next chapter">Usergroups</a></li>
-  </ul></li>
-  </ul></li>
-</ul>
-</div>
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="../../_sources/api/CentralService/sensorgroup.rst.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div>
-<div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="../../search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-    </div>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
-        </div>
-      </div>
-      <div class="clearer"></div>
-    </div>
-    <div class="footer">
-      &copy;2019, SynergyLabs.
-      
-      |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.7.5</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
-      
-      |
-      <a href="../../_sources/api/CentralService/sensorgroup.rst.txt"
-          rel="nofollow">Page source</a>
-    </div>
 
-    
+    </section>
 
-    
-  </body>
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'3.2.9',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
 </html>

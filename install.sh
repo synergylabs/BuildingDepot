@@ -124,9 +124,9 @@ function install_packages {
     curl -sL https://repos.influxdata.com/influxdb.key | sudo apt-key add -
     echo "deb https://repos.influxdata.com/${DISTRIB_ID,,} ${DISTRIB_CODENAME} stable" | sudo tee /etc/apt/sources.list.d/influxdb.list
     # Add keys to install mongodb
-    sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 9DA31620334BD75D9DCB49F368818C72E52529D4
+    wget -qO - https://www.mongodb.org/static/pgp/server-4.0.asc | sudo apt-key add -
     if [ $DISTRIB_CODENAME == "bionic" ]; then
-        echo "deb [ arch=amd64 ] https://repo.mongodb.org/apt/${DISTRIB_ID,,} ${DISTRIB_CODENAME}/mongodb-org/4.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.0.list
+        echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/${DISTRIB_ID,,} ${DISTRIB_CODENAME}/mongodb-org/4.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.0.list
     elif [ $DISTRIB_CODENAME == "xenial" ]; then
         echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/${DISTRIB_ID,,} ${DISTRIB_CODENAME}/mongodb-org/4.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.0.list
     elif [ $DISTRIB_CODENAME == "trusty" ]; then
@@ -135,18 +135,19 @@ function install_packages {
     apt-get update -y
     apt-get install
     apt-get -y install python-pip
-    #apt-get install -y mongodb-org
     apt-get install -y mongodb-org=4.0.5 mongodb-org-server=4.0.5 mongodb-org-shell=4.0.5 mongodb-org-mongos=4.0.5 mongodb-org-tools=4.0.5
     apt-get install -y openssl python-setuptools python-dev build-essential software-properties-common
     apt-get install -y nginx
     apt-get install -y supervisor
     apt-get install -y redis-server
     pip install --upgrade virtualenv
-    apt-get install wget
-    sudo apt-get install influxdb
-    sudo service influxdb start
-    sudo service mongod start
-    sudo apt-get install rabbitmq-server
+    apt-get install -y wget
+    apt-get install -y influxdb
+    service influxdb start
+    service mongod start
+    apt-get install -y rabbitmq-server
+    apt-get install -y nodejs
+    apt-get install -y npm
     sed -i -e 's/"inet_interfaces = all/"inet_interfaces = loopback-only"/g' /etc/postfix/main.cf
     service postfix restart
     systemctl enable mongod.service

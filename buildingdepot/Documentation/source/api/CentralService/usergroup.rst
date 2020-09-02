@@ -165,14 +165,16 @@ Add users to UserGroup
 
 This request adds the users specified in the request to the usergroup
 
-Note: The list of user id's sent in this request will overwrite the previous list
+Note: The list of users sent in this request will overwrite the previous list
 
 .. http:post:: /api/user_group/<name>/users
 
    :param string name: Name of UserGroup
    :JSON Parameters:
       * **data** `(dictionary)` -- Contains the information of the users to be added to the UserGroup.
-          * **users** `(list)` -- List of user ID's
+          * **users** `(list)` -- List of user objects
+              * **user_id** `(string)` -- Email of the user
+              * **manager** `(boolean)` -- Specifies whether the user is a manager of the UserGroup
    :returns:
       * **success** `(string)` -- Returns 'True' if data is posted successfully otherwise 'False'
       * **error** `(string)` -- An additional value that will be present only if the request fails specifying the cause for failure
@@ -191,8 +193,14 @@ Note: The list of user id's sent in this request will overwrite the previous lis
       {
         "data":{
             "users":[
-                 "synergy@gmail.com",
-                 "test@gmail.com"
+                 {
+                    "user_id":"synergy@gmail.com",
+                    "manager": true
+                 },
+                 {
+                    "user_id":"test@gmail.com",
+                    "manager": false
+                 }
                ]
         }
       }
@@ -253,7 +261,13 @@ This request retrieves the list of users that are in the specified UserGroup
 
       {
         "users": [
-                   "synergy@gmail.com",
-                   "test@gmail.com",
+                   {
+                      "user_id":"synergy@gmail.com",
+                      "manager": true
+                   },
+                   {
+                      "user_id":"test@gmail.com",
+                      "manager": false
+                   }
                  ]
       }
