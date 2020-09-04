@@ -98,24 +98,21 @@
 </ul>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">CentralService APIs</a><ul class="current">
-<li class="toctree-l2 current"><a class="reference internal" href="index.html#authentication">Authentication</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="oauth.html">OAuth</a></li>
-<li class="toctree-l3"><a class="reference internal" href="tagtype.html">TagType</a></li>
-<li class="toctree-l3"><a class="reference internal" href="buildingtemplate.html">BuildingTemplate</a></li>
-<li class="toctree-l3"><a class="reference internal" href="building.html">Buildings</a></li>
-<li class="toctree-l3"><a class="reference internal" href="dataservice.html">DataService</a></li>
-<li class="toctree-l3"><a class="reference internal" href="sensor.html">Sensor</a></li>
-<li class="toctree-l3"><a class="reference internal" href="sensorgroup.html">SensorGroups</a></li>
-<li class="toctree-l3"><a class="reference internal" href="usergroup.html">Usergroups</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">Permission</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#create-permission">Create Permission</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#read-permission">Read Permission</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#delete-permission">Delete Permission</a></li>
+<li class="toctree-l2"><a class="reference internal" href="oauth.html">OAuth</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tagtype.html">TagType</a></li>
+<li class="toctree-l2"><a class="reference internal" href="buildingtemplate.html">BuildingTemplate</a></li>
+<li class="toctree-l2"><a class="reference internal" href="building.html">Buildings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dataservice.html">DataService</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sensor.html">Sensor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sensorgroup.html">SensorGroups</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usergroup.html">Usergroups</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Permission</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#create-permission">Create Permission</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#read-permission">Read Permission</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#delete-permission">Delete Permission</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="user.html">User</a></li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="user.html">User</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../DataService/index.html">DataService APIs</a></li>
@@ -190,19 +187,24 @@
 <div class="section" id="create-permission">
 <h2>Create Permission<a class="headerlink" href="#create-permission" title="Permalink to this headline">¶</a></h2>
 <p>This request creates a new Permission link between a UserGroup and a SensorGroup.</p>
-<dl class="field-list">
-<dt class="field-odd">JSON Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><dl class="simple">
-<dt><strong>data</strong> <cite>(dictionary)</cite> – Contains the permission value for sensorgroup and usergroup</dt><dd><ul>
-<li><p><strong>sensor_group</strong> <cite>(string)</cite> – Name of the sensor_group</p></li>
-<li><p><strong>user_group</strong> <cite>(string)</cite> – Name of the user_group</p></li>
-<li><dl class="simple">
-<dt><strong>permission</strong> <cite>(string)</cite> – Permission level</dt><dd><ul>
-<li><p><strong>r</strong> <cite>(string)</cite> – Read - Will give read only access to the sensors</p></li>
-<li><p><strong>rw</strong> <cite>(string)</cite> – Read-Write - Will give read and write access to the sensors</p></li>
-<li><p><strong>dr</strong> <cite>(string)</cite> – Deny-read - Will deny any access to the sensors</p></li>
-<li><p><strong>rwp</strong> <cite>(string)</cite> – Read-Write-Permission - Highest level of permission that can be assigned. Will give read and write access to the sensors. In addition to this the user will be able to add/remove tags from the sensor.</p></li>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">JSON Parameters:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body"><ul class="first simple">
+<li><dl class="first docutils">
+<dt><strong>data</strong> <cite>(dictionary)</cite> – Contains the permission value for sensorgroup and usergroup</dt>
+<dd><ul class="first last">
+<li><strong>sensor_group</strong> <cite>(string)</cite> – Name of the sensor_group</li>
+<li><strong>user_group</strong> <cite>(string)</cite> – Name of the user_group</li>
+<li><dl class="first docutils">
+<dt><strong>permission</strong> <cite>(string)</cite> – Permission level</dt>
+<dd><ul class="first last">
+<li><strong>r</strong> <cite>(string)</cite> – Read - Will give read only access to the sensors</li>
+<li><strong>rw</strong> <cite>(string)</cite> – Read-Write - Will give read and write access to the sensors</li>
+<li><strong>dr</strong> <cite>(string)</cite> – Deny-read - Will deny any access to the sensors</li>
+<li><strong>rwp</strong> <cite>(string)</cite> – Read-Write-Permission - Highest level of permission that can be assigned. Will give read and write access to the sensors. In addition to this the user will be able to add/remove tags from the sensor.</li>
 </ul>
 </dd>
 </dl>
@@ -212,27 +214,33 @@
 </dl>
 </li>
 </ul>
-<blockquote>
-<div><dl class="field-list simple">
-<dt class="field-odd">returns</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>success</strong> <cite>(string)</cite> – Returns ‘True’ if data is posted successfully otherwise ‘False’</p></li>
-<li><p><strong>error</strong> <cite>(string)</cite> – An additional value that will be present only if the request fails specifying the cause for failure</p></li>
+<blockquote class="last">
+<div><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">returns:</th><td class="field-body"><ul class="first simple">
+<li><strong>success</strong> <cite>(string)</cite> – Returns ‘True’ if data is posted successfully otherwise ‘False’</li>
+<li><strong>error</strong> <cite>(string)</cite> – An additional value that will be present only if the request fails specifying the cause for failure</li>
 </ul>
-</dd>
-<dt class="field-even">status 200</dt>
-<dd class="field-even"><p>Success</p>
-</dd>
-<dt class="field-odd">status 401</dt>
-<dd class="field-odd"><p>Unauthorized Credentials</p>
-</dd>
-</dl>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">status 200:</th><td class="field-body"><p class="first">Success</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">status 401:</th><td class="field-body"><p class="first last">Unauthorized Credentials</p>
+</td>
+</tr>
+</tbody>
+</table>
 </div></blockquote>
-</dd>
-</dl>
+</td>
+</tr>
+</tbody>
+</table>
 <div class="compound">
 <p class="compound-first"><strong>Example request</strong>:</p>
-<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span class="nf">POST</span> <span class="nn">/api/permission</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">POST</span> <span class="nn">/api/permission</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
 <span class="na">Accept</span><span class="o">:</span> <span class="l">application/json; charset=utf-8</span>
 
 {
@@ -245,7 +253,7 @@
 </pre></div>
 </div>
 <p class="compound-middle"><strong>Example response</strong> (for success):</p>
-<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
 <span class="p">{</span>
@@ -254,7 +262,7 @@
 </pre></div>
 </div>
 <p class="compound-middle"><strong>Example response</strong> (for failure):</p>
-<div class="compound-last highlight-http notranslate"><div class="highlight"><pre><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<div class="compound-last highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
 <span class="p">{</span>
@@ -280,12 +288,12 @@
 <p>This request retrieves Permission level assigned for existing SensorGroup and UserGroup.</p>
 <div class="compound">
 <p class="compound-first"><strong>Example request</strong>:</p>
-<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span class="nf">GET</span> <span class="nn">/api/permission?user_group=Test_User_Group&amp;sensor_group=Test_Sensor_Group</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">GET</span> <span class="nn">/api/permission?user_group=Test_User_Group&amp;sensor_group=Test_Sensor_Group</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
 <span class="na">Accept</span><span class="o">:</span> <span class="l">application/json; charset=utf-8</span>
 </pre></div>
 </div>
 <p class="compound-middle"><strong>Example response</strong>:</p>
-<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
 <span class="p">{</span>
@@ -295,7 +303,7 @@
 </pre></div>
 </div>
 <p class="compound-middle"><strong>Example response</strong> (for failure):</p>
-<div class="compound-last highlight-http notranslate"><div class="highlight"><pre><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<div class="compound-last highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
 <span class="p">{</span>
@@ -311,12 +319,12 @@
 <p>This request deletes the permission link between the UserGroup and SensorGroup</p>
 <div class="compound">
 <p class="compound-first"><strong>Example request</strong>:</p>
-<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span class="nf">DELETE</span> <span class="nn">/api/permission?user_group=Test_User_Group&amp;sensor_group=Test_Sensor_Group</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">DELETE</span> <span class="nn">/api/permission?user_group=Test_User_Group&amp;sensor_group=Test_Sensor_Group</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
 <span class="na">Accept</span><span class="o">:</span> <span class="l">application/json; charset=utf-8</span>
 </pre></div>
 </div>
 <p class="compound-middle"><strong>Example response</strong>:</p>
-<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
 <span class="p">{</span>
@@ -325,7 +333,7 @@
 </pre></div>
 </div>
 <p class="compound-middle"><strong>Example response</strong> (for failure):</p>
-<div class="compound-last highlight-http notranslate"><div class="highlight"><pre><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<div class="compound-last highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
 <span class="p">{</span>
@@ -399,7 +407,6 @@
       <script type="text/javascript" src="../../_static/jquery.js"></script>
       <script type="text/javascript" src="../../_static/underscore.js"></script>
       <script type="text/javascript" src="../../_static/doctools.js"></script>
-      <script type="text/javascript" src="../../_static/language_data.js"></script>
 
   
 

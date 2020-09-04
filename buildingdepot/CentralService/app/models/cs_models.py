@@ -28,6 +28,10 @@ class DataService(Document):
 
     admins = ListField(StringField())
 
+class PermissionRequest(Document):
+    email = StringField()
+    timestamp = StringField()
+    requests = DictField()
 
 class TagType(Document):
     name = StringField(required=True, unique=True)

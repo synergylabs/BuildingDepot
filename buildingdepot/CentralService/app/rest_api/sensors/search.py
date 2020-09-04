@@ -29,15 +29,15 @@ class SearchService(MethodView):
         args = {}
         for key, values in data.items():
             if key == 'Building':
-                form_query('building', values, args, "$or")
+                form_query('building', values, args, "$and")
             elif key == 'SourceName':
-                form_query('source_name', values, args, "$or")
+                form_query('source_name', values, args, "$and")
             elif key == 'SourceIdentifier':
-                form_query('source_identifier', values, args, "$or")
+                form_query('source_identifier', values, args, "$and")
             elif key == 'Owner':
-                form_query('owner', values, args, "$or")
+                form_query('owner', values, args, "$and")
             elif key == 'ID':
-                form_query('name', values, args, "$or")
+                form_query('name', values, args, "$and")
             elif key == 'Tags':
                 form_query('tags', values, args, "$and")
             elif key == 'MetaData':

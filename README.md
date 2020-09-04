@@ -1,6 +1,8 @@
 BuildingDepot v3.2.9
 ====================
 
+![BuildingDepot](https://github.com/synergylabs/BuildingDepot-v3/workflows/BuildingDepot/badge.svg)
+
 BuildingDepot (BD) is a data sensor and actuation system for building management and control. It consists of a central server that uses a RESTful API to send (POST) and retrieve (GET) data. The typical data that BD stores is sensor data for buildings, including data from wireless sensor networks, existing SCADA systems, and other related data sources. 
 
 The BD server consists of three seperate services - the DataService, the DirectoryService, and the UserService.
@@ -82,10 +84,10 @@ CentralService
 
 To access the CentralService, go to
 
-   URL - http://<host>:81
+   URL - https://<host>:81
 
 DataService
 
 To access the DataService, go to
 
-   URL - http://<host>:82
+   URL - https://<host>:82

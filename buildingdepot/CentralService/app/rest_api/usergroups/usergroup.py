@@ -93,3 +93,28 @@ class UserGroupService(MethodView):
             response = dict(responses.usergroup_delete_authorization)
         return jsonify(response)
 
+    
+class UserGroupOwnedService(MethodView):
+    @check_oauth
+    def get(self):
+        """
+        Returns (JSON):
+        {
+            "result": [{
+                "error" : <If False then error will be returned>
+                "result" : <list of owned user group>
+            }]
+        }
+        """
+        user_groups = UserGroup.objects(owner=get_email())
+
+        if user_groups is None:
+            return jsonify(responses.invalid_usergroup)
+
+        response = dict(responses.success_true)
+        result = []
+
+        for user_group in user_groups:
+            result.append({"name":user_group['name'], "description":user_group['description'], "users":[{'user_id': user.user_id, 'manager': user.manager} for user in user_group.users]})
+        response.update({"result":result})
+        return jsonify(response)

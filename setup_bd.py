@@ -37,10 +37,10 @@ elif(option == "test"):
     config.readfp(configBuffer)
     user=config.get('dummysection','MONGODB_USERNAME').strip("'").strip('"')
     pwd = config.get('dummysection','MONGODB_PWD').strip("'").strip('"')
-    configs = json.load(open('testing/functional-testing-tool/tests/config.json', 'r'))
+    configs = json.load(open('benchmarking-tools/functional-testing-tool/tests/config.json', 'r'))
     test_config = dict(configs)
     test_config['password'] = tempPwd
-    with open('testing/functional-testing-tool/tests/config.json', 'w') as output:
+    with open('benchmarking-tools/functional-testing-tool/tests/config.json', 'w') as output:
         json.dump(test_config, output)
 
 else:

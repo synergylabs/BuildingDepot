@@ -5,32 +5,32 @@ name: BuildingDepot
 
 on:
   push:
-    branches: [ port-to-python3 ]
+    branches: 
+        - master
+        - develop
   pull_request:
-    branches: [ develop ]
-
+    branches:
+        - master
+        - develop
 jobs:
   build:
 
     runs-on: ubuntu-18.04
-    strategy:
-      matrix:
-        python-version: [3.6, 3.8]
 
     steps:
     - uses: actions/checkout@v2
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v2
+    - name: Set up Python 2.7
+      uses: actions/setup-python@v1
       with:
-        python-version: ${{ matrix.python-version }}
+        python-version: 2.7
     - name: Install BuildingDepot
       run: |
-        sudo bash -x ./test_install.sh
+        sudo bash -x ./script_for_github_actions.sh
     - name: Initialize tests
       run: |
-        cd testing/functional-testing-tool
+        cd benchmarking-tools/functional-testing-tool
         npm install
     - name: Run tests
       run: |
-        cd testing/functional-testing-tool
+        cd benchmarking-tools/functional-testing-tool
         npm test ./tests/all.js

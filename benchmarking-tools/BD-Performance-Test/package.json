@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/shreyasnagare/BD-Performance-Test.git"
+    "url": "git+https://github.com/IoT-Expedition/BD-Performance-Test.git"
   },
   "keywords": [
     "api",
@@ -24,9 +24,9 @@
   "author": "Shreyas Nagare",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/shreyasnagare/BD-Performance-Test/issues"
+    "url": "https://github.com/IoT-Expedition/BD-Performance-Test/issues"
   },
-  "homepage": "https://github.com/shreyasnagare/BD-Performance-Test#readme",
+  "homepage": "https://github.com/IoT-Expedition/BD-Performance-Test#readme",
   "dependencies": {
     "autocannon": "shreyasnagare/autocannon",
     "consecutive": "^5.0.4",
