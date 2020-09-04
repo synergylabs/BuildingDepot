@@ -17,13 +17,16 @@ jobs:
   build:
 
     runs-on: ubuntu-18.04
+    strategy:
+      matrix:
+        python-version: [3.6, 3.8]
 
     steps:
     - uses: actions/checkout@v2
-    - name: Set up Python 2.7
+    - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v1
       with:
-        python-version: 2.7
+        python-version: ${{ matrix.python-version }}
     - name: Install BuildingDepot
       run: |
         sudo bash -x ./script_for_github_actions.sh
