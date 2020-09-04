@@ -34,7 +34,7 @@ class PermissionRequestService(MethodView):
             channel.close()
             return pubsub
         except Exception as e:
-            print "Failed to open connection to broker " + str(e)
+            print("Failed to open connection to broker " + str(e))
             return None
 
     @check_oauth
@@ -139,18 +139,18 @@ class PermissionRequestService(MethodView):
         target_sensors = data['target_sensors']
         timestamp = data['timestamp']
 
-        print "We got the request. Here are the sensors: " + str(target_sensors)
+        print("We got the request. Here are the sensors: " + str(target_sensors))
         if not all([target_sensors, timestamp]):
             return jsonify(responses.missing_parameters)
 
         requester = User.objects(email=get_email()).first()
 
         user_sensor_map = self.map_sensors_to_owner(target_sensors)
-        print str(user_sensor_map)
+        print(str(user_sensor_map))
             
         for user in user_sensor_map:
             sensors = self.get_sensor_objects_from_uuids(user_sensor_map[user])
-            print str(sensors)
+            print(str(sensors))
             permission_request_data = { "requester_name": str(requester.first_name) + " " + str(requester.last_name), "requester_email": str(get_email()), "requested_sensors": sensors }
             PermissionRequest(email=get_email(), timestamp=str(timestamp), requests=permission_request_data).save()
 
@@ -160,19 +160,19 @@ class PermissionRequestService(MethodView):
                 for user_db in User._get_collection().find({"email": user}):
                     permission_uuid = user_db["_id"]
 
-                print "The permission ID is: " + str(permission_uuid)
+                print("The permission ID is: " + str(permission_uuid))
 
                 if permission_uuid is not None:
                     permission_request_json = json.dumps(permission_request_data)
                     pubsub = self.connect_broker()
                     channel = pubsub.channel()
                     key = hashlib.sha256(str(user).encode() + str(permission_uuid).encode()).hexdigest()
-                    print "The key " + str(key) + " is made from " + str(user) + " and " + str(permission_uuid)
+                    print("The key " + str(key) + " is made from " + str(user) + " and " + str(permission_uuid))
                     channel.basic_publish(exchange='permission_requests', routing_key=str(key), body=permission_request_json)
 
             except Exception as e:
                  traceback.print_exc()
-                 print str(repr(e))
+                 print(str(repr(e)))
                  return jsonify(responses.rabbit_mq_bind_error)
 
             if pubsub:
@@ -180,6 +180,6 @@ class PermissionRequestService(MethodView):
                     channel.close()
                     pubsub.close()
                 except Exception as e:
-                    print "Failed to end RabbitMQ session " + str(e)
+                    print("Failed to end RabbitMQ session " + str(e))
  
         return jsonify(responses.success_true)

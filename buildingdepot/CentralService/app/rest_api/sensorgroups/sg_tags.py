@@ -106,7 +106,7 @@ class SensorGroupTagsService(MethodView):
             print(tagtype)
             if tagtype is None:
                 return jsonify(responses.invalid_tagtype)
-            print(tag.get('value'))
+            print((tag.get('value')))
             tag_values = tagtype.get('values')
             if tag.get('value') not in tag_values:
                 return jsonify(responses.invalid_tag_value)

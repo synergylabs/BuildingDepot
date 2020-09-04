@@ -1,5 +1,5 @@
-from models import *
+from .models import *
 connect('buildingdepot')
 
-print(Role.objects(name='default').first().permission)
+print((Role.objects(name='default').first().permission))
 

@@ -51,9 +51,9 @@ def sensor():
 @service.route('/sensor/search', methods=['GET', 'POST'])
 def sensors_search():
     data = json.loads(request.args.get('q'))
-    print(data, type(data))
+    print((data, type(data)))
     args = {}
-    for key, values in data.items():
+    for key, values in list(data.items()):
         if key == 'Building':
             form_query('building', values, args, "$or")
         elif key == 'SourceName':
@@ -105,7 +105,7 @@ def graph(name):
             temp = obj
             break
     metadata = Sensor._get_collection().find({'name': name}, {'metadata': 1, '_id': 0})[0]['metadata']
-    metadata = [{'name': key, 'value': val} for key, val in metadata.items()]
+    metadata = [{'name': key, 'value': val} for key, val in list(metadata.items())]
     obj = Sensor.objects(name=name).first()
     tags_owned = [{'name': tag.name, 'value': tag.value} for tag in obj.tags]
     return render_template('service/graph.html', name=name, obj=temp, metadata=metadata, tags=tags_owned)

@@ -251,7 +251,7 @@ def authorize_user(user_group, sensorgroup_name, email=None):
     args['tags__all'] = tag_list
     sensors = Sensor.objects(**args)
     for sensor in sensors:
-        print(sensor['name'])
+        print((sensor['name']))
         if permission(sensor['name'], email) != 'r/w/p':
             return False
     return True
@@ -263,7 +263,7 @@ def authorize_addition(usergroup_name, email):
         return True
 
     for user in user_group.users:
-        print(type(user['manager']))
+        print((type(user['manager'])))
         if user['user_id'] == email and user['manager']:
             return True
     return False

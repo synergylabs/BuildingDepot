@@ -156,7 +156,7 @@ def FormatUrlParams(params):
     A URL query string version of the given parameters.
   """
   param_fragments = []
-  for param in sorted(iter(params.items()), key=lambda x: x[0]):
+  for param in sorted(iter(list(params.items())), key=lambda x: x[0]):
     param_fragments.append('%s=%s' % (param[0], UrlEscape(param[1])))
   return '&'.join(param_fragments)
 
@@ -288,7 +288,7 @@ def TestSmtpAuthentication(user, auth_string):
 def RequireOptions(options, *args):
   missing = [arg for arg in args if getattr(options, arg) is None]
   if missing:
-    print('Missing options: %s' % ' '.join(missing))
+    print(('Missing options: %s' % ' '.join(missing)))
     sys.exit(-1)
 
 
@@ -299,8 +299,8 @@ def main(argv):
     RequireOptions(options, 'client_id', 'client_secret')
     response = RefreshToken(options.client_id, options.client_secret,
                             options.refresh_token)
-    print('Access Token: %s' % response['access_token'])
-    print('Access Token Expiration Seconds: %s' % response['expires_in'])
+    print(('Access Token: %s' % response['access_token']))
+    print(('Access Token Expiration Seconds: %s' % response['expires_in']))
   elif options.generate_oauth2_string:
     RequireOptions(options, 'user', 'access_token')
     print(('OAuth2 argument:\n' +
@@ -308,13 +308,13 @@ def main(argv):
   elif options.generate_oauth2_token:
     RequireOptions(options, 'client_id', 'client_secret')
     print('To authorize token, visit this url and follow the directions:')
-    print('  %s' % GeneratePermissionUrl(options.client_id, options.scope))
-    authorization_code = input('Enter verification code: ')
+    print(('  %s' % GeneratePermissionUrl(options.client_id, options.scope)))
+    authorization_code = eval(input('Enter verification code: '))
     response = AuthorizeTokens(options.client_id, options.client_secret,
                                 authorization_code)
-    print('Refresh Token: %s' % response['refresh_token'])
-    print('Access Token: %s' % response['access_token'])
-    print('Access Token Expiration Seconds: %s' % response['expires_in'])
+    print(('Refresh Token: %s' % response['refresh_token']))
+    print(('Access Token: %s' % response['access_token']))
+    print(('Access Token Expiration Seconds: %s' % response['expires_in']))
   elif options.test_imap_authentication:
     RequireOptions(options, 'user', 'access_token')
     TestImapAuthentication(options.user,
@@ -341,8 +341,8 @@ def main_bd():
   cid = d['client_id']
   csec = d['client_secret']
   print('To authorize token, visit this url and follow the directions:')
-  print('  %s' % GeneratePermissionUrl(cid))
-  authorization_code = input('Enter verification code: ')
+  print(('  %s' % GeneratePermissionUrl(cid)))
+  authorization_code = eval(input('Enter verification code: '))
   response = AuthorizeTokens(cid, csec, authorization_code)
   with open(cred_filename, 'r') as fp:
       d = json.load(fp)

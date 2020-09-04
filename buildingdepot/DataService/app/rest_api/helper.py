@@ -134,7 +134,7 @@ def connect_broker():
         channel.close()
         return pubsub
     except Exception as e:
-        print("Failed to open connection to broker " + str(e))
+        print(("Failed to open connection to broker " + str(e)))
         return None
 
 

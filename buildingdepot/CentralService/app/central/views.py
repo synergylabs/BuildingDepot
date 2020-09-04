@@ -167,7 +167,7 @@ def building_metadata(name):
        then update the metadata"""
     if request.method == 'GET':
         metadata = Building._get_collection().find({'name': name}, {'metadata': 1, '_id': 0})[0]['metadata']
-        metadata = [{'name': key, 'value': val} for key, val in metadata.items()]
+        metadata = [{'name': key, 'value': val} for key, val in list(metadata.items())]
         return jsonify({'data': metadata})
     else:
         # Update the metadata
@@ -230,7 +230,7 @@ def user_tags_owned(email):
         triples = [{'building': item.building,
                     'tags': [{'name': elem.name, 'value': elem.value} for elem in item.tags]}
                    for item in user.tags_owned]
-        print(triples, data)
+        print((triples, data))
         return jsonify({'data': data, 'triples': triples})
     else:
         tags_owned = request.get_json()['data']
@@ -538,7 +538,7 @@ def permission_query():
 def sensors_search():
     data = json.loads(request.args.get('q'))
     args = {}
-    for key, values in data.items():
+    for key, values in list(data.items()):
         if key == 'Building':
             form_query('building',values,args,"$and")
         elif key == 'SourceName':

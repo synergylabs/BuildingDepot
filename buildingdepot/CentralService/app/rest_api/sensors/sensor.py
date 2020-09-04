@@ -49,7 +49,7 @@ class SensorService(MethodView):
             return jsonify(responses.invalid_uuid)
         tags_owned = [{'name': tag.name, 'value': tag.value} for tag in sensor.tags]
         metadata = Sensor._get_collection().find({'name': name}, {'metadata': 1, '_id': 0})[0]['metadata']
-        metadata = [{'name': key, 'value': val} for key, val in metadata.items()]
+        metadata = [{'name': key, 'value': val} for key, val in list(metadata.items())]
         response = dict(responses.success_true)
         response.update({'building': str(sensor.building),
                          'name': str(sensor.name),
@@ -207,7 +207,7 @@ class SensorOwnedService(MethodView):
                         if sensor is not None:
                             tags_owned = [{'name': tag['name'], 'value': tag['value']} for tag in sensor['tags']]
                             metadata = Sensor._get_collection().find({'name': sensor['name']}, {'metadata': 1, '_id': 0})[0]['metadata']
-                            metadata = [{'name': key, 'value': val} for key, val in metadata.iteritems()]
+                            metadata = [{'name': key, 'value': val} for key, val in metadata.items()]
 
                             permitted.append({'building':str(sensor.building),
                                               'name':str(sensor.name),
@@ -220,7 +220,7 @@ class SensorOwnedService(MethodView):
         for sensor in owned_sensors:
             tags_owned = [{'name': tag['name'], 'value': tag['value']} for tag in sensor['tags']]
             metadata = Sensor._get_collection().find({'name': sensor['name']}, {'metadata': 1, '_id': 0})[0]['metadata']
-            metadata = [{'name': key, 'value': val} for key, val in metadata.iteritems()]
+            metadata = [{'name': key, 'value': val} for key, val in metadata.items()]
 
             owned.append({'building':str(sensor['building']),
                           'name':str(sensor['name']),

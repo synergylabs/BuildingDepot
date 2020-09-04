@@ -65,7 +65,7 @@ class Write(Resource):
         try:
             influx.write_points(data)
         except Exception as e:
-            print('wrong ', e)
+            print(('wrong ', e))
         # series_e = time()
         print('I am ther')
         # all_e = time()

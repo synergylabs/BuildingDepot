@@ -63,5 +63,5 @@ db.data_service.insert({'name':'ds1',
                         'buildings':[],
                         'admins':[]})
 
-print("\n Created a super user with following credentials. Please login and change password immediately \n user id "\
-      ": admin@buildingdepot.org \n password: " + tempPwd)
+print(("\n Created a super user with following credentials. Please login and change password immediately \n user id "\
+      ": admin@buildingdepot.org \n password: " + tempPwd))

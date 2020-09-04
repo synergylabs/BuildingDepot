@@ -14,7 +14,7 @@ them for the RPCs
 from mongoengine import *
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from werkzeug.security import check_password_hash
-from config import Config
+from .config import Config
 from flask import current_app
 from flask_login import UserMixin
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer

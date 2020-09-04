@@ -29,8 +29,8 @@ for log in logs:
 		averages[log[2]] = [float(log[5]), 1]
 
 print("\nAVERAGES FOR TIME TAKEN (Function wise): ")
-for key, value in averages.items():
-	print("  " + key + "(): "  + str(value[0]/value[1]) + "ms (" + str(value[1]) + " calls)")
+for key, value in list(averages.items()):
+	print(("  " + key + "(): "  + str(value[0]/value[1]) + "ms (" + str(value[1]) + " calls)"))
 
 print()
 

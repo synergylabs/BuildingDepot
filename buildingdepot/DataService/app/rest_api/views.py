@@ -72,11 +72,11 @@ def get_sensors_metadata():
     if (request_type is None) or (len(request.args) < 2):
         return jsonify(responses.missing_paramters)
 
-    for key, val in request.args.items():
+    for key, val in list(request.args.items()):
         if key != 'filter':
             param = urllib.parse.unquote(key).decode('utf8')
             value = urllib.parse.unquote(val).decode('utf8')
-            print(param, value)
+            print((param, value))
 
     if request_type == "params":
         list_sensors = Sensor._get_collection().find({param: value})

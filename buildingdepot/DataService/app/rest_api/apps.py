@@ -78,8 +78,8 @@ class AppService(MethodView):
             channel = pubsub.channel()
             result = channel.queue_declare(durable=True, queue="")
         except Exception as e:
-            print("Failed to create queue " + str(e))
-            print(traceback.print_exc())
+            print(("Failed to create queue " + str(e)))
+            print((traceback.print_exc()))
             if channel:
                 channel.close()
             return jsonify(responses.queue_creation_failure)
@@ -97,7 +97,7 @@ class AppService(MethodView):
                 channel.close()
                 pubsub.close()
             except Exception as e:
-                print("Failed to end RabbitMQ session" + str(e))
+                print(("Failed to end RabbitMQ session" + str(e)))
 
         return jsonify({'success': 'True', 'app_id': result.method.queue})
 
@@ -157,8 +157,8 @@ class AppService(MethodView):
             Application.objects(user=email).update(set__apps=new_app_list)
 
         except Exception as e:
-            print("Failed to delete queue " + str(e))
-            print(traceback.print_exc())
+            print(("Failed to delete queue " + str(e)))
+            print((traceback.print_exc()))
 
             if channel:
                 channel.close()
@@ -169,6 +169,6 @@ class AppService(MethodView):
                 channel.close()
                 pubsub.close()
             except Exception as e:
-                print("Failed to end RabbitMQ session" + str(e))
+                print(("Failed to end RabbitMQ session" + str(e)))
 
         return jsonify(responses.success_true)

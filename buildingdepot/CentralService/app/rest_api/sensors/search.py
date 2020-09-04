@@ -27,7 +27,7 @@ class SearchService(MethodView):
             return jsonify(responses.missing_data)
 
         args = {}
-        for key, values in data.items():
+        for key, values in list(data.items()):
             if key == 'Building':
                 form_query('building', values, args, "$and")
             elif key == 'SourceName':
