@@ -7,6 +7,7 @@ from .sensorgroups import sensorgroup, sg_tags
 from .usergroups import ug_users, usergroup
 from .sensors import sensor, search, sensor_tags, sensor_views
 from .permissions import permission, permission_request, permission_uuid
+from .notifications import notification
 
 
 def register_view(app_obj):
@@ -142,3 +143,7 @@ def register_view(app_obj):
     app_obj.add_url_rule('/api/user', view_func=users_view, methods=['POST'])
     app_obj.add_url_rule('/api/user/<email>', view_func=users_view, methods=['GET', 'DELETE'])
 
+
+    notifications_view = notification.NotificationClientIdService.as_view('notification_client_id_service')
+    # Create, get or modify an ID used in the notification system
+    app_obj.add_url_rule('/api/notification/id', view_func=notifications_view, methods=['POST', 'PUT'])

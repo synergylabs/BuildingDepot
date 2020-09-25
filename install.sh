@@ -145,6 +145,7 @@ function install_packages {
     apt-get install -y influxdb
     service influxdb start
     service mongod start
+    pip install --user firebase-admin
     apt-get install -y rabbitmq-server
     apt-get install -y nodejs
     apt-get install -y npm
