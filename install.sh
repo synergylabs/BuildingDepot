@@ -214,6 +214,23 @@ function setup_email {
     fi
 }
 
+function setup_notifications {
+    echo "BuildingDepot uses notifications to alert users or systems of events in real-time. By default, "
+    echo "BuildingDepot uses RabbitMQ to deliver messages but we also support Google Firebase Cloud Messaging (FCM), "
+    echo "which allows BuildingDepot to send push notifications to mobile users."
+    echo "Would you like to use Google FCM?"
+    echo "Enter Y to use Google FCM and N to use RabbitMQ"
+    read response
+    if [ "$response" == "Y" ] || [ "$response" == "y" ]; then
+        echo "Please provide the absolute path of where your Service Account JSON file is, which contains the keys for your FCM project."
+        read response
+        if [ ! -z "$response" ]; then
+            echo "NOTIFICATION_TYPE = 'FIREBASE'" >> $BD/CentralService/cs_config
+            echo "FIREBASE_CREDENTIALS = '$response'" >> $BD/CentralService/cs_config
+        fi
+    fi
+}
+
 function setup_packages {
 
     echo
@@ -350,6 +367,7 @@ rm -rf configs
 
 popd
 setup_email
+setup_notifications
 
 
 # Create Database on InfluxDB

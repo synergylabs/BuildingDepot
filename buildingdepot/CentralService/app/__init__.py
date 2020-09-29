@@ -21,8 +21,6 @@ from flask_login import LoginManager
 from flask_bootstrap import Bootstrap
 from flask_oauthlib.provider import OAuth2Provider
 from xmlrpclib import ServerProxy
-from rest_api.notifications.firebase_notification import FirebaseNotification
-from rest_api.notifications.rabbit_mq_notification import RabbitMQNotification
 import redis
 
 
@@ -38,14 +36,16 @@ bootstrap = Bootstrap()
 oauth = OAuth2Provider()
 svr = ServerProxy("http://localhost:8080")
 r = redis.Redis(host=app.config['REDIS_HOST'],password=app.config['REDIS_PWD'])
-notification_instance = app.config['NOTIFICATION_TYPE']
 
-def get_push_notification_system():
-    print 'We are getting the notification instance, which is ' + notification_instance
-    if notification_instance == 'firebase':
-        return FirebaseNotification()
+try:
+    notification_type = app.config['NOTIFICATION_TYPE']
+except KeyError:
+    notification_type = "RABBITMQ"
 
-    return RabbitMQNotification()
+try:
+    firebase_credentials = app.config['FIREBASE_CREDENTIALS']
+except KeyError:
+    firebase_credentials = None
 
 def create_app(config_mode): # TODO: remove config_mode
 

@@ -16,9 +16,10 @@ from pymongo import MongoClient
 from ...models.cs_models import Sensor, User, PermissionRequest
 from ...auth.views import Client, Token
 from ..helper import form_query, create_response, check_oauth, get_email
-from ... import oauth, app, get_push_notification_system
+from ... import oauth, app
 import traceback, json, hashlib, pika, os
 from ..notifications.notification import get_notification_client_id
+from ..notifications.push_notifications import PushNotification
 
 class PermissionRequestService(MethodView):
     @check_oauth
@@ -122,14 +123,14 @@ class PermissionRequestService(MethodView):
         data = request.get_json()['data']
         target_sensors = data['target_sensors']
         timestamp = data['timestamp']
-        print 'we got the request'
+
         if not all([target_sensors, timestamp]):
             return jsonify(responses.missing_parameters)
 
         requester = User.objects(email=get_email()).first()
 
         user_sensor_map = self.map_sensors_to_owner(target_sensors)
-        print 'making requests to ' + str(user_sensor_map)
+
         for user in user_sensor_map:
             sensors = self.get_sensor_objects_from_uuids(user_sensor_map[user])
             print str(user)
@@ -137,17 +138,9 @@ class PermissionRequestService(MethodView):
             PermissionRequest(email=get_email(), timestamp=str(timestamp), requests=permission_request_data).save()
 
             try:
-                permission_uuid = ""
-
                 for user_db in User._get_collection().find({"email": user}):
-                    permission_uuid = user_db["_id"]
-
-                    if permission_uuid is not None:
-                        print 'sending a notification to ' + str(permission_uuid)
-                        key = hashlib.sha256(str(user).encode() + str(permission_uuid).encode()).hexdigest()
-                        permission_request_json = json.dumps(permission_request_data)
-                        print("Getting notification ID for " + str(user) + " with ID " + str(get_notification_client_id(user)))
-                        get_push_notification_system().send(get_notification_client_id(user), permission_request_json)
+                    permission_request_json = json.dumps(permission_request_data)
+                    PushNotification.get_instance().send(get_notification_client_id(user), permission_request_json, destination="permission_requests")
 
             except Exception as e:
                  traceback.print_exc()
