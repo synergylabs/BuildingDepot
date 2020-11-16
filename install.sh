@@ -37,6 +37,13 @@ function setup_venv {
     pip install --upgrade uWSGI
     mkdir -p /etc/uwsgi/apps-available/
 
+    echo "Did you select Google Firebase for your notification system? Please enter [y/n]"
+    read response
+
+    if [ "$response" == "Y" ] || [ "$response" == "y" ]; then 
+        pip install "firebase-admin==2.18.0"
+    fi
+
     deactivate
     cd -
 }
