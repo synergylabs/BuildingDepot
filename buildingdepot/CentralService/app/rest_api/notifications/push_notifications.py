@@ -13,15 +13,10 @@ then this class must be extended in another file. After extending this class and
 """
 
 import pika
-
-try:
-    import firebase_admin
-    from firebase_admin import messaging
-    from firebase_admin import credentials
-    from ... import notification_type, firebase_credentials
-except ImportError:
-    #We should be able to safely ignore this error, because it is very likely that the user chose not to install/use Firebase
-    pass
+import firebase_admin
+from firebase_admin import messaging
+from firebase_admin import credentials
+from ... import notification_type, firebase_credentials
 
 class FirebaseNotification():
     def __init__(self):
