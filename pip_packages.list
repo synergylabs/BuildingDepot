@@ -35,3 +35,4 @@ sphinxcontrib-websupport==1.1.2
 typing==3.7.4.1
 uWSGI==2.0.18
 validate-email==1.2
+firebase-admin==2.18.0
