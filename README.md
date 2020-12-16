@@ -24,6 +24,7 @@ The [BuildingDepot v3.2.9 API](https://buildingdepot.andrew.cmu.edu/) documentat
 ### Authors and Contributors
 * **Carnegie Mellon University** : 
 * [Sudershan Boovaraghavan](http://www.sudershanb.com)
+* [Shreyas Nagare](http://shreyasnagare.com)
 * [Joshua Gluck](http://www.synergylabs.org/jgluck/)
 * [Dohyun Kim](https://www.cs.cmu.edu/directory/dohyunk)
 * [Tarun Karuturi](https://www.linkedin.com/in/tarunkaruturi/)
