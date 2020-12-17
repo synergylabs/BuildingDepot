@@ -36,8 +36,12 @@ function setup_venv {
 
     pip install --upgrade uWSGI
     mkdir -p /etc/uwsgi/apps-available/
-
-    pip install "firebase-admin==2.18.0"
+    
+    echo "Would you like to use Google Firebase for your notification system? Please enter [y/n]"
+    read response
+    if [ "$response" == "Y" ] || [ "$response" == "y" ]; then 
+        pip install "firebase-admin==2.18.0"
+    fi
 
     deactivate
     cd -
@@ -147,7 +151,6 @@ function install_packages {
     apt-get install -y influxdb
     service influxdb start
     service mongod start
-    pip install --user firebase-admin
     apt-get install -y rabbitmq-server
     apt-get install -y nodejs
     apt-get install -y npm
@@ -352,7 +355,6 @@ if [ "$DEPLOY_DS" = true ]; then
 fi
 
 service mongod start
-service influxdb start
 service supervisor stop
 service supervisor start
 sleep 5

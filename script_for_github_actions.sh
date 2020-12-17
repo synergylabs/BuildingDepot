@@ -33,7 +33,8 @@ function setup_venv {
     pip install --upgrade pip
     pip install --upgrade setuptools
     pip install --upgrade -r pip_packages.list
-
+    pip install "firebase-admin==2.18.0"    
+    
     pip install --upgrade uWSGI
     mkdir -p /etc/uwsgi/apps-available/
 
