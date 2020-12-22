@@ -10,7 +10,7 @@ const uuid = require('uuid/v4')
 describe('Buildings APIs should handle ', function () {
 
     it('generate an access token', function (done) {
-        centralApi.get('/oauth/access_token/client_id='+ config['clientID'] +'/client_secret='+ config['clientSecret'])
+        centralApi.get('/oauth/access_token/client_id=' + config['clientID'] + '/client_secret=' + config['clientSecret'])
             .end(function (err, res) {
                 // console.log(res.body)
                 expect(res.status).to.equal(200)
@@ -27,7 +27,7 @@ describe('Buildings APIs should handle ', function () {
         centralApi.post('/api/building')
             .set('Authorization', 'Bearer ' + data.get('authorizedToken'))
             .send({
-                data:{
+                data: {
                     name: null,
                     description: 'integration-test',
                     template: 'testing'

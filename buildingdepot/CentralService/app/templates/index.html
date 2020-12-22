@@ -5,117 +5,124 @@
     {{ super() }}
     {# Theme used: Bootswatch Flatly, Licence: MIT Copyright (c) 2013 Thomas Park; https://github.com/thomaspark/bootswatch/blob/master/LICENSE #}
     <link href="https://bootswatch.com/3/flatly/bootstrap.min.css" rel="stylesheet">
-{#    <link href="{{ url_for('static', filename='custom_style.css') }}" rel="stylesheet">#}
+    {#    <link href="{{ url_for('static', filename='custom_style.css') }}" rel="stylesheet">#}
     <style>
-    .modal-backdrop{
-        z-index: 0;
-    }
-    body{
-        padding-top: 72px;
-    }
-    #pagination > li > a {
-        background-color: #2c3e50;
-    }
-    .btn-info, .btn-default{
-        background-color: #2c3e50;
-        border-color: #2c3e50;
-    }
-    .alert-warning {
-        background-color: #f35012;
-        border-color: #f35012;
-    }
-    .btn-warning {
-        background-color: #e26120;
-        border-color: #e26120;
-    }
-    .btn-warning:hover {
-        background-color: #f23528;
-        border-color: #f23528;
-    }
+        .modal-backdrop {
+            z-index: 0;
+        }
+
+        body {
+            padding-top: 72px;
+        }
+
+        #pagination > li > a {
+            background-color: #2c3e50;
+        }
+
+        .btn-info, .btn-default {
+            background-color: #2c3e50;
+            border-color: #2c3e50;
+        }
+
+        .alert-warning {
+            background-color: #f35012;
+            border-color: #f35012;
+        }
+
+        .btn-warning {
+            background-color: #e26120;
+            border-color: #e26120;
+        }
+
+        .btn-warning:hover {
+            background-color: #f23528;
+            border-color: #f23528;
+        }
     </style>
 {% endblock %}
 
 {% block navbar %}
-<div class="navbar navbar-default navbar-fixed-top">
-    <div class="container">
-        <a class="navbar-brand" href="{{ url_for('main.index') }}">BuildingDepot</a>
-        <div>
-            {% if current_user.is_authenticated %}
-            <ul class="nav navbar-nav">
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Collections <strong class="caret"></strong></a>
-
-                    <ul class="dropdown-menu">
-                        <li>
-                            <a href="{{ url_for('central.tagtype') }}">TagType</a>
-                        </li>
-
-                        <li>
-                            <a href="{{ url_for('central.buildingtemplate') }}">BuildingTemplate</a>
-                        </li>
-
-                        <li>
-                            <a href="{{ url_for('central.building') }}">Building</a>
-                        </li>
-
-                         <li>
-                            <a href="{{ url_for('central.dataservice') }}">Data Services</a>
-                        </li>
-
-                        <li>
-                            <a href="{{ url_for('central.sensor') }}">Sensor</a>
-                        </li>
-
-                        <li>
-                            <a href="{{ url_for('central.sensorgroup') }}">Sensor Group</a>
-                        </li>
-
-                        <li>
-                            <a href="{{ url_for('central.usergroup') }}">User Group</a>
-                        </li>
-
-                        <li>
-                            <a href="{{ url_for('central.permission') }}">Permission</a>
-                        </li>
-
-                        <li>
-                            <a href="{{ url_for('central.permission_query') }}">Permission Query</a>
-                        </li>
-
-                        <li>
-                            <a href="{{ url_for('central.oauth_gen') }}">Oauth</a>
-                        </li>
-
-                        <li>
-                            <a href="{{ url_for('central.user') }}">User</a>
-                        </li>
-                    </ul><!-- end dropdown-menu -->
-                </li>
-            </ul>
-            {% endif %}
-            <ul class="nav navbar-nav pull-right">
+    <div class="navbar navbar-default navbar-fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="{{ url_for('main.index') }}">BuildingDepot</a>
+            <div>
                 {% if current_user.is_authenticated %}
-                    <li><a href="#">{{ session['email'] }}</a> </li>
-                    <li><a href="{{ url_for('auth.logout') }}">Sign Out</a></li>
-                {% else %}
-                    <li><a href="{{ url_for('auth.login') }}">Sign In</a></li>
+                    <ul class="nav navbar-nav">
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Collections <strong
+                                    class="caret"></strong></a>
+
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a href="{{ url_for('central.tagtype') }}">TagType</a>
+                                </li>
+
+                                <li>
+                                    <a href="{{ url_for('central.buildingtemplate') }}">BuildingTemplate</a>
+                                </li>
+
+                                <li>
+                                    <a href="{{ url_for('central.building') }}">Building</a>
+                                </li>
+
+                                <li>
+                                    <a href="{{ url_for('central.dataservice') }}">Data Services</a>
+                                </li>
+
+                                <li>
+                                    <a href="{{ url_for('central.sensor') }}">Sensor</a>
+                                </li>
+
+                                <li>
+                                    <a href="{{ url_for('central.sensorgroup') }}">Sensor Group</a>
+                                </li>
+
+                                <li>
+                                    <a href="{{ url_for('central.usergroup') }}">User Group</a>
+                                </li>
+
+                                <li>
+                                    <a href="{{ url_for('central.permission') }}">Permission</a>
+                                </li>
+
+                                <li>
+                                    <a href="{{ url_for('central.permission_query') }}">Permission Query</a>
+                                </li>
+
+                                <li>
+                                    <a href="{{ url_for('central.oauth_gen') }}">Oauth</a>
+                                </li>
+
+                                <li>
+                                    <a href="{{ url_for('central.user') }}">User</a>
+                                </li>
+                            </ul><!-- end dropdown-menu -->
+                        </li>
+                    </ul>
                 {% endif %}
-            </ul>
+                <ul class="nav navbar-nav pull-right">
+                    {% if current_user.is_authenticated %}
+                        <li><a href="#">{{ session['email'] }}</a></li>
+                        <li><a href="{{ url_for('auth.logout') }}">Sign Out</a></li>
+                    {% else %}
+                        <li><a href="{{ url_for('auth.login') }}">Sign In</a></li>
+                    {% endif %}
+                </ul>
+            </div>
         </div>
     </div>
-</div>
 {% endblock %}
 
 {% block content %}
-<div class="container" id="content">
-    {% for message in get_flashed_messages() %}
-    <div class="alert alert-warning">
-        <button type="button" class="close" data-dismiss="alert">&times;</button>
-        {{ message }}
+    <div class="container" id="content">
+        {% for message in get_flashed_messages() %}
+            <div class="alert alert-warning">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                {{ message }}
+            </div>
+        {% endfor %}
+        {% block page_content %}{% endblock %}
     </div>
-    {% endfor %}
-    {% block page_content %}{% endblock %}
-</div>
 {% endblock %}
 
 

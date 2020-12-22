@@ -14,7 +14,9 @@ from ..models.cs_models import TagType
 
 def get_choices(cls):
     """Given a class type retrieve all its instances from MongoDB"""
-    names = [obj['name'] for obj in cls._get_collection().find({}, {'_id': 0, 'name': 1})]
+    names = [
+        obj["name"] for obj in cls._get_collection().find({}, {"_id": 0, "name": 1})
+    ]
     return list(zip(names, names))
 
 
@@ -33,4 +35,3 @@ def get_tag_descendant_pairs():
     """ For a given tag get all it descendants"""
     res = {name: get_all_descendants(name) for name in graph}
     return res
-

@@ -9,16 +9,16 @@ It handles the registration and deletion of apps from the system.
 @license: CMU License. See License file for details.
 """
 
-from flask.views import MethodView
-from flask import request, jsonify
-from ..models.ds_models import Application
-from uuid import uuid4
-from .. import r, oauth, exchange
-from .helper import connect_broker, get_email, check_oauth
-from . import responses
-
 import sys
 import traceback
+from flask import request, jsonify
+from flask.views import MethodView
+from uuid import uuid4
+
+from . import responses
+from .helper import connect_broker, get_email, check_oauth
+from .. import r, oauth, exchange
+from ..models.ds_models import Application
 
 
 class AppService(MethodView):
@@ -37,12 +37,12 @@ class AppService(MethodView):
         email = get_email()
         if email is None:
             return jsonify(responses.missing_parameters)
-        apps = Application._get_collection().find({'user': email})
+        apps = Application._get_collection().find({"user": email})
         if apps.count() == 0:
             app_list = []
         else:
-            app_list = apps[0]['apps']
-        return jsonify({'success': 'True', 'app_list': app_list})
+            app_list = apps[0]["apps"]
+        return jsonify({"success": "True", "app_list": app_list})
 
     @check_oauth
     def post(self):
@@ -57,18 +57,18 @@ class AppService(MethodView):
         }
         """
         email = get_email()
-        json_data = request.get_json()['data']
+        json_data = request.get_json()["data"]
         try:
-            name = json_data['name']
+            name = json_data["name"]
         except KeyError:
             return jsonify(responses.missing_parameters)
-        apps = Application._get_collection().find({'user': email})
+        apps = Application._get_collection().find({"user": email})
 
         if apps.count() != 0:
-            app_list = apps[0]['apps']
+            app_list = apps[0]["apps"]
             for app in app_list:
-                if name == app['name']:
-                    return jsonify({'success': 'True', 'app_id': app['value']})
+                if name == app["name"]:
+                    return jsonify({"success": "True", "app_id": app["value"]})
 
         pubsub = connect_broker()
         if pubsub is None:
@@ -85,11 +85,11 @@ class AppService(MethodView):
             return jsonify(responses.queue_creation_failure)
 
         if apps.count() == 0:
-            Application(user=email,
-                        apps=[{'name': name,
-                               'value': result.method.queue}]).save()
+            Application(
+                user=email, apps=[{"name": name, "value": result.method.queue}]
+            ).save()
         else:
-            app_list.append({'name': name, 'value': result.method.queue})
+            app_list.append({"name": name, "value": result.method.queue})
             Application.objects(user=email).update(set__apps=app_list)
 
         if pubsub:
@@ -99,7 +99,7 @@ class AppService(MethodView):
             except Exception as e:
                 print(("Failed to end RabbitMQ session" + str(e)))
 
-        return jsonify({'success': 'True', 'app_id': result.method.queue})
+        return jsonify({"success": "True", "app_id": result.method.queue})
 
     @check_oauth
     def delete(self):
@@ -117,24 +117,24 @@ class AppService(MethodView):
         """
         # get current user's list of applications
         email = get_email()
-        apps = Application._get_collection().find({'user': email})
+        apps = Application._get_collection().find({"user": email})
 
-        name = ''
+        name = ""
 
         json_data = request.get_json()
-        if 'data' not in list(json_data.keys()):
+        if "data" not in list(json_data.keys()):
             return jsonify(responses.missing_parameters)
-        elif 'name' not in list(json_data['data'].keys()):
+        elif "name" not in list(json_data["data"].keys()):
             return jsonify(responses.missing_parameters)
         else:
-            name = json_data['data']['name']
+            name = json_data["data"]["name"]
 
         app_to_be_deleted = None
 
         # check whether there is an application with the given name
         # case 1 - there is already an application instance for the given user
         if apps.count() > 0:
-            app_filter = [x for x in apps[0]['apps'] if x['name'] == name]
+            app_filter = [x for x in apps[0]["apps"] if x["name"] == name]
 
             if len(app_filter) > 0:
                 app_to_be_deleted = app_filter[0]
@@ -150,10 +150,10 @@ class AppService(MethodView):
         try:
             channel = pubsub.channel()
 
-            if 'value' in list(app_to_be_deleted.keys()):
-                result = channel.queue_delete(queue=app_to_be_deleted['value'])
+            if "value" in list(app_to_be_deleted.keys()):
+                result = channel.queue_delete(queue=app_to_be_deleted["value"])
 
-            new_app_list = list([x for x in apps[0]['apps'] if x['name'] != name])
+            new_app_list = list([x for x in apps[0]["apps"] if x["name"] != name])
             Application.objects(user=email).update(set__apps=new_app_list)
 
         except Exception as e:

@@ -5,14 +5,14 @@ name: BuildingDepot
 
 on:
   push:
-    branches: 
-        - master
-        - develop
-        - python3
+    branches:
+      - master
+      - develop
+      - python3
   pull_request:
     branches:
-        - master
-        - develop
+      - master
+      - develop
 jobs:
   build:
 
@@ -21,19 +21,19 @@ jobs:
       matrix:
         python-version: [3.5.10, 3.6.12, 3.7.9, 3.8.6]
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v1
-      with:
-        python-version: ${{ matrix.python-version }}
-    - name: Install BuildingDepot
-      run: |
-        sudo bash -x ./script_for_github_actions.sh
-    - name: Initialize tests
-      run: |
-        cd benchmarking-tools/functional-testing-tool
-        npm install
-    - name: Run tests
-      run: |
-        cd benchmarking-tools/functional-testing-tool
-        npm test ./tests/all.js
+      - uses: actions/checkout@v2
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v1
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install BuildingDepot
+        run: |
+          sudo bash -x ./script_for_github_actions.sh
+      - name: Initialize tests
+        run: |
+          cd benchmarking-tools/functional-testing-tool
+          npm install
+      - name: Run tests
+        run: |
+          cd benchmarking-tools/functional-testing-tool
+          npm test ./tests/all.js

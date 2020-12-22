@@ -12,36 +12,37 @@ a sensor contains such as Tags,Building,Source identifier,uuid etc.
 
 from flask import request, jsonify
 from flask.views import MethodView
+
 from .. import responses
-from ...models.cs_models import Sensor
 from ..helper import form_query, create_response, check_oauth
 from ... import oauth
+from ...models.cs_models import Sensor
 
 
 class SearchService(MethodView):
     @check_oauth
     def post(self):
         try:
-            data = request.get_json()['data']
+            data = request.get_json()["data"]
         except KeyError:
             return jsonify(responses.missing_data)
 
         args = {}
         for key, values in list(data.items()):
-            if key == 'Building':
-                form_query('building', values, args, "$and")
-            elif key == 'SourceName':
-                form_query('source_name', values, args, "$and")
-            elif key == 'SourceIdentifier':
-                form_query('source_identifier', values, args, "$and")
-            elif key == 'Owner':
-                form_query('owner', values, args, "$and")
-            elif key == 'ID':
-                form_query('name', values, args, "$and")
-            elif key == 'Tags':
-                form_query('tags', values, args, "$and")
-            elif key == 'MetaData':
-                form_query('metadata', values, args, "$and")
+            if key == "Building":
+                form_query("building", values, args, "$and")
+            elif key == "SourceName":
+                form_query("source_name", values, args, "$and")
+            elif key == "SourceIdentifier":
+                form_query("source_identifier", values, args, "$and")
+            elif key == "Owner":
+                form_query("owner", values, args, "$and")
+            elif key == "ID":
+                form_query("name", values, args, "$and")
+            elif key == "Tags":
+                form_query("tags", values, args, "$and")
+            elif key == "MetaData":
+                form_query("metadata", values, args, "$and")
         if not args:
             return jsonify(responses.no_search_parameters)
         collection = Sensor._get_collection().find(args)

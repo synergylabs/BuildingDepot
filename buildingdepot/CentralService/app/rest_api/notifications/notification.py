@@ -10,9 +10,10 @@ This module handles setting up and managing notifications for a given ID.
 
 from flask import request, jsonify, Flask
 from flask.views import MethodView
-from ...auth.views import Client, Token
+
 from .. import responses
 from ..helper import check_oauth, get_email
+from ...auth.views import Client, Token
 from ...models.cs_models import NotificationClientId
 
 

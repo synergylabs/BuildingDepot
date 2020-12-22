@@ -15,11 +15,11 @@
 """
 
 import _thread
-import time
-from functools import wraps
-import traceback
 import os
 import random
+import time
+import traceback
+from functools import wraps
 
 global process_unique_id
 global seq_dict
@@ -30,7 +30,7 @@ logs = []
 beginningOfTime = time.time()
 
 # Location of file where the instrumentation logs will be written to
-logfile = '/srv/buildingdepot/Instrumentation/instrument.csv'
+logfile = "/srv/buildingdepot/Instrumentation/instrument.csv"
 
 # Toggle for enabling/disabling instrumentation
 enable_instrumentation = True
@@ -39,17 +39,18 @@ enable_instrumentation = True
 # that only 70% of the logs are collected (uniformly randomly) and rest are dropped.
 sampling_rate = 1
 
-
 """A unique ID needs to be generated for every request so that all the 
    calls made by it can be tracked sequentially. The unique ID is generated 
    using a Cantor pairing function. 
 """
+
+
 def compute_request_id():
     global process_unique_id
     pid = os.getpid()
     # Using Cantor pairing function
     val = process_unique_id + pid
-    request_id = process_unique_id + (((val)*(val + 1))/2)
+    request_id = process_unique_id + (((val) * (val + 1)) / 2)
     return str(request_id)
 
 
@@ -75,25 +76,26 @@ def instrument(func):
         seq_dict[request_id] = seq + 1
 
         # Time the function execution
-        start = (time.time() - beginningOfTime)*1000
+        start = (time.time() - beginningOfTime) * 1000
         ret = func(*args, **kwargs)
-        end = (time.time() - beginningOfTime)*1000
-        
+        end = (time.time() - beginningOfTime) * 1000
+
         # Format the log string
         logString = request_id + "," + str(seq) + "," + func.__name__ + ","
 
-        for i in range(0,seq):
+        for i in range(0, seq):
             logString = "\t" + logString
 
-        logString = logString + "%0.2f,%0.2f,%0.2f\n" % (start, end, end-start)
+        logString = logString + "%0.2f,%0.2f,%0.2f\n" % (start, end, end - start)
         logs.append(logString)
 
         # Flush logs to file
         if seq == 0:
             logs = sorted(logs, key=lambda str: str.strip())
-            with open(logfile, 'a') as file:
+            with open(logfile, "a") as file:
                 for item in logs:
                     file.write(item)
             del logs[:]
         return ret
+
     return func_wrapper

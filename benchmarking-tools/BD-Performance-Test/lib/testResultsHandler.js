@@ -8,7 +8,7 @@ let handleTestResults = async function (res, options) {
     res.requests['average2xx'] = (res.requests.total - res.non2xx) / res.duration;
     res['pointPerSecond'] = res.requests['average2xx'] * options.totalSensors * options.totalSamples;
     console.log('Total Requests: ' + res.requests.total + ' requests\nAverage RPS: ' + res.requests.average2xx + ' req/s\np99 Latency: ' + res.latency.p99 + ' ms\nTotal throughput: ' + res.throughput.total + ' Bytes\nAverage throughput: ' + res.throughput.average + ' Bytes/sec\nConnections: ' + res.connections + '\nDuration: ' + res.duration + ' seconds\nNon-2xx: ' + res.non2xx);
-    if(res.pointPerSecond){
+    if (res.pointPerSecond) {
         console.log('Sensors: ' + options.totalSensors + '\nSamples: ' + options.totalSamples + '\nEffective points/sec: ' + res.pointPerSecond.toFixed(2) + ' points/sec written');
     }
     console.log('\n\n')

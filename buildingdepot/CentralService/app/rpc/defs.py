@@ -1,10 +1,11 @@
-from .. import svr
-from ..rest_api.helper import get_ds, get_sg_ds
-from ..models.cs_models import DataService
 from xmlrpc.client import ServerProxy
 
+from .. import svr
+from ..models.cs_models import DataService
+from ..rest_api.helper import get_ds, get_sg_ds
 
-def create_sensor(sensor_id, email, building, fields = None, parent = None):
+
+def create_sensor(sensor_id, email, building, fields=None, parent=None):
     if not parent:
         svr = get_remote(get_ds(sensor_id, building))
         try:
@@ -30,7 +31,7 @@ def invalidate_sensor(sensor_id):
     return True
 
 
-def delete_sensor(sensor_id, parent = None):
+def delete_sensor(sensor_id, parent=None):
     if not parent:
         svr = get_remote(get_ds(sensor_id))
         try:

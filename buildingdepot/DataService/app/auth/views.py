@@ -11,7 +11,6 @@ Functions for user login and logout from the DataService
 import binascii
 import os
 from datetime import datetime, timedelta
-
 from flask import render_template, redirect, url_for, flash, session, make_response
 from werkzeug.security import gen_salt
 
@@ -28,10 +27,9 @@ class Client(Document):
     _redirect_uris = StringField()
     _default_scopes = StringField()
 
-
     @property
     def client_type(self):
-        return 'public'
+        return "public"
 
     @property
     def redirect_uris(self):
@@ -60,7 +58,6 @@ class Token(Document):
     _scopes = StringField()
     email = StringField()
 
-
     @property
     def scopes(self):
         if self._scopes:
@@ -72,9 +69,9 @@ def token_gen(client_id, client_secret):
     client = Client.objects(client_id=client_id, client_secret=client_secret).first()
     if client is not None:
         toks = Token.objects(client=client)
-        previous_tokens = ['oauth']
+        previous_tokens = ["oauth"]
         for t in toks:
-            previous_tokens.append(''.join(['oauth:', t.access_token]))
+            previous_tokens.append("".join(["oauth:", t.access_token]))
             t.delete()
         r.delete(*previous_tokens)
         # Set token expiry period and create it
@@ -83,55 +80,60 @@ def token_gen(client_id, client_secret):
         tok = Token(
             access_token=str(binascii.hexlify(os.urandom(16))),
             refresh_token=str(binascii.hexlify(os.urandom(16))),
-            token_type='Bearer',
-            _scopes='email',
+            token_type="Bearer",
+            _scopes="email",
             expires=expires,
             client=client,
             user=client.user,
-            email=client.user).save()
-    r.setex(''.join(['oauth:', tok.access_token]), expires_in, client.user)
+            email=client.user,
+        ).save()
+    r.setex("".join(["oauth:", tok.access_token]), expires_in, client.user)
     return tok.access_token
 
 
 def oauth_gen(email):
     keys = [{"client_id": gen_salt(40), "client_secret": gen_salt(50)}]
     item = Client(
-        client_id=keys[0]['client_id'],
-        client_secret=keys[0]['client_secret'],
-        _redirect_uris=' '.join([
-            'http://localhost:8000/authorized',
-            'http://127.0.0.1:8000/authorized',
-            'http://127.0.1:8000/authorized',
-            'http://127.1:8000/authorized']),
-        _default_scopes='email',
-        user=email).save()
-    token = token_gen(keys[0]['client_id'], keys[0]['client_secret'])
+        client_id=keys[0]["client_id"],
+        client_secret=keys[0]["client_secret"],
+        _redirect_uris=" ".join(
+            [
+                "http://localhost:8000/authorized",
+                "http://127.0.0.1:8000/authorized",
+                "http://127.0.1:8000/authorized",
+                "http://127.1:8000/authorized",
+            ]
+        ),
+        _default_scopes="email",
+        user=email,
+    ).save()
+    token = token_gen(keys[0]["client_id"], keys[0]["client_secret"])
     return token
 
 
-@auth.route('/login', methods=['GET', 'POST'])
+@auth.route("/login", methods=["GET", "POST"])
 def login():
     form = LoginForm()
     keys = []
     if form.validate_on_submit():
         if svr.get_user(form.email.data, form.password.data):
-            session['email'] = form.email.data
-            if len(Client.objects(user=session['email'])) > 0:
-                clientkeys = Client.objects(user=session['email']).first()
+            session["email"] = form.email.data
+            if len(Client.objects(user=session["email"])) > 0:
+                clientkeys = Client.objects(user=session["email"]).first()
                 token = token_gen(clientkeys.client_id, clientkeys.client_secret)
             else:
                 token = oauth_gen(form.email.data)
-            resp = make_response(redirect(url_for('service.sensor')))
-            resp.set_cookie('access_token', value=token)
+            resp = make_response(redirect(url_for("service.sensor")))
+            resp.set_cookie("access_token", value=token)
             return resp
-        flash('Invalid email or password!')
-    return render_template('auth/login.html', form=form)
+        flash("Invalid email or password!")
+    return render_template("auth/login.html", form=form)
 
 
-@auth.route('/logout')
+@auth.route("/logout")
 def logout():
-    session.pop('email', None)
-    resp = make_response(redirect(url_for('main.index')))
-    resp.set_cookie('access_token', value='', expires=0)
-    flash('You have been logged out!')
+    session.pop("email", None)
+    resp = make_response(redirect(url_for("main.index")))
+    resp.set_cookie("access_token", value="", expires=0)
+    flash("You have been logged out!")
     return resp

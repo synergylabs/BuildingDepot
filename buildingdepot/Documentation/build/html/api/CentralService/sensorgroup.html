@@ -1,197 +1,191 @@
-
-
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<!--[if IE 8]>
+<html class="no-js lt-ie9" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en"> <!--<![endif]-->
 <head>
-  <meta charset="utf-8">
-  
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <title>SensorGroups &mdash; BuildingDepot 3.2.9 documentation</title>
-  
+    <meta charset="utf-8">
 
-  
-  
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  
+    <title>SensorGroups &mdash; BuildingDepot 3.2.9 documentation</title>
 
-  
-  
-    
 
-  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css"/>
 
-  
-  
-    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-  
 
-  
-
-  
-        <link rel="index" title="Index"
-              href="../../genindex.html"/>
-        <link rel="search" title="Search" href="../../search.html"/>
+    <link rel="index" title="Index"
+          href="../../genindex.html"/>
+    <link rel="search" title="Search" href="../../search.html"/>
     <link rel="top" title="BuildingDepot 3.2.9 documentation" href="../../index.html"/>
-        <link rel="up" title="CentralService APIs" href="index.html"/>
-        <link rel="next" title="Usergroups" href="usergroup.html"/>
-        <link rel="prev" title="Sensor" href="sensor.html"/> 
+    <link rel="up" title="CentralService APIs" href="index.html"/>
+    <link rel="next" title="Usergroups" href="usergroup.html"/>
+    <link rel="prev" title="Sensor" href="sensor.html"/>
 
-  
-  <script src="../../_static/js/modernizr.min.js"></script>
+
+    <script src="../../_static/js/modernizr.min.js"></script>
 
 </head>
 
 <body class="wy-body-for-nav" role="document">
 
-   
-  <div class="wy-grid-for-nav">
 
-    
+<div class="wy-grid-for-nav">
+
+
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
-          
+        <div class="wy-side-scroll">
+            <div class="wy-side-nav-search">
 
-          
-            <a href="../../index.html" class="icon icon-home"> BuildingDepot
-          
 
-          
-          </a>
+                <a href="../../index.html" class="icon icon-home"> BuildingDepot
 
-          
-            
-            
-              <div class="version">
-                3.2.9
-              </div>
-            
-          
 
-          
-<div role="search">
-  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
-    <input type="hidden" name="check_keywords" value="yes" />
-    <input type="hidden" name="area" value="default" />
-  </form>
-</div>
+                </a>
 
-          
-        </div>
 
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
+                <div class="version">
+                    3.2.9
+                </div>
+
+
+                <div role="search">
+                    <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+                        <input type="text" name="q" placeholder="Search docs"/>
+                        <input type="hidden" name="check_keywords" value="yes"/>
+                        <input type="hidden" name="area" value="default"/>
+                    </form>
+                </div>
+
+
+            </div>
+
+            <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+
+
                 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../centralservice.html">Central Service</a></li>
-</ul>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../dataservice.html">Data Service</a></li>
-</ul>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../install.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../install.html#configuration">Configuration</a></li>
-</ul>
-<ul class="current">
-<li class="toctree-l1 current"><a class="reference internal" href="index.html">CentralService APIs</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="oauth.html">OAuth</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tagtype.html">TagType</a></li>
-<li class="toctree-l2"><a class="reference internal" href="buildingtemplate.html">BuildingTemplate</a></li>
-<li class="toctree-l2"><a class="reference internal" href="building.html">Buildings</a></li>
-<li class="toctree-l2"><a class="reference internal" href="dataservice.html">DataService</a></li>
-<li class="toctree-l2"><a class="reference internal" href="sensor.html">Sensor</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">SensorGroups</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#create-sensorgroup">Create SensorGroup</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#get-sensorgroup-details">Get SensorGroup Details</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#delete-sensorgroup">Delete SensorGroup</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#add-tags-to-sensorgroup">Add tags to SensorGroup</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#get-list-of-tags-in-sensorgroup">Get list of tags in SensorGroup</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="usergroup.html">Usergroups</a></li>
-<li class="toctree-l2"><a class="reference internal" href="permission.html">Permission</a></li>
-<li class="toctree-l2"><a class="reference internal" href="user.html">User</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../DataService/index.html">DataService APIs</a></li>
-</ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../../centralservice.html">Central
+                        Service</a></li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../../dataservice.html">Data Service</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../../install.html">Installation</a></li>
+                    <li class="toctree-l1"><a class="reference internal" href="../../install.html#configuration">Configuration</a>
+                    </li>
+                </ul>
+                <ul class="current">
+                    <li class="toctree-l1 current"><a class="reference internal" href="index.html">CentralService
+                        APIs</a>
+                        <ul class="current">
+                            <li class="toctree-l2"><a class="reference internal" href="oauth.html">OAuth</a></li>
+                            <li class="toctree-l2"><a class="reference internal" href="tagtype.html">TagType</a></li>
+                            <li class="toctree-l2"><a class="reference internal" href="buildingtemplate.html">BuildingTemplate</a>
+                            </li>
+                            <li class="toctree-l2"><a class="reference internal" href="building.html">Buildings</a></li>
+                            <li class="toctree-l2"><a class="reference internal" href="dataservice.html">DataService</a>
+                            </li>
+                            <li class="toctree-l2"><a class="reference internal" href="sensor.html">Sensor</a></li>
+                            <li class="toctree-l2 current"><a class="current reference internal"
+                                                              href="#">SensorGroups</a>
+                                <ul>
+                                    <li class="toctree-l3"><a class="reference internal" href="#create-sensorgroup">Create
+                                        SensorGroup</a></li>
+                                    <li class="toctree-l3"><a class="reference internal"
+                                                              href="#get-sensorgroup-details">Get SensorGroup
+                                        Details</a></li>
+                                    <li class="toctree-l3"><a class="reference internal" href="#delete-sensorgroup">Delete
+                                        SensorGroup</a></li>
+                                    <li class="toctree-l3"><a class="reference internal"
+                                                              href="#add-tags-to-sensorgroup">Add tags to
+                                        SensorGroup</a></li>
+                                    <li class="toctree-l3"><a class="reference internal"
+                                                              href="#get-list-of-tags-in-sensorgroup">Get list of tags
+                                        in SensorGroup</a></li>
+                                </ul>
+                            </li>
+                            <li class="toctree-l2"><a class="reference internal" href="usergroup.html">Usergroups</a>
+                            </li>
+                            <li class="toctree-l2"><a class="reference internal" href="permission.html">Permission</a>
+                            </li>
+                            <li class="toctree-l2"><a class="reference internal" href="user.html">User</a></li>
+                        </ul>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../DataService/index.html">DataService
+                        APIs</a></li>
+                </ul>
 
-            
-          
+
+            </div>
         </div>
-      </div>
     </nav>
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
-      
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        
-          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">BuildingDepot</a>
-        
-      </nav>
+
+        <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+
+            <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+            <a href="../../index.html">BuildingDepot</a>
+
+        </nav>
 
 
-      
-      <div class="wy-nav-content">
-        <div class="rst-content">
-          
+        <div class="wy-nav-content">
+            <div class="rst-content">
 
 
+                <div role="navigation" aria-label="breadcrumbs navigation">
+
+                    <ul class="wy-breadcrumbs">
+
+                        <li><a href="../../index.html">Docs</a> &raquo;</li>
+
+                        <li><a href="index.html">CentralService APIs</a> &raquo;</li>
+
+                        <li>SensorGroups</li>
 
 
+                        <li class="wy-breadcrumbs-aside">
 
 
+                            <a href="../../_sources/api/CentralService/sensorgroup.rst.txt" rel="nofollow"> View page
+                                source</a>
 
 
+                        </li>
+
+                    </ul>
 
 
+                    <hr/>
+                </div>
+                <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+                    <div itemprop="articleBody">
 
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
-  <ul class="wy-breadcrumbs">
-    
-      <li><a href="../../index.html">Docs</a> &raquo;</li>
-        
-          <li><a href="index.html">CentralService APIs</a> &raquo;</li>
-        
-      <li>SensorGroups</li>
-    
-    
-      <li class="wy-breadcrumbs-aside">
-        
-            
-            <a href="../../_sources/api/CentralService/sensorgroup.rst.txt" rel="nofollow"> View page source</a>
-          
-        
-      </li>
-    
-  </ul>
-
-  
-  <hr/>
-</div>
-          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
-           <div itemprop="articleBody">
-            
-  <div class="section" id="sensorgroups">
-<h1>SensorGroups<a class="headerlink" href="#sensorgroups" title="Permalink to this headline">¶</a></h1>
-<p>SensorGroups are a virtual collection of sensors that are created based on the tags that are specified. Each sensor may consist a set of tags. The list of sensors that belong to a SensorGroup can be changed by modifying the tags attached to this SensorGroup. All sensors having the current tags will fall under this SensorGroup automatically for any subsequent operations. SensorGroups can be defined in the CentralService at <a class="reference external" href="http://www.example.com:81/api/sensorgroup">http://www.example.com:81/api/sensorgroup</a>.</p>
-<div class="section" id="create-sensorgroup">
-<h2>Create SensorGroup<a class="headerlink" href="#create-sensorgroup" title="Permalink to this headline">¶</a></h2>
-<p>This request creates a new SensorGroup with the name and description in the building specified by the user.</p>
-<div class="compound">
-<p class="compound-first"><strong>Example request</strong>:</p>
-<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">POST</span> <span class="nn">/api/sensor_group</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+                        <div class="section" id="sensorgroups">
+                            <h1>SensorGroups<a class="headerlink" href="#sensorgroups"
+                                               title="Permalink to this headline">¶</a></h1>
+                            <p>SensorGroups are a virtual collection of sensors that are created based on the tags that
+                                are specified. Each sensor may consist a set of tags. The list of sensors that belong to
+                                a SensorGroup can be changed by modifying the tags attached to this SensorGroup. All
+                                sensors having the current tags will fall under this SensorGroup automatically for any
+                                subsequent operations. SensorGroups can be defined in the CentralService at <a
+                                        class="reference external" href="http://www.example.com:81/api/sensorgroup">http://www.example.com:81/api/sensorgroup</a>.
+                            </p>
+                            <div class="section" id="create-sensorgroup">
+                                <h2>Create SensorGroup<a class="headerlink" href="#create-sensorgroup"
+                                                         title="Permalink to this headline">¶</a></h2>
+                                <p>This request creates a new SensorGroup with the name and description in the building
+                                    specified by the user.</p>
+                                <div class="compound">
+                                    <p class="compound-first"><strong>Example request</strong>:</p>
+                                    <div class="compound-middle highlight-http notranslate">
+                                        <div class="highlight"><pre><span></span><span class="nf">POST</span> <span
+                                                class="nn">/api/sensor_group</span> <span class="kr">HTTP</span><span
+                                                class="o">/</span><span class="m">1.1</span>
 <span class="na">Accept</span><span class="o">:</span> <span class="l">application/json; charset=utf-8</span>
 
 { &quot;data&quot;: {
@@ -200,99 +194,143 @@
               &quot;description&quot;:&quot;Description for Sensor Group&quot;
           }
 }
-</pre></div>
-</div>
-<p class="compound-middle"><strong>Example response</strong> (for success):</p>
-<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+</pre>
+                                        </div>
+                                    </div>
+                                    <p class="compound-middle"><strong>Example response</strong> (for success):</p>
+                                    <div class="compound-middle highlight-http notranslate">
+                                        <div class="highlight"><pre><span></span><span class="kr">HTTP</span><span
+                                                class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span
+                                                class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
 <span class="p">{</span>
   <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;True&quot;</span>
 <span class="p">}</span>
-</pre></div>
-</div>
-<p class="compound-middle"><strong>Example response</strong> (for failure):</p>
-<div class="compound-last highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+</pre>
+                                        </div>
+                                    </div>
+                                    <p class="compound-middle"><strong>Example response</strong> (for failure):</p>
+                                    <div class="compound-last highlight-http notranslate">
+                                        <div class="highlight"><pre><span></span><span class="kr">HTTP</span><span
+                                                class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span
+                                                class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
 <span class="p">{</span>
-  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;False&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;Building does not exist&quot;</span>
+  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;False&quot;</span><span
+                                                    class="p">,</span>
+  <span class="nt">&quot;error&quot;</span><span class="p">:</span> <span
+                                                    class="s2">&quot;Building does not exist&quot;</span>
 <span class="p">}</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="section" id="get-sensorgroup-details">
-<h2>Get SensorGroup Details<a class="headerlink" href="#get-sensorgroup-details" title="Permalink to this headline">¶</a></h2>
-<p>This request retrieves the details of a SensorGroup</p>
-<div class="compound">
-<p class="compound-first"><strong>Example request</strong>:</p>
-<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">GET</span> <span class="nn">/api/sensor_group/Test</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+</pre>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="section" id="get-sensorgroup-details">
+                                <h2>Get SensorGroup Details<a class="headerlink" href="#get-sensorgroup-details"
+                                                              title="Permalink to this headline">¶</a></h2>
+                                <p>This request retrieves the details of a SensorGroup</p>
+                                <div class="compound">
+                                    <p class="compound-first"><strong>Example request</strong>:</p>
+                                    <div class="compound-middle highlight-http notranslate">
+                                        <div class="highlight"><pre><span></span><span class="nf">GET</span> <span
+                                                class="nn">/api/sensor_group/Test</span> <span
+                                                class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
 <span class="na">Accept</span><span class="o">:</span> <span class="l">application/json; charset=utf-8</span>
-</pre></div>
-</div>
-<p class="compound-middle"><strong>Example response</strong> (for success):</p>
-<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+</pre>
+                                        </div>
+                                    </div>
+                                    <p class="compound-middle"><strong>Example response</strong> (for success):</p>
+                                    <div class="compound-middle highlight-http notranslate">
+                                        <div class="highlight"><pre><span></span><span class="kr">HTTP</span><span
+                                                class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span
+                                                class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
 <span class="p">{</span>
   <span class="nt">&quot;success&quot;</span> <span class="p">:</span> <span class="s2">&quot;true&quot;</span>
-  <span class="s2">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;Test&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;Test&quot;</span><span
+                                                    class="p">,</span>
   <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;A SensorGroup for Test&quot;</span>
   <span class="s2">&quot;building&quot;</span><span class="p">:</span><span class="s2">&quot;NSH&quot;</span>
 <span class="p">}</span>
-</pre></div>
-</div>
-<p class="compound-middle"><strong>Example response</strong> (for failure):</p>
-<div class="compound-last highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+</pre>
+                                        </div>
+                                    </div>
+                                    <p class="compound-middle"><strong>Example response</strong> (for failure):</p>
+                                    <div class="compound-last highlight-http notranslate">
+                                        <div class="highlight"><pre><span></span><span class="kr">HTTP</span><span
+                                                class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span
+                                                class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
 <span class="p">{</span>
-  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;False&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;False&quot;</span><span
+                                                    class="p">,</span>
   <span class="nt">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;SensorGroup does not exist&quot;</span>
 <span class="p">}</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="section" id="delete-sensorgroup">
-<h2>Delete SensorGroup<a class="headerlink" href="#delete-sensorgroup" title="Permalink to this headline">¶</a></h2>
-<p>This request deletes the SensorGroup</p>
-<div class="compound">
-<p class="compound-first"><strong>Example request</strong>:</p>
-<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">DELETE</span> <span class="nn">/api/sensor_group/Test</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+</pre>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="section" id="delete-sensorgroup">
+                                <h2>Delete SensorGroup<a class="headerlink" href="#delete-sensorgroup"
+                                                         title="Permalink to this headline">¶</a></h2>
+                                <p>This request deletes the SensorGroup</p>
+                                <div class="compound">
+                                    <p class="compound-first"><strong>Example request</strong>:</p>
+                                    <div class="compound-middle highlight-http notranslate">
+                                        <div class="highlight"><pre><span></span><span class="nf">DELETE</span> <span
+                                                class="nn">/api/sensor_group/Test</span> <span
+                                                class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
 <span class="na">Accept</span><span class="o">:</span> <span class="l">application/json; charset=utf-8</span>
-</pre></div>
-</div>
-<p class="compound-middle"><strong>Example response (for success)</strong>:</p>
-<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+</pre>
+                                        </div>
+                                    </div>
+                                    <p class="compound-middle"><strong>Example response (for success)</strong>:</p>
+                                    <div class="compound-middle highlight-http notranslate">
+                                        <div class="highlight"><pre><span></span><span class="kr">HTTP</span><span
+                                                class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span
+                                                class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
 <span class="p">{</span>
   <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;True&quot;</span>
 <span class="p">}</span>
-</pre></div>
-</div>
-<p class="compound-middle"><strong>Example response</strong> (for failure):</p>
-<div class="compound-last highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+</pre>
+                                        </div>
+                                    </div>
+                                    <p class="compound-middle"><strong>Example response</strong> (for failure):</p>
+                                    <div class="compound-last highlight-http notranslate">
+                                        <div class="highlight"><pre><span></span><span class="kr">HTTP</span><span
+                                                class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span
+                                                class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
 <span class="p">{</span>
-  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;False&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;False&quot;</span><span
+                                                    class="p">,</span>
   <span class="nt">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;SensorGroup does not exist&quot;</span>
 <span class="p">}</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="section" id="add-tags-to-sensorgroup">
-<h2>Add tags to SensorGroup<a class="headerlink" href="#add-tags-to-sensorgroup" title="Permalink to this headline">¶</a></h2>
-<p>This request adds the tags specified in the request to the SensorGroup</p>
-<p>Note: The list of tags sent in this request will overwrite the previous list.</p>
-<div class="compound">
-<p class="compound-first"><strong>Example request</strong>:</p>
-<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">POST</span> <span class="nn">/api/sensor_group/test/tags</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+</pre>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="section" id="add-tags-to-sensorgroup">
+                                <h2>Add tags to SensorGroup<a class="headerlink" href="#add-tags-to-sensorgroup"
+                                                              title="Permalink to this headline">¶</a></h2>
+                                <p>This request adds the tags specified in the request to the SensorGroup</p>
+                                <p>Note: The list of tags sent in this request will overwrite the previous list.</p>
+                                <div class="compound">
+                                    <p class="compound-first"><strong>Example request</strong>:</p>
+                                    <div class="compound-middle highlight-http notranslate">
+                                        <div class="highlight"><pre><span></span><span class="nf">POST</span> <span
+                                                class="nn">/api/sensor_group/test/tags</span> <span
+                                                class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
 <span class="na">Accept</span><span class="o">:</span> <span class="l">application/json; charset=utf-8</span>
 
 
@@ -310,30 +348,46 @@
           ]
   }
 }
-</pre></div>
-</div>
-<p class="compound-middle"><strong>Example response</strong>:</p>
-<div class="compound-last highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+</pre>
+                                        </div>
+                                    </div>
+                                    <p class="compound-middle"><strong>Example response</strong>:</p>
+                                    <div class="compound-last highlight-http notranslate">
+                                        <div class="highlight"><pre><span></span><span class="kr">HTTP</span><span
+                                                class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span
+                                                class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
 <span class="p">{</span>
   <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;True&quot;</span>
 <span class="p">}</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="section" id="get-list-of-tags-in-sensorgroup">
-<h2>Get list of tags in SensorGroup<a class="headerlink" href="#get-list-of-tags-in-sensorgroup" title="Permalink to this headline">¶</a></h2>
-<p>This request retrieves two lists of key-value pairs, one list contains the array of eligible tags that can be attached to this SensorGroup and the other list contains the array of tags that are currently attached to this SensorGroup.</p>
-<div class="compound">
-<p class="compound-first"><strong>Example request</strong>:</p>
-<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">GET</span> <span class="nn">/api/sensor_group/test/tags</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+</pre>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="section" id="get-list-of-tags-in-sensorgroup">
+                                <h2>Get list of tags in SensorGroup<a class="headerlink"
+                                                                      href="#get-list-of-tags-in-sensorgroup"
+                                                                      title="Permalink to this headline">¶</a></h2>
+                                <p>This request retrieves two lists of key-value pairs, one list contains the array of
+                                    eligible tags that can be attached to this SensorGroup and the other list contains
+                                    the array of tags that are currently attached to this SensorGroup.</p>
+                                <div class="compound">
+                                    <p class="compound-first"><strong>Example request</strong>:</p>
+                                    <div class="compound-middle highlight-http notranslate">
+                                        <div class="highlight"><pre><span></span><span class="nf">GET</span> <span
+                                                class="nn">/api/sensor_group/test/tags</span> <span
+                                                class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
 <span class="na">Accept</span><span class="o">:</span> <span class="l">application/json; charset=utf-8</span>
-</pre></div>
-</div>
-<p class="compound-middle"><strong>Example response</strong>:</p>
-<div class="compound-last highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+</pre>
+                                        </div>
+                                    </div>
+                                    <p class="compound-middle"><strong>Example response</strong>:</p>
+                                    <div class="compound-last highlight-http notranslate">
+                                        <div class="highlight"><pre><span></span><span class="kr">HTTP</span><span
+                                                class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span
+                                                class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
 <span class="p">{</span>
@@ -352,92 +406,95 @@
 
   <span class="nt">&quot;tags_owned&quot;</span><span class="p">:</span> <span class="p">[</span>
                   <span class="p">{</span>
-                   <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Corridor&quot;</span><span class="p">,</span>
-                   <span class="nt">&quot;value&quot;</span><span class="p">:</span> <span class="s2">&quot;3600&quot;</span>
+                   <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Corridor&quot;</span><span
+                                                    class="p">,</span>
+                   <span class="nt">&quot;value&quot;</span><span class="p">:</span> <span
+                                                    class="s2">&quot;3600&quot;</span>
                   <span class="p">},</span>
                   <span class="p">{</span>
-                   <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Floor&quot;</span><span class="p">,</span>
-                   <span class="nt">&quot;value&quot;</span><span class="p">:</span> <span class="s2">&quot;3&quot;</span>
+                   <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span
+                                                    class="s2">&quot;Floor&quot;</span><span class="p">,</span>
+                   <span class="nt">&quot;value&quot;</span><span class="p">:</span> <span
+                                                    class="s2">&quot;3&quot;</span>
                   <span class="p">},</span>
                   <span class="p">{</span>
-                   <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Room&quot;</span><span class="p">,</span>
-                   <span class="nt">&quot;value&quot;</span><span class="p">:</span> <span class="s2">&quot;3606&quot;</span>
+                   <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span
+                                                    class="s2">&quot;Room&quot;</span><span class="p">,</span>
+                   <span class="nt">&quot;value&quot;</span><span class="p">:</span> <span
+                                                    class="s2">&quot;3606&quot;</span>
                   <span class="p">}</span>
                 <span class="p">]</span>
 <span class="p">}</span>
-</pre></div>
-</div>
-</div>
-</div>
-</div>
+</pre>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
 
-           </div>
-          </div>
-          <footer>
-  
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="usergroup.html" class="btn btn-neutral float-right" title="Usergroups" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
-      
-      
-        <a href="sensor.html" class="btn btn-neutral" title="Sensor" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
-    </div>
-  
+                    </div>
+                </div>
+                <footer>
 
-  <hr/>
+                    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
 
-  <div role="contentinfo">
-    <p>
-        &copy; Copyright 2020, SynergyLabs.
+                        <a href="usergroup.html" class="btn btn-neutral float-right" title="Usergroups" accesskey="n">Next
+                            <span class="fa fa-arrow-circle-right"></span></a>
 
-    </p>
-  </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> and ❤️  using a custom <a href="https://github.com/LinxiFan/Sphinx-theme">theme</a> based on <a href="https://readthedocs.org">Read the Docs</a>. 
 
-</footer>
+                        <a href="sensor.html" class="btn btn-neutral" title="Sensor" accesskey="p"><span
+                                class="fa fa-arrow-circle-left"></span> Previous</a>
 
+                    </div>
+
+
+                    <hr/>
+
+                    <div role="contentinfo">
+                        <p>
+                            &copy; Copyright 2020, SynergyLabs.
+
+                        </p>
+                    </div>
+                    Built with <a href="http://sphinx-doc.org/">Sphinx</a> and ❤️ using a custom <a
+                        href="https://github.com/LinxiFan/Sphinx-theme">theme</a> based on <a
+                        href="https://readthedocs.org">Read the Docs</a>.
+
+                </footer>
+
+            </div>
         </div>
-      </div>
 
     </section>
 
-  </div>
-  
+</div>
 
 
-  
+<script type="text/javascript">
+    var DOCUMENTATION_OPTIONS = {
+        URL_ROOT: '../../',
+        VERSION: '3.2.9',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE: true,
+        SOURCELINK_SUFFIX: '.txt'
+    };
+</script>
+<script type="text/javascript" src="../../_static/jquery.js"></script>
+<script type="text/javascript" src="../../_static/underscore.js"></script>
+<script type="text/javascript" src="../../_static/doctools.js"></script>
 
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../../',
-            VERSION:'3.2.9',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="../../_static/jquery.js"></script>
-      <script type="text/javascript" src="../../_static/underscore.js"></script>
-      <script type="text/javascript" src="../../_static/doctools.js"></script>
 
-  
+<script type="text/javascript" src="../../_static/js/theme.js"></script>
 
-  
-  
-    <script type="text/javascript" src="../../_static/js/theme.js"></script>
-  
 
-  
-  
-  <script type="text/javascript">
-      jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
-      });
-  </script>
-   
+<script type="text/javascript">
+    jQuery(function () {
+        SphinxRtdTheme.StickyNav.enable();
+    });
+</script>
+
 
 </body>
 </html>

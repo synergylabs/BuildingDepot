@@ -13,31 +13,34 @@ template.
 """
 from flask import jsonify, request
 from flask.views import MethodView
+
 from .. import responses
 from ..helper import add_delete, gen_update, check_oauth
-from ...models.cs_models import TagType, BuildingTemplate, Building
 from ... import oauth
 from ...auth.access_control import super_required
+from ...models.cs_models import TagType, BuildingTemplate, Building
 
 
 class BuildingTemplateService(MethodView):
-    params = ['name', 'description', 'tag_types']
+    params = ["name", "description", "tag_types"]
 
     @check_oauth
     @super_required
     def post(self):
         try:
-            data = request.get_json()['data']
+            data = request.get_json()["data"]
         except KeyError:
             return jsonify(responses.missing_data)
         try:
-            name = data['name']
+            name = data["name"]
         except:
             return jsonify(responses.missing_parameters)
         if not name:
-            return jsonify({'success':'False', 'error': 'Invalid Building Template name.'})
+            return jsonify(
+                {"success": "False", "error": "Invalid Building Template name."}
+            )
         template = BuildingTemplate.objects(name=name).first()
-        tagtypes = data.get('tag_types')
+        tagtypes = data.get("tag_types")
         if not tagtypes:
             tagtypes = []
         for tagtype in tagtypes:
@@ -47,13 +50,13 @@ class BuildingTemplateService(MethodView):
         if template is None:
             BuildingTemplate(**gen_update(self.params, data)).save()
         else:
-            added, deleted = add_delete(template['tag_types'], tagtypes)
+            added, deleted = add_delete(template["tag_types"], tagtypes)
             collection = Building._get_collection()
             for tagtype in deleted:
                 if collection.find({"template": name, "tags.name": name}).count() > 0:
                     return jsonify(responses.tagtype_in_use)
             collection = BuildingTemplate._get_collection()
-            collection.update({'name': name}, {'$set': gen_update(self.params, data)})
+            collection.update({"name": name}, {"$set": gen_update(self.params, data)})
         return jsonify(responses.success_true)
 
     @check_oauth
@@ -62,9 +65,13 @@ class BuildingTemplateService(MethodView):
         if template is None:
             return jsonify(responses.invalid_template)
         response = dict(responses.success_true)
-        response.update({'name': template['name'],
-                         'description': template['description'],
-                         'tag_types': template['tag_types']})
+        response.update(
+            {
+                "name": template["name"],
+                "description": template["description"],
+                "tag_types": template["tag_types"],
+            }
+        )
         return jsonify(response)
 
     @check_oauth

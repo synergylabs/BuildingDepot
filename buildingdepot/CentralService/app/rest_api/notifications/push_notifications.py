@@ -12,10 +12,11 @@ then this class must be extended in another file. After extending this class and
 @license: CMU License. See License file for details.
 """
 
-import pika
 import firebase_admin
-from firebase_admin import messaging
+import pika
 from firebase_admin import credentials
+from firebase_admin import messaging
+
 from ... import notification_type, firebase_credentials
 
 

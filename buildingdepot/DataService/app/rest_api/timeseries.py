@@ -9,88 +9,114 @@ data stores.
 @copyright: (c) 2020 SynergyLabs
 @license: CMU License. See License file for details.
 """
-from flask.views import MethodView
+import influxdb
+import sys
+import time
 from flask import request, jsonify, abort
-from . import responses
-from .. import r, influx, oauth, exchange
-from .helper import jsonString, timestamp_to_time_string, check_oauth, get_email
-from .helper import connect_broker
-import sys, time, influxdb
+from flask.views import MethodView
 
-sys.path.append('/srv/buildingdepot')
-from ..api_0_0.resources.utils import authenticate_acl, permission, batch_permission_check
+from . import responses
+from .helper import connect_broker
+from .helper import jsonString, timestamp_to_time_string, check_oauth, get_email
+from .. import r, influx, oauth, exchange
+
+sys.path.append("/srv/buildingdepot")
+from ..api_0_0.resources.utils import (
+    authenticate_acl,
+    permission,
+    batch_permission_check,
+)
 
 
 class TimeSeriesService(MethodView):
     @check_oauth
-    @authenticate_acl('r')
+    @authenticate_acl("r")
     def get(self, name):
         """Reads the time series data of the sensor over the interval specified and returns it to the
-           user. If resolution is also specified then data points will be averaged over the resolution
-           period and returned
+        user. If resolution is also specified then data points will be averaged over the resolution
+        period and returned
 
-           Args as data:
-            "name" : <sensor uuid>
-            "start_time" : <unix timestamp of start time>
-            "end_time" : <unix timestamp of end time>
-            "resolution" : <optional resolution can be specified to scale down data",
-            "fields" : "<field1>;<feild2>"
+        Args as data:
+         "name" : <sensor uuid>
+         "start_time" : <unix timestamp of start time>
+         "end_time" : <unix timestamp of end time>
+         "resolution" : <optional resolution can be specified to scale down data",
+         "fields" : "<field1>;<feild2>"
 
-           Returns (JSON):
-           {
-                "data": {
-                        "series" : [
-                            "columns" : [column definitions]
-                        ]
-                        "name": <sensor-uuid>
-                        "values" : [list of sensor values]
-                }
-                "success" : <True or False>
-           }
-           Note: 'columns' = ['time', 'mean_value',
-                              'mean_200_hz_magnitude', 'mean_200_hz_phase']
+        Returns (JSON):
+        {
+             "data": {
+                     "series" : [
+                         "columns" : [column definitions]
+                     ]
+                     "name": <sensor-uuid>
+                     "values" : [list of sensor values]
+             }
+             "success" : <True or False>
+        }
+        Note: 'columns' = ['time', 'mean_value',
+                           'mean_200_hz_magnitude', 'mean_200_hz_phase']
         """
 
-        start_time = request.args.get('start_time')
-        end_time = request.args.get('end_time')
-        resolution = request.args.get('resolution')
-        fields= request.args.get('fields')
+        start_time = request.args.get("start_time")
+        end_time = request.args.get("end_time")
+        resolution = request.args.get("resolution")
+        fields = request.args.get("fields")
         original_fields = fields
         if fields:
-            fields = fields.split(';')
+            fields = fields.split(";")
             original_fields = fields
             fields = '"' + '", "'.join(fields) + '"'
         else:
-            fields = '*'
+            fields = "*"
 
         if not all([start_time, end_time]):
             return jsonify(responses.missing_parameters)
 
-        if r.sismember('views', name):
-            allowed_fields = [value.strip() for value in r.get('fields:{}'.format(name)).split(',')]
+        if r.sismember("views", name):
+            allowed_fields = [
+                value.strip() for value in r.get("fields:{}".format(name)).split(",")
+            ]
             if original_fields:
                 fields = [field for field in original_fields if field in allowed_fields]
-                fields = ','.join(fields)
+                fields = ",".join(fields)
             else:
-                fields = ','.join(allowed_fields)
-            name = r.get('parent:{}'.format(name))
+                fields = ",".join(allowed_fields)
+            name = r.get("parent:{}".format(name))
 
         if resolution:
-            if fields == '*':
-                return jsonify('TODO: Fields are not supported with resolution')
+            if fields == "*":
+                return jsonify("TODO: Fields are not supported with resolution")
             try:
-                query = 'select mean(*) from "' + name + '" where (time>\'' + timestamp_to_time_string(
-                        float(start_time)) \
-                    + '\' and time<\'' + timestamp_to_time_string(
-                        float(end_time)) + '\')' + " GROUP BY time(" + resolution + ")"
+                query = (
+                    'select mean(*) from "'
+                    + name
+                    + "\" where (time>'"
+                    + timestamp_to_time_string(float(start_time))
+                    + "' and time<'"
+                    + timestamp_to_time_string(float(end_time))
+                    + "')"
+                    + " GROUP BY time("
+                    + resolution
+                    + ")"
+                )
                 data = influx.query(query)
             except influxdb.exceptions.InfluxDBClientError:
                 return jsonify(responses.resolution_high)
         else:
-            if fields is not '*':
-                fields = '"' + '", "'.join(fields.split(',')) + '"'
-            query = 'select ' + fields + ' from "' + name + '" where time>\'' + timestamp_to_time_string(float(start_time)) \
-                + '\' and time<\'' + timestamp_to_time_string(float(end_time)) + '\''
+            if fields is not "*":
+                fields = '"' + '", "'.join(fields.split(",")) + '"'
+            query = (
+                "select "
+                + fields
+                + ' from "'
+                + name
+                + "\" where time>'"
+                + timestamp_to_time_string(float(start_time))
+                + "' and time<'"
+                + timestamp_to_time_string(float(end_time))
+                + "'"
+            )
 
             # # Log InfluxDB Query # #
             # print ('\n\n' + '{s:{c}^{n}}'.format(s=' InfluxDB Query ', n=100, c='#'))
@@ -103,7 +129,7 @@ class TimeSeriesService(MethodView):
         # print ('\n\n' + '{s:{c}^{n}}'.format(s=' InfluxDB Data ', n=100, c='#'))
         # print (data.raw)
         # print ('#' * 100 + '\n\n')
-        response.update({'data': data.raw})
+        response.update({"data": data.raw})
 
         return jsonify(response)
 
@@ -139,27 +165,27 @@ class TimeSeriesService(MethodView):
         try:
             postData = request.get_json()
             if "data" in postData:
-                json = postData['data']
+                json = postData["data"]
             else:
                 json = postData
             points = []
-            sensors_list = [sensor['sensor_id'] for sensor in json]
+            sensors_list = [sensor["sensor_id"] for sensor in json]
             permissions = batch_permission_check(sensors_list, get_email())
             # Check if there are any apps associated with the sensors
             views_list = []
             for sensor in sensors_list:
-                views_list = views_list + list(r.smembers('views:{}'.format(sensor)))
+                views_list = views_list + list(r.smembers("views:{}".format(sensor)))
             sensors_list = sensors_list + views_list
             pipeline = r.pipeline()
             for sensor in sensors_list:
-                pipeline.exists(''.join(['apps:', sensor]))
+                pipeline.exists("".join(["apps:", sensor]))
             apps = dict(list(zip(sensors_list, pipeline.execute())))
             for sensor in json:
                 # check a user has permission
                 unauthorised_sensor = []
                 # If 'w' (write is in the permission), authorize
-                if 'w' in permissions[sensor['sensor_id']]:
-                    for sample in sensor['samples']:
+                if "w" in permissions[sensor["sensor_id"]]:
+                    for sample in sensor["samples"]:
                         for key in list(sample.keys()):
                             if type(sample[key]) is list:
                                 length = len(sample[key])
@@ -167,25 +193,27 @@ class TimeSeriesService(MethodView):
                                     sample.update({"%s-%d" % (key, i): sample[key][i]})
                                 del sample[key]
                         dic = {
-                            'measurement': sensor['sensor_id'],
-                            'time': timestamp_to_time_string(sample['time']),
-                            'fields': {
-                                'inserted_at': timestamp_to_time_string(time.time()),
-                                #'value': sample['value']
-                            }
+                            "measurement": sensor["sensor_id"],
+                            "time": timestamp_to_time_string(sample["time"]),
+                            "fields": {
+                                "inserted_at": timestamp_to_time_string(time.time()),
+                                # 'value': sample['value']
+                            },
                         }
-                        del sample['time']
-                        dic['fields'].update(sample)
+                        del sample["time"]
+                        dic["fields"].update(sample)
                         points.append(dic)
-                    views = r.smembers('views:{}'.format(sensor['sensor_id']))
+                    views = r.smembers("views:{}".format(sensor["sensor_id"]))
                     for view in views:
                         fields = []
-                        view_fields = r.get('fields:{}'.format(view))
+                        view_fields = r.get("fields:{}".format(view))
                         if view_fields:
-                            fields = [field.strip() for field in view_fields.split(',')]
+                            fields = [field.strip() for field in view_fields.split(",")]
                         view_dic = dict(dic)
-                        view_fields = {k: v for k, v in list(dic['fields'].items()) if k in fields }
-                        view_dic.update({'fields': view_fields})
+                        view_fields = {
+                            k: v for k, v in list(dic["fields"].items()) if k in fields
+                        }
+                        view_dic.update({"fields": view_fields})
                         if apps[view]:
                             if not pubsub:
                                 pubsub = connect_broker()
@@ -194,17 +222,27 @@ class TimeSeriesService(MethodView):
                                     try:
                                         channel = pubsub.channel()
                                     except Exception as e:
-                                        print(("Failed to open channel" + " error" + str(e)))
+                                        print(
+                                            (
+                                                "Failed to open channel"
+                                                + " error"
+                                                + str(e)
+                                            )
+                                        )
                             try:
                                 # print ('\n\n' + '{s:{c}^{n}}'.format(s=' view_dic ', n=100, c='#'))
                                 # print (view_dic)
                                 # print ('#' * 100 + '\n\n')
-                                channel.basic_publish(exchange=exchange, routing_key=view, body=str(view_dic))
+                                channel.basic_publish(
+                                    exchange=exchange,
+                                    routing_key=view,
+                                    body=str(view_dic),
+                                )
                             except Exception as e:
                                 print("except inside")
                                 print(("Failed to write to broker " + str(e)))
 
-                    if apps[sensor['sensor_id']]:
+                    if apps[sensor["sensor_id"]]:
                         if not pubsub:
                             pubsub = connect_broker()
 
@@ -212,17 +250,23 @@ class TimeSeriesService(MethodView):
                                 try:
                                     channel = pubsub.channel()
                                 except Exception as e:
-                                    print(("Failed to open channel" + " error" + str(e)))
+                                    print(
+                                        ("Failed to open channel" + " error" + str(e))
+                                    )
                         try:
                             # print ('\n\n' + '{s:{c}^{n}}'.format(s=' dic ', n=100, c='#'))
                             # print (dic)
                             # print ('#' * 100 + '\n\n')
-                            channel.basic_publish(exchange=exchange, routing_key=sensor['sensor_id'], body=str(dic))
+                            channel.basic_publish(
+                                exchange=exchange,
+                                routing_key=sensor["sensor_id"],
+                                body=str(dic),
+                            )
                         except Exception as e:
                             print("except inside")
                             print(("Failed to write to broker " + str(e)))
                 else:
-                    unauthorised_sensor.append(sensor['sensor_id'])
+                    unauthorised_sensor.append(sensor["sensor_id"])
         except KeyError:
             print(json)
             abort(400)
@@ -236,13 +280,17 @@ class TimeSeriesService(MethodView):
         if result:
             if len(unauthorised_sensor) > 0:
                 response = dict(responses.success_false)
-                response.update({'unauthorised_sensor': unauthorised_sensor,
-                                 'error': 'Unauthorised sensors present'})
+                response.update(
+                    {
+                        "unauthorised_sensor": unauthorised_sensor,
+                        "error": "Unauthorised sensors present",
+                    }
+                )
             else:
                 response = dict(responses.success_true)
         else:
             response = dict(responses.success_false)
-            response.update({'error': 'Error in writing in InfluxDB'})
+            response.update({"error": "Error in writing in InfluxDB"})
 
         if pubsub:
             try:

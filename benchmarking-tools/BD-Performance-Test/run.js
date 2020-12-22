@@ -6,17 +6,15 @@ let config = require('./config.json'),
 
 if (process.argv[2] === undefined) {
     testSuite = config.testSuite;
-}
-else {
+} else {
     testSuite = process.argv[2];
 }
 
-let runTestSuite = async function(testSuite){
-    if(await fileSystemHandler.exists(testSuite)){
+let runTestSuite = async function (testSuite) {
+    if (await fileSystemHandler.exists(testSuite)) {
         let testSuiteJSON = (await fileSystemHandler.readFile(testSuite)).toString();
         run.addTestSuite(JSON.parse(testSuiteJSON));
-    }
-    else{
+    } else {
         run.addTestSuite(await run.createTestSuite(testSuite));
     }
 };
