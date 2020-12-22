@@ -37,6 +37,16 @@ oauth = OAuth2Provider()
 svr = ServerProxy("http://localhost:8080")
 r = redis.Redis(host=app.config['REDIS_HOST'],password=app.config['REDIS_PWD'],decode_responses=True)
 
+try:
+    notification_type = app.config['NOTIFICATION_TYPE']
+except KeyError:
+    notification_type = "RABBITMQ"
+
+try:
+    firebase_credentials = app.config['FIREBASE_CREDENTIALS']
+except KeyError:
+    firebase_credentials = None
+
 def create_app(config_mode): # TODO: remove config_mode
 
     connect(db=app.config['MONGODB_DATABASE'],

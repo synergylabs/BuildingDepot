@@ -1,2 +1,3 @@
 *.pyc
 *.idea/
+!buildingdepot/CentralService/app/rest_api/network/push_notifications.py
