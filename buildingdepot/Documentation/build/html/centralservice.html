@@ -215,17 +215,19 @@ There are four levels of permission defined in BuildingDepot which are ‘d/r’
 between a user and a point then the one that is most restrictive is chosen. The deny read
 permission level, in particular, is important for maintaining privacy of data for various groups
 simultaneously using BuildingDepot for a building.</p>
-<dl class="simple">
-<dt>Different evels of permission access:</dt><dd><ul class="simple">
-<li><p><strong>d/r</strong>: Deny/Read will deny any access to the points</p></li>
-<li><p><strong>r</strong>: Read will give read only access to the points</p></li>
-<li><p><strong>r/w</strong>: Read/Write will give read and write access to the points (such as changing values of actuators)</p></li>
-<li><p><strong>r/w/p</strong>: Read/Write/Permission is the highest level of permission that can be assigned. Will give read and write access to the points. This permission also allows users to alter permissions for the points (see above).</p></li>
+<dl class="docutils">
+<dt>Different evels of permission access:</dt>
+<dd><ul class="first last simple">
+<li><strong>d/r</strong>: Deny/Read will deny any access to the points</li>
+<li><strong>r</strong>: Read will give read only access to the points</li>
+<li><strong>r/w</strong>: Read/Write will give read and write access to the points (such as changing values of actuators)</li>
+<li><strong>r/w/p</strong>: Read/Write/Permission is the highest level of permission that can be assigned. Will give read and write access to the points. This permission also allows users to alter permissions for the points (see above).</li>
 </ul>
 </dd>
-<dt><strong>Note:</strong></dt><dd><ul class="simple">
-<li><p>The <em>ownership</em> level of permission is assigned at the point of creation. It has all privileges of r/w/p. Additionally, it cannot be revoked or changed under any circumstances.</p></li>
-<li><p>The <em>super</em> users of BuildingDepot have r/w/p access to all the points.</p></li>
+<dt><strong>Note:</strong></dt>
+<dd><ul class="first last simple">
+<li>The <em>ownership</em> level of permission is assigned at the point of creation. It has all privileges of r/w/p. Additionally, it cannot be revoked or changed under any circumstances.</li>
+<li>The <em>super</em> users of BuildingDepot have r/w/p access to all the points.</li>
 </ul>
 </dd>
 </dl>
@@ -326,7 +328,6 @@ r/w/p access to will be the points that the users will gain access to based on t
       <script type="text/javascript" src="_static/jquery.js"></script>
       <script type="text/javascript" src="_static/underscore.js"></script>
       <script type="text/javascript" src="_static/doctools.js"></script>
-      <script type="text/javascript" src="_static/language_data.js"></script>
 
   
 

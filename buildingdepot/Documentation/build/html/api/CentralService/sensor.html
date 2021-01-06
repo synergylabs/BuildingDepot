@@ -98,31 +98,28 @@
 </ul>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">CentralService APIs</a><ul class="current">
-<li class="toctree-l2 current"><a class="reference internal" href="index.html#authentication">Authentication</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="oauth.html">OAuth</a></li>
-<li class="toctree-l3"><a class="reference internal" href="tagtype.html">TagType</a></li>
-<li class="toctree-l3"><a class="reference internal" href="buildingtemplate.html">BuildingTemplate</a></li>
-<li class="toctree-l3"><a class="reference internal" href="building.html">Buildings</a></li>
-<li class="toctree-l3"><a class="reference internal" href="dataservice.html">DataService</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">Sensor</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#create-a-sensor">Create a Sensor</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#get-sensor-details">Get Sensor details</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#delete-a-sensor">Delete a Sensor</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#search-sensors">Search Sensors</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#add-tags-to-a-sensor">Add Tags to a Sensor</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#get-tags-of-a-sensor">Get Tags of a Sensor</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#create-a-sensor-view">Create a Sensor View</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#get-sensor-view-details">Get Sensor View details</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#delete-a-sensor-view">Delete a Sensor View</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#sensorgroups-and-usergroups">SensorGroups and UserGroups</a></li>
+<li class="toctree-l2"><a class="reference internal" href="oauth.html">OAuth</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tagtype.html">TagType</a></li>
+<li class="toctree-l2"><a class="reference internal" href="buildingtemplate.html">BuildingTemplate</a></li>
+<li class="toctree-l2"><a class="reference internal" href="building.html">Buildings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dataservice.html">DataService</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Sensor</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#create-a-sensor">Create a Sensor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#get-sensor-details">Get Sensor details</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#delete-a-sensor">Delete a Sensor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#search-sensors">Search Sensors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#add-tags-to-a-sensor">Add Tags to a Sensor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#get-tags-of-a-sensor">Get Tags of a Sensor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#create-a-sensor-view">Create a Sensor View</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#get-sensor-view-details">Get Sensor View details</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#delete-a-sensor-view">Delete a Sensor View</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#sensorgroups-and-usergroups">SensorGroups and UserGroups</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="sensorgroup.html">SensorGroups</a></li>
-<li class="toctree-l3"><a class="reference internal" href="usergroup.html">Usergroups</a></li>
-<li class="toctree-l3"><a class="reference internal" href="permission.html">Permission</a></li>
-<li class="toctree-l3"><a class="reference internal" href="user.html">User</a></li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="sensorgroup.html">SensorGroups</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usergroup.html">Usergroups</a></li>
+<li class="toctree-l2"><a class="reference internal" href="permission.html">Permission</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user.html">User</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../DataService/index.html">DataService APIs</a></li>
@@ -200,7 +197,7 @@ Sensor access is restricted to Central Service <cite>Users</cite> with permissio
 <p>Creates a new Sensor point in BuildingDepot and returns the UUID.</p>
 <div class="compound">
 <p class="compound-first"><strong>Example request</strong>:</p>
-<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span class="nf">POST</span> <span class="nn">/api/sensor</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">POST</span> <span class="nn">/api/sensor</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
 <span class="na">Accept</span><span class="o">:</span> <span class="l">application/json; charset=utf-8</span>
 
 {
@@ -213,7 +210,7 @@ Sensor access is restricted to Central Service <cite>Users</cite> with permissio
 </pre></div>
 </div>
 <p class="compound-middle"><strong>Example response</strong>:</p>
-<div class="compound-last highlight-http notranslate"><div class="highlight"><pre><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<div class="compound-last highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
 <span class="p">{</span>
@@ -229,16 +226,20 @@ Sensor access is restricted to Central Service <cite>Users</cite> with permissio
 <p>Retrieves all the details of the sensor based on the uuid specified</p>
 <div class="compound">
 <p class="compound-first"><strong>Example request</strong>:</p>
-<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span class="nf">GET</span> <span class="nn">/api/sensor/8aac1048-aa9f-41c9-9c20-6dd81339c7de/views</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">GET</span> <span class="nn">/api/sensor/8aac1048-aa9f-41c9-9c20-6dd81339c7de</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
 <span class="na">Accept</span><span class="o">:</span> <span class="l">application/json; charset=utf-8</span>
 </pre></div>
 </div>
 <p class="compound-middle"><strong>Example response</strong>:</p>
-<div class="compound-last highlight-http notranslate"><div class="highlight"><pre><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<div class="compound-last highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
 <span class="p">{</span>
     <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;True&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;building&quot;</span><span class="p">:</span> <span class="s2">&quot;NSH&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;8aac1048-aa9f-41c9-9c20-6dd81339c7de&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;source_identifier&quot;</span><span class="p">:</span> <span class="s2">&quot;Sensor_Tag&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;source_name&quot;</span><span class="p">:</span> <span class="s2">&quot;Test_Sensor&quot;</span><span class="p">,</span>
     <span class="nt">&quot;views_owned&quot;</span><span class="p">:</span> <span class="p">[</span>
       <span class="p">{</span>
         <span class="nt">&quot;fields&quot;</span><span class="p">:</span> <span class="s2">&quot;EMI-0&quot;</span><span class="p">,</span>
@@ -260,35 +261,41 @@ Sensor access is restricted to Central Service <cite>Users</cite> with permissio
 <h2>Delete a Sensor<a class="headerlink" href="#delete-a-sensor" title="Permalink to this headline">¶</a></h2>
 <p>Delete the Sensor associated with <cite>sensor_uuid</cite>.</p>
 <div class="admonition attention">
-<p class="admonition-title">Attention</p>
+<p class="first admonition-title">Attention</p>
 <p>Restricted to Admins only</p>
-<p>Currently can only be done through the GUI</p>
+<p class="last">Currently can only be done through the GUI</p>
 </div>
 </div>
 <div class="section" id="search-sensors">
 <h2>Search Sensors<a class="headerlink" href="#search-sensors" title="Permalink to this headline">¶</a></h2>
 <p>The Search API is used search sensors based on uuid,source_name,source_identifier, building, Tag and MetaData. Multiple search queries can be sent in a single request.</p>
-<dl class="field-list simple">
-<dt class="field-odd">JSON Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><dl class="simple">
-<dt><strong>data</strong> <cite>(dictionary)</cite> – Contains the list of Search Query key-value pairs</dt><dd><ul>
-<li><p><strong>ID</strong> <cite>(list)</cite> – UUID of the Sensor</p></li>
-<li><p><strong>Building</strong> <cite>(list)</cite> – Building in which the sensor is located</p></li>
-<li><p><strong>Tags</strong> <cite>(list)</cite> – List of tags owned by the sensor. The are given as key,value pairs.</p></li>
-<li><p><strong>Metadata</strong> <cite>(list)</cite> – List of metadata owned by the sensor.The are given as key,value pairs.</p></li>
-<li><p><strong>Source_Identifier</strong> <cite>(list)</cite> – Source identifier of the sensor</p></li>
-<li><p><strong>Source_Name</strong> <cite>(list)</cite> – Source name of the sensor</p></li>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">JSON Parameters:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body"><ul class="first last simple">
+<li><dl class="first docutils">
+<dt><strong>data</strong> <cite>(dictionary)</cite> – Contains the list of Search Query key-value pairs</dt>
+<dd><ul class="first last">
+<li><strong>ID</strong> <cite>(list)</cite> – UUID of the Sensor</li>
+<li><strong>Building</strong> <cite>(list)</cite> – Building in which the sensor is located</li>
+<li><strong>Tags</strong> <cite>(list)</cite> – List of tags owned by the sensor. The are given as key,value pairs.</li>
+<li><strong>Metadata</strong> <cite>(list)</cite> – List of metadata owned by the sensor.The are given as key,value pairs.</li>
+<li><strong>Source_Identifier</strong> <cite>(list)</cite> – Source identifier of the sensor</li>
+<li><strong>Source_Name</strong> <cite>(list)</cite> – Source name of the sensor</li>
 </ul>
 </dd>
 </dl>
 </li>
 </ul>
-</dd>
-</dl>
+</td>
+</tr>
+</tbody>
+</table>
 <div class="compound">
 <p class="compound-first"><strong>Example request</strong>:</p>
-<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span class="nf">POST</span> <span class="nn">/api/sensor/search</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">POST</span> <span class="nn">/api/sensor/search</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
 <span class="na">Accept</span><span class="o">:</span> <span class="l">application/json; charset=utf-8</span>
 
 {
@@ -301,7 +308,7 @@ Sensor access is restricted to Central Service <cite>Users</cite> with permissio
 </pre></div>
 </div>
 <p class="compound-middle"><strong>Example response</strong> (for success):</p>
-<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
 <span class="p">{</span>
@@ -315,7 +322,7 @@ Sensor access is restricted to Central Service <cite>Users</cite> with permissio
 </pre></div>
 </div>
 <p class="compound-middle"><strong>Example response</strong> (for failure):</p>
-<div class="compound-last highlight-http notranslate"><div class="highlight"><pre><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<div class="compound-last highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
 <span class="p">{</span>
@@ -331,7 +338,7 @@ Sensor access is restricted to Central Service <cite>Users</cite> with permissio
 <p>This request adds tags (key-value pairs) to a particular sensor. To get the available tags that can be added to the sensor, please use the get tags of a sensor API to fetch the list of available tags.</p>
 <div class="compound">
 <p class="compound-first"><strong>Example request</strong>:</p>
-<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span class="nf">POST</span> <span class="nn">/api/sensor/be2a09a5-4ef6-4c67-886e-272c37e7e38f/tags</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">POST</span> <span class="nn">/api/sensor/be2a09a5-4ef6-4c67-886e-272c37e7e38f/tags</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
 <span class="na">Accept</span><span class="o">:</span> <span class="l">application/json; charset=utf-8</span>
 
 {
@@ -351,7 +358,7 @@ Sensor access is restricted to Central Service <cite>Users</cite> with permissio
 </pre></div>
 </div>
 <p class="compound-middle"><strong>Example response</strong> (for success):</p>
-<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
 <span class="p">{</span>
@@ -360,7 +367,7 @@ Sensor access is restricted to Central Service <cite>Users</cite> with permissio
 </pre></div>
 </div>
 <p class="compound-middle"><strong>Example response</strong> (for failure):</p>
-<div class="compound-last highlight-http notranslate"><div class="highlight"><pre><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<div class="compound-last highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
 <span class="p">{</span>
@@ -376,12 +383,12 @@ Sensor access is restricted to Central Service <cite>Users</cite> with permissio
 <p>This request retrieves two lists of key-value pairs, one list contains the array of eligible tags that can be attached to this sensor and the other list contains the array of tags that are currently attached to this sensor.</p>
 <div class="compound">
 <p class="compound-first"><strong>Example request</strong>:</p>
-<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span class="nf">GET</span> <span class="nn">/api/sensor/26da099a-3fe0-4966-b068-14f51bcedb6e/tags</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">GET</span> <span class="nn">/api/sensor/26da099a-3fe0-4966-b068-14f51bcedb6e/tags</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
 <span class="na">Accept</span><span class="o">:</span> <span class="l">application/json; charset=utf-8</span>
 </pre></div>
 </div>
 <p class="compound-middle"><strong>Example response</strong> (for success):</p>
-<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
 <span class="p">{</span>
@@ -415,7 +422,7 @@ Sensor access is restricted to Central Service <cite>Users</cite> with permissio
 </pre></div>
 </div>
 <p class="compound-middle"><strong>Example response</strong> (for failure):</p>
-<div class="compound-last highlight-http notranslate"><div class="highlight"><pre><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<div class="compound-last highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
 <span class="p">{</span>
@@ -433,7 +440,7 @@ the user may only want to receive or request a subset of data. This API creates 
 UUID for the sensor.</p>
 <div class="compound">
 <p class="compound-first"><strong>Example request</strong>:</p>
-<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span class="nf">POST</span> <span class="nn">/api/sensor/8aac1048-aa9f-41c9-9c20-6dd81339c7de/views</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">POST</span> <span class="nn">/api/sensor/8aac1048-aa9f-41c9-9c20-6dd81339c7de/views</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
 <span class="na">Accept</span><span class="o">:</span> <span class="l">application/json; charset=utf-8</span>
 
 {
@@ -445,7 +452,7 @@ UUID for the sensor.</p>
 </pre></div>
 </div>
 <p class="compound-middle"><strong>Example response</strong> (for success):</p>
-<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
 <span class="p">{</span>
@@ -455,7 +462,7 @@ UUID for the sensor.</p>
 </pre></div>
 </div>
 <p class="compound-middle"><strong>Example response</strong> (for failure):</p>
-<div class="compound-last highlight-http notranslate"><div class="highlight"><pre><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<div class="compound-last highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
 <span class="p">{</span>
@@ -471,12 +478,12 @@ UUID for the sensor.</p>
 <p>Retrieves all the views of the sensor based on the sensor uuid specified</p>
 <div class="compound">
 <p class="compound-first"><strong>Example request</strong>:</p>
-<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span class="nf">GET</span> <span class="nn">/api/sensor/6cf53d24-e3a3-41bd-b2b5-8f109694f628</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">GET</span> <span class="nn">/api/sensor/6cf53d24-e3a3-41bd-b2b5-8f109694f628</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
 <span class="na">Accept</span><span class="o">:</span> <span class="l">application/json; charset=utf-8</span>
 </pre></div>
 </div>
 <p class="compound-middle"><strong>Example response</strong> (for success):</p>
-<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
 <span class="p">{</span>
@@ -502,7 +509,7 @@ UUID for the sensor.</p>
 </pre></div>
 </div>
 <p class="compound-middle"><strong>Example response</strong> (for failure):</p>
-<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
 <span class="p">{</span>
@@ -512,7 +519,7 @@ UUID for the sensor.</p>
 </pre></div>
 </div>
 <p class="compound-middle"><strong>Example response</strong> (for failure):</p>
-<div class="compound-last highlight-http notranslate"><div class="highlight"><pre><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<div class="compound-last highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
 <span class="p">{</span>
@@ -528,12 +535,12 @@ UUID for the sensor.</p>
 <p>This request deletes a sensor view of a sensor.</p>
 <div class="compound">
 <p class="compound-first"><strong>Example request</strong>:</p>
-<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span class="nf">DELETE</span> <span class="nn">/api/sensor/8aac1048-aa9f-41c9-9c20-6dd81339c7de/views/22d807bf-af67-493a-80b7-2690d26c9244</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">DELETE</span> <span class="nn">/api/sensor/8aac1048-aa9f-41c9-9c20-6dd81339c7de/views/22d807bf-af67-493a-80b7-2690d26c9244</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
 <span class="na">Accept</span><span class="o">:</span> <span class="l">application/json; charset=utf-8</span>
 </pre></div>
 </div>
 <p class="compound-middle"><strong>Example response</strong> (for success):</p>
-<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
 <span class="p">{</span>
@@ -542,7 +549,7 @@ UUID for the sensor.</p>
 </pre></div>
 </div>
 <p class="compound-middle"><strong>Example response</strong> (for failure):</p>
-<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
 <span class="p">{</span>
@@ -552,7 +559,7 @@ UUID for the sensor.</p>
 </pre></div>
 </div>
 <p class="compound-middle"><strong>Example response</strong> (for failure):</p>
-<div class="compound-last highlight-http notranslate"><div class="highlight"><pre><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<div class="compound-last highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
 <span class="p">{</span>
@@ -565,12 +572,13 @@ UUID for the sensor.</p>
 </div>
 <div class="section" id="sensorgroups-and-usergroups">
 <h2>SensorGroups and UserGroups<a class="headerlink" href="#sensorgroups-and-usergroups" title="Permalink to this headline">¶</a></h2>
-<dl class="simple">
-<dt>BuildingDepot restricts access to sensors to users on three levels. A user can have either of these types of access to a sensor:</dt><dd><ul class="simple">
-<li><p><strong>Read</strong></p></li>
-<li><p><strong>Read/Write</strong></p></li>
-<li><p><strong>Deny Read</strong></p></li>
-<li><p><strong>Read/Write/Permission</strong></p></li>
+<dl class="docutils">
+<dt>BuildingDepot restricts access to sensors to users on three levels. A user can have either of these types of access to a sensor:</dt>
+<dd><ul class="first last simple">
+<li><strong>Read</strong></li>
+<li><strong>Read/Write</strong></li>
+<li><strong>Deny Read</strong></li>
+<li><strong>Read/Write/Permission</strong></li>
 </ul>
 </dd>
 </dl>
@@ -631,7 +639,6 @@ UUID for the sensor.</p>
       <script type="text/javascript" src="../../_static/jquery.js"></script>
       <script type="text/javascript" src="../../_static/underscore.js"></script>
       <script type="text/javascript" src="../../_static/doctools.js"></script>
-      <script type="text/javascript" src="../../_static/language_data.js"></script>
 
   
 

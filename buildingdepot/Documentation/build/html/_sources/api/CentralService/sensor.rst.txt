@@ -80,7 +80,7 @@ Retrieves all the details of the sensor based on the uuid specified
 
    .. sourcecode:: http
 
-      GET /api/sensor/8aac1048-aa9f-41c9-9c20-6dd81339c7de/views HTTP/1.1
+      GET /api/sensor/8aac1048-aa9f-41c9-9c20-6dd81339c7de HTTP/1.1
       Accept: application/json; charset=utf-8
 
    **Example response**:
@@ -92,6 +92,10 @@ Retrieves all the details of the sensor based on the uuid specified
 
       {
           "success": "True",
+          "building": "NSH",
+          "name": "8aac1048-aa9f-41c9-9c20-6dd81339c7de",
+          "source_identifier": "Sensor_Tag",
+          "source_name": "Test_Sensor",
           "views_owned": [
             {
               "fields": "EMI-0",
