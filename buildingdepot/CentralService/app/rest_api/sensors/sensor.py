@@ -170,7 +170,8 @@ class SensorOwnedService(MethodView):
         """
         email = get_email()
 
-        owned_sensors = Sensor._get_collection().find({'owner':email})
+        owned_or_claimed_query = {'$or':[{'owner':email}, {'claimed':email}]}
+        owned_sensors = Sensor._get_collection().find(owned_or_claimed_query)
         user_groups = UserGroup._get_collection().find({'users':[email]})
 
         owned = []
