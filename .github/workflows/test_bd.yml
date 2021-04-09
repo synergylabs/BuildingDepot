@@ -14,7 +14,6 @@ on:
       - develop
 jobs:
   build:
-    continue-on-error:
     runs-on: ubuntu-18.04
     strategy:
       fail-fast: false
