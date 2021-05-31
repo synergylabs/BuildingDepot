@@ -15,6 +15,7 @@ from .. import responses
 from ..helper import check_oauth, get_email
 from ...models.cs_models import NotificationClientId
 
+
 def get_notification_client_id(client_email):
     notification_client = NotificationClientId.objects(email=client_email).first()
 
@@ -22,6 +23,7 @@ def get_notification_client_id(client_email):
         return notification_client.client_id
 
     return None
+
 
 class NotificationClientIdService(MethodView):
     @check_oauth
@@ -46,9 +48,10 @@ class NotificationClientIdService(MethodView):
 
         if data is None or data['id'] is None:
             return jsonify(responses.missing_parameters)
-
-        id = NotificationClientId(email=get_email()).first()
-        id.client_id = data['id']
-        id.update()
+        try:
+            notifications_collection = NotificationClientId.objects(email=get_email()).first()
+            notifications_collection.update(set__client_id=data['id'])
+        except RuntimeError as error:
+            print("Error", error)
 
         return jsonify(responses.success_true)
