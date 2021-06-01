@@ -99,13 +99,17 @@ function deploy_config {
 function install_packages {
     apt-get install -y curl
     apt-get install -y apt-transport-https
+    apt install curl gnupg -y
     source /etc/lsb-release
 
 
+
     #Add keys for rabbitmq
+    curl -fsSL https://github.com/rabbitmq/signing-keys/releases/download/2.0/rabbitmq-release-signing-key.asc | sudo apt-key add -
     echo "deb https://dl.bintray.com/rabbitmq/debian ${DISTRIB_CODENAME} main" | sudo tee /etc/apt/sources.list.d/bintray.rabbitmq.list
     echo "deb https://dl.bintray.com/rabbitmq-erlang/debian ${DISTRIB_CODENAME} erlang" | sudo tee -a /etc/apt/sources.list.d/bintray.rabbitmq.list
-    wget -O- https://www.rabbitmq.com/rabbitmq-release-signing-key.asc | sudo apt-key add -
+    #wget -O- https://www.rabbitmq.com/rabbitmq-release-signing-key.asc | sudo apt-key add -
+
     # Add keys to install influxdb
     curl -sL https://repos.influxdata.com/influxdb.key | sudo apt-key add -
     echo "deb https://repos.influxdata.com/${DISTRIB_ID,,} ${DISTRIB_CODENAME} stable" | sudo tee /etc/apt/sources.list.d/influxdb.list
@@ -131,7 +135,7 @@ function install_packages {
     apt-get install -y influxdb
     service influxdb start
     service mongod start
-    apt-get install -y rabbitmq-server
+    apt-get install -y rabbitmq-server --fix-missing
     DEBIAN_FRONTEND=noninteractive apt-get install -y postfix
     apt-get install -y nodejs
     apt-get install -y npm
