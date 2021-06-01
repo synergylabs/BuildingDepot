@@ -103,8 +103,8 @@ function install_packages {
 
 
     #Add keys for rabbitmq
-    echo "deb https://dl.bintray.com/rabbitmq/debian ${DISTRIB_CODENAME} main" | sudo tee /etc/apt/sources.list.d/bintray.rabbitmq.list
-    echo "deb https://dl.bintray.com/rabbitmq-erlang/debian ${DISTRIB_CODENAME} erlang" | sudo tee -a /etc/apt/sources.list.d/bintray.rabbitmq.list
+    #echo "deb https://dl.bintray.com/rabbitmq/debian ${DISTRIB_CODENAME} main" | sudo tee /etc/apt/sources.list.d/bintray.rabbitmq.list
+    echo "deb https://dl.bintray.com/rabbitmq-erlang/debian ${DISTRIB_CODENAME} erlang-22.x" | sudo tee -a /etc/apt/sources.list.d/bintray.rabbitmq.list
     wget -O- https://dl.bintray.com/rabbitmq/Keys/rabbitmq-release-signing-key.asc | sudo apt-key add -
     wget -O- https://www.rabbitmq.com/rabbitmq-release-signing-key.asc | sudo apt-key add -
     # Add keys to install influxdb
