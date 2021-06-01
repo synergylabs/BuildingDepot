@@ -102,12 +102,10 @@ function install_packages {
     apt install curl gnupg -y
     source /etc/lsb-release
 
-
-
     #Add keys for rabbitmq
     curl -fsSL https://github.com/rabbitmq/signing-keys/releases/download/2.0/rabbitmq-release-signing-key.asc | sudo apt-key add -
-    echo "deb https://dl.bintray.com/rabbitmq/debian ${DISTRIB_CODENAME} main" | sudo tee /etc/apt/sources.list.d/bintray.rabbitmq.list
-    echo "deb https://dl.bintray.com/rabbitmq-erlang/debian ${DISTRIB_CODENAME} erlang" | sudo tee -a /etc/apt/sources.list.d/bintray.rabbitmq.list
+#    echo "deb https://dl.bintray.com/rabbitmq/debian ${DISTRIB_CODENAME} main" | sudo tee /etc/apt/sources.list.d/bintray.rabbitmq.list
+#    echo "deb https://dl.bintray.com/rabbitmq-erlang/debian ${DISTRIB_CODENAME} erlang" | sudo tee -a /etc/apt/sources.list.d/bintray.rabbitmq.list
     #wget -O- https://www.rabbitmq.com/rabbitmq-release-signing-key.asc | sudo apt-key add -
 
     # Add keys to install influxdb
