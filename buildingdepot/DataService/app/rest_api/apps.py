@@ -61,9 +61,9 @@ class AppService(MethodView):
         error_flag = False
 
         json_data = request.get_json()
-        if "data" not in json_data.keys():
+        if "data" not in list(json_data.keys()):
             return jsonify(responses.missing_parameters)
-        elif "name" not in json_data["data"].keys():
+        elif "name" not in list(json_data["data"].keys()):
             return jsonify(responses.missing_parameters)
         else:
             name = json_data["data"]["name"]
@@ -87,7 +87,7 @@ class AppService(MethodView):
                                 "app_id": app["value"],
                             }
 
-                if len(json_result.keys()) == len(name):
+                if len(list(json_result.keys())) == len(name):
                     return jsonify({"success": "True", "app_id": json_result})
 
         pubsub = connect_broker()
@@ -100,8 +100,8 @@ class AppService(MethodView):
                 channel = pubsub.channel()
                 result = channel.queue_declare(durable=True)
             except Exception as e:
-                print("Failed to create queue " + str(e))
-                print(traceback.print_exc())
+                print(("Failed to create queue " + str(e)))
+                print((traceback.print_exc()))
                 if channel:
                     channel.close()
                 return jsonify(responses.queue_creation_failure)
@@ -119,7 +119,7 @@ class AppService(MethodView):
                     channel.close()
                     pubsub.close()
                 except Exception as e:
-                    print("Failed to end RabbitMQ session" + str(e))
+                    print(("Failed to end RabbitMQ session" + str(e)))
 
             return jsonify({"success": "True", "app_id": result.method.queue})
 
@@ -139,8 +139,8 @@ class AppService(MethodView):
                     app_list.append({"name": nm, "value": result.method.queue})
 
                 except Exception as e:
-                    print("Failed to create queue " + str(e))
-                    print(traceback.print_exc())
+                    print(("Failed to create queue " + str(e)))
+                    print((traceback.print_exc()))
                     if channel:
                         channel.close()
                     error_flag = True
@@ -154,7 +154,7 @@ class AppService(MethodView):
                     channel.close()
                     pubsub.close()
                 except Exception as e:
-                    print("Failed to end RabbitMQ session" + str(e))
+                    print(("Failed to end RabbitMQ session" + str(e)))
 
             if apps.count() == 0:
                 Application(user=email, apps=app_list).save()
@@ -195,9 +195,9 @@ class AppService(MethodView):
         name = ""
 
         json_data = request.get_json()
-        if "data" not in json_data.keys():
+        if "data" not in list(json_data.keys()):
             return jsonify(responses.missing_parameters)
-        elif "name" not in json_data["data"].keys():
+        elif "name" not in list(json_data["data"].keys()):
             return jsonify(responses.missing_parameters)
         else:
             name = json_data["data"]["name"]
@@ -207,7 +207,7 @@ class AppService(MethodView):
         if apps.count() > 0:
             if not isinstance(name, list):
                 app_to_be_deleted = None
-                app_filter = filter(lambda x: x["name"] == name, apps[0]["apps"])
+                app_filter = [x for x in apps[0]["apps"] if x["name"] == name]
 
                 if len(app_filter) > 0:
                     app_to_be_deleted = app_filter[0]
@@ -216,7 +216,7 @@ class AppService(MethodView):
                 json_result = {}
                 error_flag = False
                 for nm in name:
-                    app_filter = filter(lambda x: x["name"] == nm, apps[0]["apps"])
+                    app_filter = [x for x in apps[0]["apps"] if x["name"] == nm]
                     if len(app_filter) > 0:
                         app_to_be_deleted.append(app_filter[0])
                     else:
@@ -238,17 +238,15 @@ class AppService(MethodView):
             try:
                 channel = pubsub.channel()
 
-                if "value" in app_to_be_deleted.keys():
+                if "value" in list(app_to_be_deleted.keys()):
                     result = channel.queue_delete(queue=app_to_be_deleted["value"])
 
-                new_app_list = list(
-                    filter(lambda x: x["name"] != name, apps[0]["apps"])
-                )
+                new_app_list = list([x for x in apps[0]["apps"] if x["name"] != name])
                 Application.objects(user=email).update(set__apps=new_app_list)
 
             except Exception as e:
-                print("Failed to create queue " + str(e))
-                print(traceback.print_exc())
+                print(("Failed to create queue " + str(e)))
+                print((traceback.print_exc()))
                 if channel:
                     channel.close()
                 return jsonify(responses.queue_creation_failure)
@@ -258,7 +256,7 @@ class AppService(MethodView):
                     channel.close()
                     pubsub.close()
                 except Exception as e:
-                    print("Failed to end RabbitMQ session" + str(e))
+                    print(("Failed to end RabbitMQ session" + str(e)))
 
             return jsonify(responses.success_true)
 
@@ -266,15 +264,15 @@ class AppService(MethodView):
             for app_to_delete in app_to_be_deleted:
                 try:
                     channel = pubsub.channel()
-                    if "value" in app_to_delete.keys():
+                    if "value" in list(app_to_delete.keys()):
                         result = channel.queue_delete(queue=app_to_delete["value"])
 
                     json_result[app_to_delete["name"]] = {}
                     json_result[app_to_delete["name"]] = {"success": "True"}
 
                 except Exception as e:
-                    print("Failed to create queue " + str(e))
-                    print(traceback.print_exc())
+                    print(("Failed to create queue " + str(e)))
+                    print((traceback.print_exc()))
                     if channel:
                         channel.close()
                     error_flag = True
@@ -283,9 +281,7 @@ class AppService(MethodView):
                         "error": "Failed to create queue",
                     }
 
-            new_app_list = list(
-                filter(lambda x: x["name"] not in name, apps[0]["apps"])
-            )
+            new_app_list = list([x for x in apps[0]["apps"] if x["name"] not in name])
             Application.objects(user=email).update(set__apps=new_app_list)
 
             if pubsub:
@@ -294,7 +290,7 @@ class AppService(MethodView):
                         channel.close()
                     pubsub.close()
                 except Exception as e:
-                    print("Failed to end RabbitMQ session" + str(e))
+                    print(("Failed to end RabbitMQ session" + str(e)))
 
             if error_flag:
                 return jsonify({"success": "False", "name": json_result})

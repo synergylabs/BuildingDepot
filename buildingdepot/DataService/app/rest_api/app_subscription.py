@@ -60,8 +60,8 @@ class AppSubscriptionService(MethodView):
                     r.sadd("".join(["apps:", sensor]), app["value"])
 
                 except Exception as e:
-                    print("Failed to bind queue " + str(e))
-                    print(traceback.print_exc())
+                    print(("Failed to bind queue " + str(e)))
+                    print((traceback.print_exc()))
                     return jsonify(responses.queue_binding_failure)
 
                 if pubsub:
@@ -69,7 +69,7 @@ class AppSubscriptionService(MethodView):
                         channel.close()
                         pubsub.close()
                     except Exception as e:
-                        print("Failed to end RabbitMQ session" + str(e))
+                        print(("Failed to end RabbitMQ session" + str(e)))
 
             return jsonify(responses.success_true)
 
@@ -112,8 +112,8 @@ class AppSubscriptionService(MethodView):
                     )
                     r.srem("".join(["apps:", sensor]), app["value"])
                 except Exception as e:
-                    print("Failed to bind queue " + str(e))
-                    print(traceback.print_exc())
+                    print(("Failed to bind queue " + str(e)))
+                    print((traceback.print_exc()))
                     return jsonify(responses.queue_binding_failure)
 
                 if pubsub:
@@ -121,7 +121,7 @@ class AppSubscriptionService(MethodView):
                         channel.close()
                         pubsub.close()
                     except Exception as e:
-                        print("Failed to end RabbitMQ session" + str(e))
+                        print(("Failed to end RabbitMQ session" + str(e)))
 
             return jsonify(responses.success_true)
 
