@@ -28,10 +28,8 @@ def register_view(app_obj):
         "/api/template/<name>", view_func=template_view, methods=["GET", "DELETE"]
     )
 
-    template_tagtypes_view = (
-        buildingtemplate_tagtypes.BuildingTemplateTagtypeService.as_view(
-            "template_tagtypes_api"
-        )
+    template_tagtypes_view = buildingtemplate_tagtypes.BuildingTemplateTagtypeService.as_view(
+        "template_tagtypes_api"
     )
     # post creates/modifies building templates
     # get returns information on a specified building template.

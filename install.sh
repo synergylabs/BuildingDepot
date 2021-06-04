@@ -32,7 +32,7 @@ function setup_venv() {
   pip3 install --upgrade pip
   pip3 install --upgrade setuptools
   pip3 install --upgrade -r pip_packages.list
-
+  pip3 install "firebase-admin==4.5.0"
   pip3 install --upgrade uWSGI
   mkdir -p /etc/uwsgi/apps-available/
 
