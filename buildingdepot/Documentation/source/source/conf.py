@@ -20,7 +20,7 @@
 # -- Project information -----------------------------------------------------
 
 project = "BuildingDepot v3.3.0"
-copyright = "2020, SynergyLabs@CMU"
+copyright = "2021, SynergyLabs@CMU"
 author = "Shreyas Nagare"
 
 # The short X.Y version

@@ -6,7 +6,7 @@ Contains the definitions for all the various decorator functions that are
 called to authenticate,validate email,define what level of access the user
 has to the specified sensor.
 
-@copyright: (c) 2020 SynergyLabs
+@copyright: (c) 2021 SynergyLabs
 @license: CMU License. See License file for details.
 """
 

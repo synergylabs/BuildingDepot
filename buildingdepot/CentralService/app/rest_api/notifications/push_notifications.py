@@ -8,7 +8,7 @@ push notifications. If a different push notification service must be used, for e
 then this class must be extended in another file. After extending this class and implementing
 'send', you must update cs_config to point to the implementation that should be loaded.
 
-@copyright: (c) 2020 SynergyLabs
+@copyright: (c) 2021 SynergyLabs
 @license: CMU License. See License file for details.
 """
 

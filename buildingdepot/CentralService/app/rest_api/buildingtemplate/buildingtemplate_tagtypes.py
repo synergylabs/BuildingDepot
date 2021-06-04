@@ -5,7 +5,7 @@ CentralService.rest_api.buildingtemplate_tagtypes
 This module handles the interactions with the buildingtemplate tagtypes. Takes care
 of all the CRUD operations on buildingtemplate tagtypes.
 
-@copyright: (c) 2020 SynergyLabs
+@copyright: (c) 2021 SynergyLabs
 @license: CMU License. See License file for details.
 """
 

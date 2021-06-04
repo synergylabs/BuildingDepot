@@ -9,7 +9,7 @@ a html page.
 For example opening up http://localhost:81/service/sensor on your installation
 of BD will call the sensor() function
 
-@copyright: (c) 2020 SynergyLabs
+@copyright: (c) 2021 SynergyLabs
 @license: CMU License. See License file for details.
 """
 

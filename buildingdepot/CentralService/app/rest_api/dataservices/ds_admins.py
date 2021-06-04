@@ -6,7 +6,7 @@ This module handles the interactions with the admins present in each
 dataservice. It handles all the CRUD operations for the admins list
 present in each dataservice.
 
-@copyright: (c) 2020 SynergyLabs
+@copyright: (c) 2021 SynergyLabs
 @license: CMU License. See License file for details.
 """
 

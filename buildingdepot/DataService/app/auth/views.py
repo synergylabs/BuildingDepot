@@ -4,7 +4,7 @@ DataService.auth.views
 
 Functions for user login and logout from the DataService
 
-@copyright: (c) 2020 SynergyLabs
+@copyright: (c) 2021 SynergyLabs
 @license: CMU License. See License file for details.
 """
 

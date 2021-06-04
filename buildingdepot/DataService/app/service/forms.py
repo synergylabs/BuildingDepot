@@ -5,7 +5,7 @@ DataService.form
 Contains the definitions for all the forms that will be shown to the user
 in the frontend of the DataService.
 
-@copyright: (c) 2020 SynergyLabs
+@copyright: (c) 2021 SynergyLabs
 @license: CMU License. See License file for details.
 """
 

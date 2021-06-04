@@ -5,7 +5,7 @@ DataService.rest_api.permission
 This module handles interacting with the underlying permission models.
 It handles the required CRUD operations for permissions.
 
-@copyright: (c) 2020 SynergyLabs
+@copyright: (c) 2021 SynergyLabs
 @license: CMU License. See License file for details.
 """
 import sys

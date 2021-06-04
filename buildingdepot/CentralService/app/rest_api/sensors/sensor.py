@@ -7,7 +7,7 @@ It handles the common services for sensors, such as making a new one or
 retrieving sensor details. It manages the underlying cache, and will
 ensure that the cache gets updated as needed.
 
-@copyright: (c) 2020 SynergyLabs
+@copyright: (c) 2021 SynergyLabs
 @license: CMU License. See License file for details.
 """
 

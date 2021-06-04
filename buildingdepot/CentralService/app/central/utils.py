@@ -5,7 +5,7 @@ CentralService.app.utils
 Contains the definitions for all helper functions that are used by
 the main CentralService.
 
-@copyright: (c) 2020 SynergyLabs
+@copyright: (c) 2021 SynergyLabs
 @license: CMU License. See License file for details.
 """
 

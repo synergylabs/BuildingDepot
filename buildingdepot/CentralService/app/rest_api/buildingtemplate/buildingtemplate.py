@@ -8,7 +8,7 @@ Each buildingtemplate will have a list of tagtypes attached to it that
 can be used by all buildings that are based on that specific building
 template.
 
-@copyright: (c) 2020 SynergyLabs
+@copyright: (c) 2021 SynergyLabs
 @license: CMU License. See License file for details.
 """
 from flask import jsonify, request

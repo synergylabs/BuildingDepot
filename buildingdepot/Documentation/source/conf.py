@@ -8,7 +8,7 @@
 # -- Project information -----------------------------------------------------
 
 project = "BuildingDepot"
-copyright = "2020, SynergyLabs"
+copyright = "2021, SynergyLabs"
 author = "SynergyLabs"
 
 # The short X.Y version

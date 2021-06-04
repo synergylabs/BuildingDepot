@@ -5,7 +5,7 @@ DataService.oauth_bd.views
 Contains all the class and method definitions required for the OAuth
 token generation and verification
 
-@copyright: (c) 2020 SynergyLabs
+@copyright: (c) 2021 SynergyLabs
 @license: CMU License. See License file for details.
 """
 

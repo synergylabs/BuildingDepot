@@ -7,7 +7,7 @@ All requests will need to be authenticated using an OAuth token and sensor speci
 requests will also have an additional check where the ACL's are referenced to see if
 the user has access to the specific sensor
 
-@copyright: (c) 2020 SynergyLabs
+@copyright: (c) 2021 SynergyLabs
 @license: CMU License. See License file for details.
 """
 

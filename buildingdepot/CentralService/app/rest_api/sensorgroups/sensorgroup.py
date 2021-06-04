@@ -8,7 +8,7 @@ or deleting an existing one. Whenever a new group is created it caches a
 list of the sensors that fall in this group. This list is further used
 for acl's and other purposes.
 
-@copyright: (c) 2020 SynergyLabs
+@copyright: (c) 2021 SynergyLabs
 @license: CMU License. See License file for details.
 """
 import sys
