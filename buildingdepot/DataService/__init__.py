@@ -17,10 +17,9 @@ from .app import create_app
 from .app.rest_api.register import register_view
 
 app = create_app(os.getenv("FLASK_CONFIG") or "dev")
-manager = Manager(app)
 register_view(app)
 
-
+@app.shell_context_processor
 def make_shell_context():
     return dict(app=app)
 
@@ -29,7 +28,5 @@ def get_current():
     return app
 
 
-manager.add_command("shell", Shell(make_context=make_shell_context))
-
 if __name__ == "__main__":
-    manager.run()
+    app.run()
