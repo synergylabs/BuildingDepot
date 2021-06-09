@@ -17,7 +17,7 @@ from functools import wraps
 
 from .. import exchange, r
 from ..models.ds_models import Building, TagType, User
-from ..oauth_bd.views import Token
+from ..auth.views import Token
 
 
 def get_email():
