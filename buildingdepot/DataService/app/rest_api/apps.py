@@ -98,7 +98,7 @@ class AppService(MethodView):
             channel = None
             try:
                 channel = pubsub.channel()
-                result = channel.queue_declare(durable=True)
+                result = channel.queue_declare(queue="", durable=True)
             except Exception as e:
                 print(("Failed to create queue " + str(e)))
                 print((traceback.print_exc()))
@@ -130,7 +130,7 @@ class AppService(MethodView):
                 channel = None
                 try:
                     channel = pubsub.channel()
-                    result = channel.queue_declare(durable=True)
+                    result = channel.queue_declare(queue="", durable=True)
 
                     json_result[nm] = {}
                     json_result[nm] = {"success": "True"}
