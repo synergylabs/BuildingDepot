@@ -11,7 +11,6 @@ config file or falls back to the default one.
 """
 
 import os
-from flask_script import Manager, Shell
 
 from .app import create_app
 from .app.rest_api.register import register_view
