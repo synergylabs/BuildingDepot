@@ -149,6 +149,7 @@ function install_packages() {
   service influxdb start
   service mongod start
   apt-get install -y rabbitmq-server
+  curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
   apt-get install -y nodejs
   apt-get install -y npm
   sed -i -e 's/"inet_interfaces = all/"inet_interfaces = loopback-only"/g' /etc/postfix/main.cf
