@@ -134,7 +134,7 @@ function install_packages {
     apt-get update -y
     apt-get install
     apt-get install -y python-pip
-    apt-get install -y mongodb-org=4.0.5 mongodb-org-server=4.0.5 mongodb-org-shell=4.0.5 mongodb-org-mongos=4.0.5 mongodb-org-tools=4.0.5
+    apt-get install -y mongodb-org=4.4 mongodb-org-server=4.4 mongodb-org-shell=4.4 mongodb-org-mongos=4.4 mongodb-org-tools=4.4
     apt-get install -y openssl python-setuptools python-dev build-essential software-properties-common
     apt-get install -y nginx
     apt-get install -y supervisor
