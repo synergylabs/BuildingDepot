@@ -119,14 +119,18 @@ function install_packages {
     curl -sL https://repos.influxdata.com/influxdb.key | sudo apt-key add -
     echo "deb https://repos.influxdata.com/${DISTRIB_ID,,} ${DISTRIB_CODENAME} stable" | sudo tee /etc/apt/sources.list.d/influxdb.list
     # Add keys to install mongodb
-    wget -qO - https://www.mongodb.org/static/pgp/server-4.0.asc | sudo apt-key add -
-    if [ $DISTRIB_CODENAME == "bionic" ]; then
-        echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/${DISTRIB_ID,,} ${DISTRIB_CODENAME}/mongodb-org/4.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.0.list
+    wget -qO - https://www.mongodb.org/static/pgp/server-4.4.asc | sudo apt-key add -
+    if [ $DISTRIB_CODENAME == "focal" ]; then
+        echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu ${DISTRIB_CODENAME}/mongodb-org/4.4 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.4.list
+    elif [ $DISTRIB_CODENAME == "bionic" ]; then
+        echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu ${DISTRIB_CODENAME}/mongodb-org/4.4 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.4.list
     elif [ $DISTRIB_CODENAME == "xenial" ]; then
-        echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/${DISTRIB_ID,,} ${DISTRIB_CODENAME}/mongodb-org/4.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.0.list
+        echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu ${DISTRIB_CODENAME}/mongodb-org/4.4 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.4.list
     elif [ $DISTRIB_CODENAME == "trusty" ]; then
+        wget -qO - https://www.mongodb.org/static/pgp/server-4.0.asc | sudo apt-key add -
         echo "deb [ arch=amd64 ] https://repo.mongodb.org/apt/${DISTRIB_ID,,} ${DISTRIB_CODENAME}/mongodb-org/4.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.0.list
     fi
+
     apt-get update -y
     apt-get install
     apt-get install -y python-pip
