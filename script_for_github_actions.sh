@@ -104,6 +104,7 @@ function install_packages {
 
     #Add keys for rabbitmq
     curl -fsSL https://www.rabbitmq.com/rabbitmq-release-signing-key.asc | sudo apt-key add -
+    curl -1sLf 'https://packagecloud.io/rabbitmq/rabbitmq-server/gpgkey' | sudo apt-key add -
 
     echo "deb http://ppa.launchpad.net/rabbitmq/rabbitmq-erlang/ubuntu ${DISTRIB_CODENAME} main" | sudo tee /etc/apt/sources.list.d/rabbitmq.list
     echo "deb-src http://ppa.launchpad.net/rabbitmq/rabbitmq-erlang/ubuntu ${DISTRIB_CODENAME} main" | sudo tee /etc/apt/sources.list.d/rabbitmq.list
@@ -130,7 +131,6 @@ function install_packages {
         wget -qO - https://www.mongodb.org/static/pgp/server-4.0.asc | sudo apt-key add -
         echo "deb [ arch=amd64 ] https://repo.mongodb.org/apt/${DISTRIB_ID,,} ${DISTRIB_CODENAME}/mongodb-org/4.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.0.list
     fi
-
     apt-get update -y
     apt-get install
     apt-get install -y python-pip
