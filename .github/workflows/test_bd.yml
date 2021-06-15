@@ -14,8 +14,9 @@ on:
       - develop
 jobs:
   build:
+    runs-on: ubuntu-latest
     container:
-      image: ubuntu/ubuntu:focal-20210416
+      image: ubuntu:focal-20210416
     strategy:
       fail-fast: false
       matrix:
