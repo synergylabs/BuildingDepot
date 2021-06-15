@@ -105,15 +105,6 @@ function install_packages {
     curl -s https://packagecloud.io/install/repositories/rabbitmq/rabbitmq-server/script.deb.sh | bash
     curl -fsSL https://www.rabbitmq.com/rabbitmq-release-signing-key.asc | apt-key add -
     curl -1sLf 'https://packagecloud.io/rabbitmq/rabbitmq-server/gpgkey' | apt-key add -
-    curl -fsSL https://github.com/rabbitmq/signing-keys/releases/download/2.0/rabbitmq-release-signing-key.asc | apt-key add -
-    tee /etc/apt/sources.list.d/bintray.rabbitmq.list <<EOF
-    deb https://dl.bintray.com/rabbitmq-erlang/debian focal erlang
-    deb https://dl.bintray.com/rabbitmq/debian focal main
-    EOF
-
-    apt-get update -y
-
-    apt-get install rabbitmq-server -y --fix-missing
 
     echo "deb http://ppa.launchpad.net/rabbitmq/rabbitmq-erlang/ubuntu ${DISTRIB_CODENAME} main" | tee /etc/apt/sources.list.d/rabbitmq.list
     echo "deb-src http://ppa.launchpad.net/rabbitmq/rabbitmq-erlang/ubuntu ${DISTRIB_CODENAME} main" | tee /etc/apt/sources.list.d/rabbitmq.list
@@ -153,12 +144,12 @@ function install_packages {
     apt-get install -y influxdb
     service influxdb start
     service mongod start
-#    apt-get install -y erlang-base \
-#                        erlang-asn1 erlang-crypto erlang-eldap erlang-ftp erlang-inets \
-#                        erlang-mnesia erlang-os-mon erlang-parsetools erlang-public-key \
-#                        erlang-runtime-tools erlang-snmp erlang-ssl \
-#                        erlang-syntax-tools erlang-tftp erlang-tools erlang-xmerl
-#    apt-get install -y rabbitmq-server --fix-missing
+    apt-get install -y erlang-base \
+                        erlang-asn1 erlang-crypto erlang-eldap erlang-ftp erlang-inets \
+                        erlang-mnesia erlang-os-mon erlang-parsetools erlang-public-key \
+                        erlang-runtime-tools erlang-snmp erlang-ssl \
+                        erlang-syntax-tools erlang-tftp erlang-tools erlang-xmerl
+    apt-get install -y rabbitmq-server --fix-missing
     DEBIAN_FRONTEND=noninteractive apt-get install -y postfix
     curl -fsSL https://deb.nodesource.com/setup_lts.x | -E bash -
     apt-get install -y nodejs
@@ -284,3 +275,4 @@ setup_packages
 #
 echo -e "\nInstallation Finished..\n"
 supervisorctl restart all
+
