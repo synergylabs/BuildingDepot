@@ -5,7 +5,7 @@ DEPLOY_CS=true
 DEPLOY_DS=true
 
 ################################################################################
-# Check and make sure we are running as root or sudo (?)
+# Check and make sure we are running as root or (?)
 ################################################################################
 if [[ $UID -ne 0 ]]; then
   echo -e "\n$0 must be run as root. Most functions require super-user priviledges!\n"
@@ -101,11 +101,11 @@ function install_packages {
     source /etc/lsb-release
 
     #Add keys for rabbitmq
-    curl -s https://packagecloud.io/install/repositories/rabbitmq/erlang/script.deb.sh | sudo bash
-    curl -s https://packagecloud.io/install/repositories/rabbitmq/rabbitmq-server/script.deb.sh | sudo bash
-    curl -fsSL https://www.rabbitmq.com/rabbitmq-release-signing-key.asc | sudo apt-key add -
-    curl -1sLf 'https://packagecloud.io/rabbitmq/rabbitmq-server/gpgkey' | sudo apt-key add -
-    curl -fsSL https://github.com/rabbitmq/signing-keys/releases/download/2.0/rabbitmq-release-signing-key.asc | sudo apt-key add -
+    curl -s https://packagecloud.io/install/repositories/rabbitmq/erlang/script.deb.sh | bash
+    curl -s https://packagecloud.io/install/repositories/rabbitmq/rabbitmq-server/script.deb.sh | bash
+    curl -fsSL https://www.rabbitmq.com/rabbitmq-release-signing-key.asc | apt-key add -
+    curl -1sLf 'https://packagecloud.io/rabbitmq/rabbitmq-server/gpgkey' | apt-key add -
+    curl -fsSL https://github.com/rabbitmq/signing-keys/releases/download/2.0/rabbitmq-release-signing-key.asc | apt-key add -
     tee /etc/apt/sources.list.d/bintray.rabbitmq.list <<EOF
     deb https://dl.bintray.com/rabbitmq-erlang/debian focal erlang
     deb https://dl.bintray.com/rabbitmq/debian focal main
@@ -115,30 +115,30 @@ function install_packages {
 
     apt-get install rabbitmq-server -y --fix-missing
 
-    echo "deb http://ppa.launchpad.net/rabbitmq/rabbitmq-erlang/ubuntu ${DISTRIB_CODENAME} main" | sudo tee /etc/apt/sources.list.d/rabbitmq.list
-    echo "deb-src http://ppa.launchpad.net/rabbitmq/rabbitmq-erlang/ubuntu ${DISTRIB_CODENAME} main" | sudo tee /etc/apt/sources.list.d/rabbitmq.list
+    echo "deb http://ppa.launchpad.net/rabbitmq/rabbitmq-erlang/ubuntu ${DISTRIB_CODENAME} main" | tee /etc/apt/sources.list.d/rabbitmq.list
+    echo "deb-src http://ppa.launchpad.net/rabbitmq/rabbitmq-erlang/ubuntu ${DISTRIB_CODENAME} main" | tee /etc/apt/sources.list.d/rabbitmq.list
 
-    echo "deb https://packagecloud.io/rabbitmq/rabbitmq-server/ubuntu/ ${DISTRIB_CODENAME} main" | sudo tee /etc/apt/sources.list.d/rabbitmq.list
-    echo "deb-src https://packagecloud.io/rabbitmq/rabbitmq-server/ubuntu/  ${DISTRIB_CODENAME} main" | sudo tee /etc/apt/sources.list.d/rabbitmq.list
+    echo "deb https://packagecloud.io/rabbitmq/rabbitmq-server/ubuntu/ ${DISTRIB_CODENAME} main" | tee /etc/apt/sources.list.d/rabbitmq.list
+    echo "deb-src https://packagecloud.io/rabbitmq/rabbitmq-server/ubuntu/  ${DISTRIB_CODENAME} main" | tee /etc/apt/sources.list.d/rabbitmq.list
 
-#    echo "deb https://dl.bintray.com/rabbitmq/debian ${DISTRIB_CODENAME} main" | sudo tee /etc/apt/sources.list.d/bintray.rabbitmq.list
-#    echo "deb https://dl.bintray.com/rabbitmq-erlang/debian ${DISTRIB_CODENAME} erlang" | sudo tee -a /etc/apt/sources.list.d/bintray.rabbitmq.list
-    #wget -O- https://www.rabbitmq.com/rabbitmq-release-signing-key.asc | sudo apt-key add -
+#    echo "deb https://dl.bintray.com/rabbitmq/debian ${DISTRIB_CODENAME} main" | tee /etc/apt/sources.list.d/bintray.rabbitmq.list
+#    echo "deb https://dl.bintray.com/rabbitmq-erlang/debian ${DISTRIB_CODENAME} erlang" | tee -a /etc/apt/sources.list.d/bintray.rabbitmq.list
+    #wget -O- https://www.rabbitmq.com/rabbitmq-release-signing-key.asc | apt-key add -
 
     # Add keys to install influxdb
-    curl -sL https://repos.influxdata.com/influxdb.key | sudo apt-key add -
-    echo "deb https://repos.influxdata.com/${DISTRIB_ID,,} ${DISTRIB_CODENAME} stable" | sudo tee /etc/apt/sources.list.d/influxdb.list
+    curl -sL https://repos.influxdata.com/influxdb.key | apt-key add -
+    echo "deb https://repos.influxdata.com/${DISTRIB_ID,,} ${DISTRIB_CODENAME} stable" | tee /etc/apt/sources.list.d/influxdb.list
     # Add keys to install mongodb
-    wget -qO - https://www.mongodb.org/static/pgp/server-4.4.asc | sudo apt-key add -
+    wget -qO - https://www.mongodb.org/static/pgp/server-4.4.asc | apt-key add -
     if [ $DISTRIB_CODENAME == "focal" ]; then
-        echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu ${DISTRIB_CODENAME}/mongodb-org/4.4 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.4.list
+        echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu ${DISTRIB_CODENAME}/mongodb-org/4.4 multiverse" | tee /etc/apt/sources.list.d/mongodb-org-4.4.list
     elif [ $DISTRIB_CODENAME == "bionic" ]; then
-        echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu ${DISTRIB_CODENAME}/mongodb-org/4.4 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.4.list
+        echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu ${DISTRIB_CODENAME}/mongodb-org/4.4 multiverse" | tee /etc/apt/sources.list.d/mongodb-org-4.4.list
     elif [ $DISTRIB_CODENAME == "xenial" ]; then
-        echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu ${DISTRIB_CODENAME}/mongodb-org/4.4 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.4.list
+        echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu ${DISTRIB_CODENAME}/mongodb-org/4.4 multiverse" | tee /etc/apt/sources.list.d/mongodb-org-4.4.list
     elif [ $DISTRIB_CODENAME == "trusty" ]; then
-        wget -qO - https://www.mongodb.org/static/pgp/server-4.0.asc | sudo apt-key add -
-        echo "deb [ arch=amd64 ] https://repo.mongodb.org/apt/${DISTRIB_ID,,} ${DISTRIB_CODENAME}/mongodb-org/4.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.0.list
+        wget -qO - https://www.mongodb.org/static/pgp/server-4.0.asc | apt-key add -
+        echo "deb [ arch=amd64 ] https://repo.mongodb.org/apt/${DISTRIB_ID,,} ${DISTRIB_CODENAME}/mongodb-org/4.0 multiverse" | tee /etc/apt/sources.list.d/mongodb-org-4.0.list
     fi
     apt-get update -y
     apt-get install
@@ -160,7 +160,7 @@ function install_packages {
 #                        erlang-syntax-tools erlang-tftp erlang-tools erlang-xmerl
 #    apt-get install -y rabbitmq-server --fix-missing
     DEBIAN_FRONTEND=noninteractive apt-get install -y postfix
-    curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
+    curl -fsSL https://deb.nodesource.com/setup_lts.x | -E bash -
     apt-get install -y nodejs
     apt-get install -y npm
     sed -i -e 's/"inet_interfaces = all/"inet_interfaces = loopback-only"/g' /etc/postfix/main.cf
@@ -193,7 +193,7 @@ function setup_email {
     echo "BuildingDepot requires a Mail Transfer Agent. Would you like to install one or use your gmail account?"
     echo "Note: If you use GMail, it is advised to create a new account for this purpose."
     echo "Installing an MTA..."
-    sudo apt-get install -y mailutils
+    apt-get install -y mailutils
     sed -i -e 's/"inet_interfaces = all/"inet_interfaces = loopback-only"/g' /etc/postfix/main.cf
     service postfix restart
     echo "EMAIL = 'LOCAL'" >> $BD/CentralService/cs_config
