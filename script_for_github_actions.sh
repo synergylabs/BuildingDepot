@@ -101,6 +101,8 @@ function install_packages {
     source /etc/lsb-release
 
     #Add keys for rabbitmq
+    curl -s https://packagecloud.io/install/repositories/rabbitmq/erlang/script.deb.sh | sudo bash
+    curl -s https://packagecloud.io/install/repositories/rabbitmq/rabbitmq-server/script.deb.sh | sudo bash
     curl -fsSL https://www.rabbitmq.com/rabbitmq-release-signing-key.asc | sudo apt-key add -
     curl -1sLf 'https://packagecloud.io/rabbitmq/rabbitmq-server/gpgkey' | sudo apt-key add -
 
