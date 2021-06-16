@@ -102,25 +102,8 @@ function install_packages {
     apt install curl gnupg -y
     source /etc/lsb-release
 
-    ## Team RabbitMQ's main signing key
-    sudo apt-key adv --keyserver "hkps://keys.openpgp.org" --recv-keys "0x0A9AF2115F4687BD29803A206B73A36E6026DFCA"
-    ## Launchpad PPA that provides modern Erlang releases
-    sudo apt-key adv --keyserver "keyserver.ubuntu.com" --recv-keys "F77F1EDA57EBB1CC"
-
-    echo "deb http://ppa.launchpad.net/rabbitmq/rabbitmq-erlang/ubuntu ${DISTRIB_CODENAME} main" | sudo tee /etc/apt/sources.list.d/rabbitmq.list
-    echo "deb-src http://ppa.launchpad.net/rabbitmq/rabbitmq-erlang/ubuntu ${DISTRIB_CODENAME} main" | sudo tee /etc/apt/sources.list.d/rabbitmq.list
-
-    echo "deb https://packagecloud.io/rabbitmq/rabbitmq-server/ubuntu/ ${DISTRIB_CODENAME} main" | sudo tee /etc/apt/sources.list.d/rabbitmq.list
-    echo "deb-src https://packagecloud.io/rabbitmq/rabbitmq-server/ubuntu/  ${DISTRIB_CODENAME} main" | sudo tee /etc/apt/sources.list.d/rabbitmq.list
-
-
-    ## PackageCloud RabbitMQ repository
-#    curl -1sLf 'https://packagecloud.io/rabbitmq/rabbitmq-server/gpgkey' | sudo apt-key add -
-#
-#    echo "deb http://ppa.launchpad.net/rabbitmq/rabbitmq-erlang/ubuntu ${DISTRIB_CODENAME} main" | tee /etc/apt/sources.list.d/rabbitmq.list
-#    echo "deb-src http://ppa.launchpad.net/rabbitmq/rabbitmq-erlang/ubuntu ${DISTRIB_CODENAME} main" >> /etc/apt/sources.list.d/rabbitmq.list
-#    echo "deb https://packagecloud.io/rabbitmq/rabbitmq-server/ubuntu/ ${DISTRIB_CODENAME} main" >> /etc/apt/sources.list.d/rabbitmq.list
-#    echo "deb-src https://packagecloud.io/rabbitmq/rabbitmq-server/ubuntu/  ${DISTRIB_CODENAME} main" >> /etc/apt/sources.list.d/rabbitmq.list
+    # Add keys for Rabbitmq
+    curl -fsSL https://github.com/rabbitmq/signing-keys/releases/download/2.0/rabbitmq-release-signing-key.asc | sudo apt-key add -
 
     # Add keys to install influxdb
     curl -sL https://repos.influxdata.com/influxdb.key | sudo apt-key add -
