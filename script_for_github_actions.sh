@@ -102,19 +102,17 @@ function install_packages {
     apt install curl gnupg -y
     source /etc/lsb-release
 
-    #Add keys for rabbitmq
-    curl -fsSL https://www.rabbitmq.com/rabbitmq-release-signing-key.asc | sudo apt-key add -
+    ## Team RabbitMQ's main signing key
+    sudo apt-key adv --keyserver "hkps://keys.openpgp.org" --recv-keys "0x0A9AF2115F4687BD29803A206B73A36E6026DFCA"
+    ## Launchpad PPA that provides modern Erlang releases
+    sudo apt-key adv --keyserver "keyserver.ubuntu.com" --recv-keys "F77F1EDA57EBB1CC"
+    ## PackageCloud RabbitMQ repository
     curl -1sLf 'https://packagecloud.io/rabbitmq/rabbitmq-server/gpgkey' | sudo apt-key add -
 
-    echo "deb http://ppa.launchpad.net/rabbitmq/rabbitmq-erlang/ubuntu ${DISTRIB_CODENAME} main" | sudo tee /etc/apt/sources.list.d/rabbitmq.list
-    echo "deb-src http://ppa.launchpad.net/rabbitmq/rabbitmq-erlang/ubuntu ${DISTRIB_CODENAME} main" | sudo tee /etc/apt/sources.list.d/rabbitmq.list
-
-    echo "deb https://packagecloud.io/rabbitmq/rabbitmq-server/ubuntu/ ${DISTRIB_CODENAME} main" | sudo tee /etc/apt/sources.list.d/rabbitmq.list
-    echo "deb-src https://packagecloud.io/rabbitmq/rabbitmq-server/ubuntu/  ${DISTRIB_CODENAME} main" | sudo tee /etc/apt/sources.list.d/rabbitmq.list
-
-#    echo "deb https://dl.bintray.com/rabbitmq/debian ${DISTRIB_CODENAME} main" | sudo tee /etc/apt/sources.list.d/bintray.rabbitmq.list
-#    echo "deb https://dl.bintray.com/rabbitmq-erlang/debian ${DISTRIB_CODENAME} erlang" | sudo tee -a /etc/apt/sources.list.d/bintray.rabbitmq.list
-    #wget -O- https://www.rabbitmq.com/rabbitmq-release-signing-key.asc | sudo apt-key add -
+    echo "deb http://ppa.launchpad.net/rabbitmq/rabbitmq-erlang/ubuntu ${DISTRIB_CODENAME} main" | tee /etc/apt/sources.list.d/rabbitmq.list
+    echo "deb-src http://ppa.launchpad.net/rabbitmq/rabbitmq-erlang/ubuntu ${DISTRIB_CODENAME} main" >> /etc/apt/sources.list.d/rabbitmq.list
+    echo "deb https://packagecloud.io/rabbitmq/rabbitmq-server/ubuntu/ ${DISTRIB_CODENAME} main" >> /etc/apt/sources.list.d/rabbitmq.list
+    echo "deb-src https://packagecloud.io/rabbitmq/rabbitmq-server/ubuntu/  ${DISTRIB_CODENAME} main" >> /etc/apt/sources.list.d/rabbitmq.list
 
     # Add keys to install influxdb
     curl -sL https://repos.influxdata.com/influxdb.key | sudo apt-key add -
@@ -131,10 +129,14 @@ function install_packages {
         wget -qO - https://www.mongodb.org/static/pgp/server-4.0.asc | sudo apt-key add -
         echo "deb [ arch=amd64 ] https://repo.mongodb.org/apt/${DISTRIB_ID,,} ${DISTRIB_CODENAME}/mongodb-org/4.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.0.list
     fi
+
     apt-get update -y
     apt-get install
     apt-get install -y python-pip
-    apt-get install -y mongodb-org=4.4 mongodb-org-server=4.4 mongodb-org-shell=4.4 mongodb-org-mongos=4.4 mongodb-org-tools=4.4
+    if [ $DISTRIB_CODENAME == "trusty" ]; then
+      apt-get install -y mongodb-org=4.0.25 mongodb-org-server=4.0.25 mongodb-org-shell=4.0.25 mongodb-org-mongos=4.0.25 mongodb-org-tools=4.0.25
+    else
+      apt-get install -y mongodb-org=4.4.6 mongodb-org-server=4.4.6 mongodb-org-shell=4.4.6 mongodb-org-mongos=4.4.6 mongodb-org-tools=4.4.6
     apt-get install -y openssl python-setuptools python-dev build-essential software-properties-common
     apt-get install -y nginx
     apt-get install -y supervisor
