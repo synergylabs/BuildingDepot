@@ -140,11 +140,6 @@ function install_packages {
     apt-get install -y influxdb
     service influxdb start
     service mongod start
-    apt-get install -y erlang-base \
-                        erlang-asn1 erlang-crypto erlang-eldap erlang-ftp erlang-inets \
-                        erlang-mnesia erlang-os-mon erlang-parsetools erlang-public-key \
-                        erlang-runtime-tools erlang-snmp erlang-ssl \
-                        erlang-syntax-tools erlang-tftp erlang-tools erlang-xmerl
     apt-get install -y rabbitmq-server --fix-missing
     DEBIAN_FRONTEND=noninteractive apt-get install -y postfix
     apt-get install -y nodejs
