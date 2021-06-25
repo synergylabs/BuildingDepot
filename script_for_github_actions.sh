@@ -104,6 +104,7 @@ function install_packages {
 
     # Add keys for Rabbitmq
     curl -fsSL https://github.com/rabbitmq/signing-keys/releases/download/2.0/rabbitmq-release-signing-key.asc | sudo apt-key add -
+    add-apt-repository ppa:rabbitmq/rabbitmq-erlang
 
     # Add keys to install influxdb
     curl -sL https://repos.influxdata.com/influxdb.key | sudo apt-key add -
