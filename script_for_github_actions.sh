@@ -141,7 +141,11 @@ function install_packages {
     apt-get install -y influxdb
     service influxdb start
     service mongod start
+    cat /etc/hostname
+    cat /etc/hosts
     apt-get install -y rabbitmq-server --fix-missing
+    cat /etc/hostname
+    cat /etc/hosts
     DEBIAN_FRONTEND=noninteractive apt-get install -y postfix
     apt-get install -y nodejs
     apt-get install -y npm
