@@ -101,20 +101,10 @@ function install_packages {
     source /etc/lsb-release
 
     #Add keys for rabbitmq
-    curl -s https://packagecloud.io/install/repositories/rabbitmq/erlang/script.deb.sh | bash
     curl -s https://packagecloud.io/install/repositories/rabbitmq/rabbitmq-server/script.deb.sh | bash
-    curl -fsSL https://www.rabbitmq.com/rabbitmq-release-signing-key.asc | apt-key add -
-    curl -1sLf 'https://packagecloud.io/rabbitmq/rabbitmq-server/gpgkey' | apt-key add -
 
-    echo "deb http://ppa.launchpad.net/rabbitmq/rabbitmq-erlang/ubuntu ${DISTRIB_CODENAME} main" | tee /etc/apt/sources.list.d/rabbitmq.list
-    echo "deb-src http://ppa.launchpad.net/rabbitmq/rabbitmq-erlang/ubuntu ${DISTRIB_CODENAME} main" | tee /etc/apt/sources.list.d/rabbitmq.list
-
-    echo "deb https://packagecloud.io/rabbitmq/rabbitmq-server/ubuntu/ ${DISTRIB_CODENAME} main" | tee /etc/apt/sources.list.d/rabbitmq.list
-    echo "deb-src https://packagecloud.io/rabbitmq/rabbitmq-server/ubuntu/  ${DISTRIB_CODENAME} main" | tee /etc/apt/sources.list.d/rabbitmq.list
-
-#    echo "deb https://dl.bintray.com/rabbitmq/debian ${DISTRIB_CODENAME} main" | tee /etc/apt/sources.list.d/bintray.rabbitmq.list
-#    echo "deb https://dl.bintray.com/rabbitmq-erlang/debian ${DISTRIB_CODENAME} erlang" | tee -a /etc/apt/sources.list.d/bintray.rabbitmq.list
-    #wget -O- https://www.rabbitmq.com/rabbitmq-release-signing-key.asc | apt-key add -
+    echo "deb http://ppa.launchpad.net/rabbitmq/rabbitmq-erlang/ubuntu ${DISTRIB_CODENAME} main" | tee /etc/apt/sources.list.d/rabbitmq-erlang.list
+    echo "deb-src http://ppa.launchpad.net/rabbitmq/rabbitmq-erlang/ubuntu ${DISTRIB_CODENAME} main" | tee -a /etc/apt/sources.list.d/rabbitmq-erlang.list
 
     # Add keys to install influxdb
     curl -sL https://repos.influxdata.com/influxdb.key | apt-key add -
@@ -134,7 +124,13 @@ function install_packages {
     apt-get update -y
     apt-get install
     apt-get install -y python3-pip
-    apt-get install -y mongodb-org
+
+    if [ $DISTRIB_CODENAME == "trusty" ]; then
+      apt-get install -y mongodb-org=4.0.25 mongodb-org-server=4.0.25 mongodb-org-shell=4.0.25 mongodb-org-mongos=4.0.25 mongodb-org-tools=4.0.25
+    else
+      apt-get install -y mongodb-org=4.4.6 mongodb-org-server=4.4.6 mongodb-org-shell=4.4.6 mongodb-org-mongos=4.4.6 mongodb-org-tools=4.4.6
+    fi
+
     apt-get install -y openssl python3-setuptools python3-dev build-essential software-properties-common
     apt-get install -y nginx
     apt-get install -y supervisor
