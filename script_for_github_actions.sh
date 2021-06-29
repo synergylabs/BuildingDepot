@@ -104,6 +104,8 @@ function install_packages {
 
     # Add keys for Rabbitmq
     curl -s https://packagecloud.io/install/repositories/rabbitmq/rabbitmq-server/script.deb.sh | bash
+    # Adds Launchpad PPA that provides modern Erlang releases
+    sudo apt-key adv --keyserver "keyserver.ubuntu.com" --recv-keys "F77F1EDA57EBB1CC"
     echo "deb http://ppa.launchpad.net/rabbitmq/rabbitmq-erlang/ubuntu ${DISTRIB_CODENAME} main" | tee /etc/apt/sources.list.d/rabbitmq-erlang.list
     echo "deb-src http://ppa.launchpad.net/rabbitmq/rabbitmq-erlang/ubuntu ${DISTRIB_CODENAME} main" | tee -a /etc/apt/sources.list.d/rabbitmq-erlang.list
 
@@ -143,12 +145,12 @@ function install_packages {
     apt-get install -y influxdb
     service influxdb start
     service mongod start
-    cat /etc/hostname
-    echo $HOSTNAME >> /etc/hosts
-    cat /etc/hosts
+    apt-get install -y erlang-base \
+                      erlang-asn1 erlang-crypto erlang-eldap erlang-ftp erlang-inets \
+                      erlang-mnesia erlang-os-mon erlang-parsetools erlang-public-key \
+                      erlang-runtime-tools erlang-snmp erlang-ssl \
+                      erlang-syntax-tools erlang-tftp erlang-tools erlang-xmerl
     apt-get install -y rabbitmq-server --fix-missing
-    cat /etc/hostname
-    cat /etc/hosts
     DEBIAN_FRONTEND=noninteractive apt-get install -y postfix
     apt-get install -y nodejs
     apt-get install -y npm
