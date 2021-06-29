@@ -139,7 +139,7 @@ class AppService(MethodView):
             if len(app_filter) > 0:
                 app_to_be_deleted = app_filter[0]
 
-        # If there is no application to be delted
+        # If there is no application to be deleted
         if app_to_be_deleted is None:
             return jsonify(responses.application_does_not_exist)
 

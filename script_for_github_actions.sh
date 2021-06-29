@@ -103,12 +103,14 @@ function install_packages {
     source /etc/lsb-release
 
     # Add keys for Rabbitmq
-    curl -fsSL https://github.com/rabbitmq/signing-keys/releases/download/2.0/rabbitmq-release-signing-key.asc | sudo apt-key add -
-    add-apt-repository ppa:rabbitmq/rabbitmq-erlang
+    curl -s https://packagecloud.io/install/repositories/rabbitmq/rabbitmq-server/script.deb.sh | bash
+    echo "deb http://ppa.launchpad.net/rabbitmq/rabbitmq-erlang/ubuntu ${DISTRIB_CODENAME} main" | tee /etc/apt/sources.list.d/rabbitmq-erlang.list
+    echo "deb-src http://ppa.launchpad.net/rabbitmq/rabbitmq-erlang/ubuntu ${DISTRIB_CODENAME} main" | tee -a /etc/apt/sources.list.d/rabbitmq-erlang.list
 
     # Add keys to install influxdb
     curl -sL https://repos.influxdata.com/influxdb.key | sudo apt-key add -
     echo "deb https://repos.influxdata.com/${DISTRIB_ID,,} ${DISTRIB_CODENAME} stable" | sudo tee /etc/apt/sources.list.d/influxdb.list
+
     # Add keys to install mongodb
     wget -qO - https://www.mongodb.org/static/pgp/server-4.4.asc | sudo apt-key add -
     if [ $DISTRIB_CODENAME == "focal" ]; then
@@ -142,6 +144,7 @@ function install_packages {
     service influxdb start
     service mongod start
     cat /etc/hostname
+    echo $HOSTNAME >> /etc/hosts
     cat /etc/hosts
     apt-get install -y rabbitmq-server --fix-missing
     cat /etc/hostname
