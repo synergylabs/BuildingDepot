@@ -1,8 +1,0 @@
-{
-  "centralServiceUri": "http://localhost:81",
-  "dataServiceUri": "http://localhost:82",
-  "clientID": "",
-  "clientSecret": "",
-  "email": "admin@buildingdepot.org",
-  "password": ""
-}

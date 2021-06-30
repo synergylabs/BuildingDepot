@@ -135,7 +135,7 @@ class PermissionRequestService(MethodView):
             sensors = self.get_sensor_objects_from_uuids(user_sensor_map[user])
             print str(user)
             permission_request_data = { "requester_name": str(requester.first_name) + " " + str(requester.last_name), "requester_email": str(get_email()), "requested_sensors": sensors }
-            PermissionRequest(email=get_email(), timestamp=str(timestamp), requests=permission_request_data).save()
+            PermissionRequest(email=user, timestamp=str(timestamp), requests=permission_request_data).save()
 
             try:
                 for user_db in User._get_collection().find({"email": user}):
