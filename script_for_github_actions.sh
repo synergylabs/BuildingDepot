@@ -236,8 +236,8 @@ function setup_packages {
     sleep 2
 
     ## Add RabbitMQ Admin user
-    rabbitmqUsername=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 16 | head -n 1)
-    rabbitmqPassword=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)
+    rabbitmqUsername="user$(openssl rand -hex 16)"
+    rabbitmqPassword=$(openssl rand -hex 32)
     echo "RABBITMQ_USERNAME = '$rabbitmqUsername'">> $BD/DataService/ds_config
     echo "RABBITMQ_PWD = '$rabbitmqPassword'">> $BD/DataService/ds_config
     #Create a new user.
