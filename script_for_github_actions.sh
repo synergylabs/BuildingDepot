@@ -233,6 +233,30 @@ function setup_packages {
     sed -i -e '/#.* requirepass / s/.*/ requirepass  '$redisPassword'/' /etc/redis/redis.conf
     service redis restart
 
+    sleep 2
+
+    ## Add RabbitMQ Admin user
+    rabbitmqUsername=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 16 | head -n 1)
+    rabbitmqPassword=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)
+    echo "RABBITMQ_USERNAME = '$rabbitmqUsername'">> $BD/DataService/ds_config
+    echo "RABBITMQ_PWD = '$rabbitmqPassword'">> $BD/DataService/ds_config
+    #Create a new user.
+    rabbitmqctl add_user "$rabbitmqUsername" "$rabbitmqPassword"
+    # Add Administrative Rights
+    rabbitmqctl set_user_tags "$rabbitmqUsername" administrator
+    # Grant necessary permissions
+    rabbitmqctl set_permissions -p / "$rabbitmqUsername" ".*" ".*" ".*"
+    echo "BuildingDepot uses RabbitMQ Queues for Publishing  and Subscribing to Sensor data. "
+    echo "Some web front-end use RabbitMQ Queues use rabbitmq_web_stomp plugin"
+    echo "Enter Y to install rabbitmq_web_stomp plugin: "
+    read response
+    if [ "$response" == "Y" ] || [ "$response" == "y" ]; then
+      rabbitmq-plugins enable rabbitmq_web_stomp
+    fi
+
+    sleep 1
+
+
     echo
     echo "Auto-Generated User Credentials for BuildingDepot Packages [MongoDB,InfluxDB & Redis]"
     echo
