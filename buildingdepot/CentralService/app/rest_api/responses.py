@@ -91,6 +91,9 @@ super_user_required = {'success': 'False', 'error': 'Super user privileges requi
 # RabbitMQ error responses
 rabbit_mq_bind_error = {'success': 'False', 'error': 'Unable to bind rabbitmq queue. Check params are valid'}
 
+# Notification error responses
+client_id_already_exists = { 'success': 'False', 'error': 'The user already has a client notification ID' }
+
 # not used
 missing_template = {'success': 'False', 'error': 'Template is not specified'}
 tagtype_name_change_invalid = {'success': 'False', 'error': 'Cannot change name as TagType is already in use'}

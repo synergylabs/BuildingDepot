@@ -18,25 +18,10 @@ from ...auth.views import Client, Token
 from ..helper import form_query, create_response, check_oauth, get_email
 from ... import oauth, app
 import traceback, json, hashlib, pika, os
+from ..notifications.notification import get_notification_client_id
+from ..notifications.push_notifications import PushNotification
 
 class PermissionRequestService(MethodView):
-    def connect_broker(self):
-        """
-        Args:
-            None:
-        Returns:    
-            pubsub: object corresponding to the connection with the broker
-        """
-        try:
-            pubsub = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
-            channel = pubsub.channel()
-            channel.exchange_declare(exchange='permission_requests', type='direct')
-            channel.close()
-            return pubsub
-        except Exception as e:
-            print "Failed to open connection to broker " + str(e)
-            return None
-
     @check_oauth
     def get(self):
         """
@@ -139,47 +124,27 @@ class PermissionRequestService(MethodView):
         target_sensors = data['target_sensors']
         timestamp = data['timestamp']
 
-        print "We got the request. Here are the sensors: " + str(target_sensors)
         if not all([target_sensors, timestamp]):
             return jsonify(responses.missing_parameters)
 
         requester = User.objects(email=get_email()).first()
 
         user_sensor_map = self.map_sensors_to_owner(target_sensors)
-        print str(user_sensor_map)
-            
+
         for user in user_sensor_map:
             sensors = self.get_sensor_objects_from_uuids(user_sensor_map[user])
-            print str(sensors)
+            print str(user)
             permission_request_data = { "requester_name": str(requester.first_name) + " " + str(requester.last_name), "requester_email": str(get_email()), "requested_sensors": sensors }
-            PermissionRequest(email=get_email(), timestamp=str(timestamp), requests=permission_request_data).save()
+            PermissionRequest(email=user, timestamp=str(timestamp), requests=permission_request_data).save()
 
             try:
-                permission_uuid = ""
-
                 for user_db in User._get_collection().find({"email": user}):
-                    permission_uuid = user_db["_id"]
-
-                print "The permission ID is: " + str(permission_uuid)
-
-                if permission_uuid is not None:
                     permission_request_json = json.dumps(permission_request_data)
-                    pubsub = self.connect_broker()
-                    channel = pubsub.channel()
-                    key = hashlib.sha256(str(user).encode() + str(permission_uuid).encode()).hexdigest()
-                    print "The key " + str(key) + " is made from " + str(user) + " and " + str(permission_uuid)
-                    channel.basic_publish(exchange='permission_requests', routing_key=str(key), body=permission_request_json)
+                    PushNotification.get_instance().send(get_notification_client_id(user), permission_request_json, destination="permission_requests")
 
             except Exception as e:
                  traceback.print_exc()
                  print str(repr(e))
                  return jsonify(responses.rabbit_mq_bind_error)
-
-            if pubsub:
-                try:
-                    channel.close()
-                    pubsub.close()
-                except Exception as e:
-                    print "Failed to end RabbitMQ session " + str(e)
  
         return jsonify(responses.success_true)

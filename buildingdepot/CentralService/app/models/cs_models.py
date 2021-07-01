@@ -127,6 +127,9 @@ class Sensor(Document):
     tags = ListField(EmbeddedDocumentField(Node))
     subscribers = ListField(StringField())
 
+class NotificationClientId(Document):
+    email = StringField(required=True, unique=True)
+    client_id = StringField(required=True, unique=True)
 
 class SensorGroup(Document):
     name = StringField(required=True, unique=True)

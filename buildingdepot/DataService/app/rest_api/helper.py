@@ -14,7 +14,7 @@ from functools import wraps
 from flask import request, abort
 from ..oauth_bd.views import Token
 from ..models.ds_models import Building, TagType, User
-from .. import exchange, r
+from .. import exchange, r, rabbitmq_username, rabbitmq_password
 import time, json, pika
 
 
@@ -128,7 +128,9 @@ def connect_broker():
         pubsub: object corresponding to the connection with the broker
     """
     try:
-        pubsub = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
+        credentials = pika.PlainCredentials(rabbitmq_username, rabbitmq_password)
+        pubsub = pika.BlockingConnection(pika.ConnectionParameters(host='localhost',
+                                                                   credentials=credentials))
         channel = pubsub.channel()
         channel.exchange_declare(exchange=exchange, type='direct')
         channel.close()
@@ -213,4 +215,5 @@ def check_oauth(f):
                         # Invalid, deleting
                         token.delete()
         abort(401)
+
     return secure
