@@ -259,8 +259,8 @@ function setup_packages {
     read response
     if [ "$response" == "Y" ] || [ "$response" == "y" ]; then
         ## Add MongoDB Admin user
-        mongoUsername=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 16 | head -n 1)
-        mongoPassword=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)
+        mongoUsername="user$(openssl rand -hex 16)"
+        mongoPassword=$(openssl rand -hex 32)
         echo "MONGODB_USERNAME = '$mongoUsername'" >> $BD/CentralService/cs_config
         echo "MONGODB_PWD = '$mongoPassword'" >> $BD/CentralService/cs_config
         echo "MONGODB_USERNAME = '$mongoUsername'" >> $BD/DataService/ds_config
@@ -276,8 +276,8 @@ function setup_packages {
         sleep 2
 
         ## Add InfluxDB Admin user
-        influxUsername=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 16 | head -n 1)
-        influxPassword=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)
+        influxUsername="user$(openssl rand -hex 16)"
+        influxPassword=$(openssl rand -hex 32)
         echo "INFLUXDB_USERNAME = '$influxUsername'">> $BD/DataService/ds_config
         echo "INFLUXDB_PWD = '$influxPassword'">> $BD/DataService/ds_config
         sleep 1
@@ -288,7 +288,7 @@ function setup_packages {
         sleep 2
 
         ## Add Redis Admin user
-        redisPassword=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 64 | head -n 1)
+        redisPassword=$(openssl rand -hex 64)
         echo "REDIS_PWD = '$redisPassword'">> $BD/CentralService/cs_config
         echo "REDIS_PWD = '$redisPassword'">> $BD/DataService/ds_config
         echo "    REDIS_PWD = '$redisPassword'" >> $BD/CentralReplica/config.py
@@ -298,8 +298,8 @@ function setup_packages {
         sleep 2
 
         ## Add RabbitMQ Admin user
-        rabbitmqUsername=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 16 | head -n 1)
-        rabbitmqPassword=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)
+        rabbitmqUsername="user$(openssl rand -hex 16)"
+        rabbitmqPassword=$(openssl rand -hex 32)
         echo "RABBITMQ_USERNAME = '$rabbitmqUsername'">> $BD/DataService/ds_config
         echo "RABBITMQ_PWD = '$rabbitmqPassword'">> $BD/DataService/ds_config
         #Create a new user.

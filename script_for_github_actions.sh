@@ -249,10 +249,7 @@ function setup_packages {
     echo "BuildingDepot uses RabbitMQ Queues for Publishing  and Subscribing to Sensor data. "
     echo "Some web front-end use RabbitMQ Queues use rabbitmq_web_stomp plugin"
     echo "Enter Y to install rabbitmq_web_stomp plugin: "
-    read response
-    if [ "$response" == "Y" ] || [ "$response" == "y" ]; then
-      rabbitmq-plugins enable rabbitmq_web_stomp
-    fi
+    rabbitmq-plugins enable rabbitmq_web_stomp
 
     sleep 1
 

@@ -34,6 +34,9 @@ app.config.from_envvar('DS_SETTINGS')
 permissions = {"rw": "r/w", "r": "r", "dr": "d/r", "rwp": "r/w/p"}
 
 exchange = 'master_exchange'
+rabbitmq_username = app.config['RABBITMQ_USERNAME']
+rabbitmq_password = app.config['RABBITMQ_PWD']
+
 
 influx = InfluxDBClient(app.config['INFLUXDB_HOST'], 
                         app.config['INFLUXDB_PORT'], 
