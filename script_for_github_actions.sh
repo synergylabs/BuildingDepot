@@ -238,14 +238,24 @@ function setup_packages {
     ## Add RabbitMQ Admin user
     rabbitmqUsername="user$(openssl rand -hex 16)"
     rabbitmqPassword=$(openssl rand -hex 32)
-    echo "RABBITMQ_USERNAME = '$rabbitmqUsername'">> $BD/DataService/ds_config
-    echo "RABBITMQ_PWD = '$rabbitmqPassword'">> $BD/DataService/ds_config
-    #Create a new user.
+    rabbitmqUsername_endUser="user$(openssl rand -hex 16)"
+    rabbitmqPassword_endUser=$(openssl rand -hex 32)
+    echo "RABBITMQ_ADMIN_USERNAME = '$rabbitmqUsername'">> $BD/DataService/ds_config
+    echo "RABBITMQ_ADMIN_PWD = '$rabbitmqPassword'">> $BD/DataService/ds_config
+    echo "RABBITMQ_ENDUSER_USERNAME = '$rabbitmqUsername_endUser'">> $BD/DataService/ds_config
+    echo "RABBITMQ_ENDUSER_PWD = '$rabbitmqPassword_endUser'">> $BD/DataService/ds_config
+    # Create a Admin user.
     rabbitmqctl add_user "$rabbitmqUsername" "$rabbitmqPassword"
     # Add Administrative Rights
     rabbitmqctl set_user_tags "$rabbitmqUsername" administrator
     # Grant necessary permissions
     rabbitmqctl set_permissions -p / "$rabbitmqUsername" ".*" ".*" ".*"
+    # Create a End User.
+    rabbitmqctl add_user "$rabbitmqUsername_endUser" "$rabbitmqPassword_endUser"
+    # Add Permissions
+    rabbitmqctl set_user_tags "$rabbitmqUsername_endUser"
+    # Grant necessary permissions
+    rabbitmqctl set_permissions -p / "$rabbitmqUsername_endUser" "" "" ".*"
     echo "BuildingDepot uses RabbitMQ Queues for Publishing  and Subscribing to Sensor data. "
     echo "Some web front-end use RabbitMQ Queues use rabbitmq_web_stomp plugin"
     echo "Enter Y to install rabbitmq_web_stomp plugin: "

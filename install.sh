@@ -257,6 +257,7 @@ function setup_packages {
     echo "--------------------"
     echo "Enter Y to auto-generate credentials for packages (MongoDB,InfluxDB & Redis). Credentials are stored in cs_config file (or) Enter N to input individual package credentials"
     read response
+
     if [ "$response" == "Y" ] || [ "$response" == "y" ]; then
         ## Add MongoDB Admin user
         mongoUsername="user$(openssl rand -hex 16)"
@@ -300,15 +301,26 @@ function setup_packages {
         ## Add RabbitMQ Admin user
         rabbitmqUsername="user$(openssl rand -hex 16)"
         rabbitmqPassword=$(openssl rand -hex 32)
-        echo "RABBITMQ_USERNAME = '$rabbitmqUsername'">> $BD/DataService/ds_config
-        echo "RABBITMQ_PWD = '$rabbitmqPassword'">> $BD/DataService/ds_config
-        #Create a new user.
+        rabbitmqUsername_endUser="user$(openssl rand -hex 16)"
+        rabbitmqPassword_endUser=$(openssl rand -hex 32)
+        echo "RABBITMQ_ADMIN_USERNAME = '$rabbitmqUsername'">> $BD/DataService/ds_config
+        echo "RABBITMQ_ADMIN_PWD = '$rabbitmqPassword'">> $BD/DataService/ds_config
+        echo "RABBITMQ_ENDUSER_USERNAME = '$rabbitmqUsername_endUser'">> $BD/DataService/ds_config
+        echo "RABBITMQ_ENDUSER_PWD = '$rabbitmqPassword_endUser'">> $BD/DataService/ds_config
+        # Create a Admin user.
         rabbitmqctl add_user "$rabbitmqUsername" "$rabbitmqPassword"
         # Add Administrative Rights
         rabbitmqctl set_user_tags "$rabbitmqUsername" administrator
         # Grant necessary permissions
         rabbitmqctl set_permissions -p / "$rabbitmqUsername" ".*" ".*" ".*"
-        echo "BuildingDepot uses RabbitMQ Queues for Publishing  and Subscribing to Sensor data. "
+        # Create a End User.
+        rabbitmqctl add_user "$rabbitmqUsername_endUser" "$rabbitmqPassword_endUser"
+        # Add Permissions
+        rabbitmqctl set_user_tags "$rabbitmqUsername_endUser"
+        # Grant necessary permissions
+        rabbitmqctl set_permissions -p / "$rabbitmqUsername_endUser" "" "" ".*"
+
+        echo "BuildingDepot uses RabbitMQ Queues for Publishing and Subscribing to Sensor data. "
         echo "Some web front-end use RabbitMQ Queues use rabbitmq_web_stomp plugin"
         echo "Enter Y to install rabbitmq_web_stomp plugin: "
         read response
@@ -373,19 +385,34 @@ function setup_packages {
 
        ## Add RabbitMQ Admin user
         echo
-        echo "Enter Redis Username: "
+        echo "Enter RabbitMQ Admin Username: "
         read rabbitmqUsername
-        echo "Enter Redis Password: "
+        echo "Enter RabbitMQ Admin Password: "
         read -s rabbitmqPassword
+        echo "Enter RabbitMQ EndUser Username: "
+        read rabbitmqUsername_endUser
+        echo "Enter RabbitMQ EndUser Password: "
+        read -s rabbitmqPassword_endUser
+
         #Create a new user.
         rabbitmqctl add_user "$rabbitmqUsername" "$rabbitmqPassword"
         # Add Administrative Rights
         rabbitmqctl set_user_tags "$rabbitmqUsername" administrator
         # Grant necessary permissions
         rabbitmqctl set_permissions -p / "$rabbitmqUsername" ".*" ".*" ".*"
-        echo "RABBITMQ_USERNAME = '$rabbitmqUsername'">> $BD/DataService/ds_config
-        echo "RABBITMQ_PWD = '$rabbitmqPassword'">> $BD/DataService/ds_config
-        echo "BuildingDepot uses RabbitMQ Queues for Publishing  and Subscribing to Sensor data. "
+        # Create a End User.
+        rabbitmqctl add_user "$rabbitmqUsername_endUser" "$rabbitmqPassword_endUser"
+        # Add Permissions
+        rabbitmqctl set_user_tags "$rabbitmqUsername_endUser"
+        # Grant necessary permissions
+        rabbitmqctl set_permissions -p / "$rabbitmqUsername_endUser" "" "" ".*"
+
+        echo "RABBITMQ_ADMIN_USERNAME = '$rabbitmqUsername'">> $BD/DataService/ds_config
+        echo "RABBITMQ_ADMIN_PWD = '$rabbitmqPassword'">> $BD/DataService/ds_config
+        echo "RABBITMQ_ENDUSER_USERNAME = '$rabbitmqUsername_endUser'">> $BD/DataService/ds_config
+        echo "RABBITMQ_ENDUSER_PWD = '$rabbitmqPassword_endUser'">> $BD/DataService/ds_config
+
+        echo "BuildingDepot uses RabbitMQ Queues for Publishing and Subscribing to Sensor data. "
         echo "Some web front-end use RabbitMQ Queues use rabbitmq_web_stomp plugin"
         echo "Enter Y to install rabbitmq_web_stomp plugin: "
         read response
@@ -399,7 +426,7 @@ function setup_packages {
         echo "Saved User Credentials for BuildingDepot Packages"
         echo
 
-     else
+    else
         echo
         echo "Invalid option please Try again."
         setup_packages
