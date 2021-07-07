@@ -33,7 +33,8 @@ function setup_venv {
     pip install --upgrade pip
     pip install --upgrade setuptools
     pip install --upgrade -r pip_packages.list
-
+    pip install "firebase-admin==2.18.0"    
+    
     pip install --upgrade uWSGI
     mkdir -p /etc/uwsgi/apps-available/
 
@@ -98,29 +99,43 @@ function deploy_config {
 function install_packages {
     apt-get install -y curl
     apt-get install -y apt-transport-https
+    apt install curl gnupg -y
     source /etc/lsb-release
 
+    # Add keys for Rabbitmq
+    curl -s https://packagecloud.io/install/repositories/rabbitmq/rabbitmq-server/script.deb.sh | bash
+    # Adds Launchpad PPA that provides modern Erlang releases
+    sudo apt-key adv --keyserver "keyserver.ubuntu.com" --recv-keys "F77F1EDA57EBB1CC"
+    echo "deb http://ppa.launchpad.net/rabbitmq/rabbitmq-erlang/ubuntu ${DISTRIB_CODENAME} main" | tee /etc/apt/sources.list.d/rabbitmq-erlang.list
+    echo "deb-src http://ppa.launchpad.net/rabbitmq/rabbitmq-erlang/ubuntu ${DISTRIB_CODENAME} main" | tee -a /etc/apt/sources.list.d/rabbitmq-erlang.list
 
-    #Add keys for rabbitmq
-    echo "deb https://dl.bintray.com/rabbitmq/debian ${DISTRIB_CODENAME} main" | sudo tee /etc/apt/sources.list.d/bintray.rabbitmq.list
-    echo "deb https://dl.bintray.com/rabbitmq-erlang/debian ${DISTRIB_CODENAME} erlang" | sudo tee -a /etc/apt/sources.list.d/bintray.rabbitmq.list
-    wget -O- https://www.rabbitmq.com/rabbitmq-release-signing-key.asc | sudo apt-key add -
     # Add keys to install influxdb
     curl -sL https://repos.influxdata.com/influxdb.key | sudo apt-key add -
     echo "deb https://repos.influxdata.com/${DISTRIB_ID,,} ${DISTRIB_CODENAME} stable" | sudo tee /etc/apt/sources.list.d/influxdb.list
+
     # Add keys to install mongodb
-    wget -qO - https://www.mongodb.org/static/pgp/server-4.0.asc | sudo apt-key add -
-    if [ $DISTRIB_CODENAME == "bionic" ]; then
-        echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/${DISTRIB_ID,,} ${DISTRIB_CODENAME}/mongodb-org/4.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.0.list
+    wget -qO - https://www.mongodb.org/static/pgp/server-4.4.asc | sudo apt-key add -
+    if [ $DISTRIB_CODENAME == "focal" ]; then
+        echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu ${DISTRIB_CODENAME}/mongodb-org/4.4 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.4.list
+    elif [ $DISTRIB_CODENAME == "bionic" ]; then
+        echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu ${DISTRIB_CODENAME}/mongodb-org/4.4 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.4.list
     elif [ $DISTRIB_CODENAME == "xenial" ]; then
-        echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/${DISTRIB_ID,,} ${DISTRIB_CODENAME}/mongodb-org/4.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.0.list
+        echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu ${DISTRIB_CODENAME}/mongodb-org/4.4 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.4.list
     elif [ $DISTRIB_CODENAME == "trusty" ]; then
+        wget -qO - https://www.mongodb.org/static/pgp/server-4.0.asc | sudo apt-key add -
         echo "deb [ arch=amd64 ] https://repo.mongodb.org/apt/${DISTRIB_ID,,} ${DISTRIB_CODENAME}/mongodb-org/4.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.0.list
     fi
+
     apt-get update -y
     apt-get install
     apt-get install -y python-pip
-    apt-get install -y mongodb-org=4.0.5 mongodb-org-server=4.0.5 mongodb-org-shell=4.0.5 mongodb-org-mongos=4.0.5 mongodb-org-tools=4.0.5
+
+    if [ $DISTRIB_CODENAME == "trusty" ]; then
+      apt-get install -y mongodb-org=4.0.25 mongodb-org-server=4.0.25 mongodb-org-shell=4.0.25 mongodb-org-mongos=4.0.25 mongodb-org-tools=4.0.25
+    else
+      apt-get install -y mongodb-org=4.4.6 mongodb-org-server=4.4.6 mongodb-org-shell=4.4.6 mongodb-org-mongos=4.4.6 mongodb-org-tools=4.4.6
+    fi
+
     apt-get install -y openssl python-setuptools python-dev build-essential software-properties-common
     apt-get install -y nginx
     apt-get install -y supervisor
@@ -130,7 +145,12 @@ function install_packages {
     apt-get install -y influxdb
     service influxdb start
     service mongod start
-    apt-get install -y rabbitmq-server
+    apt-get install -y erlang-base \
+                      erlang-asn1 erlang-crypto erlang-eldap erlang-ftp erlang-inets \
+                      erlang-mnesia erlang-os-mon erlang-parsetools erlang-public-key \
+                      erlang-runtime-tools erlang-snmp erlang-ssl \
+                      erlang-syntax-tools erlang-tftp erlang-tools erlang-xmerl
+    apt-get install -y rabbitmq-server --fix-missing
     DEBIAN_FRONTEND=noninteractive apt-get install -y postfix
     apt-get install -y nodejs
     apt-get install -y npm
@@ -212,6 +232,37 @@ function setup_packages {
     echo "    REDIS_PWD = '$redisPassword'" >> $BD/CentralReplica/config.py
     sed -i -e '/#.* requirepass / s/.*/ requirepass  '$redisPassword'/' /etc/redis/redis.conf
     service redis restart
+
+    sleep 2
+
+    ## Add RabbitMQ Admin user
+    rabbitmqUsername="user$(openssl rand -hex 16)"
+    rabbitmqPassword=$(openssl rand -hex 32)
+    rabbitmqUsername_endUser="user$(openssl rand -hex 16)"
+    rabbitmqPassword_endUser=$(openssl rand -hex 32)
+    echo "RABBITMQ_ADMIN_USERNAME = '$rabbitmqUsername'">> $BD/DataService/ds_config
+    echo "RABBITMQ_ADMIN_PWD = '$rabbitmqPassword'">> $BD/DataService/ds_config
+    echo "RABBITMQ_ENDUSER_USERNAME = '$rabbitmqUsername_endUser'">> $BD/DataService/ds_config
+    echo "RABBITMQ_ENDUSER_PWD = '$rabbitmqPassword_endUser'">> $BD/DataService/ds_config
+    # Create a Admin user.
+    rabbitmqctl add_user "$rabbitmqUsername" "$rabbitmqPassword"
+    # Add Administrative Rights
+    rabbitmqctl set_user_tags "$rabbitmqUsername" administrator
+    # Grant necessary permissions
+    rabbitmqctl set_permissions -p / "$rabbitmqUsername" ".*" ".*" ".*"
+    # Create a End User.
+    rabbitmqctl add_user "$rabbitmqUsername_endUser" "$rabbitmqPassword_endUser"
+    # Add Permissions
+    rabbitmqctl set_user_tags "$rabbitmqUsername_endUser"
+    # Grant necessary permissions
+    rabbitmqctl set_permissions -p / "$rabbitmqUsername_endUser" "" "" ".*"
+    echo "BuildingDepot uses RabbitMQ Queues for Publishing  and Subscribing to Sensor data. "
+    echo "Some web front-end use RabbitMQ Queues use rabbitmq_web_stomp plugin"
+    echo "Enter Y to install rabbitmq_web_stomp plugin: "
+    rabbitmq-plugins enable rabbitmq_web_stomp
+
+    sleep 1
+
 
     echo
     echo "Auto-Generated User Credentials for BuildingDepot Packages [MongoDB,InfluxDB & Redis]"
