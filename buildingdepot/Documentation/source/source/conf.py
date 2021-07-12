@@ -20,8 +20,8 @@
 # -- Project information -----------------------------------------------------
 
 project = u"BuildingDepot v3.2.9"
-copyright = u"2020, Shreyas Nagare"
-author = u"Shreyas Nagare"
+copyright = u"2021, Sudershan Boovaraghavan, Shreyas Nagare"
+author = u"Sudershan Boovaraghavan, Shreyas Nagare"
 
 # The short X.Y version
 version = u""
@@ -128,7 +128,7 @@ latex_documents = [
         master_doc,
         "BuildingDepotv329.tex",
         u"BuildingDepot v3.2.9 Documentation",
-        u"Shreyas Nagare",
+        u"Synergy Labs",
         "manual",
     ),
 ]
