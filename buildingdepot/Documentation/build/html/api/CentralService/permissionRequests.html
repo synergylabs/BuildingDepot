@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>TagType &mdash; BuildingDepot 3.2.9 documentation</title>
+  <title>Permission Requests &mdash; BuildingDepot 3.2.9 documentation</title>
   
 
   
@@ -35,8 +35,8 @@
         <link rel="search" title="Search" href="../../search.html"/>
     <link rel="top" title="BuildingDepot 3.2.9 documentation" href="../../index.html"/>
         <link rel="up" title="CentralService APIs" href="index.html"/>
-        <link rel="next" title="BuildingTemplate" href="buildingtemplate.html"/>
-        <link rel="prev" title="OAuth" href="oauth.html"/> 
+        <link rel="next" title="User" href="user.html"/>
+        <link rel="prev" title="Permission" href="permission.html"/> 
 
   
   <script src="../../_static/js/modernizr.min.js"></script>
@@ -99,11 +99,7 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">CentralService APIs</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="oauth.html">OAuth</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">TagType</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#add-tagtype">Add TagType</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#get-tagtype">Get TagType</a></li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="tagtype.html">TagType</a></li>
 <li class="toctree-l2"><a class="reference internal" href="buildingtemplate.html">BuildingTemplate</a></li>
 <li class="toctree-l2"><a class="reference internal" href="building.html">Buildings</a></li>
 <li class="toctree-l2"><a class="reference internal" href="dataservice.html">DataService</a></li>
@@ -111,7 +107,11 @@
 <li class="toctree-l2"><a class="reference internal" href="sensorgroup.html">SensorGroups</a></li>
 <li class="toctree-l2"><a class="reference internal" href="usergroup.html">Usergroups</a></li>
 <li class="toctree-l2"><a class="reference internal" href="permission.html">Permission</a></li>
-<li class="toctree-l2"><a class="reference internal" href="permissionRequests.html">Permission Requests</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Permission Requests</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#create-permission-requests">Create Permission Requests</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#read-permission-requests">Read Permission Requests</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="user.html">User</a></li>
 </ul>
 </li>
@@ -162,13 +162,13 @@
         
           <li><a href="index.html">CentralService APIs</a> &raquo;</li>
         
-      <li>TagType</li>
+      <li>Permission Requests</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../../_sources/api/CentralService/tagtype.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../../_sources/api/CentralService/permissionRequests.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -181,23 +181,82 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="tagtype">
-<h1>TagType<a class="headerlink" href="#tagtype" title="Permalink to this headline">¶</a></h1>
-<p>Tag Types are used to describe the structure and domains of buildings and help in categorising sensors that can be easily allocated in groups to different users. TagType can be defined in the CentralService at <a class="reference external" href="http://www.example.com:81/api/tagtype">http://www.example.com:81/api/tagtype</a>. TagsTypes have a hierarchical structure i.e. a tag can have both parent tags and children tags. They play a very crucial role within BuildingDepot in defining permissions that restrict access to sensors based on the permissions a user has. Also, A building template is supported by a group of tag types allocated to it.</p>
-<div class="section" id="add-tagtype">
-<h2>Add TagType<a class="headerlink" href="#add-tagtype" title="Permalink to this headline">¶</a></h2>
-<p>This request creates a new TagType in BuildingDepot which will be used in the Building template to define the structure of the Buildings.</p>
+  <div class="section" id="permission-requests">
+<h1>Permission Requests<a class="headerlink" href="#permission-requests" title="Permalink to this headline">¶</a></h1>
+<p>A Permission Request can be sent to obtain access to a particular sensor entity owned by a user of BuildingDepot.
+Once the permission request is sent to the user, on approval the Permission APIs should be used to create a permission
+pair between the user and the sensor resources.
+The Permissions are created between SensorGroups and UserGroups in Building Depot which come together to form the access control lists.
+Here we select a User Group and a Sensor Group and a permission value with which we want to associate these both.
+There are three levels of permission defined in BuildingDepot which are ‘d/r’ (deny read) ,’r’ (read), ‘r/w’ (read write) and ‘r/w/p’ (read write permission).
+If there are multiple permission mappings between a user and a sensor then the one that is most restrictive is chosen.
+Permissions can be defined in the CentralService at <a class="reference external" href="http://www.example.com:81/api/permission">http://www.example.com:81/api/permission</a>.
+Note: Firebase or RabbitMQ needs to be installed during the BD installation for this to work.</p>
+<div class="section" id="create-permission-requests">
+<h2>Create Permission Requests<a class="headerlink" href="#create-permission-requests" title="Permalink to this headline">¶</a></h2>
+<p>This request creates a new Permission Request for a sensor entity owned by a user.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">JSON Parameters:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body"><ul class="first simple">
+<li><dl class="first docutils">
+<dt><strong>data</strong> <cite>(dictionary)</cite> – Contains the permission value for sensorgroup and usergroup</dt>
+<dd><ul class="first last">
+<li><strong>target_sensors</strong> <cite>(string)</cite> – List of Targeted sensors</li>
+<li><strong>timestamp</strong> <cite>(string)</cite> – Name of the user_group</li>
+<li><dl class="first docutils">
+<dt><strong>permission</strong> <cite>(string)</cite> – Permission level</dt>
+<dd><ul class="first last">
+<li><strong>r</strong> <cite>(string)</cite> – Read - Will give read only access to the sensors</li>
+<li><strong>rw</strong> <cite>(string)</cite> – Read-Write - Will give read and write access to the sensors</li>
+<li><strong>dr</strong> <cite>(string)</cite> – Deny-read - Will deny any access to the sensors</li>
+<li><strong>rwp</strong> <cite>(string)</cite> – Read-Write-Permission - Highest level of permission that can be assigned. Will give read and write access to the sensors. In addition to this the user will be able to add/remove tags from the sensor.</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+<blockquote class="last">
+<div><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">returns:</th><td class="field-body"><ul class="first simple">
+<li><strong>success</strong> <cite>(string)</cite> – Returns ‘True’ if data is posted successfully otherwise ‘False’</li>
+<li><strong>error</strong> <cite>(string)</cite> – An additional value that will be present only if the request fails specifying the cause for failure</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">status 200:</th><td class="field-body"><p class="first">Success</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">status 401:</th><td class="field-body"><p class="first last">Unauthorized Credentials</p>
+</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
 <div class="compound">
 <p class="compound-first"><strong>Example request</strong>:</p>
-<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">POST</span> <span class="nn">/api/tagtype</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">POST</span> <span class="nn">/api/permission/request</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
 <span class="na">Accept</span><span class="o">:</span> <span class="l">application/json; charset=utf-8</span>
 
-
-{ &quot;data&quot;:
-          {   &quot;name&quot;: &quot;corridor&quot;,
-              &quot;description&quot;: &quot;passage in a building&quot;,
-              &quot;parents&quot;: [ &quot;floor&quot; ]
-              }
+{
+  &quot;data&quot;:{
+      &quot;target_sensors&quot;:[6cf53d24-e3a3-41bd-b2b5-8f109694f628, 6cf53d24-e3a3-41bd-b2b5-8f109694f629],
+      &quot;timestamp&quot;:&quot;1626105964&quot;,
+      &quot;permission&quot;:&quot;r&quot;
+  }
 }
 </pre></div>
 </div>
@@ -216,35 +275,39 @@
 
 <span class="p">{</span>
   <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;False&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;List of parents tags not valid&quot;</span>
+  <span class="nt">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot; Missing Parameters&quot;</span>
+<span class="p">}</span>
+
+<span class="p">{</span>
+  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;False&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot; Sensor does not exist&quot;</span>
+<span class="p">}</span>
+
+<span class="p">{</span>
+  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;False&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot; Permission value does not exist&quot;</span>
 <span class="p">}</span>
 </pre></div>
 </div>
 </div>
 </div>
-<div class="section" id="get-tagtype">
-<h2>Get TagType<a class="headerlink" href="#get-tagtype" title="Permalink to this headline">¶</a></h2>
-<p>This request fetches information about a TagType in BuildingDepot.</p>
+<div class="section" id="read-permission-requests">
+<h2>Read Permission Requests<a class="headerlink" href="#read-permission-requests" title="Permalink to this headline">¶</a></h2>
+<p>This request retrieves Permission Request for a user.</p>
 <div class="compound">
 <p class="compound-first"><strong>Example request</strong>:</p>
-<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">GET</span> <span class="nn">/api/tagtype/floor</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">GET</span> <span class="nn">/api/permission/request</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
 <span class="na">Accept</span><span class="o">:</span> <span class="l">application/json; charset=utf-8</span>
 </pre></div>
 </div>
-<p class="compound-middle"><strong>Example response</strong> (for success):</p>
-<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
-<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+<p class="compound-middle"><strong>Example response</strong>:</p>
+<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span>HTTP/1.1 200 OK
+Content-Type: application/json
 
-<span class="p">{</span>
-  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;True&quot;</span>
-  <span class="s2">&quot;children&quot;</span><span class="p">:</span> <span class="p">[</span>  <span class="s2">&quot;corridor&quot;</span>
-                  <span class="p">],</span>
-  <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
-  <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;floor&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;parents&quot;</span><span class="p">:</span> <span class="p">[],</span>
-  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;True&quot;</span>
-
-<span class="p">}</span>
+{
+  &quot;success&quot;: &quot;True&quot;
+  &quot;permission_requests&quot;: [{ &quot;requester_name&quot;: Admin, &quot;requester_email&quot;: test@buildingdepot.org, &quot;requested_sensors&quot;: [6cf53d24-e3a3-41bd-b2b5-8f109694f628, 6cf53d24-e3a3-41bd-b2b5-8f109694f629] }]
+}
 </pre></div>
 </div>
 <p class="compound-middle"><strong>Example response</strong> (for failure):</p>
@@ -253,7 +316,7 @@
 
 <span class="p">{</span>
   <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;False&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;TagType does not exist&quot;</span>
+  <span class="nt">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot; Permission Requests does not exist&quot;</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -268,10 +331,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="buildingtemplate.html" class="btn btn-neutral float-right" title="BuildingTemplate" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="user.html" class="btn btn-neutral float-right" title="User" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="oauth.html" class="btn btn-neutral" title="OAuth" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="permission.html" class="btn btn-neutral" title="Permission" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

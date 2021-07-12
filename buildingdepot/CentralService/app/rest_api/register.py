@@ -11,7 +11,6 @@ from .notifications import notification
 
 
 def register_view(app_obj):
-
     tagtype_view = tagtype.TagTypeService.as_view('tagtype_api')
     # add/change tagtypes
     app_obj.add_url_rule('/api/tagtype', view_func=tagtype_view, methods=['POST'])
@@ -29,7 +28,8 @@ def register_view(app_obj):
     # post creates/modifies building templates
     # get returns information on a specified building template.
     # delete deletes the template
-    app_obj.add_url_rule('/api/template/<name>/tags', view_func=template_tagtypes_view, methods=['GET', 'DELETE', 'POST', 'PUT'])
+    app_obj.add_url_rule('/api/template/<name>/tags', view_func=template_tagtypes_view,
+                         methods=['GET', 'DELETE', 'POST', 'PUT'])
 
     building_view = building.BuildingService.as_view('building_api')
     # post creates/modifies buildings
@@ -42,7 +42,8 @@ def register_view(app_obj):
     # get a list of tags associated with a specified building
     # post changes/adds tags to a specified building
     # delete removes a tag from a specified building
-    app_obj.add_url_rule('/api/building/<building_name>/tags', view_func=building_tags_view, methods=['POST', 'GET', 'DELETE'])
+    app_obj.add_url_rule('/api/building/<building_name>/tags', view_func=building_tags_view,
+                         methods=['POST', 'GET', 'DELETE'])
 
     dataservice_view = dataservice.DataserviceService.as_view('dataservice_api')
     # post changes/adds a data service to a central service
@@ -127,7 +128,8 @@ def register_view(app_obj):
     # Push a notification to a mite owner that the user making this request wants permission to their mites
     app_obj.add_url_rule('/api/permission/request', view_func=permission_request_view, methods=['GET', 'POST'])
 
-    permission_uuid_request_view = permission_uuid.PermissionRequestUUIDService.as_view('permission_request_uuid_service')
+    permission_uuid_request_view = permission_uuid.PermissionRequestUUIDService.as_view(
+        'permission_request_uuid_service')
     # Get or create UUIDs for permission request RabbitMQ queues
     app_obj.add_url_rule('/api/permission/request/uuid', view_func=permission_uuid_request_view, methods=['GET'])
 
@@ -142,7 +144,6 @@ def register_view(app_obj):
     # delete removes a user
     app_obj.add_url_rule('/api/user', view_func=users_view, methods=['POST'])
     app_obj.add_url_rule('/api/user/<email>', view_func=users_view, methods=['GET', 'DELETE'])
-
 
     notifications_view = notification.NotificationClientIdService.as_view('notification_client_id_service')
     # Create, get or modify an ID used in the notification system
