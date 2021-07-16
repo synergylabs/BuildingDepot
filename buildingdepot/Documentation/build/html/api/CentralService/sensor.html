@@ -1,196 +1,204 @@
+
+
 <!DOCTYPE html>
-<!--[if IE 8]>
-<html class="no-js lt-ie9" lang="en"> <![endif]-->
-<!--[if gt IE 8]><!-->
-<html class="no-js" lang="en"> <!--<![endif]-->
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
-    <meta charset="utf-8">
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Sensor &mdash; BuildingDepot 3.2.9 documentation</title>
+  
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
 
-    <title>Sensor &mdash; BuildingDepot 3.2.9 documentation</title>
+  
 
+  
+  
+    
 
-    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css"/>
+  
 
+  
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  
 
-    <link rel="index" title="Index"
-          href="../../genindex.html"/>
-    <link rel="search" title="Search" href="../../search.html"/>
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../genindex.html"/>
+        <link rel="search" title="Search" href="../../search.html"/>
     <link rel="top" title="BuildingDepot 3.2.9 documentation" href="../../index.html"/>
-    <link rel="up" title="CentralService APIs" href="index.html"/>
-    <link rel="next" title="SensorGroups" href="sensorgroup.html"/>
-    <link rel="prev" title="DataService" href="dataservice.html"/>
+        <link rel="up" title="CentralService APIs" href="index.html"/>
+        <link rel="next" title="SensorGroups" href="sensorgroup.html"/>
+        <link rel="prev" title="DataService" href="dataservice.html"/> 
 
-
-    <script src="../../_static/js/modernizr.min.js"></script>
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
 
 </head>
 
 <body class="wy-body-for-nav" role="document">
 
+   
+  <div class="wy-grid-for-nav">
 
-<div class="wy-grid-for-nav">
-
-
+    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-        <div class="wy-side-scroll">
-            <div class="wy-side-nav-search">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
 
+          
+            <a href="../../index.html" class="icon icon-home"> BuildingDepot
+          
 
-                <a href="../../index.html" class="icon icon-home"> BuildingDepot
+          
+          </a>
 
+          
+            
+            
+              <div class="version">
+                3.2.9
+              </div>
+            
+          
 
-                </a>
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
 
-
-                <div class="version">
-                    3.2.9
-                </div>
-
-
-                <div role="search">
-                    <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
-                        <input type="text" name="q" placeholder="Search docs"/>
-                        <input type="hidden" name="check_keywords" value="yes"/>
-                        <input type="hidden" name="area" value="default"/>
-                    </form>
-                </div>
-
-
-            </div>
-
-            <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-
-
-                <ul>
-                    <li class="toctree-l1"><a class="reference internal" href="../../centralservice.html">Central
-                        Service</a></li>
-                </ul>
-                <ul>
-                    <li class="toctree-l1"><a class="reference internal" href="../../dataservice.html">Data Service</a>
-                    </li>
-                </ul>
-                <ul>
-                    <li class="toctree-l1"><a class="reference internal" href="../../install.html">Installation</a></li>
-                    <li class="toctree-l1"><a class="reference internal" href="../../install.html#configuration">Configuration</a>
-                    </li>
-                </ul>
-                <ul class="current">
-                    <li class="toctree-l1 current"><a class="reference internal" href="index.html">CentralService
-                        APIs</a>
-                        <ul class="current">
-                            <li class="toctree-l2"><a class="reference internal" href="oauth.html">OAuth</a></li>
-                            <li class="toctree-l2"><a class="reference internal" href="tagtype.html">TagType</a></li>
-                            <li class="toctree-l2"><a class="reference internal" href="buildingtemplate.html">BuildingTemplate</a>
-                            </li>
-                            <li class="toctree-l2"><a class="reference internal" href="building.html">Buildings</a></li>
-                            <li class="toctree-l2"><a class="reference internal" href="dataservice.html">DataService</a>
-                            </li>
-                            <li class="toctree-l2 current"><a class="current reference internal" href="#">Sensor</a>
-                                <ul>
-                                    <li class="toctree-l3"><a class="reference internal" href="#create-a-sensor">Create
-                                        a Sensor</a></li>
-                                    <li class="toctree-l3"><a class="reference internal" href="#get-sensor-details">Get
-                                        Sensor details</a></li>
-                                    <li class="toctree-l3"><a class="reference internal" href="#delete-a-sensor">Delete
-                                        a Sensor</a></li>
-                                    <li class="toctree-l3"><a class="reference internal" href="#search-sensors">Search
-                                        Sensors</a></li>
-                                    <li class="toctree-l3"><a class="reference internal" href="#add-tags-to-a-sensor">Add
-                                        Tags to a Sensor</a></li>
-                                    <li class="toctree-l3"><a class="reference internal" href="#get-tags-of-a-sensor">Get
-                                        Tags of a Sensor</a></li>
-                                    <li class="toctree-l3"><a class="reference internal" href="#create-a-sensor-view">Create
-                                        a Sensor View</a></li>
-                                    <li class="toctree-l3"><a class="reference internal"
-                                                              href="#get-sensor-view-details">Get Sensor View
-                                        details</a></li>
-                                    <li class="toctree-l3"><a class="reference internal" href="#delete-a-sensor-view">Delete
-                                        a Sensor View</a></li>
-                                    <li class="toctree-l3"><a class="reference internal"
-                                                              href="#sensorgroups-and-usergroups">SensorGroups and
-                                        UserGroups</a></li>
-                                </ul>
-                            </li>
-                            <li class="toctree-l2"><a class="reference internal"
-                                                      href="sensorgroup.html">SensorGroups</a></li>
-                            <li class="toctree-l2"><a class="reference internal" href="usergroup.html">Usergroups</a>
-                            </li>
-                            <li class="toctree-l2"><a class="reference internal" href="permission.html">Permission</a>
-                            </li>
-                            <li class="toctree-l2"><a class="reference internal" href="user.html">User</a></li>
-                        </ul>
-                    </li>
-                    <li class="toctree-l1"><a class="reference internal" href="../DataService/index.html">DataService
-                        APIs</a></li>
-                </ul>
-
-
-            </div>
+          
         </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../centralservice.html">Central Service</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../dataservice.html">Data Service</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../install.html#configuration">Configuration</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">CentralService APIs</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="oauth.html">OAuth</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tagtype.html">TagType</a></li>
+<li class="toctree-l2"><a class="reference internal" href="buildingtemplate.html">BuildingTemplate</a></li>
+<li class="toctree-l2"><a class="reference internal" href="building.html">Buildings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dataservice.html">DataService</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Sensor</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#create-a-sensor">Create a Sensor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#get-sensor-details">Get Sensor details</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#delete-a-sensor">Delete a Sensor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#search-sensors">Search Sensors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#add-tags-to-a-sensor">Add Tags to a Sensor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#get-tags-of-a-sensor">Get Tags of a Sensor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#create-a-sensor-view">Create a Sensor View</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#get-sensor-view-details">Get Sensor View details</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#delete-a-sensor-view">Delete a Sensor View</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#sensorgroups-and-usergroups">SensorGroups and UserGroups</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="sensorgroup.html">SensorGroups</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usergroup.html">Usergroups</a></li>
+<li class="toctree-l2"><a class="reference internal" href="permission.html">Permission</a></li>
+<li class="toctree-l2"><a class="reference internal" href="permissionRequests.html">Permission Requests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user.html">User</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../DataService/index.html">DataService APIs</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
     </nav>
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
-
-        <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-
-            <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-            <a href="../../index.html">BuildingDepot</a>
-
-        </nav>
-
-
-        <div class="wy-nav-content">
-            <div class="rst-content">
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">BuildingDepot</a>
+        
+      </nav>
 
 
-                <div role="navigation" aria-label="breadcrumbs navigation">
-
-                    <ul class="wy-breadcrumbs">
-
-                        <li><a href="../../index.html">Docs</a> &raquo;</li>
-
-                        <li><a href="index.html">CentralService APIs</a> &raquo;</li>
-
-                        <li>Sensor</li>
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
 
 
-                        <li class="wy-breadcrumbs-aside">
 
 
-                            <a href="../../_sources/api/CentralService/sensor.rst.txt" rel="nofollow"> View page
-                                source</a>
 
 
-                        </li>
-
-                    </ul>
 
 
-                    <hr/>
-                </div>
-                <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
-                    <div itemprop="articleBody">
 
-                        <div class="section" id="sensor">
-                            <h1>Sensor<a class="headerlink" href="#sensor" title="Permalink to this headline">¶</a></h1>
-                            <p>The Sensor collection manages Sensors for Locations associated with the
-                                CentralService.Sensors can be defined in the CentralService at <a
-                                        class="reference external" href="http://www.example.com:81/api/sensor">http://www.example.com:81/api/sensor</a>.
-                                Sensor access is restricted to Central Service <cite>Users</cite> with permissions for
-                                the Sensor and to the <cite>Admin</cite> who owns the Sensor.</p>
-                            <div class="section" id="create-a-sensor">
-                                <h2>Create a Sensor<a class="headerlink" href="#create-a-sensor"
-                                                      title="Permalink to this headline">¶</a></h2>
-                                <p>Creates a new Sensor point in BuildingDepot and returns the UUID.</p>
-                                <div class="compound">
-                                    <p class="compound-first"><strong>Example request</strong>:</p>
-                                    <div class="compound-middle highlight-http notranslate">
-                                        <div class="highlight"><pre><span></span><span class="nf">POST</span> <span
-                                                class="nn">/api/sensor</span> <span class="kr">HTTP</span><span
-                                                class="o">/</span><span class="m">1.1</span>
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="index.html">CentralService APIs</a> &raquo;</li>
+        
+      <li>Sensor</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/api/CentralService/sensor.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="sensor">
+<h1>Sensor<a class="headerlink" href="#sensor" title="Permalink to this headline">¶</a></h1>
+<p>The Sensor collection manages Sensors for Locations associated with the CentralService.Sensors can be defined in the CentralService at <a class="reference external" href="http://www.example.com:81/api/sensor">http://www.example.com:81/api/sensor</a>.
+Sensor access is restricted to Central Service <cite>Users</cite> with permissions for the Sensor and to the <cite>Admin</cite> who owns the Sensor.</p>
+<div class="section" id="create-a-sensor">
+<h2>Create a Sensor<a class="headerlink" href="#create-a-sensor" title="Permalink to this headline">¶</a></h2>
+<p>Creates a new Sensor point in BuildingDepot and returns the UUID.</p>
+<div class="compound">
+<p class="compound-first"><strong>Example request</strong>:</p>
+<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">POST</span> <span class="nn">/api/sensor</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
 <span class="na">Accept</span><span class="o">:</span> <span class="l">application/json; charset=utf-8</span>
 
 {
@@ -200,150 +208,95 @@
                 &quot;building&quot;:&quot;NSH&quot;
               }
 }
-</pre>
-                                        </div>
-                                    </div>
-                                    <p class="compound-middle"><strong>Example response</strong>:</p>
-                                    <div class="compound-last highlight-http notranslate">
-                                        <div class="highlight"><pre><span></span><span class="kr">HTTP</span><span
-                                                class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span
-                                                class="ne">OK</span>
+</pre></div>
+</div>
+<p class="compound-middle"><strong>Example response</strong>:</p>
+<div class="compound-last highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
 <span class="p">{</span>
   <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;True&quot;</span>
   <span class="s2">&quot;uuid&quot;</span><span class="p">:</span> <span class="s2">&quot;6cf53d24-e3a3-41bd-b2b5-8f109694f628&quot;</span>
 <span class="p">}</span>
-</pre>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="section" id="get-sensor-details">
-                                <h2>Get Sensor details<a class="headerlink" href="#get-sensor-details"
-                                                         title="Permalink to this headline">¶</a></h2>
-                                <p>Retrieves all the details of the sensor based on the uuid specified</p>
-                                <div class="compound">
-                                    <p class="compound-first"><strong>Example request</strong>:</p>
-                                    <div class="compound-middle highlight-http notranslate">
-                                        <div class="highlight"><pre><span></span><span class="nf">GET</span> <span
-                                                class="nn">/api/sensor/8aac1048-aa9f-41c9-9c20-6dd81339c7de</span> <span
-                                                class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="get-sensor-details">
+<h2>Get Sensor details<a class="headerlink" href="#get-sensor-details" title="Permalink to this headline">¶</a></h2>
+<p>Retrieves all the details of the sensor based on the uuid specified</p>
+<div class="compound">
+<p class="compound-first"><strong>Example request</strong>:</p>
+<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">GET</span> <span class="nn">/api/sensor/8aac1048-aa9f-41c9-9c20-6dd81339c7de</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
 <span class="na">Accept</span><span class="o">:</span> <span class="l">application/json; charset=utf-8</span>
-</pre>
-                                        </div>
-                                    </div>
-                                    <p class="compound-middle"><strong>Example response</strong>:</p>
-                                    <div class="compound-last highlight-http notranslate">
-                                        <div class="highlight"><pre><span></span><span class="kr">HTTP</span><span
-                                                class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span
-                                                class="ne">OK</span>
+</pre></div>
+</div>
+<p class="compound-middle"><strong>Example response</strong>:</p>
+<div class="compound-last highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
 <span class="p">{</span>
-    <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;True&quot;</span><span
-                                                    class="p">,</span>
-    <span class="nt">&quot;building&quot;</span><span class="p">:</span> <span class="s2">&quot;NSH&quot;</span><span
-                                                    class="p">,</span>
-    <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;8aac1048-aa9f-41c9-9c20-6dd81339c7de&quot;</span><span
-                                                    class="p">,</span>
-    <span class="nt">&quot;source_identifier&quot;</span><span class="p">:</span> <span class="s2">&quot;Sensor_Tag&quot;</span><span
-                                                    class="p">,</span>
-    <span class="nt">&quot;source_name&quot;</span><span class="p">:</span> <span
-                                                    class="s2">&quot;Test_Sensor&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;True&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;building&quot;</span><span class="p">:</span> <span class="s2">&quot;NSH&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;8aac1048-aa9f-41c9-9c20-6dd81339c7de&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;source_identifier&quot;</span><span class="p">:</span> <span class="s2">&quot;Sensor_Tag&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;source_name&quot;</span><span class="p">:</span> <span class="s2">&quot;Test_Sensor&quot;</span><span class="p">,</span>
     <span class="nt">&quot;views_owned&quot;</span><span class="p">:</span> <span class="p">[</span>
       <span class="p">{</span>
-        <span class="nt">&quot;fields&quot;</span><span class="p">:</span> <span
-                                                    class="s2">&quot;EMI-0&quot;</span><span class="p">,</span>
-        <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;280bc754-a963-4740-89f4-bdae9ede76f6&quot;</span><span
-                                                    class="p">,</span>
-        <span class="nt">&quot;source_name&quot;</span><span class="p">:</span> <span
-                                                    class="s2">&quot;Averages&quot;</span>
+        <span class="nt">&quot;fields&quot;</span><span class="p">:</span> <span class="s2">&quot;EMI-0&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;280bc754-a963-4740-89f4-bdae9ede76f6&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;source_name&quot;</span><span class="p">:</span> <span class="s2">&quot;Averages&quot;</span>
       <span class="p">},</span>
       <span class="p">{</span>
-        <span class="nt">&quot;fields&quot;</span><span class="p">:</span> <span
-                                                    class="s2">&quot;EMI-2, EMI-3&quot;</span><span class="p">,</span>
-        <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;6336a9d7-6f65-4572-9e52-78fa3808c92f&quot;</span><span
-                                                    class="p">,</span>
+        <span class="nt">&quot;fields&quot;</span><span class="p">:</span> <span class="s2">&quot;EMI-2, EMI-3&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;6336a9d7-6f65-4572-9e52-78fa3808c92f&quot;</span><span class="p">,</span>
         <span class="nt">&quot;source_name&quot;</span><span class="p">:</span> <span class="s2">&quot;Min, Max EMI&quot;</span>
       <span class="p">}</span>
     <span class="p">]</span>
 <span class="p">}</span>
-</pre>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="section" id="delete-a-sensor">
-                                <h2>Delete a Sensor<a class="headerlink" href="#delete-a-sensor"
-                                                      title="Permalink to this headline">¶</a></h2>
-                                <p>Delete the Sensor associated with <cite>sensor_uuid</cite>.</p>
-                                <div class="admonition attention">
-                                    <p class="first admonition-title">Attention</p>
-                                    <p>Restricted to Admins only</p>
-                                    <p class="last">Currently can only be done through the GUI</p>
-                                </div>
-                            </div>
-                            <div class="section" id="search-sensors">
-                                <h2>Search Sensors<a class="headerlink" href="#search-sensors"
-                                                     title="Permalink to this headline">¶</a></h2>
-                                <p>The Search API is used search sensors based on uuid,source_name,source_identifier,
-                                    building, Tag and MetaData. Multiple search queries can be sent in a single
-                                    request.</p>
-                                <table class="docutils field-list" frame="void" rules="none">
-                                    <col class="field-name"/>
-                                    <col class="field-body"/>
-                                    <tbody valign="top">
-                                    <tr class="field-odd field">
-                                        <th class="field-name" colspan="2">JSON Parameters:</th>
-                                    </tr>
-                                    <tr class="field-odd field">
-                                        <td>&#160;</td>
-                                        <td class="field-body">
-                                            <ul class="first last simple">
-                                                <li>
-                                                    <dl class="first docutils">
-                                                        <dt><strong>data</strong> <cite>(dictionary)</cite> – Contains
-                                                            the list of Search Query key-value pairs
-                                                        </dt>
-                                                        <dd>
-                                                            <ul class="first last">
-                                                                <li><strong>ID</strong> <cite>(list)</cite> – UUID of
-                                                                    the Sensor
-                                                                </li>
-                                                                <li><strong>Building</strong> <cite>(list)</cite> –
-                                                                    Building in which the sensor is located
-                                                                </li>
-                                                                <li><strong>Tags</strong> <cite>(list)</cite> – List of
-                                                                    tags owned by the sensor. The are given as key,value
-                                                                    pairs.
-                                                                </li>
-                                                                <li><strong>Metadata</strong> <cite>(list)</cite> – List
-                                                                    of metadata owned by the sensor.The are given as
-                                                                    key,value pairs.
-                                                                </li>
-                                                                <li><strong>Source_Identifier</strong>
-                                                                    <cite>(list)</cite> – Source identifier of the
-                                                                    sensor
-                                                                </li>
-                                                                <li><strong>Source_Name</strong> <cite>(list)</cite> –
-                                                                    Source name of the sensor
-                                                                </li>
-                                                            </ul>
-                                                        </dd>
-                                                    </dl>
-                                                </li>
-                                            </ul>
-                                        </td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                                <div class="compound">
-                                    <p class="compound-first"><strong>Example request</strong>:</p>
-                                    <div class="compound-middle highlight-http notranslate">
-                                        <div class="highlight"><pre><span></span><span class="nf">POST</span> <span
-                                                class="nn">/api/sensor/search</span> <span class="kr">HTTP</span><span
-                                                class="o">/</span><span class="m">1.1</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="delete-a-sensor">
+<h2>Delete a Sensor<a class="headerlink" href="#delete-a-sensor" title="Permalink to this headline">¶</a></h2>
+<p>Delete the Sensor associated with <cite>sensor_uuid</cite>.</p>
+<div class="admonition attention">
+<p class="first admonition-title">Attention</p>
+<p>Restricted to Admins only</p>
+<p class="last">Currently can only be done through the GUI</p>
+</div>
+</div>
+<div class="section" id="search-sensors">
+<h2>Search Sensors<a class="headerlink" href="#search-sensors" title="Permalink to this headline">¶</a></h2>
+<p>The Search API is used search sensors based on uuid,source_name,source_identifier, building, Tag and MetaData. Multiple search queries can be sent in a single request.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">JSON Parameters:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body"><ul class="first last simple">
+<li><dl class="first docutils">
+<dt><strong>data</strong> <cite>(dictionary)</cite> – Contains the list of Search Query key-value pairs</dt>
+<dd><ul class="first last">
+<li><strong>ID</strong> <cite>(list)</cite> – UUID of the Sensor</li>
+<li><strong>Building</strong> <cite>(list)</cite> – Building in which the sensor is located</li>
+<li><strong>Tags</strong> <cite>(list)</cite> – List of tags owned by the sensor. The are given as key,value pairs.</li>
+<li><strong>Metadata</strong> <cite>(list)</cite> – List of metadata owned by the sensor.The are given as key,value pairs.</li>
+<li><strong>Source_Identifier</strong> <cite>(list)</cite> – Source identifier of the sensor</li>
+<li><strong>Source_Name</strong> <cite>(list)</cite> – Source name of the sensor</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="compound">
+<p class="compound-first"><strong>Example request</strong>:</p>
+<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">POST</span> <span class="nn">/api/sensor/search</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
 <span class="na">Accept</span><span class="o">:</span> <span class="l">application/json; charset=utf-8</span>
 
 {
@@ -353,70 +306,40 @@
       &quot;Tags&quot;:[&quot;floor:1&quot;, &quot;corridor:4200&quot;]
   }
 }
-</pre>
-                                        </div>
-                                    </div>
-                                    <p class="compound-middle"><strong>Example response</strong> (for success):</p>
-                                    <div class="compound-middle highlight-http notranslate">
-                                        <div class="highlight"><pre><span></span><span class="kr">HTTP</span><span
-                                                class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span
-                                                class="ne">OK</span>
+</pre></div>
+</div>
+<p class="compound-middle"><strong>Example response</strong> (for success):</p>
+<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
 <span class="p">{</span>
-    <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;True&quot;</span><span
-                                                    class="p">,</span>
-    <span class="nt">&quot;building&quot;</span><span class="p">:</span> <span class="s2">&quot;NSH&quot;</span><span
-                                                    class="p">,</span>
-    <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;6cf53d24-e3a3-41bd-b2b5-8f109694f628&quot;</span><span
-                                                    class="p">,</span>
-    <span class="nt">&quot;source_identifier&quot;</span><span class="p">:</span> <span class="s2">&quot;Sensor Tag&quot;</span><span
-                                                    class="p">,</span>
-    <span class="nt">&quot;source_name&quot;</span><span class="p">:</span> <span
-                                                    class="s2">&quot;Test Sensor&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;tags&quot;</span><span class="p">:[{</span><span class="nt">&quot;name&quot;</span><span
-                                                    class="p">:</span> <span class="s2">&quot;floor&quot;</span><span
-                                                    class="p">,</span> <span class="nt">&quot;value&quot;</span><span
-                                                    class="p">:</span> <span class="s2">&quot;1&quot;</span><span
-                                                    class="p">},</span> <span class="p">{</span><span class="nt">&quot;name&quot;</span><span
-                                                    class="p">:</span> <span class="s2">&quot;corridor&quot;</span><span
-                                                    class="p">,</span> <span class="nt">&quot;value&quot;</span><span
-                                                    class="p">:</span> <span class="s2">&quot;4200&quot;</span><span
-                                                    class="p">}]</span>
+    <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;True&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;building&quot;</span><span class="p">:</span> <span class="s2">&quot;NSH&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;6cf53d24-e3a3-41bd-b2b5-8f109694f628&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;source_identifier&quot;</span><span class="p">:</span> <span class="s2">&quot;Sensor Tag&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;source_name&quot;</span><span class="p">:</span> <span class="s2">&quot;Test Sensor&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;tags&quot;</span><span class="p">:[{</span><span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;floor&quot;</span><span class="p">,</span> <span class="nt">&quot;value&quot;</span><span class="p">:</span> <span class="s2">&quot;1&quot;</span><span class="p">},</span> <span class="p">{</span><span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;corridor&quot;</span><span class="p">,</span> <span class="nt">&quot;value&quot;</span><span class="p">:</span> <span class="s2">&quot;4200&quot;</span><span class="p">}]</span>
 <span class="p">}</span>
-</pre>
-                                        </div>
-                                    </div>
-                                    <p class="compound-middle"><strong>Example response</strong> (for failure):</p>
-                                    <div class="compound-last highlight-http notranslate">
-                                        <div class="highlight"><pre><span></span><span class="kr">HTTP</span><span
-                                                class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span
-                                                class="ne">OK</span>
+</pre></div>
+</div>
+<p class="compound-middle"><strong>Example response</strong> (for failure):</p>
+<div class="compound-last highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
 <span class="p">{</span>
-  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;False&quot;</span><span
-                                                    class="p">,</span>
-  <span class="nt">&quot;error&quot;</span><span class="p">:</span> <span
-                                                    class="s2">&quot; Sensor does not exist&quot;</span>
+  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;False&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot; Sensor does not exist&quot;</span>
 <span class="p">}</span>
-</pre>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="section" id="add-tags-to-a-sensor">
-                                <h2>Add Tags to a Sensor<a class="headerlink" href="#add-tags-to-a-sensor"
-                                                           title="Permalink to this headline">¶</a></h2>
-                                <p>This request adds tags (key-value pairs) to a particular sensor. To get the available
-                                    tags that can be added to the sensor, please use the get tags of a sensor API to
-                                    fetch the list of available tags.</p>
-                                <div class="compound">
-                                    <p class="compound-first"><strong>Example request</strong>:</p>
-                                    <div class="compound-middle highlight-http notranslate">
-                                        <div class="highlight"><pre><span></span><span class="nf">POST</span> <span
-                                                class="nn">/api/sensor/be2a09a5-4ef6-4c67-886e-272c37e7e38f/tags</span> <span
-                                                class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="add-tags-to-a-sensor">
+<h2>Add Tags to a Sensor<a class="headerlink" href="#add-tags-to-a-sensor" title="Permalink to this headline">¶</a></h2>
+<p>This request adds tags (key-value pairs) to a particular sensor. To get the available tags that can be added to the sensor, please use the get tags of a sensor API to fetch the list of available tags.</p>
+<div class="compound">
+<p class="compound-first"><strong>Example request</strong>:</p>
+<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">POST</span> <span class="nn">/api/sensor/be2a09a5-4ef6-4c67-886e-272c37e7e38f/tags</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
 <span class="na">Accept</span><span class="o">:</span> <span class="l">application/json; charset=utf-8</span>
 
 {
@@ -433,61 +356,40 @@
                   ]
               }
 }
-</pre>
-                                        </div>
-                                    </div>
-                                    <p class="compound-middle"><strong>Example response</strong> (for success):</p>
-                                    <div class="compound-middle highlight-http notranslate">
-                                        <div class="highlight"><pre><span></span><span class="kr">HTTP</span><span
-                                                class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span
-                                                class="ne">OK</span>
+</pre></div>
+</div>
+<p class="compound-middle"><strong>Example response</strong> (for success):</p>
+<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
 <span class="p">{</span>
   <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;True&quot;</span>
 <span class="p">}</span>
-</pre>
-                                        </div>
-                                    </div>
-                                    <p class="compound-middle"><strong>Example response</strong> (for failure):</p>
-                                    <div class="compound-last highlight-http notranslate">
-                                        <div class="highlight"><pre><span></span><span class="kr">HTTP</span><span
-                                                class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span
-                                                class="ne">OK</span>
+</pre></div>
+</div>
+<p class="compound-middle"><strong>Example response</strong> (for failure):</p>
+<div class="compound-last highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
 <span class="p">{</span>
-  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;False&quot;</span><span
-                                                    class="p">,</span>
-  <span class="nt">&quot;error&quot;</span><span class="p">:</span> <span
-                                                    class="s2">&quot; Sensor does not exist&quot;</span>
+  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;False&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot; Sensor does not exist&quot;</span>
 <span class="p">}</span>
-</pre>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="section" id="get-tags-of-a-sensor">
-                                <h2>Get Tags of a Sensor<a class="headerlink" href="#get-tags-of-a-sensor"
-                                                           title="Permalink to this headline">¶</a></h2>
-                                <p>This request retrieves two lists of key-value pairs, one list contains the array of
-                                    eligible tags that can be attached to this sensor and the other list contains the
-                                    array of tags that are currently attached to this sensor.</p>
-                                <div class="compound">
-                                    <p class="compound-first"><strong>Example request</strong>:</p>
-                                    <div class="compound-middle highlight-http notranslate">
-                                        <div class="highlight"><pre><span></span><span class="nf">GET</span> <span
-                                                class="nn">/api/sensor/26da099a-3fe0-4966-b068-14f51bcedb6e/tags</span> <span
-                                                class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="get-tags-of-a-sensor">
+<h2>Get Tags of a Sensor<a class="headerlink" href="#get-tags-of-a-sensor" title="Permalink to this headline">¶</a></h2>
+<p>This request retrieves two lists of key-value pairs, one list contains the array of eligible tags that can be attached to this sensor and the other list contains the array of tags that are currently attached to this sensor.</p>
+<div class="compound">
+<p class="compound-first"><strong>Example request</strong>:</p>
+<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">GET</span> <span class="nn">/api/sensor/26da099a-3fe0-4966-b068-14f51bcedb6e/tags</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
 <span class="na">Accept</span><span class="o">:</span> <span class="l">application/json; charset=utf-8</span>
-</pre>
-                                        </div>
-                                    </div>
-                                    <p class="compound-middle"><strong>Example response</strong> (for success):</p>
-                                    <div class="compound-middle highlight-http notranslate">
-                                        <div class="highlight"><pre><span></span><span class="kr">HTTP</span><span
-                                                class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span
-                                                class="ne">OK</span>
+</pre></div>
+</div>
+<p class="compound-middle"><strong>Example response</strong> (for success):</p>
+<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
 <span class="p">{</span>
@@ -505,60 +407,41 @@
           <span class="p">},</span>
   <span class="nt">&quot;tags_owned&quot;</span><span class="p">:</span> <span class="p">[</span>
                   <span class="p">{</span>
-                   <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Corridor&quot;</span><span
-                                                    class="p">,</span>
-                   <span class="nt">&quot;value&quot;</span><span class="p">:</span> <span
-                                                    class="s2">&quot;3600&quot;</span>
+                   <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Corridor&quot;</span><span class="p">,</span>
+                   <span class="nt">&quot;value&quot;</span><span class="p">:</span> <span class="s2">&quot;3600&quot;</span>
                   <span class="p">},</span>
                   <span class="p">{</span>
-                   <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span
-                                                    class="s2">&quot;Floor&quot;</span><span class="p">,</span>
-                   <span class="nt">&quot;value&quot;</span><span class="p">:</span> <span
-                                                    class="s2">&quot;3&quot;</span>
+                   <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Floor&quot;</span><span class="p">,</span>
+                   <span class="nt">&quot;value&quot;</span><span class="p">:</span> <span class="s2">&quot;3&quot;</span>
                   <span class="p">},</span>
                   <span class="p">{</span>
-                   <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span
-                                                    class="s2">&quot;Room&quot;</span><span class="p">,</span>
-                   <span class="nt">&quot;value&quot;</span><span class="p">:</span> <span
-                                                    class="s2">&quot;3606&quot;</span>
+                   <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Room&quot;</span><span class="p">,</span>
+                   <span class="nt">&quot;value&quot;</span><span class="p">:</span> <span class="s2">&quot;3606&quot;</span>
                   <span class="p">}</span>
                   <span class="p">]</span>
   <span class="p">}</span>
-</pre>
-                                        </div>
-                                    </div>
-                                    <p class="compound-middle"><strong>Example response</strong> (for failure):</p>
-                                    <div class="compound-last highlight-http notranslate">
-                                        <div class="highlight"><pre><span></span><span class="kr">HTTP</span><span
-                                                class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span
-                                                class="ne">OK</span>
+</pre></div>
+</div>
+<p class="compound-middle"><strong>Example response</strong> (for failure):</p>
+<div class="compound-last highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
 <span class="p">{</span>
-  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;False&quot;</span><span
-                                                    class="p">,</span>
-  <span class="nt">&quot;error&quot;</span><span class="p">:</span> <span
-                                                    class="s2">&quot; Sensor does not exist&quot;</span>
+  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;False&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot; Sensor does not exist&quot;</span>
 <span class="p">}</span>
-</pre>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="section" id="create-a-sensor-view">
-                                <h2>Create a Sensor View<a class="headerlink" href="#create-a-sensor-view"
-                                                           title="Permalink to this headline">¶</a></h2>
-                                <p>Creates a new Sensor View for a sensor point in BuildingDepot. Each sensor may have
-                                    multiple fields of data, however,
-                                    the user may only want to receive or request a subset of data. This API creates a
-                                    view for the sensor and returns the
-                                    UUID for the sensor.</p>
-                                <div class="compound">
-                                    <p class="compound-first"><strong>Example request</strong>:</p>
-                                    <div class="compound-middle highlight-http notranslate">
-                                        <div class="highlight"><pre><span></span><span class="nf">POST</span> <span
-                                                class="nn">/api/sensor/8aac1048-aa9f-41c9-9c20-6dd81339c7de/views</span> <span
-                                                class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="create-a-sensor-view">
+<h2>Create a Sensor View<a class="headerlink" href="#create-a-sensor-view" title="Permalink to this headline">¶</a></h2>
+<p>Creates a new Sensor View for a sensor point in BuildingDepot. Each sensor may have multiple fields of data, however,
+the user may only want to receive or request a subset of data. This API creates a view for the sensor and returns the
+UUID for the sensor.</p>
+<div class="compound">
+<p class="compound-first"><strong>Example request</strong>:</p>
+<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">POST</span> <span class="nn">/api/sensor/8aac1048-aa9f-41c9-9c20-6dd81339c7de/views</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
 <span class="na">Accept</span><span class="o">:</span> <span class="l">application/json; charset=utf-8</span>
 
 {
@@ -567,59 +450,41 @@
               &quot;source_name&quot;: &quot;Important Values&quot;
               }
 }
-</pre>
-                                        </div>
-                                    </div>
-                                    <p class="compound-middle"><strong>Example response</strong> (for success):</p>
-                                    <div class="compound-middle highlight-http notranslate">
-                                        <div class="highlight"><pre><span></span><span class="kr">HTTP</span><span
-                                                class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span
-                                                class="ne">OK</span>
+</pre></div>
+</div>
+<p class="compound-middle"><strong>Example response</strong> (for success):</p>
+<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
 <span class="p">{</span>
   <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;True&quot;</span>
   <span class="s2">&quot;uuid&quot;</span><span class="p">:</span> <span class="s2">&quot;6cf53d24-e3a3-41bd-b2b5-8f109694f628&quot;</span>
 <span class="p">}</span>
-</pre>
-                                        </div>
-                                    </div>
-                                    <p class="compound-middle"><strong>Example response</strong> (for failure):</p>
-                                    <div class="compound-last highlight-http notranslate">
-                                        <div class="highlight"><pre><span></span><span class="kr">HTTP</span><span
-                                                class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span
-                                                class="ne">OK</span>
+</pre></div>
+</div>
+<p class="compound-middle"><strong>Example response</strong> (for failure):</p>
+<div class="compound-last highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
 <span class="p">{</span>
-  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;False&quot;</span><span
-                                                    class="p">,</span>
+  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;False&quot;</span><span class="p">,</span>
   <span class="nt">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;Communication failure with DataService&quot;</span>
 <span class="p">}</span>
-</pre>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="section" id="get-sensor-view-details">
-                                <h2>Get Sensor View details<a class="headerlink" href="#get-sensor-view-details"
-                                                              title="Permalink to this headline">¶</a></h2>
-                                <p>Retrieves all the views of the sensor based on the sensor uuid specified</p>
-                                <div class="compound">
-                                    <p class="compound-first"><strong>Example request</strong>:</p>
-                                    <div class="compound-middle highlight-http notranslate">
-                                        <div class="highlight"><pre><span></span><span class="nf">GET</span> <span
-                                                class="nn">/api/sensor/6cf53d24-e3a3-41bd-b2b5-8f109694f628</span> <span
-                                                class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="get-sensor-view-details">
+<h2>Get Sensor View details<a class="headerlink" href="#get-sensor-view-details" title="Permalink to this headline">¶</a></h2>
+<p>Retrieves all the views of the sensor based on the sensor uuid specified</p>
+<div class="compound">
+<p class="compound-first"><strong>Example request</strong>:</p>
+<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">GET</span> <span class="nn">/api/sensor/6cf53d24-e3a3-41bd-b2b5-8f109694f628</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
 <span class="na">Accept</span><span class="o">:</span> <span class="l">application/json; charset=utf-8</span>
-</pre>
-                                        </div>
-                                    </div>
-                                    <p class="compound-middle"><strong>Example response</strong> (for success):</p>
-                                    <div class="compound-middle highlight-http notranslate">
-                                        <div class="highlight"><pre><span></span><span class="kr">HTTP</span><span
-                                                class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span
-                                                class="ne">OK</span>
+</pre></div>
+</div>
+<p class="compound-middle"><strong>Example response</strong> (for success):</p>
+<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
 <span class="p">{</span>
@@ -628,215 +493,169 @@
       <span class="s2">&quot;EMI-1&quot;</span><span class="p">,</span>
       <span class="s2">&quot;Mic-2&quot;</span>
     <span class="p">],</span>
-    <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;True&quot;</span><span
-                                                    class="p">,</span>
+    <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;True&quot;</span><span class="p">,</span>
     <span class="nt">&quot;views_owned&quot;</span><span class="p">:</span> <span class="p">[</span>
       <span class="p">{</span>
-        <span class="nt">&quot;fields&quot;</span><span class="p">:</span> <span class="s2">&quot;EMI-1, Mic-2, Temp-0&quot;</span><span
-                                                    class="p">,</span>
-        <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;3240e89b-81df-4c1c-a411-fe891ed2aaef&quot;</span><span
-                                                    class="p">,</span>
+        <span class="nt">&quot;fields&quot;</span><span class="p">:</span> <span class="s2">&quot;EMI-1, Mic-2, Temp-0&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;3240e89b-81df-4c1c-a411-fe891ed2aaef&quot;</span><span class="p">,</span>
         <span class="nt">&quot;source_name&quot;</span><span class="p">:</span> <span class="s2">&quot;All&quot;</span>
       <span class="p">},</span>
       <span class="p">{</span>
-        <span class="nt">&quot;fields&quot;</span><span class="p">:</span> <span
-                                                    class="s2">&quot;EMI-1&quot;</span><span class="p">,</span>
-        <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;ce7330aa-0893-4115-842d-0b6ab92e98de&quot;</span><span
-                                                    class="p">,</span>
-        <span class="nt">&quot;source_name&quot;</span><span class="p">:</span> <span
-                                                    class="s2">&quot;EMI Average&quot;</span>
+        <span class="nt">&quot;fields&quot;</span><span class="p">:</span> <span class="s2">&quot;EMI-1&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;ce7330aa-0893-4115-842d-0b6ab92e98de&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;source_name&quot;</span><span class="p">:</span> <span class="s2">&quot;EMI Average&quot;</span>
       <span class="p">}</span>
     <span class="p">]</span>
   <span class="p">}</span>
-</pre>
-                                        </div>
-                                    </div>
-                                    <p class="compound-middle"><strong>Example response</strong> (for failure):</p>
-                                    <div class="compound-middle highlight-http notranslate">
-                                        <div class="highlight"><pre><span></span><span class="kr">HTTP</span><span
-                                                class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span
-                                                class="ne">OK</span>
+</pre></div>
+</div>
+<p class="compound-middle"><strong>Example response</strong> (for failure):</p>
+<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
 <span class="p">{</span>
-  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;False&quot;</span><span
-                                                    class="p">,</span>
-  <span class="nt">&quot;error&quot;</span><span class="p">:</span> <span
-                                                    class="s2">&quot; Sensor does not exist&quot;</span>
+  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;False&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot; Sensor does not exist&quot;</span>
 <span class="p">}</span>
-</pre>
-                                        </div>
-                                    </div>
-                                    <p class="compound-middle"><strong>Example response</strong> (for failure):</p>
-                                    <div class="compound-last highlight-http notranslate">
-                                        <div class="highlight"><pre><span></span><span class="kr">HTTP</span><span
-                                                class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span
-                                                class="ne">OK</span>
+</pre></div>
+</div>
+<p class="compound-middle"><strong>Example response</strong> (for failure):</p>
+<div class="compound-last highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
 <span class="p">{</span>
-  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;False&quot;</span><span
-                                                    class="p">,</span>
-  <span class="nt">&quot;error&quot;</span><span class="p">:</span> <span
-                                                    class="s2">&quot;Missing parameters&quot;</span>
+  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;False&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;Missing parameters&quot;</span>
 <span class="p">}</span>
-</pre>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="section" id="delete-a-sensor-view">
-                                <h2>Delete a Sensor View<a class="headerlink" href="#delete-a-sensor-view"
-                                                           title="Permalink to this headline">¶</a></h2>
-                                <p>This request deletes a sensor view of a sensor.</p>
-                                <div class="compound">
-                                    <p class="compound-first"><strong>Example request</strong>:</p>
-                                    <div class="compound-middle highlight-http notranslate">
-                                        <div class="highlight"><pre><span></span><span class="nf">DELETE</span> <span
-                                                class="nn">/api/sensor/8aac1048-aa9f-41c9-9c20-6dd81339c7de/views/22d807bf-af67-493a-80b7-2690d26c9244</span> <span
-                                                class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="delete-a-sensor-view">
+<h2>Delete a Sensor View<a class="headerlink" href="#delete-a-sensor-view" title="Permalink to this headline">¶</a></h2>
+<p>This request deletes a sensor view of a sensor.</p>
+<div class="compound">
+<p class="compound-first"><strong>Example request</strong>:</p>
+<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">DELETE</span> <span class="nn">/api/sensor/8aac1048-aa9f-41c9-9c20-6dd81339c7de/views/22d807bf-af67-493a-80b7-2690d26c9244</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
 <span class="na">Accept</span><span class="o">:</span> <span class="l">application/json; charset=utf-8</span>
-</pre>
-                                        </div>
-                                    </div>
-                                    <p class="compound-middle"><strong>Example response</strong> (for success):</p>
-                                    <div class="compound-middle highlight-http notranslate">
-                                        <div class="highlight"><pre><span></span><span class="kr">HTTP</span><span
-                                                class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span
-                                                class="ne">OK</span>
+</pre></div>
+</div>
+<p class="compound-middle"><strong>Example response</strong> (for success):</p>
+<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
 <span class="p">{</span>
   <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;True&quot;</span>
 <span class="p">}</span>
-</pre>
-                                        </div>
-                                    </div>
-                                    <p class="compound-middle"><strong>Example response</strong> (for failure):</p>
-                                    <div class="compound-middle highlight-http notranslate">
-                                        <div class="highlight"><pre><span></span><span class="kr">HTTP</span><span
-                                                class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span
-                                                class="ne">OK</span>
+</pre></div>
+</div>
+<p class="compound-middle"><strong>Example response</strong> (for failure):</p>
+<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
 <span class="p">{</span>
-  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;False&quot;</span><span
-                                                    class="p">,</span>
+  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;False&quot;</span><span class="p">,</span>
   <span class="nt">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;Permission does not exist&quot;</span>
 <span class="p">}</span>
-</pre>
-                                        </div>
-                                    </div>
-                                    <p class="compound-middle"><strong>Example response</strong> (for failure):</p>
-                                    <div class="compound-last highlight-http notranslate">
-                                        <div class="highlight"><pre><span></span><span class="kr">HTTP</span><span
-                                                class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span
-                                                class="ne">OK</span>
+</pre></div>
+</div>
+<p class="compound-middle"><strong>Example response</strong> (for failure):</p>
+<div class="compound-last highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
 <span class="p">{</span>
-  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;False&quot;</span><span
-                                                    class="p">,</span>
+  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;False&quot;</span><span class="p">,</span>
   <span class="nt">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;Communication failure with DataService&quot;</span>
 <span class="p">}</span>
-</pre>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="section" id="sensorgroups-and-usergroups">
-                                <h2>SensorGroups and UserGroups<a class="headerlink" href="#sensorgroups-and-usergroups"
-                                                                  title="Permalink to this headline">¶</a></h2>
-                                <dl class="docutils">
-                                    <dt>BuildingDepot restricts access to sensors to users on three levels. A user can
-                                        have either of these types of access to a sensor:
-                                    </dt>
-                                    <dd>
-                                        <ul class="first last simple">
-                                            <li><strong>Read</strong></li>
-                                            <li><strong>Read/Write</strong></li>
-                                            <li><strong>Deny Read</strong></li>
-                                            <li><strong>Read/Write/Permission</strong></li>
-                                        </ul>
-                                    </dd>
-                                </dl>
-                                <p>As the names suggest a user with read access to a sensor will be able to read all the
-                                    datapoints of the sensors. A user with Read/Write access will be able to both read
-                                    and write (if supported by the sensor) to the sensors. With Deny Read a user will
-                                    not be able to read any datapoints of the sensor.</p>
-                                <p>The basis of deciding these permissions is dependent on the abstraction of
-                                    SensorGroups and UserGroups within BuildingDepot.</p>
-                                <p>SensorGroups are created on the basis of tags that are specified at the time of
-                                    creation. All sensors with the specified tags will be a part of the SensorGroup that
-                                    is created. Usergroups are basically a list of users which are connected to a
-                                    SensorGroup via a “Permissions” link. This link is what defines the level of access
-                                    that the users in the UserGroup have to the sensors in the SensorGroup.</p>
-                            </div>
-                        </div>
-
-
-                    </div>
-                </div>
-                <footer>
-
-                    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-
-                        <a href="sensorgroup.html" class="btn btn-neutral float-right" title="SensorGroups"
-                           accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
-
-
-                        <a href="dataservice.html" class="btn btn-neutral" title="DataService" accesskey="p"><span
-                                class="fa fa-arrow-circle-left"></span> Previous</a>
-
-                    </div>
-
-
-                    <hr/>
-
-                    <div role="contentinfo">
-                        <p>
-                            &copy; Copyright 2021, SynergyLabs.
-
-                        </p>
-                    </div>
-                    Built with <a href="http://sphinx-doc.org/">Sphinx</a> and ❤️ using a custom <a
-                        href="https://github.com/LinxiFan/Sphinx-theme">theme</a> based on <a
-                        href="https://readthedocs.org">Read the Docs</a>.
-
-                </footer>
-
-            </div>
-        </div>
-
-    </section>
-
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="sensorgroups-and-usergroups">
+<h2>SensorGroups and UserGroups<a class="headerlink" href="#sensorgroups-and-usergroups" title="Permalink to this headline">¶</a></h2>
+<dl class="docutils">
+<dt>BuildingDepot restricts access to sensors to users on three levels. A user can have either of these types of access to a sensor:</dt>
+<dd><ul class="first last simple">
+<li><strong>Read</strong></li>
+<li><strong>Read/Write</strong></li>
+<li><strong>Deny Read</strong></li>
+<li><strong>Read/Write/Permission</strong></li>
+</ul>
+</dd>
+</dl>
+<p>As the names suggest a user with read access to a sensor will be able to read all the datapoints of the sensors. A user with Read/Write access will be able to both read and write (if supported by the sensor) to the sensors. With Deny Read a user will not be able to read any datapoints of the sensor.</p>
+<p>The basis of deciding these permissions is dependent on the abstraction of SensorGroups and UserGroups within BuildingDepot.</p>
+<p>SensorGroups are created on the basis of tags that are specified at the time of creation. All sensors with the specified tags will be a part of the SensorGroup that is created. Usergroups are basically a list of users which are connected to a SensorGroup via a “Permissions” link. This link is what defines the level of access that the users in the UserGroup have to the sensors in the SensorGroup.</p>
+</div>
 </div>
 
 
-<script type="text/javascript">
-    var DOCUMENTATION_OPTIONS = {
-        URL_ROOT: '../../',
-        VERSION: '3.2.9',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE: true,
-        SOURCELINK_SUFFIX: '.txt'
-    };
-</script>
-<script type="text/javascript" src="../../_static/jquery.js"></script>
-<script type="text/javascript" src="../../_static/underscore.js"></script>
-<script type="text/javascript" src="../../_static/doctools.js"></script>
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="sensorgroup.html" class="btn btn-neutral float-right" title="SensorGroups" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="dataservice.html" class="btn btn-neutral" title="DataService" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, SynergyLabs.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> and ❤️  using a custom <a href="https://github.com/LinxiFan/Sphinx-theme">theme</a> based on <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
 
 
-<script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
 
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'3.2.9',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
 
-<script type="text/javascript">
-    jQuery(function () {
-        SphinxRtdTheme.StickyNav.enable();
-    });
-</script>
+  
 
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
 
 </body>
 </html>

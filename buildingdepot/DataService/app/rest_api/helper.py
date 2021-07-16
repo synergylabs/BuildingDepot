@@ -15,7 +15,7 @@ from datetime import datetime
 from flask import request, abort
 from functools import wraps
 
-from .. import exchange, r
+from .. import exchange, r, rabbitmq_username, rabbitmq_password
 from ..models.ds_models import Building, TagType, User
 from ..auth.views import Token
 
@@ -133,7 +133,9 @@ def connect_broker():
         pubsub: object corresponding to the connection with the broker
     """
     try:
-        pubsub = pika.BlockingConnection(pika.ConnectionParameters(host="localhost"))
+        credentials = pika.PlainCredentials(rabbitmq_username, rabbitmq_password)
+        pubsub = pika.BlockingConnection(pika.ConnectionParameters(host='localhost',
+                                                                   credentials=credentials))
         channel = pubsub.channel()
         channel.exchange_declare(exchange=exchange, exchange_type="direct")
         channel.close()

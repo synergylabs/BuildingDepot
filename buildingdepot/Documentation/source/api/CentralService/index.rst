@@ -25,6 +25,7 @@ This OAuth token will have to be sent in the headers of all the requests made to
    sensorgroup.rst
    usergroup.rst
    permission.rst
+   permissionRequests.rst
    user.rst
 
 

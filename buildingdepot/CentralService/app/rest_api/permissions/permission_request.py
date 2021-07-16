@@ -149,7 +149,6 @@ class PermissionRequestService(MethodView):
 
         for user in user_sensor_map:
             sensors = self.get_sensor_objects_from_uuids(user_sensor_map[user])
-            print(str(user))
             permission_request_data = {
                 "requester_name": str(requester.first_name)
                 + " "
@@ -158,7 +157,7 @@ class PermissionRequestService(MethodView):
                 "requested_sensors": sensors,
             }
             PermissionRequest(
-                email=get_email(),
+                email=user,
                 timestamp=str(timestamp),
                 requests=permission_request_data,
             ).save()

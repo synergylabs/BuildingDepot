@@ -1,187 +1,198 @@
+
+
 <!DOCTYPE html>
-<!--[if IE 8]>
-<html class="no-js lt-ie9" lang="en"> <![endif]-->
-<!--[if gt IE 8]><!-->
-<html class="no-js" lang="en"> <!--<![endif]-->
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
-    <meta charset="utf-8">
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Usergroups &mdash; BuildingDepot 3.2.9 documentation</title>
+  
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
 
-    <title>Usergroups &mdash; BuildingDepot 3.2.9 documentation</title>
+  
 
+  
+  
+    
 
-    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css"/>
+  
 
+  
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  
 
-    <link rel="index" title="Index"
-          href="../../genindex.html"/>
-    <link rel="search" title="Search" href="../../search.html"/>
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../genindex.html"/>
+        <link rel="search" title="Search" href="../../search.html"/>
     <link rel="top" title="BuildingDepot 3.2.9 documentation" href="../../index.html"/>
-    <link rel="up" title="CentralService APIs" href="index.html"/>
-    <link rel="next" title="Permission" href="permission.html"/>
-    <link rel="prev" title="SensorGroups" href="sensorgroup.html"/>
+        <link rel="up" title="CentralService APIs" href="index.html"/>
+        <link rel="next" title="Permission" href="permission.html"/>
+        <link rel="prev" title="SensorGroups" href="sensorgroup.html"/> 
 
-
-    <script src="../../_static/js/modernizr.min.js"></script>
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
 
 </head>
 
 <body class="wy-body-for-nav" role="document">
 
+   
+  <div class="wy-grid-for-nav">
 
-<div class="wy-grid-for-nav">
-
-
+    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-        <div class="wy-side-scroll">
-            <div class="wy-side-nav-search">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
 
+          
+            <a href="../../index.html" class="icon icon-home"> BuildingDepot
+          
 
-                <a href="../../index.html" class="icon icon-home"> BuildingDepot
+          
+          </a>
 
+          
+            
+            
+              <div class="version">
+                3.2.9
+              </div>
+            
+          
 
-                </a>
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
 
-
-                <div class="version">
-                    3.2.9
-                </div>
-
-
-                <div role="search">
-                    <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
-                        <input type="text" name="q" placeholder="Search docs"/>
-                        <input type="hidden" name="check_keywords" value="yes"/>
-                        <input type="hidden" name="area" value="default"/>
-                    </form>
-                </div>
-
-
-            </div>
-
-            <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-
-
-                <ul>
-                    <li class="toctree-l1"><a class="reference internal" href="../../centralservice.html">Central
-                        Service</a></li>
-                </ul>
-                <ul>
-                    <li class="toctree-l1"><a class="reference internal" href="../../dataservice.html">Data Service</a>
-                    </li>
-                </ul>
-                <ul>
-                    <li class="toctree-l1"><a class="reference internal" href="../../install.html">Installation</a></li>
-                    <li class="toctree-l1"><a class="reference internal" href="../../install.html#configuration">Configuration</a>
-                    </li>
-                </ul>
-                <ul class="current">
-                    <li class="toctree-l1 current"><a class="reference internal" href="index.html">CentralService
-                        APIs</a>
-                        <ul class="current">
-                            <li class="toctree-l2"><a class="reference internal" href="oauth.html">OAuth</a></li>
-                            <li class="toctree-l2"><a class="reference internal" href="tagtype.html">TagType</a></li>
-                            <li class="toctree-l2"><a class="reference internal" href="buildingtemplate.html">BuildingTemplate</a>
-                            </li>
-                            <li class="toctree-l2"><a class="reference internal" href="building.html">Buildings</a></li>
-                            <li class="toctree-l2"><a class="reference internal" href="dataservice.html">DataService</a>
-                            </li>
-                            <li class="toctree-l2"><a class="reference internal" href="sensor.html">Sensor</a></li>
-                            <li class="toctree-l2"><a class="reference internal"
-                                                      href="sensorgroup.html">SensorGroups</a></li>
-                            <li class="toctree-l2 current"><a class="current reference internal" href="#">Usergroups</a>
-                                <ul>
-                                    <li class="toctree-l3"><a class="reference internal" href="#create-usergroup">Create
-                                        UserGroup</a></li>
-                                    <li class="toctree-l3"><a class="reference internal" href="#get-usergroup-details">Get
-                                        UserGroup Details</a></li>
-                                    <li class="toctree-l3"><a class="reference internal" href="#delete-usergroup">Delete
-                                        UserGroup</a></li>
-                                    <li class="toctree-l3"><a class="reference internal" href="#add-users-to-usergroup">Add
-                                        users to UserGroup</a></li>
-                                    <li class="toctree-l3"><a class="reference internal"
-                                                              href="#get-list-of-users-in-usergroup">Get list of users
-                                        in UserGroup</a></li>
-                                </ul>
-                            </li>
-                            <li class="toctree-l2"><a class="reference internal" href="permission.html">Permission</a>
-                            </li>
-                            <li class="toctree-l2"><a class="reference internal" href="user.html">User</a></li>
-                        </ul>
-                    </li>
-                    <li class="toctree-l1"><a class="reference internal" href="../DataService/index.html">DataService
-                        APIs</a></li>
-                </ul>
-
-
-            </div>
+          
         </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../centralservice.html">Central Service</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../dataservice.html">Data Service</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../install.html#configuration">Configuration</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">CentralService APIs</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="oauth.html">OAuth</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tagtype.html">TagType</a></li>
+<li class="toctree-l2"><a class="reference internal" href="buildingtemplate.html">BuildingTemplate</a></li>
+<li class="toctree-l2"><a class="reference internal" href="building.html">Buildings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dataservice.html">DataService</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sensor.html">Sensor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sensorgroup.html">SensorGroups</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Usergroups</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#create-usergroup">Create UserGroup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#get-usergroup-details">Get UserGroup Details</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#delete-usergroup">Delete UserGroup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#add-users-to-usergroup">Add users to UserGroup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#get-list-of-users-in-usergroup">Get list of users in UserGroup</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="permission.html">Permission</a></li>
+<li class="toctree-l2"><a class="reference internal" href="permissionRequests.html">Permission Requests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user.html">User</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../DataService/index.html">DataService APIs</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
     </nav>
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
-
-        <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-
-            <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-            <a href="../../index.html">BuildingDepot</a>
-
-        </nav>
-
-
-        <div class="wy-nav-content">
-            <div class="rst-content">
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">BuildingDepot</a>
+        
+      </nav>
 
 
-                <div role="navigation" aria-label="breadcrumbs navigation">
-
-                    <ul class="wy-breadcrumbs">
-
-                        <li><a href="../../index.html">Docs</a> &raquo;</li>
-
-                        <li><a href="index.html">CentralService APIs</a> &raquo;</li>
-
-                        <li>Usergroups</li>
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
 
 
-                        <li class="wy-breadcrumbs-aside">
 
 
-                            <a href="../../_sources/api/CentralService/usergroup.rst.txt" rel="nofollow"> View page
-                                source</a>
 
 
-                        </li>
-
-                    </ul>
 
 
-                    <hr/>
-                </div>
-                <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
-                    <div itemprop="articleBody">
 
-                        <div class="section" id="usergroups">
-                            <h1>Usergroups<a class="headerlink" href="#usergroups"
-                                             title="Permalink to this headline">¶</a></h1>
-                            <p>Usergroups are as the name suggests a group of users formed using the id’s with which
-                                they are registered in BuildingDepot. Usergroups when combined with SensorGroups help in
-                                bringing about the Access Control functions that BuildingDepot provides.UserGroups can
-                                be defined in the CentralService at <a class="reference external"
-                                                                       href="http://www.example.com:81/api/usergroup">http://www.example.com:81/api/usergroup</a>.
-                            </p>
-                            <div class="section" id="create-usergroup">
-                                <h2>Create UserGroup<a class="headerlink" href="#create-usergroup"
-                                                       title="Permalink to this headline">¶</a></h2>
-                                <p>This request creates a new UserGroup with the name and description as specified by
-                                    the user.</p>
-                                <div class="compound">
-                                    <p class="compound-first"><strong>Example request</strong>:</p>
-                                    <div class="compound-middle highlight-http notranslate">
-                                        <div class="highlight"><pre><span></span><span class="nf">POST</span> <span
-                                                class="nn">/api/user_group</span> <span class="kr">HTTP</span><span
-                                                class="o">/</span><span class="m">1.1</span>
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="index.html">CentralService APIs</a> &raquo;</li>
+        
+      <li>Usergroups</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/api/CentralService/usergroup.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="usergroups">
+<h1>Usergroups<a class="headerlink" href="#usergroups" title="Permalink to this headline">¶</a></h1>
+<p>Usergroups are as the name suggests a group of users formed using the id’s with which they are registered in BuildingDepot. Usergroups when combined with SensorGroups help in bringing about the Access Control functions that BuildingDepot provides.UserGroups can be defined in the CentralService at <a class="reference external" href="http://www.example.com:81/api/usergroup">http://www.example.com:81/api/usergroup</a>.</p>
+<div class="section" id="create-usergroup">
+<h2>Create UserGroup<a class="headerlink" href="#create-usergroup" title="Permalink to this headline">¶</a></h2>
+<p>This request creates a new UserGroup with the name and description as specified by the user.</p>
+<div class="compound">
+<p class="compound-first"><strong>Example request</strong>:</p>
+<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">POST</span> <span class="nn">/api/user_group</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
 <span class="na">Accept</span><span class="o">:</span> <span class="l">application/json; charset=utf-8</span>
 
 {
@@ -190,142 +201,98 @@
           &quot;description&quot;: &quot;Description for User Group&quot;
       }
 }
-</pre>
-                                        </div>
-                                    </div>
-                                    <p class="compound-middle"><strong>Example response</strong> (for success):</p>
-                                    <div class="compound-middle highlight-http notranslate">
-                                        <div class="highlight"><pre><span></span><span class="kr">HTTP</span><span
-                                                class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span
-                                                class="ne">OK</span>
+</pre></div>
+</div>
+<p class="compound-middle"><strong>Example response</strong> (for success):</p>
+<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
 <span class="p">{</span>
   <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;True&quot;</span>
 <span class="p">}</span>
-</pre>
-                                        </div>
-                                    </div>
-                                    <p class="compound-middle"><strong>Example response</strong> (for failure):</p>
-                                    <div class="compound-last highlight-http notranslate">
-                                        <div class="highlight"><pre><span></span><span class="kr">HTTP</span><span
-                                                class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span
-                                                class="ne">OK</span>
+</pre></div>
+</div>
+<p class="compound-middle"><strong>Example response</strong> (for failure):</p>
+<div class="compound-last highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
 <span class="p">{</span>
-  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;False&quot;</span><span
-                                                    class="p">,</span>
+  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;False&quot;</span><span class="p">,</span>
   <span class="nt">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;No Name&quot;</span>
 <span class="p">}</span>
-</pre>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="section" id="get-usergroup-details">
-                                <h2>Get UserGroup Details<a class="headerlink" href="#get-usergroup-details"
-                                                            title="Permalink to this headline">¶</a></h2>
-                                <p>This request retrieves the details of a UserGroup</p>
-                                <div class="compound">
-                                    <p class="compound-first"><strong>Example request</strong>:</p>
-                                    <div class="compound-middle highlight-http notranslate">
-                                        <div class="highlight"><pre><span></span><span class="nf">GET</span> <span
-                                                class="nn">/api/user_group/Test</span> <span class="kr">HTTP</span><span
-                                                class="o">/</span><span class="m">1.1</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="get-usergroup-details">
+<h2>Get UserGroup Details<a class="headerlink" href="#get-usergroup-details" title="Permalink to this headline">¶</a></h2>
+<p>This request retrieves the details of a UserGroup</p>
+<div class="compound">
+<p class="compound-first"><strong>Example request</strong>:</p>
+<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">GET</span> <span class="nn">/api/user_group/Test</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
 <span class="na">Accept</span><span class="o">:</span> <span class="l">application/json; charset=utf-8</span>
-</pre>
-                                        </div>
-                                    </div>
-                                    <p class="compound-middle"><strong>Example response</strong> (for success):</p>
-                                    <div class="compound-middle highlight-http notranslate">
-                                        <div class="highlight"><pre><span></span><span class="kr">HTTP</span><span
-                                                class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span
-                                                class="ne">OK</span>
+</pre></div>
+</div>
+<p class="compound-middle"><strong>Example response</strong> (for success):</p>
+<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
 <span class="p">{</span>
-  <span class="nt">&quot;success&quot;</span> <span class="p">:</span> <span class="s2">&quot;true&quot;</span><span
-                                                    class="p">,</span>
-  <span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;Test&quot;</span><span
-                                                    class="p">,</span>
+  <span class="nt">&quot;success&quot;</span> <span class="p">:</span> <span class="s2">&quot;true&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;Test&quot;</span><span class="p">,</span>
   <span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="s2">&quot;A UserGroup for Test&quot;</span>
 <span class="p">}</span>
-</pre>
-                                        </div>
-                                    </div>
-                                    <p class="compound-middle"><strong>Example response</strong> (for failure):</p>
-                                    <div class="compound-last highlight-http notranslate">
-                                        <div class="highlight"><pre><span></span><span class="kr">HTTP</span><span
-                                                class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span
-                                                class="ne">OK</span>
+</pre></div>
+</div>
+<p class="compound-middle"><strong>Example response</strong> (for failure):</p>
+<div class="compound-last highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
 <span class="p">{</span>
-  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;False&quot;</span><span
-                                                    class="p">,</span>
+  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;False&quot;</span><span class="p">,</span>
   <span class="nt">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;Usergroup does not exist&quot;</span>
 <span class="p">}</span>
-</pre>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="section" id="delete-usergroup">
-                                <h2>Delete UserGroup<a class="headerlink" href="#delete-usergroup"
-                                                       title="Permalink to this headline">¶</a></h2>
-                                <p>This request deletes the UserGroup</p>
-                                <div class="compound">
-                                    <p class="compound-first"><strong>Example request</strong>:</p>
-                                    <div class="compound-middle highlight-http notranslate">
-                                        <div class="highlight"><pre><span></span><span class="nf">DELETE</span> <span
-                                                class="nn">/api/user_group/&lt;name&gt;</span> <span
-                                                class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="delete-usergroup">
+<h2>Delete UserGroup<a class="headerlink" href="#delete-usergroup" title="Permalink to this headline">¶</a></h2>
+<p>This request deletes the UserGroup</p>
+<div class="compound">
+<p class="compound-first"><strong>Example request</strong>:</p>
+<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">DELETE</span> <span class="nn">/api/user_group/&lt;name&gt;</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
 <span class="na">Accept</span><span class="o">:</span> <span class="l">application/json; charset=utf-8</span>
-</pre>
-                                        </div>
-                                    </div>
-                                    <p class="compound-middle"><strong>Example response</strong> (for success):</p>
-                                    <div class="compound-middle highlight-http notranslate">
-                                        <div class="highlight"><pre><span></span><span class="kr">HTTP</span><span
-                                                class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span
-                                                class="ne">OK</span>
+</pre></div>
+</div>
+<p class="compound-middle"><strong>Example response</strong> (for success):</p>
+<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
 <span class="p">{</span>
   <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;True&quot;</span>
 <span class="p">}</span>
-</pre>
-                                        </div>
-                                    </div>
-                                    <p class="compound-middle"><strong>Example response</strong> (for failure):</p>
-                                    <div class="compound-last highlight-http notranslate">
-                                        <div class="highlight"><pre><span></span><span class="kr">HTTP</span><span
-                                                class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span
-                                                class="ne">OK</span>
+</pre></div>
+</div>
+<p class="compound-middle"><strong>Example response</strong> (for failure):</p>
+<div class="compound-last highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
 <span class="p">{</span>
-  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;False&quot;</span><span
-                                                    class="p">,</span>
+  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;False&quot;</span><span class="p">,</span>
   <span class="nt">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;Usergroup does not exist&quot;</span>
 <span class="p">}</span>
-</pre>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="section" id="add-users-to-usergroup">
-                                <h2>Add users to UserGroup<a class="headerlink" href="#add-users-to-usergroup"
-                                                             title="Permalink to this headline">¶</a></h2>
-                                <p>This request adds the users specified in the request to the usergroup</p>
-                                <p>Note: The list of users sent in this request will overwrite the previous list</p>
-                                <div class="compound">
-                                    <p class="compound-first"><strong>Example request</strong>:</p>
-                                    <div class="compound-middle highlight-http notranslate">
-                                        <div class="highlight"><pre><span></span><span class="nf">POST</span> <span
-                                                class="nn">/api/user_group/Test/users</span> <span
-                                                class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="add-users-to-usergroup">
+<h2>Add users to UserGroup<a class="headerlink" href="#add-users-to-usergroup" title="Permalink to this headline">¶</a></h2>
+<p>This request adds the users specified in the request to the usergroup</p>
+<p>Note: The list of users sent in this request will overwrite the previous list</p>
+<div class="compound">
+<p class="compound-first"><strong>Example request</strong>:</p>
+<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">POST</span> <span class="nn">/api/user_group/Test/users</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
 <span class="na">Accept</span><span class="o">:</span> <span class="l">application/json; charset=utf-8</span>
 
 {
@@ -342,145 +309,127 @@
          ]
   }
 }
-</pre>
-                                        </div>
-                                    </div>
-                                    <p class="compound-middle"><strong>Example response</strong> (for success):</p>
-                                    <div class="compound-middle highlight-http notranslate">
-                                        <div class="highlight"><pre><span></span><span class="kr">HTTP</span><span
-                                                class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span
-                                                class="ne">OK</span>
+</pre></div>
+</div>
+<p class="compound-middle"><strong>Example response</strong> (for success):</p>
+<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
 <span class="p">{</span>
   <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;True&quot;</span>
 <span class="p">}</span>
-</pre>
-                                        </div>
-                                    </div>
-                                    <p class="compound-middle"><strong>Example response</strong> (for failure):</p>
-                                    <div class="compound-last highlight-http notranslate">
-                                        <div class="highlight"><pre><span></span><span class="kr">HTTP</span><span
-                                                class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span
-                                                class="ne">OK</span>
+</pre></div>
+</div>
+<p class="compound-middle"><strong>Example response</strong> (for failure):</p>
+<div class="compound-last highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
 <span class="p">{</span>
-  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;False&quot;</span><span
-                                                    class="p">,</span>
+  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;False&quot;</span><span class="p">,</span>
   <span class="nt">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;One or more users not registered&quot;</span>
 <span class="p">}</span>
-</pre>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="section" id="get-list-of-users-in-usergroup">
-                                <h2>Get list of users in UserGroup<a class="headerlink"
-                                                                     href="#get-list-of-users-in-usergroup"
-                                                                     title="Permalink to this headline">¶</a></h2>
-                                <p>This request retrieves the list of users that are in the specified UserGroup</p>
-                                <div class="compound">
-                                    <p class="compound-first"><strong>Example request</strong>:</p>
-                                    <div class="compound-middle highlight-http notranslate">
-                                        <div class="highlight"><pre><span></span><span class="nf">GET</span> <span
-                                                class="nn">/api/user_group/Test/users</span> <span
-                                                class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="get-list-of-users-in-usergroup">
+<h2>Get list of users in UserGroup<a class="headerlink" href="#get-list-of-users-in-usergroup" title="Permalink to this headline">¶</a></h2>
+<p>This request retrieves the list of users that are in the specified UserGroup</p>
+<div class="compound">
+<p class="compound-first"><strong>Example request</strong>:</p>
+<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">GET</span> <span class="nn">/api/user_group/Test/users</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
 <span class="na">Accept</span><span class="o">:</span> <span class="l">application/json; charset=utf-8</span>
-</pre>
-                                        </div>
-                                    </div>
-                                    <p class="compound-middle"><strong>Example response</strong>:</p>
-                                    <div class="compound-last highlight-http notranslate">
-                                        <div class="highlight"><pre><span></span><span class="kr">HTTP</span><span
-                                                class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span
-                                                class="ne">OK</span>
+</pre></div>
+</div>
+<p class="compound-middle"><strong>Example response</strong>:</p>
+<div class="compound-last highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
 <span class="p">{</span>
   <span class="nt">&quot;users&quot;</span><span class="p">:</span> <span class="p">[</span>
              <span class="p">{</span>
-                <span class="nt">&quot;user_id&quot;</span><span class="p">:</span><span class="s2">&quot;synergy@gmail.com&quot;</span><span
-                                                    class="p">,</span>
+                <span class="nt">&quot;user_id&quot;</span><span class="p">:</span><span class="s2">&quot;synergy@gmail.com&quot;</span><span class="p">,</span>
                 <span class="nt">&quot;manager&quot;</span><span class="p">:</span> <span class="kc">true</span>
              <span class="p">},</span>
              <span class="p">{</span>
-                <span class="nt">&quot;user_id&quot;</span><span class="p">:</span><span class="s2">&quot;test@gmail.com&quot;</span><span
-                                                    class="p">,</span>
+                <span class="nt">&quot;user_id&quot;</span><span class="p">:</span><span class="s2">&quot;test@gmail.com&quot;</span><span class="p">,</span>
                 <span class="nt">&quot;manager&quot;</span><span class="p">:</span> <span class="kc">false</span>
              <span class="p">}</span>
            <span class="p">]</span>
 <span class="p">}</span>
-</pre>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-
-                    </div>
-                </div>
-                <footer>
-
-                    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-
-                        <a href="permission.html" class="btn btn-neutral float-right" title="Permission" accesskey="n">Next
-                            <span class="fa fa-arrow-circle-right"></span></a>
-
-
-                        <a href="sensorgroup.html" class="btn btn-neutral" title="SensorGroups" accesskey="p"><span
-                                class="fa fa-arrow-circle-left"></span> Previous</a>
-
-                    </div>
-
-
-                    <hr/>
-
-                    <div role="contentinfo">
-                        <p>
-                            &copy; Copyright 2021, SynergyLabs.
-
-                        </p>
-                    </div>
-                    Built with <a href="http://sphinx-doc.org/">Sphinx</a> and ❤️ using a custom <a
-                        href="https://github.com/LinxiFan/Sphinx-theme">theme</a> based on <a
-                        href="https://readthedocs.org">Read the Docs</a>.
-
-                </footer>
-
-            </div>
-        </div>
-
-    </section>
-
+</pre></div>
+</div>
+</div>
+</div>
 </div>
 
 
-<script type="text/javascript">
-    var DOCUMENTATION_OPTIONS = {
-        URL_ROOT: '../../',
-        VERSION: '3.2.9',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE: true,
-        SOURCELINK_SUFFIX: '.txt'
-    };
-</script>
-<script type="text/javascript" src="../../_static/jquery.js"></script>
-<script type="text/javascript" src="../../_static/underscore.js"></script>
-<script type="text/javascript" src="../../_static/doctools.js"></script>
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="permission.html" class="btn btn-neutral float-right" title="Permission" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="sensorgroup.html" class="btn btn-neutral" title="SensorGroups" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, SynergyLabs.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> and ❤️  using a custom <a href="https://github.com/LinxiFan/Sphinx-theme">theme</a> based on <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
 
 
-<script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
 
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'3.2.9',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
 
-<script type="text/javascript">
-    jQuery(function () {
-        SphinxRtdTheme.StickyNav.enable();
-    });
-</script>
+  
 
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
 
 </body>
 </html>

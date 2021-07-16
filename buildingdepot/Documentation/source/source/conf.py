@@ -19,9 +19,9 @@
 
 # -- Project information -----------------------------------------------------
 
-project = "BuildingDepot v3.3.0"
-copyright = "2021, SynergyLabs@CMU"
-author = "Shreyas Nagare"
+project = u"BuildingDepot v3.3.0"
+copyright = u"2021, Sudershan Boovaraghavan, Shreyas Nagare"
+author = u"Sudershan Boovaraghavan, Shreyas Nagare"
 
 # The short X.Y version
 version = ""
@@ -98,7 +98,7 @@ html_static_path = ["_static"]
 # -- Options for HTMLHelp output ---------------------------------------------
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = "BuildingDepotv329doc"
+htmlhelp_basename = "BuildingDepotv330doc"
 
 # -- Options for LaTeX output ------------------------------------------------
 
@@ -123,9 +123,9 @@ latex_elements = {
 latex_documents = [
     (
         master_doc,
-        "BuildingDepotv329.tex",
-        "BuildingDepot v3.2.9 Documentation",
-        "Shreyas Nagare",
+        "BuildingDepotv330.tex",
+        u"BuildingDepot v3.3.0 Documentation",
+        u"Synergy Labs",
         "manual",
     ),
 ]
@@ -137,8 +137,8 @@ latex_documents = [
 man_pages = [
     (
         master_doc,
-        "buildingdepotv329",
-        "BuildingDepot v3.2.9 Documentation",
+        "buildingdepotv330",
+        "BuildingDepot v3.3.0 Documentation",
         [author],
         1,
     )
@@ -152,10 +152,10 @@ man_pages = [
 texinfo_documents = [
     (
         master_doc,
-        "BuildingDepotv329",
-        "BuildingDepot v3.2.9 Documentation",
+        "BuildingDepotv330",
+        "BuildingDepot v3.3.0 Documentation",
         author,
-        "BuildingDepotv329",
+        "BuildingDepotv330",
         "One line description of project.",
         "Miscellaneous",
     ),
