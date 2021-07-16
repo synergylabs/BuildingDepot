@@ -1,4 +1,4 @@
-BuildingDepot v3.2.9
+BuildingDepot v3.3
 ====================
 
 ![BuildingDepot](https://github.com/synergylabs/BuildingDepot-v3/workflows/BuildingDepot/badge.svg)
