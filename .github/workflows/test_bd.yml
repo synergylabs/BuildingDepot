@@ -14,13 +14,12 @@ on:
       - develop
 jobs:
   build:
-    runs-on: ubuntu-latest
-    container:
-      image: ubuntu:focal-20210416
+    runs-on: ${{ matrix.os }}
     strategy:
-      fail-fast: false
       matrix:
-        python-version: ['3.6.13', '3.7.10', '3.8.9']
+        os: [ubuntu-18.04, ubuntu-20.04]
+        python-version: ['3.8.10', '3.9.6']
+      fail-fast: false
     steps:
       - uses: actions/checkout@v2
       - name: Set up Python ${{ matrix.python-version }}
