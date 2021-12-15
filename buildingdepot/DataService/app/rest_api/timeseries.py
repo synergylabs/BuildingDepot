@@ -85,9 +85,9 @@ class TimeSeriesService(MethodView):
                         float(start_time)) \
                     + '\' and time<\'' + timestamp_to_time_string(
                         float(end_time)) + '\')' + " GROUP BY time(" + resolution + ")"
-                print('\n\n' + '{s:{c}^{n}}'.format(s=' InfluxDB Query ', n=100, c='#'))
-                print(query)
-                print('#' * 100 + '\n\n')
+                # print('\n\n' + '{s:{c}^{n}}'.format(s=' InfluxDB Query ', n=100, c='#'))
+                # print(query)
+                # print('#' * 100 + '\n\n')
                 data = influx.query(query)
             except influxdb.exceptions.InfluxDBClientError:
                 return jsonify(responses.resolution_high)
