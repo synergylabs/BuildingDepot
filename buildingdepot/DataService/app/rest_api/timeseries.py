@@ -66,7 +66,6 @@ class TimeSeriesService(MethodView):
         if fields:
             fields = fields.split(";")
             original_fields = fields
-            fields = '"' + '", "'.join(fields) + '"'
         else:
             fields = "*"
 
@@ -84,39 +83,28 @@ class TimeSeriesService(MethodView):
                 fields = ",".join(allowed_fields)
             name = r.get("parent:{}".format(name))
 
+        if not fields:
+            return jsonify(responses.no_allowed_fields)
+
         if resolution:
-            if fields == "*":
-                return jsonify("TODO: Fields are not supported with resolution")
             try:
-                query = (
-                    'select mean(*) from "'
-                    + name
-                    + "\" where (time>'"
-                    + timestamp_to_time_string(float(start_time))
-                    + "' and time<'"
-                    + timestamp_to_time_string(float(end_time))
-                    + "')"
-                    + " GROUP BY time("
-                    + resolution
-                    + ")"
-                )
+                if fields is not '*' and fields:
+                    fields = '/(' + '|'.join(fields.split(',')) + ')-*/'
+                query = 'select mean('+fields+') from "' + name + '" where (time>\'' + timestamp_to_time_string(
+                        float(start_time)) \
+                    + '\' and time<\'' + timestamp_to_time_string(
+                        float(end_time)) + '\')' + " GROUP BY time(" + resolution + ")"
+                # print('\n\n' + '{s:{c}^{n}}'.format(s=' InfluxDB Query ', n=100, c='#'))
+                # print(query)
+                # print('#' * 100 + '\n\n')
                 data = influx.query(query)
             except influxdb.exceptions.InfluxDBClientError:
                 return jsonify(responses.resolution_high)
         else:
-            if fields is not "*":
-                fields = '"' + '", "'.join(fields.split(",")) + '"'
-            query = (
-                "select "
-                + fields
-                + ' from "'
-                + name
-                + "\" where time>'"
-                + timestamp_to_time_string(float(start_time))
-                + "' and time<'"
-                + timestamp_to_time_string(float(end_time))
-                + "'"
-            )
+            if fields is not '*' and fields:
+                fields = '/(' + '|'.join(fields.split(',')) + ')-*/'
+            query = 'select ' + fields + ' from "' + name + '" where time>\'' + timestamp_to_time_string(float(start_time)) \
+                + '\' and time<\'' + timestamp_to_time_string(float(end_time)) + '\''
 
             # # Log InfluxDB Query # #
             # print ('\n\n' + '{s:{c}^{n}}'.format(s=' InfluxDB Query ', n=100, c='#'))
@@ -130,6 +118,7 @@ class TimeSeriesService(MethodView):
         # print (data.raw)
         # print ('#' * 100 + '\n\n')
         response.update({"data": data.raw})
+        del response["data"]["statement_id"]
 
         return jsonify(response)
 
