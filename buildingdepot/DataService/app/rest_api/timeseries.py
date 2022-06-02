@@ -170,7 +170,10 @@ class TimeSeriesService(MethodView):
                             if type(sample[key]) is list:
                                 length = len(sample[key])
                                 for i in range(length):
-                                    sample.update({"%s-%d" % (key, i): sample[key][i]})
+                                    if isinstance(sample[key][i], basestring):
+                                        sample.update({"%s-%d" % (key, i): sample[key][i]})
+                                    else:
+                                        sample.update({"%s-%d" % (key, i): float(sample[key][i])})
                                 del sample[key]
                         dic = {
                             'measurement': sensor['sensor_id'],
@@ -190,7 +193,9 @@ class TimeSeriesService(MethodView):
                         if view_fields:
                             fields = [field.strip() for field in view_fields.split(',')]
                         view_dic = dict(dic)
-                        view_fields = {k: v for k, v in dic['fields'].items() if k in fields }
+                        # view_fields = {k: v for k, v in dic['fields'].items() if k in fields }
+                        view_fields = {k: v for k, v in dic['fields'].items() if k.rsplit('-',1)[0] in fields }
+
                         view_dic.update({'fields': view_fields})
                         if apps[view]:
                             if not pubsub:
