@@ -90,10 +90,10 @@ class TimeSeriesService(MethodView):
             try:
                 if fields is not '*' and fields:
                     fields = '/(' + '|'.join(fields.split(',')) + ')-*/'
-                query = 'select mean('+fields+') from "' + name + '" where (time>\'' + timestamp_to_time_string(
-                        float(start_time)) \
-                    + '\' and time<\'' + timestamp_to_time_string(
-                        float(end_time)) + '\')' + " GROUP BY time(" + resolution + ")"
+                query = 'select mean(' + fields + ') from "' + name + '" where (time>\'' + timestamp_to_time_string(
+                    float(start_time)) \
+                        + '\' and time<\'' + timestamp_to_time_string(
+                    float(end_time)) + '\')' + " GROUP BY time(" + resolution + ")"
                 # print('\n\n' + '{s:{c}^{n}}'.format(s=' InfluxDB Query ', n=100, c='#'))
                 # print(query)
                 # print('#' * 100 + '\n\n')
@@ -103,8 +103,9 @@ class TimeSeriesService(MethodView):
         else:
             if fields is not '*' and fields:
                 fields = '/(' + '|'.join(fields.split(',')) + ')-*/'
-            query = 'select ' + fields + ' from "' + name + '" where time>\'' + timestamp_to_time_string(float(start_time)) \
-                + '\' and time<\'' + timestamp_to_time_string(float(end_time)) + '\''
+            query = 'select ' + fields + ' from "' + name + '" where time>\'' + timestamp_to_time_string(
+                float(start_time)) \
+                    + '\' and time<\'' + timestamp_to_time_string(float(end_time)) + '\''
 
             # # Log InfluxDB Query # #
             # print ('\n\n' + '{s:{c}^{n}}'.format(s=' InfluxDB Query ', n=100, c='#'))
@@ -179,7 +180,10 @@ class TimeSeriesService(MethodView):
                             if type(sample[key]) is list:
                                 length = len(sample[key])
                                 for i in range(length):
-                                    sample.update({"%s-%d" % (key, i): sample[key][i]})
+                                    if isinstance(sample[key][i], basestring):
+                                        sample.update({"%s-%d" % (key, i): sample[key][i]})
+                                    else:
+                                        sample.update({"%s-%d" % (key, i): float(sample[key][i])})
                                 del sample[key]
                         dic = {
                             "measurement": sensor["sensor_id"],
@@ -200,7 +204,7 @@ class TimeSeriesService(MethodView):
                             fields = [field.strip() for field in view_fields.split(",")]
                         view_dic = dict(dic)
                         view_fields = {
-                            k: v for k, v in list(dic["fields"].items()) if k in fields
+                            k: v for k, v in list(dic["fields"].items()) if k.rsplit('-', 1)[0] in fields
                         }
                         view_dic.update({"fields": view_fields})
                         if apps[view]:
@@ -213,9 +217,9 @@ class TimeSeriesService(MethodView):
                                     except Exception as e:
                                         print(
                                             (
-                                                "Failed to open channel"
-                                                + " error"
-                                                + str(e)
+                                                    "Failed to open channel"
+                                                    + " error"
+                                                    + str(e)
                                             )
                                         )
                             try:
