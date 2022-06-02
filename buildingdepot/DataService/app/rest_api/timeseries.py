@@ -59,7 +59,6 @@ class TimeSeriesService(MethodView):
         if fields:
             fields = fields.split(';')
             original_fields = fields
-            fields = '"' + '", "'.join(fields) + '"'
         else:
             fields = '*'
 
@@ -75,20 +74,26 @@ class TimeSeriesService(MethodView):
                 fields = ','.join(allowed_fields)
             name = r.get('parent:{}'.format(name))
 
+        if not fields:
+            return jsonify(responses.no_allowed_fields)
+
         if resolution:
-            if fields == '*':
-                return jsonify('TODO: Fields are not supported with resolution')
             try:
-                query = 'select mean(*) from "' + name + '" where (time>\'' + timestamp_to_time_string(
+                if fields is not '*' and fields:
+                    fields = '/(' + '|'.join(fields.split(',')) + ')-*/'
+                query = 'select mean('+fields+') from "' + name + '" where (time>\'' + timestamp_to_time_string(
                         float(start_time)) \
                     + '\' and time<\'' + timestamp_to_time_string(
                         float(end_time)) + '\')' + " GROUP BY time(" + resolution + ")"
+                # print('\n\n' + '{s:{c}^{n}}'.format(s=' InfluxDB Query ', n=100, c='#'))
+                # print(query)
+                # print('#' * 100 + '\n\n')
                 data = influx.query(query)
             except influxdb.exceptions.InfluxDBClientError:
                 return jsonify(responses.resolution_high)
         else:
-            if fields is not '*':
-                fields = '"' + '", "'.join(fields.split(',')) + '"'
+            if fields is not '*' and fields:
+                fields = '/(' + '|'.join(fields.split(',')) + ')-*/'
             query = 'select ' + fields + ' from "' + name + '" where time>\'' + timestamp_to_time_string(float(start_time)) \
                 + '\' and time<\'' + timestamp_to_time_string(float(end_time)) + '\''
 
@@ -104,6 +109,7 @@ class TimeSeriesService(MethodView):
         # print (data.raw)
         # print ('#' * 100 + '\n\n')
         response.update({'data': data.raw})
+        del response["data"]["statement_id"]
 
         return jsonify(response)
 
@@ -164,7 +170,10 @@ class TimeSeriesService(MethodView):
                             if type(sample[key]) is list:
                                 length = len(sample[key])
                                 for i in range(length):
-                                    sample.update({"%s-%d" % (key, i): sample[key][i]})
+                                    if isinstance(sample[key][i], basestring):
+                                        sample.update({"%s-%d" % (key, i): sample[key][i]})
+                                    else:
+                                        sample.update({"%s-%d" % (key, i): float(sample[key][i])})
                                 del sample[key]
                         dic = {
                             'measurement': sensor['sensor_id'],
@@ -184,7 +193,9 @@ class TimeSeriesService(MethodView):
                         if view_fields:
                             fields = [field.strip() for field in view_fields.split(',')]
                         view_dic = dict(dic)
-                        view_fields = {k: v for k, v in dic['fields'].items() if k in fields }
+                        # view_fields = {k: v for k, v in dic['fields'].items() if k in fields }
+                        view_fields = {k: v for k, v in dic['fields'].items() if k.rsplit('-',1)[0] in fields }
+
                         view_dic.update({'fields': view_fields})
                         if apps[view]:
                             if not pubsub:

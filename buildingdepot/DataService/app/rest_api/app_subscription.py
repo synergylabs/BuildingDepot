@@ -68,7 +68,7 @@ class AppSubscriptionService(MethodView):
                     except Exception as e:
                         print "Failed to end RabbitMQ session" + str(e)
 
-            return jsonify(responses.success_true)
+                return jsonify(responses.success_true)
 
         return jsonify(responses.application_does_not_exist)
 
