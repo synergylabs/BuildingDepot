@@ -1,8 +1,9 @@
 {
-  "title":"All tests",
-  "tests":[{
-    "test": "create a tagtype"
-  },
+  "title": "All tests",
+  "tests": [
+    {
+      "test": "create a tagtype"
+    },
     {
       "test": "get a tagtype"
     },
@@ -146,5 +147,6 @@
     },
     {
       "test": "delete a tagtype"
-    }]
+    }
+  ]
 }

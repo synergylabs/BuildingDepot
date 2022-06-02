@@ -7,12 +7,13 @@ CentralService. Any query in the CentralService that requires data from the
 CentralService such as valid tags, list of buildings etc. will have to go through
 this if data is not found in the cache
 
-@copyright: (c) 2016 SynergyLabs
-@license: UCSD License. See License file for details.
+@copyright: (c) 2021 SynergyLabs
+@license: CMU License. See License file for details.
 """
 
-from .. import svr
 from flask import current_app
+
+from .. import svr
 
 PAGE_SIZE = 100
 
@@ -34,11 +35,11 @@ def validate_users(emails):
 
 
 def get_add_delete(old, now):
-    user_old,user_new = [],[]
+    user_old, user_new = [], []
     for user in old:
-        user_old.append(user['user_id'])
+        user_old.append(user["user_id"])
     for user in new:
-        user_new.append(user['user_id'])
+        user_new.append(user["user_id"])
     old, now = set(user_old), set(user_new)
     return now - old, old - now
 
@@ -52,4 +53,4 @@ def validate_email_password(email, password):
 
 
 def get_admins():
-    return svr.get_admins(current_app.config['NAME'])
+    return svr.get_admins(current_app.config["NAME"])

@@ -7,17 +7,17 @@ Each class here is a Table in MongoDB where each value that is inserted into
 these tables can have any of the parameters defined within the class. Needs
 them for the RPCs
 
-@copyright: (c) 2016 SynergyLabs
+@copyright: (c) 2021 SynergyLabs
 @license: See License file for details.
 """
 
-from mongoengine import *
-from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
-from werkzeug.security import check_password_hash
 from config import Config
 from flask import current_app
 from flask_login import UserMixin
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
+from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
+from mongoengine import *
+from werkzeug.security import check_password_hash
 from werkzeug.security import generate_password_hash, check_password_hash
 
 
@@ -76,6 +76,7 @@ class TagOwned(EmbeddedDocument):
     building = StringField()
     tags = ListField(EmbeddedDocumentField(Node))
 
+
 class User(Document):
     email = StringField(required=True, unique=True)
     password = StringField(required=True)
@@ -91,25 +92,25 @@ class User(Document):
         return check_password_hash(self.password, password)
 
     def generate_auth_token(self, expiration):
-        s = Serializer(current_app.config['SECRET_KEY'],
-                       expires_in=expiration)
-        return s.dumps({'email': self.email})
+        s = Serializer(current_app.config["SECRET_KEY"], expires_in=expiration)
+        return s.dumps({"email": self.email})
 
     @staticmethod
     def verify_auth_token(token):
-        s = Serializer(current_app.config['SECRET_KEY'])
+        s = Serializer(current_app.config["SECRET_KEY"])
         try:
             data = s.loads(token)
         except:
             return None
 
-        return User.objects(email=data['email']).first()
+        return User.objects(email=data["email"]).first()
 
     def is_super(self):
-        return self.role.type == 'super'
+        return self.role.type == "super"
 
     def is_local(self):
-        return self.role.type == 'local'
+        return self.role.type == "local"
+
 
 class Sensor(Document):
     name = StringField(required=True, unique=True)
@@ -130,7 +131,3 @@ class SensorGroup(Document):
     building = StringField()
     tags = ListField(EmbeddedDocumentField(Node))
     owner = StringField()
-
-
-
-

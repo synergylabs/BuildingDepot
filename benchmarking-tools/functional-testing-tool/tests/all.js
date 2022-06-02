@@ -8,7 +8,7 @@ var expect = require('chai').expect,
 const uuid = require('uuid/v4')
 
 describe('An authorized superuser should be able to ', function () {
-    this.timeout(5000);
+    this.timeout(10000);
     it('generate an access token', function (done) {
         if (config['clientID'].length && config['clientSecret'].length) {
             centralApi.get('/oauth/access_token/client_id=' + config['clientID'] + '/client_secret=' + config['clientSecret'])

@@ -10,7 +10,7 @@ const uuid = require('uuid/v4')
 describe('UserGroup APIs should handle ', function () {
 
     it('generate an access token', function (done) {
-        centralApi.get('/oauth/access_token/client_id='+ config['clientID'] +'/client_secret='+ config['clientSecret'])
+        centralApi.get('/oauth/access_token/client_id=' + config['clientID'] + '/client_secret=' + config['clientSecret'])
             .end(function (err, res) {
                 // console.log(res.body)
                 expect(res.status).to.equal(200)
@@ -27,8 +27,7 @@ describe('UserGroup APIs should handle ', function () {
         data.set('user_group', null)
         centralApi.post('/api/user_group')
             .set('Authorization', 'Bearer ' + data.get('authorizedToken'))
-            .send({
-            })
+            .send({})
             .end(function (err, res) {
                 // console.log(res.body)
                 expect(res.status).to.equal(200)

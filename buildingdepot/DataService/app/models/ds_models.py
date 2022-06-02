@@ -6,8 +6,8 @@ Contains all the class definitions that are required for the DataService.
 Each class here is a Table in MongoDB where each value that is inserted into
 these tables can have any of the paramteres defined within the class
 
-@copyright: (c) 2016 SynergyLabs
-@license: UCSD License. See License file for details.
+@copyright: (c) 2021 SynergyLabs
+@license: CMU License. See License file for details.
 """
 
 from mongoengine import *
@@ -35,10 +35,10 @@ class User(Document):
         return self.email
 
     def is_super(self):
-        return self.role.type == 'super'
+        return self.role.type == "super"
 
     def is_default(self):
-        return self.role.type == 'default'
+        return self.role.type == "default"
 
 
 class Sensor(Document):

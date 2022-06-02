@@ -6,17 +6,18 @@ This module handles the interactions with the buildings present in each
 dataservice. It handles all the CRUD operations for the buildings list
 present in each dataservice.
 
-@copyright: (c) 2016 SynergyLabs
-@license: UCSD License. See License file for details.
+@copyright: (c) 2021 SynergyLabs
+@license: CMU License. See License file for details.
 """
 
 from flask import jsonify, request
 from flask.views import MethodView
-from ...models.cs_models import Building, DataService
+
 from .. import responses
+from ..helper import check_oauth
 from ... import oauth
 from ...auth.access_control import super_required
-from ..helper import check_oauth
+from ...models.cs_models import Building, DataService
 
 
 class DataserviceBuildingsService(MethodView):
@@ -24,11 +25,11 @@ class DataserviceBuildingsService(MethodView):
     @super_required
     def post(self, name):
         try:
-            data = request.get_json()['data']
+            data = request.get_json()["data"]
         except KeyError:
             return jsonify(responses.missing_data)
 
-        buildings = data.get('buildings')
+        buildings = data.get("buildings")
         if buildings is None:
             return jsonify(responses.missing_parameters)
 
@@ -49,14 +50,14 @@ class DataserviceBuildingsService(MethodView):
         if dataservice is None:
             return jsonify(responses.invalid_dataservice)
         response = dict(responses.success_true)
-        response.update({'buildings': dataservice.buildings})
+        response.update({"buildings": dataservice.buildings})
         return jsonify(response)
 
     @check_oauth
     @super_required
     def delete(self, name):
         try:
-            data = request.get_json()['data']
+            data = request.get_json()["data"]
         except KeyError:
             return jsonify(responses.missing_data)
 
@@ -64,11 +65,10 @@ class DataserviceBuildingsService(MethodView):
         if dataservice is None:
             return jsonify(responses.invalid_dataservice)
 
-        buildings = data.get('buildings')
+        buildings = data.get("buildings")
         if buildings is None:
             return jsonify(responses.missing_parameters)
 
         collection = DataService._get_collection()
-        collection.update({'name': name},
-                          {'$pullAll': {'buildings': buildings}})
+        collection.update({"name": name}, {"$pullAll": {"buildings": buildings}})
         return jsonify(responses.success_true)

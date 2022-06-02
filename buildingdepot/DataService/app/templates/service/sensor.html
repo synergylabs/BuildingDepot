@@ -6,8 +6,9 @@
 {% block page_content %}
     <div class="row" ng-app="myApp" ng-controller="metadataController">
         <div class="page-header">
-            <h2 style="display: inline-block;" id = "header">  &nbsp;&nbsp;&nbsp;Sensor&nbsp;&nbsp;
-                <a ng-click="root.filter()" href="#filter_search" data-toggle="modal" class="btn btn-info btn-lg"><span class="glyphicon glyphicon-search"></span>&nbsp;Search
+            <h2 style="display: inline-block;" id="header"> &nbsp;&nbsp;&nbsp;Sensor&nbsp;&nbsp;
+                <a ng-click="root.filter()" href="#filter_search" data-toggle="modal" class="btn btn-info btn-lg"><span
+                        class="glyphicon glyphicon-search"></span>&nbsp;Search
                 </a>
             </h2>
             <ul class="pagination" id="pagination" style="float: right"></ul>
@@ -18,9 +19,13 @@
             {% elif current_page == 1 and total >= pagesize %}
                 <div style="text-align: center">Showing 1 - {{ pagesize }} of {{ total }} Sensors</div>
             {% elif current_page<pages %}
-                <div style="text-align: center">Showing {{ ((current_page-1)*pagesize) + 1 }} - {{ (current_page)*pagesize }} of {{ total }} Sensors</div>
+                <div style="text-align: center">Showing {{ ((current_page-1)*pagesize) + 1 }}
+                    - {{ (current_page)*pagesize }} of {{ total }} Sensors
+                </div>
             {% elif current_page==pages %}
-                <div style="text-align: center">Showing {{((current_page-1)*pagesize) + 1}} - {{ total }} of {{ total }} Sensors</div>
+                <div style="text-align: center">Showing {{ ((current_page-1)*pagesize) + 1 }} - {{ total }}
+                    of {{ total }} Sensors
+                </div>
             {% endif %}
         </div>
         <div>
@@ -42,9 +47,14 @@
                                     </thead>
                                     <tbody>
                                     <tr ng-repeat="pair in old_search">
-                                        <td><input disabled ng-model="old_search[$index].key" type="text" class="form-control" value="{[ pair.key ]}"></td>
-                                        <td><input ng-model="old_search[$index].value" type="text" class="form-control" value="{[ pair.value ]}"></td>
-                                        <td><button class="close" ng-click="root.removeOldFilter($index)">&times;</button></td>
+                                        <td><input disabled ng-model="old_search[$index].key" type="text"
+                                                   class="form-control" value="{[ pair.key ]}"></td>
+                                        <td><input ng-model="old_search[$index].value" type="text" class="form-control"
+                                                   value="{[ pair.value ]}"></td>
+                                        <td>
+                                            <button class="close" ng-click="root.removeOldFilter($index)">&times;
+                                            </button>
+                                        </td>
                                     </tr>
                                     </tbody>
                                 </table>
@@ -60,16 +70,24 @@
                                     </thead>
                                     <tbody>
                                     <tr ng-repeat="pair in filter_search">
-                                        <td><select ng-model="filter_search[$index].key" class="form-control" ng-options="opt for opt in filter_strings | orderBy: opt"></select></td>
-                                        <td><input ng-model="filter_search[$index].value" type="text" class="form-control" value="{[ pair.value ]}"></td>
-                                        <td><button class="close" ng-click="root.removeFilter($index)">&times;</button></td>
+                                        <td><select ng-model="filter_search[$index].key" class="form-control"
+                                                    ng-options="opt for opt in filter_strings | orderBy: opt"></select>
+                                        </td>
+                                        <td><input ng-model="filter_search[$index].value" type="text"
+                                                   class="form-control" value="{[ pair.value ]}"></td>
+                                        <td>
+                                            <button class="close" ng-click="root.removeFilter($index)">&times;</button>
+                                        </td>
                                     </tr>
                                     </tbody>
                                 </table>
                             </div>
                             <div class="btn-group">
-                                <button ng-click="root.addNewFilter()" type="button" class="btn btn-info">Add a new Filter</button>
-                                <button ng-click="root.updateFilter()" type="button" class="btn btn-warning">Search</button>
+                                <button ng-click="root.addNewFilter()" type="button" class="btn btn-info">Add a new
+                                    Filter
+                                </button>
+                                <button ng-click="root.updateFilter()" type="button" class="btn btn-warning">Search
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -93,8 +111,10 @@
                                     </thead>
                                     <tbody>
                                     <tr ng-repeat="tag in tags_owned">
-                                        <td><input disabled ng-model="tags_owned[$index].name" type="text" class="form-control" value="{[ tag.name ]}"></td>
-                                        <td><input disabled ng-model="tags_owned[$index].value" type="text" class="form-control" value="{[ tag.value ]}"></td>
+                                        <td><input disabled ng-model="tags_owned[$index].name" type="text"
+                                                   class="form-control" value="{[ tag.name ]}"></td>
+                                        <td><input disabled ng-model="tags_owned[$index].value" type="text"
+                                                   class="form-control" value="{[ tag.value ]}"></td>
                                     </tr>
                                     </tbody>
                                 </table>
@@ -117,13 +137,15 @@
                     <tbody>
                     {% for obj in objs %}
                         <tr>
-                            <td><a onclick="window.location='graph/{{ obj.name }}';" style="cursor: pointer;" >{{ obj.name }}</a></td>
+                            <td><a onclick="window.location='graph/{{ obj.name }}';"
+                                   style="cursor: pointer;">{{ obj.name }}</a></td>
                             <td>{{ obj.building }}</td>
                             <td>{{ obj.source_name }}</td>
                             <td>{{ obj.source_identifier }}</td>
                             <td>{{ obj.owner }}</td>
                             <td>
-                                <a ng-click="root.tags('{{ obj.name }}')" href="#tags" data-toggle="modal" class="btn btn-info">Tags</a>
+                                <a ng-click="root.tags('{{ obj.name }}')" href="#tags" data-toggle="modal"
+                                   class="btn btn-info">Tags</a>
                             </td>
                         </tr>
                     {% endfor %}
@@ -139,13 +161,15 @@
     <script type="application/javascript">
         //Javascript
         function insertParam(key, value) {
-            key = escape(key); value = escape(value);
+            key = escape(key);
+            value = escape(value);
             var kvp = document.location.search.substr(1).split('&');
             if (kvp == '') {
                 document.location.search = '?' + key + '=' + value;
-            }
-            else {
-                var i = kvp.length; var x; while (i--) {
+            } else {
+                var i = kvp.length;
+                var x;
+                while (i--) {
                     x = kvp[i].split('=');
                     if (x[0] == key) {
                         x[1] = value;
@@ -153,45 +177,53 @@
                         break;
                     }
                 }
-                if (i < 0) { kvp[kvp.length] = [key, value].join('='); }
+                if (i < 0) {
+                    kvp[kvp.length] = [key, value].join('=');
+                }
                 document.location.search = kvp.join('&');
             }
         }
 
         var totalPages = {{ pages }}, buttons = 5;
         var currentPage = lowerLimit = upperLimit = Math.min({{ current_page }}, totalPages);
-        var modify="";
+        var modify = "";
         if (currentPage > 1)
             $('#pagination').append('<li><a href=javascript:insertParam("page",1)><em>First</em></a></li> ');
         for (var b = 1; b < buttons && b < totalPages;) {
-            if (lowerLimit > 1 ) { lowerLimit--; b++; }
-            if (b < buttons && upperLimit < totalPages) { upperLimit++; b++; }
+            if (lowerLimit > 1) {
+                lowerLimit--;
+                b++;
+            }
+            if (b < buttons && upperLimit < totalPages) {
+                upperLimit++;
+                b++;
+            }
         }
         for (var i = lowerLimit; i <= upperLimit; i++) {
             if (i == currentPage) $('#pagination').append('<li class="page-item"> <a style="background-color: #33ccff;" href=#><em>' + i + '</em></a></li>');
-            else $('#pagination').append('<li><a href=javascript:insertParam("page",'+i+')><em>' + i + '</em></a></li> ');
+            else $('#pagination').append('<li><a href=javascript:insertParam("page",' + i + ')><em>' + i + '</em></a></li> ');
         }
         if (currentPage != totalPages)
             $('#pagination').append('<li><a href=javascript:insertParam("page",' + totalPages + ')><em>Last</em></a></li> ');
 
-        if(location.search.indexOf("q=")>=0){
+        if (location.search.indexOf("q=") >= 0) {
             $('#header').append('&nbsp;<a href="{{ url_for('service.sensor') }}" class="btn btn-danger btn-lg"><span class="glyphicon glyphicon-danger"></span>&nbsp;Clear</a>')
         }
 
         //AngularJS part
         var app = angular.module("myApp", []);
-        var access_token=document.cookie.replace(/(?:(?:^|.*;\s*)access_token\s*\=\s*([^;]*).*$)|^.*$/, "$1");
-        var header ={'Authorization': 'bearer ' + access_token};
-        app.config(['$interpolateProvider', function($interpolateProvider) {
+        var access_token = document.cookie.replace(/(?:(?:^|.*;\s*)access_token\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+        var header = {'Authorization': 'bearer ' + access_token};
+        app.config(['$interpolateProvider', function ($interpolateProvider) {
             $interpolateProvider.startSymbol('{[');
             $interpolateProvider.endSymbol(']}');
         }]);
-        app.controller("metadataController", function($scope, $http) {
+        app.controller("metadataController", function ($scope, $http) {
             $scope.root = {};
             $scope.filter_search = [];
             $scope.filter_search.push({'key': '', 'value': ''});
-            $scope.filter_strings = ["ID","Building","SourceName","SourceIdentifier","MetaData","Tags"];
-            $scope.root.filter = function(){
+            $scope.filter_strings = ["ID", "Building", "SourceName", "SourceIdentifier", "MetaData", "Tags"];
+            $scope.root.filter = function () {
                 try {
                     var query = JSON.parse(decodeURIComponent(location.search.substring(1)).split('=')[1]);
 
@@ -208,23 +240,23 @@
                         }
                     }
                     $scope.old_search = old_search;
+                } catch (err) {
                 }
-                catch (err){}
             };
 
-            $scope.root.removeOldFilter = function(index) {
+            $scope.root.removeOldFilter = function (index) {
                 $scope.old_search.splice(index, 1);
             };
-            $scope.root.removeFilter = function(index) {
+            $scope.root.removeFilter = function (index) {
                 $scope.filter_search.splice(index, 1);
             };
-            $scope.root.updateFilter=function(){
-                if($scope.old_search)
-                    var temp =$scope.filter_search.concat($scope.old_search);
+            $scope.root.updateFilter = function () {
+                if ($scope.old_search)
+                    var temp = $scope.filter_search.concat($scope.old_search);
                 else
-                    var temp =$scope.filter_search;
+                    var temp = $scope.filter_search;
 
-                var json={};
+                var json = {};
                 if (temp.length <= 0) {
                     $.notify("Please Enter Some Search Query", {
                         position: "top center",
@@ -251,64 +283,53 @@
                             });
                             return;
                         }
-                         //Change Format of payload before posting
+                        //Change Format of payload before posting
                         if (temp[i].key == 'Building') {
                             if ("Building" in json) {
-                                json["Building"].push(temp[i].value.replace('&','%26'));
-                            }
-                            else {
+                                json["Building"].push(temp[i].value.replace('&', '%26'));
+                            } else {
                                 json["Building"] = [];
-                                json["Building"].push(temp[i].value.replace('&','%26'));
+                                json["Building"].push(temp[i].value.replace('&', '%26'));
                             }
-                        }
-                        else if (temp[i].key == 'ID') {
+                        } else if (temp[i].key == 'ID') {
                             if ("ID" in json) {
                                 json["ID"].push(temp[i].value);
-                            }
-                            else {
+                            } else {
                                 json["ID"] = [];
                                 json["ID"].push(temp[i].value);
                             }
-                        }
-                        else if (temp[i].key == 'MetaData') {
+                        } else if (temp[i].key == 'MetaData') {
                             if ("MetaData" in json) {
-                                json["MetaData"].push(temp[i].value.replace('&','%26'));
-                            }
-                            else {
+                                json["MetaData"].push(temp[i].value.replace('&', '%26'));
+                            } else {
                                 json["MetaData"] = [];
-                                json["MetaData"].push(temp[i].value.replace('&','%26'));
+                                json["MetaData"].push(temp[i].value.replace('&', '%26'));
                             }
-                        }
-                        else if (temp[i].key == 'SourceIdentifier') {
+                        } else if (temp[i].key == 'SourceIdentifier') {
                             if ("SourceIdentifier" in json) {
-                                json["SourceIdentifier"].push(temp[i].value.replace('&','%26'));
-                            }
-                            else {
+                                json["SourceIdentifier"].push(temp[i].value.replace('&', '%26'));
+                            } else {
                                 json["SourceIdentifier"] = [];
-                                json["SourceIdentifier"].push(temp[i].value.replace('&','%26'));
+                                json["SourceIdentifier"].push(temp[i].value.replace('&', '%26'));
                             }
-                        }
-                        else if (temp[i].key == 'SourceName') {
+                        } else if (temp[i].key == 'SourceName') {
                             if ("SourceName" in json) {
-                                json["SourceName"].push(temp[i].value.replace('&','%26'));
-                            }
-                            else {
+                                json["SourceName"].push(temp[i].value.replace('&', '%26'));
+                            } else {
                                 json["SourceName"] = [];
-                                json["SourceName"].push(temp[i].value.replace('&','%26'));
+                                json["SourceName"].push(temp[i].value.replace('&', '%26'));
                             }
-                        }
-                        else if (temp[i].key == 'Tags') {
+                        } else if (temp[i].key == 'Tags') {
                             if ("Tags" in json) {
-                                json["Tags"].push(temp[i].value.replace('&','%26'));
-                            }
-                            else {
+                                json["Tags"].push(temp[i].value.replace('&', '%26'));
+                            } else {
                                 json["Tags"] = [];
-                                json["Tags"].push(temp[i].value.replace('&','%26'));
+                                json["Tags"].push(temp[i].value.replace('&', '%26'));
                             }
                         }
                     }
-                    var url='/service/sensor/search';
-                    window.location=url+"?q="+JSON.stringify(json);
+                    var url = '/service/sensor/search';
+                    window.location = url + "?q=" + JSON.stringify(json);
                     /*var value=json;
                      var form =$('<form action="' + url + '" method="post">' + '<input type="hidden" name="api_url" value=' +JSON.stringify(value)+ ' />' + '</form>');
                      $('body').append(form);
@@ -317,24 +338,24 @@
 
             };
 
-            $scope.root.tags = function(sensorName) {
+            $scope.root.tags = function (sensorName) {
                 $scope.addedTags = [];
                 $scope.sensorName = sensorName;
-                var res = $http.get('/service/sensor/' + sensorName + '/tags',{ headers: header });
-                res.success(function(data) {
+                var res = $http.get('/service/sensor/' + sensorName + '/tags', {headers: header});
+                res.success(function (data) {
                     $scope.tags = data.tags;
                     $scope.tags_owned = data.tags_owned;
                     $scope.names = Object.keys($scope.tags);
 
                 });
-                res.error(function(data) {
+                res.error(function (data) {
                     console.log(data);
-                    $.notify("Ajax failed", { position:"top center",clickToHide: true,autoHideDelay:2000});
+                    $.notify("Ajax failed", {position: "top center", clickToHide: true, autoHideDelay: 2000});
                 });
             };
         });
-        app.filter('valueFilter', [function() {
-            return function(input, scope, name) {
+        app.filter('valueFilter', [function () {
+            return function (input, scope, name) {
                 return scope.tags[name]["values"];
             };
         }]);

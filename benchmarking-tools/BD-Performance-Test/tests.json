@@ -1,50 +1,52 @@
 {
-	"create a tagtype":{
-		"url":"cs",
-		"path":"/api/tagtype",
-		"method":"POST",
-		"idReplacement": true,
-		"body":{
-			"data":{
-				"name":"tag-~id~",
-				"description":"performance-testing"
-			}
-		}
-	},
-	"get a tagtype":{
-		"url":"cs",
-		"path":"/api/tagtype/tag-~id~",
-		"method":"GET",
-		"idReplacement": true
-	},
-	"create a building template":{
-		"url":"cs",
-		"path":"/api/template",
-		"method":"POST",
-		"idReplacement": true,
-		"file":"post-data-files/create a building template.json"
-	},
-	"create a sensor":{
-		"url":"cs",
-		"path":"/api/sensor",
-		"method":"POST",
-		"idReplacement": true,
-		"body":{
-			"data":{
-				"name":"performance-testing",
-				"building":"testing",
-				"tags":[{
-					"name":"testing",
-					"value":"1"
-				}]
-			}
-		}
-	},
-	"post time-series data":{
-		"url":"ds",
-		"path":"/api/component_test/influx",
-		"method":"POST",
-		"idReplacement": true,
-		"json":"{\"data\": [{\"sensor_id\":\"a76650b9-9442-446f-a3bb-3af29aaf655f\",\"samples\":[{\"time\":~tm~,\"value\":55.12286237520166}]}]}"
-	}
+  "create a tagtype": {
+    "url": "cs",
+    "path": "/api/tagtype",
+    "method": "POST",
+    "idReplacement": true,
+    "body": {
+      "data": {
+        "name": "tag-~id~",
+        "description": "performance-testing"
+      }
+    }
+  },
+  "get a tagtype": {
+    "url": "cs",
+    "path": "/api/tagtype/tag-~id~",
+    "method": "GET",
+    "idReplacement": true
+  },
+  "create a building template": {
+    "url": "cs",
+    "path": "/api/template",
+    "method": "POST",
+    "idReplacement": true,
+    "file": "post-data-files/create a building template.json"
+  },
+  "create a sensor": {
+    "url": "cs",
+    "path": "/api/sensor",
+    "method": "POST",
+    "idReplacement": true,
+    "body": {
+      "data": {
+        "name": "performance-testing",
+        "building": "testing",
+        "tags": [
+          {
+            "name": "testing",
+            "value": "1"
+          }
+        ]
+      }
+    }
+  },
+  "post time-series data": {
+    "url": "ds",
+    "path": "/api/component_test/influx",
+    "method": "POST",
+    "idReplacement": true,
+    "json": "{\"data\": [{\"sensor_id\":\"a76650b9-9442-446f-a3bb-3af29aaf655f\",\"samples\":[{\"time\":~tm~,\"value\":55.12286237520166}]}]}"
+  }
 }

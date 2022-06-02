@@ -7,24 +7,25 @@ add and remove tags from them. Whenever tags are added or deleted from a group
 it updates the cache where a list is maintained of the sensors that fall in each
 group.
 
-@copyright: (c) 2016 SynergyLabs
-@license: UCSD License. See License file for details.
+@copyright: (c) 2021 SynergyLabs
+@license: CMU License. See License file for details.
 """
 
 import sys
+from flask import request, jsonify
 from flask.views import MethodView
-from flask import request,jsonify
+
 from .. import responses
-from ..helper import add_delete,get_building_tags, check_oauth
-from ...models.cs_models import SensorGroup,Permission
-from ... import r,oauth
+from ..helper import add_delete, get_building_tags, check_oauth
+from ... import r, oauth
 from ...auth.access_control import authenticate_acl
+from ...models.cs_models import SensorGroup, Permission
 from ...rpc import defs
 
-class SensorGroupTagsService(MethodView):
 
+class SensorGroupTagsService(MethodView):
     @check_oauth
-    def get(self,name):
+    def get(self, name):
         """
         Args as data:
             "name" : <Name of SensorGroup>
@@ -50,14 +51,14 @@ class SensorGroupTagsService(MethodView):
         obj = SensorGroup.objects(name=name).first()
         if obj is None:
             return jsonify(responses.invalid_sensorgroup)
-        tags_owned = [{'name': tag.name, 'value': tag.value} for tag in obj.tags]
+        tags_owned = [{"name": tag.name, "value": tag.value} for tag in obj.tags]
         tags = get_building_tags(obj.building)
         response = dict(responses.success_true)
-        response.update({'tags': tags, 'tags_owned': tags_owned})
+        response.update({"tags": tags, "tags_owned": tags_owned})
         return jsonify(response)
 
     @check_oauth
-    def post(self,name):
+    def post(self, name):
         """
         Args as data:
             "name" : <Name of SensorGroup>
@@ -82,13 +83,13 @@ class SensorGroupTagsService(MethodView):
         if Permission.objects(sensor_group=name).first() is not None:
             return jsonify(responses.sensorgroup_used)
         try:
-            tags = request.get_json()['data']['tags']
+            tags = request.get_json()["data"]["tags"]
         except KeyError:
             return jsonify(responses.missing_data)
         sensorgroup = SensorGroup.objects(name=name).first()
         if sensorgroup is None:
             return jsonify(responses.invalid_sensorgroup)
-        validate_tags = self.check_tags(tags,sensorgroup.building)
+        validate_tags = self.check_tags(tags, sensorgroup.building)
         if validate_tags is not None:
             return validate_tags
         if defs.invalidate_permission(name):
@@ -97,22 +98,19 @@ class SensorGroupTagsService(MethodView):
             return jsonify(responses.ds_error)
         return jsonify(responses.success_true)
 
-    def check_tags(self,tags,building):
+    def check_tags(self, tags, building):
         building_tags = get_building_tags(building)
-        print building_tags
-        print tags
+        print(building_tags)
+        print(tags)
         for tag in tags:
-            tagtype = building_tags.get(tag.get('name'))
-            print tagtype
+            tagtype = building_tags.get(tag.get("name"))
+            print(tagtype)
             if tagtype is None:
                 return jsonify(responses.invalid_tagtype)
-            print tag.get('value')
-            tag_values = tagtype.get('values')
-            if tag.get('value') not in tag_values:
+            print((tag.get("value")))
+            tag_values = tagtype.get("values")
+            if tag.get("value") not in tag_values:
                 return jsonify(responses.invalid_tag_value)
-            if tagtype.get('acl_tag') is False:
+            if tagtype.get("acl_tag") is False:
                 return jsonify(responses.invalid_tag_permission)
         return None
-
-
-

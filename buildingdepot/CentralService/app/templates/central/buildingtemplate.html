@@ -6,7 +6,8 @@
 {% block page_content %}
     <div class="row">
         <div class="page-header">
-            <h2>BuildingTemplate <a href="#myModal" data-toggle="modal" class="btn btn-info btn-lg"><span class="glyphicon glyphicon-hand-up"></span> Add a New BuildingTemplate</a></h2>
+            <h2>BuildingTemplate <a href="#myModal" data-toggle="modal" class="btn btn-info btn-lg"><span
+                    class="glyphicon glyphicon-hand-up"></span> Add a New BuildingTemplate</a></h2>
         </div>
         <div class="modal fade" id="myModal">
             <div class="modal-dialog">
@@ -39,8 +40,12 @@
                                     </thead>
                                     <tbody>
                                     <tr ng-repeat="tag in tags_owned">
-                                        <td><input disabled ng-model="tags_owned[$index]" type="text" class="form-control" value="{[ tag ]}"></td>
-                                        <td><button class="close" ng-click="root.removeExistingTag($index)">&times;</button></td>
+                                        <td><input disabled ng-model="tags_owned[$index]" type="text"
+                                                   class="form-control" value="{[ tag ]}"></td>
+                                        <td>
+                                            <button class="close" ng-click="root.removeExistingTag($index)">&times;
+                                            </button>
+                                        </td>
                                     </tr>
                                     </tbody>
                                 </table>
@@ -54,15 +59,22 @@
                                     </thead>
                                     <tbody>
                                     <tr ng-repeat="tag in addedTags">
-                                        <td><select ng-model="addedTags[$index]" class="form-control" ng-options="name for name in names | orderBy: name"></select></td>
-                                        <td><button class="close" ng-click="root.removeTag($index)">&times;</button></td>
+                                        <td><select ng-model="addedTags[$index]" class="form-control"
+                                                    ng-options="name for name in names | orderBy: name"></select></td>
+                                        <td>
+                                            <button class="close" ng-click="root.removeTag($index)">&times;</button>
+                                        </td>
                                     </tr>
                                     </tbody>
                                 </table>
                             </div>
                             <div class="btn-group">
-                                <button ng-click="root.addNewTag()" type="button" class="btn btn-info">Add a new Tag Type</button>
-                                <button ng-click="root.updateTags('BuildingName')" type="button" class="btn btn-warning">Update</button>
+                                <button ng-click="root.addNewTag()" type="button" class="btn btn-info">Add a new Tag
+                                    Type
+                                </button>
+                                <button ng-click="root.updateTags('BuildingName')" type="button"
+                                        class="btn btn-warning">Update
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -90,13 +102,15 @@
                                 </select>
                             </td>
                             <td>
-                                <a ng-click="root.tags('{{ obj.name }}',{{obj.tag_types}})" href="#tags" data-toggle="modal" class="btn btn-info btn-md">
+                                <a ng-click="root.tags('{{ obj.name }}',{{ obj.tag_types }})" href="#tags"
+                                   data-toggle="modal" class="btn btn-info btn-md">
                                     <span class="glyphicon glyphicon-edit"></span> Edit TagTypes
                                 </a>
                             </td>
                             {% if obj.can_delete %}
                                 <td>
-                                    <form action="{{ url_for('central.buildingtemplate_delete') }}" method="POST" onsubmit="return confirm('Are you sure you want to Delete?');">
+                                    <form action="{{ url_for('central.buildingtemplate_delete') }}" method="POST"
+                                          onsubmit="return confirm('Are you sure you want to Delete?');">
                                         <input type="hidden" value="{{ obj.name }}" name="name">
                                         <input type="submit" value="Delete" class="btn btn-danger">
                                     </form>
@@ -111,60 +125,73 @@
 
     </div>
 {% endblock %}
-{%  block scripts %}
+{% block scripts %}
     {{ super() }}
     <script>
         var app = angular.module("myApp", []);
-        app.config(['$interpolateProvider', function($interpolateProvider) {
+        app.config(['$interpolateProvider', function ($interpolateProvider) {
             $interpolateProvider.startSymbol('{[');
             $interpolateProvider.endSymbol(']}');
         }]);
-        app.controller("metadataController", function($scope, $http) {
+        app.controller("metadataController", function ($scope, $http) {
 
             $scope.root = {};
-            $scope.root.tags =function(BuildingName,tag_types){
+            $scope.root.tags = function (BuildingName, tag_types) {
                 $scope.addedTags = [];
                 $scope.BuildingName = BuildingName;
-                $scope.initial_tags=tag_types;
-                $scope.tags_owned=tag_types;
+                $scope.initial_tags = tag_types;
+                $scope.tags_owned = tag_types;
 
                 var res = $http.get('/api/tagtype/list');
-                res.success(function(data){
+                res.success(function (data) {
                     $scope.names = data.tags;
                 });
             };
-            $scope.root.updateTags=function (name) {
+            $scope.root.updateTags = function (name) {
                 tags = $scope.tags_owned.concat($scope.addedTags);
-                if (tags.length >0){
-                    var set ={};
-                    for (var i = 0; i < tags.length;i++ ){
-                        if (tags[i] === ''){
-                            $.notify("There is a Tag Type that is not specified", { position:"top center",clickToHide: true,autoHideDelay:2000});
+                if (tags.length > 0) {
+                    var set = {};
+                    for (var i = 0; i < tags.length; i++) {
+                        if (tags[i] === '') {
+                            $.notify("There is a Tag Type that is not specified", {
+                                position: "top center",
+                                clickToHide: true,
+                                autoHideDelay: 2000
+                            });
                             return;
                         }
-                        if (set[tags[i]]){
-                            $.notify("There is a tagtype that is specified more than once", { position:"top center",clickToHide: true,autoHideDelay:2000});
+                        if (set[tags[i]]) {
+                            $.notify("There is a tagtype that is specified more than once", {
+                                position: "top center",
+                                clickToHide: true,
+                                autoHideDelay: 2000
+                            });
                             return;
                         }
-                        set[tags[i]]=true;
+                        set[tags[i]] = true;
                     }
                 }
-                var res= $http.post('/api/buildingtemplate/'+$scope[name]+'/edit', {'data': tags});
-                res.success(function(data){
-                    $.notify("Success",{ globalPosition:'top center',clickToHide: true,autoHideDelay:2000, className:'success'});
-                    setTimeout(function() {
-                        document.location='/central/buildingtemplate'
-                        }, 335);
+                var res = $http.post('/api/buildingtemplate/' + $scope[name] + '/edit', {'data': tags});
+                res.success(function (data) {
+                    $.notify("Success", {
+                        globalPosition: 'top center',
+                        clickToHide: true,
+                        autoHideDelay: 2000,
+                        className: 'success'
+                    });
+                    setTimeout(function () {
+                        document.location = '/central/buildingtemplate'
+                    }, 335);
                 });
 
             };
-            $scope.root.removeExistingTag = function(index) {
+            $scope.root.removeExistingTag = function (index) {
                 $scope.tags_owned.splice(index, 1);
             };
-            $scope.root.addNewTag = function() {
+            $scope.root.addNewTag = function () {
                 $scope.addedTags.push('');
             };
-            $scope.root.removeTag = function(index) {
+            $scope.root.removeTag = function (index) {
                 $scope.addedTags.splice(index, 1);
             };
         });

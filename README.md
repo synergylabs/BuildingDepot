@@ -1,4 +1,4 @@
-BuildingDepot v3.2.9
+BuildingDepot v3.3
 ====================
 
 ![BuildingDepot](https://github.com/synergylabs/BuildingDepot-v3/workflows/BuildingDepot/badge.svg)
@@ -89,12 +89,12 @@ What's installed
 
 * The following packages are installed using apt-get
  * openssl
- * python-setuptools
- * python-dev
+ * python3-setuptools
+ * python3-dev
  * build-essential
- * python-software-properties
+ * python3-software-properties
  * mongodb
- * python-pip
+ * python3-pip
  * nginx
  * supervisor
  * redis-server
@@ -103,15 +103,18 @@ What's installed
 * The following packages are installed in the python virtual environment
  * Flask
  * mongoengine
- * flask-restful
- * Flask-HTTPAuth
- * flask-login
- * validate-email
- * requests
+ * Flask-Login
  * Flask-Script
+ * Flask-OAuthlib
+ * jsonschema
+ * pika
+ * Sphinx
+ * sphinx-theme
  * Flask-WTF
- * flask-bootstrap
+ * Flask-Bootstrap
+ * uWSGI
  * redis
  * influxdb
  * pymongo
+ * aniso8601
  * firebase-admin

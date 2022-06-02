@@ -5,21 +5,27 @@ DataService.rest_api.permission
 This module handles interacting with the underlying permission models.
 It handles the required CRUD operations for permissions.
 
-@copyright: (c) 2016 SynergyLabs
-@license: UCSD License. See License file for details.
+@copyright: (c) 2021 SynergyLabs
+@license: CMU License. See License file for details.
 """
 
+import hashlib
+import json
+import os
+import pika
+import traceback
 from flask import request, jsonify, Flask
 from flask.views import MethodView
-from .. import responses
 from pymongo import MongoClient
-from ...models.cs_models import Sensor, User, PermissionRequest
-from ...auth.views import Client, Token
+
+from .. import responses
 from ..helper import form_query, create_response, check_oauth, get_email
-from ... import oauth, app
-import traceback, json, hashlib, pika, os
 from ..notifications.notification import get_notification_client_id
 from ..notifications.push_notifications import PushNotification
+from ... import oauth, app
+from ...auth.views import Client, Token
+from ...models.cs_models import Sensor, User, PermissionRequest
+
 
 class PermissionRequestService(MethodView):
     @check_oauth
@@ -41,18 +47,20 @@ class PermissionRequestService(MethodView):
         email = get_email()
         timestamp_filter = 0
 
-        if request.args.get('timestamp_filter') is not None:
-            timestamp_filter = int(request.args.get('timestamp_filter'))
+        if request.args.get("timestamp_filter") is not None:
+            timestamp_filter = int(request.args.get("timestamp_filter"))
 
         permission_request_history = PermissionRequest.objects(email=email)
-        request_results = { "permission_requests": [] }
+        request_results = {"permission_requests": []}
 
         if permission_request_history is not None:
             for permission_request in permission_request_history:
                 timestamp = int(permission_request["timestamp"])
-                
+
                 if timestamp >= timestamp_filter:
-                    request_results["permission_requests"].append(permission_request["requests"])
+                    request_results["permission_requests"].append(
+                        permission_request["requests"]
+                    )
 
         response = dict(responses.success_true)
         response.update(request_results)
@@ -77,14 +85,14 @@ class PermissionRequestService(MethodView):
                     if tag.name == "parent":
                         parent_sensor_uuid = tag.value
                         parent_sensor = Sensor.objects(name=parent_sensor_uuid).first()
-                        
+
                         sensor_owner = self.get_user_who_claimed(parent_sensor.tags)
 
                         if sensor_owner is not None:
                             if sensor_owner not in user_sensor_map:
                                 user_sensor_map[sensor_owner] = []
 
-                            user_sensor_map[sensor_owner].append(sensor_uuid)                        
+                            user_sensor_map[sensor_owner].append(sensor_uuid)
 
         return user_sensor_map
 
@@ -102,10 +110,18 @@ class PermissionRequestService(MethodView):
 
         for uuid in uuids:
             sensor = Sensor.objects(name=uuid).first()
-            sensor_json = {"name": sensor.name.encode("ascii"), "source_name": sensor.source_name.encode("ascii"), "source_identifier": sensor.source_identifier.encode("ascii"), "building": sensor.building.encode("ascii"), "tags": {}}
+            sensor_json = {
+                "name": sensor.name.encode("ascii"),
+                "source_name": sensor.source_name.encode("ascii"),
+                "source_identifier": sensor.source_identifier.encode("ascii"),
+                "building": sensor.building.encode("ascii"),
+                "tags": {},
+            }
 
             for tags in sensor.tags:
-                sensor_json["tags"][tags.name.encode("ascii")] = tags.value.encode("ascii")
+                sensor_json["tags"][tags.name.encode("ascii")] = tags.value.encode(
+                    "ascii"
+                )
 
             sensor_objects.append(sensor_json)
 
@@ -120,9 +136,9 @@ class PermissionRequestService(MethodView):
         Returns:
             Success if the operation could be completed
         """
-        data = request.get_json()['data']
-        target_sensors = data['target_sensors']
-        timestamp = data['timestamp']
+        data = request.get_json()["data"]
+        target_sensors = data["target_sensors"]
+        timestamp = data["timestamp"]
 
         if not all([target_sensors, timestamp]):
             return jsonify(responses.missing_parameters)
@@ -133,18 +149,31 @@ class PermissionRequestService(MethodView):
 
         for user in user_sensor_map:
             sensors = self.get_sensor_objects_from_uuids(user_sensor_map[user])
-            print str(user)
-            permission_request_data = { "requester_name": str(requester.first_name) + " " + str(requester.last_name), "requester_email": str(get_email()), "requested_sensors": sensors }
-            PermissionRequest(email=user, timestamp=str(timestamp), requests=permission_request_data).save()
+            permission_request_data = {
+                "requester_name": str(requester.first_name)
+                + " "
+                + str(requester.last_name),
+                "requester_email": str(get_email()),
+                "requested_sensors": sensors,
+            }
+            PermissionRequest(
+                email=user,
+                timestamp=str(timestamp),
+                requests=permission_request_data,
+            ).save()
 
             try:
                 for user_db in User._get_collection().find({"email": user}):
                     permission_request_json = json.dumps(permission_request_data)
-                    PushNotification.get_instance().send(get_notification_client_id(user), permission_request_json, destination="permission_requests")
+                    PushNotification.get_instance().send(
+                        get_notification_client_id(user),
+                        permission_request_json,
+                        destination="permission_requests",
+                    )
 
             except Exception as e:
-                 traceback.print_exc()
-                 print str(repr(e))
-                 return jsonify(responses.rabbit_mq_bind_error)
- 
+                traceback.print_exc()
+                print(str(repr(e)))
+                return jsonify(responses.rabbit_mq_bind_error)
+
         return jsonify(responses.success_true)
