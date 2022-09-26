@@ -309,3 +309,5 @@ setup_packages
 #
 echo -e "\nInstallation Finished..\n"
 supervisorctl restart all
+tail -500 /var/log/buildingdepot/CentralService/uwsgi-app.log
+tail -500 /var/log/buildingdepot/DataService/uwsgi-app.log
