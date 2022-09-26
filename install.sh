@@ -32,6 +32,7 @@ function setup_venv() {
   pip3 install --upgrade pip
   pip3 install --upgrade setuptools
   pip3 install --upgrade -r pip_packages.list
+  pip3 install "firebase-admin"
 
   pip3 install --upgrade uWSGI
   mkdir -p /etc/uwsgi/apps-available/
@@ -241,7 +242,6 @@ function setup_notifications() {
   echo "Enter Y to select Google FCM and N to select RabbitMQ: "
   read response
   if [ "$response" == "Y" ] || [ "$response" == "y" ]; then
-    pip3 install "firebase-admin==2.18.0"
     echo "Please provide the absolute path of where your Google Service Account JSON file is, which contains the keys for your FCM project."
     read response
     if [ ! -z "$response" ]; then
