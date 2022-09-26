@@ -109,16 +109,21 @@ function install_packages() {
   # Add keys to install influxdb
   curl -sL https://repos.influxdata.com/influxdb.key | apt-key add -
   echo "deb https://repos.influxdata.com/${DISTRIB_ID,,} ${DISTRIB_CODENAME} stable" | tee /etc/apt/sources.list.d/influxdb.list
+
   # Add keys to install mongodb
-  wget -qO - https://www.mongodb.org/static/pgp/server-4.4.asc | apt-key add -
+  if [ $DISTRIB_CODENAME == "trusty" ]; then
+    wget -qO - https://www.mongodb.org/static/pgp/server-4.0.asc | sudo apt-key add -
+  else
+    wget -qO - https://www.mongodb.org/static/pgp/server-6.0.asc | sudo apt-key add -
+  fi
+
   if [ $DISTRIB_CODENAME == "focal" ]; then
-    echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu ${DISTRIB_CODENAME}/mongodb-org/4.4 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.4.list
+    echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu ${DISTRIB_CODENAME}/mongodb-org/6.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-6.0.list
   elif [ $DISTRIB_CODENAME == "bionic" ]; then
-    echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu ${DISTRIB_CODENAME}/mongodb-org/4.4 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.4.list
+    echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu ${DISTRIB_CODENAME}/mongodb-org/6.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-6.0.list
   elif [ $DISTRIB_CODENAME == "xenial" ]; then
-    echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu ${DISTRIB_CODENAME}/mongodb-org/4.4 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.4.list
+    echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu ${DISTRIB_CODENAME}/mongodb-org/6.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-6.0.list
   elif [ $DISTRIB_CODENAME == "trusty" ]; then
-    wget -qO - https://www.mongodb.org/static/pgp/server-4.0.asc | apt-key add -
     echo "deb [ arch=amd64 ] https://repo.mongodb.org/apt/${DISTRIB_ID,,} ${DISTRIB_CODENAME}/mongodb-org/4.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.0.list
   fi
 
@@ -129,7 +134,7 @@ function install_packages() {
   if [ $DISTRIB_CODENAME == "trusty" ]; then
     apt-get install -y mongodb-org=4.0.25 mongodb-org-server=4.0.25 mongodb-org-shell=4.0.25 mongodb-org-mongos=4.0.25 mongodb-org-tools=4.0.25
   else
-    apt-get install -y mongodb-org=4.4.6 mongodb-org-server=4.4.6 mongodb-org-shell=4.4.6 mongodb-org-mongos=4.4.6 mongodb-org-tools=4.4.6
+    apt-get install -y mongodb-org=6.0.1 mongodb-org-database=6.0.1 mongodb-org-server=6.0.1 mongodb-mongosh=6.0.1 mongodb-org-mongos=6.0.1 mongodb-org-tools=6.0.1
   fi
 
   apt-get install -y openssl python3-setuptools python3-dev build-essential software-properties-common
@@ -202,8 +207,12 @@ function setup_packages() {
   echo "MONGODB_PWD = '$mongoPassword'" >>$BD/DataService/ds_config
   echo "    MONGODB_USERNAME = '$mongoUsername'" >>$BD/CentralReplica/config.py
   echo "    MONGODB_PWD = '$mongoPassword'" >>$BD/CentralReplica/config.py
-  mongo --eval "db.getSiblingDB('admin').createUser({user:'$mongoUsername',pwd:'$mongoPassword',roles:['userAdminAnyDatabase','dbAdminAnyDatabase','readWriteAnyDatabase']})"
-  # Enable MongoDB authorization
+  if [ $DISTRIB_CODENAME == "trusty" ]; then
+    mongo --eval "db.getSiblingDB('admin').createUser({user:'$mongoUsername',pwd:'$mongoPassword',roles:['userAdminAnyDatabase','dbAdminAnyDatabase','readWriteAnyDatabase']})"
+  else
+    mongosh --eval "db.getSiblingDB('admin').createUser({user:'$mongoUsername',pwd:'$mongoPassword',roles:['userAdminAnyDatabase','dbAdminAnyDatabase','readWriteAnyDatabase']})"
+  fi
+ # Enable MongoDB authorization
   echo "security:" >>/etc/mongod.conf
   echo "  authorization: \"enabled\"" >>/etc/mongod.conf
   service mongod restart
