@@ -31,6 +31,11 @@ function setup_venv() {
 
   pip3 install --upgrade pip
   pip3 install --upgrade setuptools
+  if [ $DISTRIB_CODENAME == "focal" ]; then
+    pip3 install "Flask==2.1.3"
+  else
+    pip3 install "Flask==2.0.3"
+  fi
   pip3 install --upgrade -r pip_packages.list
   pip3 install "firebase-admin"
 
