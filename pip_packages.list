@@ -17,3 +17,4 @@ Sphinx==3.0.4
 sphinx-theme==1.0
 uWSGI==2.0.18
 wheel==0.34.2
+itsdangerous==2.0.1
