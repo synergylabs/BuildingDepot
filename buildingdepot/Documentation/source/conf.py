@@ -7,14 +7,14 @@
 
 # -- Project information -----------------------------------------------------
 
-project = "BuildingDepot"
-copyright = "2021, SynergyLabs"
-author = "SynergyLabs"
+project = u"BuildingDepot"
+copyright = u"2022, SynergyLabs, Sudershan Boovaraghavan"
+author = u"Sudershan Boovaraghavan"
 
 # The short X.Y version
-version = "3.2.9"
+version = "3.3"
 # The full version, including alpha/beta/rc tags
-release = "3.2.9"
+release = "3.3"
 
 # -- General configuration ---------------------------------------------------
 
@@ -28,6 +28,7 @@ release = "3.2.9"
 extensions = [
     "sphinx.ext.todo",
     "sphinx.ext.githubpages",
+    "sphinxcontrib.httpdomain"
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -47,7 +48,7 @@ master_doc = "index"
 #
 # This is also used if you do content translation via gettext catalogs.
 # Usually you set "language" from the command line for these cases.
-language = None
+language = "en"
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.

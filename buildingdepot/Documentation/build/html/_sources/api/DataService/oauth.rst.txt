@@ -12,10 +12,10 @@ Generating access tokens
 Generate an access token using the client id and secret key obtained from the CentralService. Each access token is valid for 24 hours from the time of generation.
 
 .. http:get:: /oauth/access_token/client_id=<client_id>/client_secret=<client_secret>
+	
 
-
-    :returns:
-       * **access token**
+	:returns:
+	   * **access token**
 
 .. compound::
 

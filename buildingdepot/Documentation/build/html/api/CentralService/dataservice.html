@@ -5,10 +5,11 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  
+  <meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>DataService &mdash; BuildingDepot 3.2.9 documentation</title>
+  <title>DataService &mdash; BuildingDepot 3.3 documentation</title>
   
 
   
@@ -28,12 +29,16 @@
   
 
   
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  
 
   
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="BuildingDepot 3.2.9 documentation" href="../../index.html"/>
+    <link rel="top" title="BuildingDepot 3.3 documentation" href="../../index.html"/>
         <link rel="up" title="CentralService APIs" href="index.html"/>
         <link rel="next" title="Sensor" href="sensor.html"/>
         <link rel="prev" title="Buildings" href="building.html"/> 
@@ -65,7 +70,7 @@
             
             
               <div class="version">
-                3.2.9
+                3.3
               </div>
             
           
@@ -188,15 +193,42 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="dataservice">
-<h1>DataService<a class="headerlink" href="#dataservice" title="Permalink to this headline">¶</a></h1>
+  <section id="dataservice">
+<h1>DataService<a class="headerlink" href="#dataservice" title="Permalink to this heading">¶</a></h1>
 <p>The DataService is where all the data related to sensors and the timeseries data of each sensor resides. All the access control related functionality is defined at centralservice is also enforced within the DataService.  A new DataService can be defined in the CentralService at <a class="reference external" href="http://www.example.com:81/api/dataservice">http://www.example.com:81/api/dataservice</a>.</p>
-<div class="section" id="create-a-new-dataservice">
-<h2>Create a new DataService<a class="headerlink" href="#create-a-new-dataservice" title="Permalink to this headline">¶</a></h2>
+<section id="create-a-new-dataservice">
+<h2>Create a new DataService<a class="headerlink" href="#create-a-new-dataservice" title="Permalink to this heading">¶</a></h2>
 <p>This request creates a new DataService with description,host and port where the datservice will function.</p>
+<dl class="http post">
+<dt class="sig sig-object http" id="post--api-dataservice">
+<span class="sig-name descname"><span class="pre">POST</span> </span><span class="sig-name descname"><span class="pre">/api/dataservice</span></span><a class="headerlink" href="#post--api-dataservice" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">JSON Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>string</em>) – Name of the DataService</p></li>
+<li><p><strong>description</strong> (<em>string</em>) – Description for the DataService</p></li>
+<li><p><strong>host</strong> (<em>string</em>) – HostName of the device where the DataService is to be installed</p></li>
+<li><p><strong>port</strong> (<em>string</em>) – Port number of the device where the DataService is to be installed</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>success</strong> <cite>(string)</cite> – Returns ‘True’ if data is posted successfully otherwise ‘False’</p></li>
+<li><p><strong>error</strong> <cite>(string)</cite> – An additional value that will be present only if the request fails specifying the cause for failure</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Status Codes<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><span><a class="reference external" href="https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a></span> – Success</p></li>
+<li><p><span><a class="reference external" href="https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a></span> – Unauthorized Credentials</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
 <div class="compound">
-<p class="compound-first"><strong>Example request</strong>:</p>
-<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">POST</span> <span class="nn">/api/dataservice</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">POST</span> <span class="nn">/api/dataservice</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
 <span class="na">Accept</span><span class="o">:</span> <span class="l">application/json; charset=utf-8</span>
 
 {
@@ -209,106 +241,190 @@
 }
 </pre></div>
 </div>
-<p class="compound-middle"><strong>Example response</strong> (for success):</p>
-<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<p><strong>Example response</strong> (for success):</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
-<span class="p">{</span>
-  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;True&quot;</span>
-<span class="p">}</span>
+<span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nt">&quot;success&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;True&quot;</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 </pre></div>
 </div>
-<p class="compound-middle"><strong>Example response</strong> (for failure):</p>
-<div class="compound-last highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<p><strong>Example response</strong> (for failure):</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
-<span class="p">{</span>
-  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;False&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot; Missing parameters&quot;</span>
-<span class="p">}</span>
+<span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nt">&quot;success&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;False&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">  </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot; Missing parameters&quot;</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 
-<span class="p">{</span>
-  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;False&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot; Missing data&quot;</span>
-<span class="p">}</span>
+<span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nt">&quot;success&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;False&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">  </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot; Missing data&quot;</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 </pre></div>
 </div>
 </div>
-</div>
-<div class="section" id="get-dataservice-details">
-<h2>Get DataService Details<a class="headerlink" href="#get-dataservice-details" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="get-dataservice-details">
+<h2>Get DataService Details<a class="headerlink" href="#get-dataservice-details" title="Permalink to this heading">¶</a></h2>
 <p>This request retrieves name, description, hostname and port to used in the dataservice specified in the request.</p>
+<dl class="http get">
+<dt class="sig sig-object http" id="get--api-dataservice--name-">
+<span class="sig-name descname"><span class="pre">GET</span> </span><span class="sig-name descname"><span class="pre">/api/dataservice/&lt;name&gt;</span></span><a class="headerlink" href="#get--api-dataservice--name-" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>string</em>) – Name of the DataService</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>success</strong> <cite>(string)</cite> – Returns ‘True’ if data is retrieved successfully otherwise ‘False’</p></li>
+<li><p><strong>name</strong> <cite>(string)</cite> – Name of the DataService</p></li>
+<li><p><strong>description</strong> <cite>(string)</cite> – Description for the DataService</p></li>
+<li><p><strong>host</strong> <cite>(string)</cite> –  HostName of the device where the DataService is installed</p></li>
+<li><p><strong>port</strong> <cite>(string)</cite> –  Port number of the device where the DataService is installed</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Status Codes<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><span><a class="reference external" href="https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a></span> – Success</p></li>
+<li><p><span><a class="reference external" href="https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a></span> – Unauthorized Credentials</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
 <div class="compound">
-<p class="compound-first"><strong>Example request</strong>:</p>
-<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">GET</span> <span class="nn">/api/dataservice/ds3</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">GET</span> <span class="nn">/api/dataservice/ds3</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
 <span class="na">Accept</span><span class="o">:</span> <span class="l">application/json; charset=utf-8</span>
 </pre></div>
 </div>
-<p class="compound-middle"><strong>Example response</strong>:</p>
-<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
-<span class="p">{</span>   <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;True&quot;</span><span class="p">,</span>
-      <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;ds3&quot;</span>
-      <span class="s2">&quot;description&quot;</span><span class="p">:</span><span class="s2">&quot;Test_ds3&quot;</span><span class="p">,</span>
-      <span class="nt">&quot;host&quot;</span><span class="p">:</span><span class="s2">&quot;127.0.0.3&quot;</span><span class="p">,</span>
-      <span class="nt">&quot;port&quot;</span><span class="p">:</span><span class="s2">&quot;83&quot;</span>
-<span class="p">}</span>
+<span class="p">{</span><span class="w">   </span><span class="nt">&quot;success&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;True&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">      </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="nt">&quot;ds3&quot;</span><span class="w"></span>
+<span class="w">      </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="s2">&quot;Test_ds3&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">      </span><span class="nt">&quot;host&quot;</span><span class="p">:</span><span class="s2">&quot;127.0.0.3&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">      </span><span class="nt">&quot;port&quot;</span><span class="p">:</span><span class="s2">&quot;83&quot;</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 </pre></div>
 </div>
-<p class="compound-middle"><strong>Example response</strong> (for failure):</p>
-<div class="compound-last highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<p><strong>Example response</strong> (for failure):</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
-<span class="p">{</span>
-  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;False&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot; DataService does not exist&quot;</span>
-<span class="p">}</span>
+<span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nt">&quot;success&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;False&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">  </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot; DataService does not exist&quot;</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 </pre></div>
 </div>
 </div>
-</div>
-<div class="section" id="delete-dataservice">
-<h2>Delete DataService<a class="headerlink" href="#delete-dataservice" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="delete-dataservice">
+<h2>Delete DataService<a class="headerlink" href="#delete-dataservice" title="Permalink to this heading">¶</a></h2>
 <p>This request deletes the requested DataService from Building Depot.</p>
+<dl class="http delete">
+<dt class="sig sig-object http" id="delete--api-dataservice--name-">
+<span class="sig-name descname"><span class="pre">DELETE</span> </span><span class="sig-name descname"><span class="pre">/api/dataservice/&lt;name&gt;</span></span><a class="headerlink" href="#delete--api-dataservice--name-" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>string</em>) – Name of the DataService</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>success</strong> <cite>(string)</cite> – Returns ‘True’ if the DataService is successfully deleted otherwise ‘False’</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Status Codes<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><span><a class="reference external" href="https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a></span> – Success</p></li>
+<li><p><span><a class="reference external" href="https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a></span> – Unauthorized Credentials</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
 <div class="compound">
-<p class="compound-first"><strong>Example request</strong>:</p>
-<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">DELETE</span> <span class="nn">/api/dataservice/ds3</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">DELETE</span> <span class="nn">/api/dataservice/ds3</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
 <span class="na">Accept</span><span class="o">:</span> <span class="l">application/json; charset=utf-8</span>
 </pre></div>
 </div>
-<p class="compound-middle"><strong>Example response</strong>:</p>
-<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
-<span class="p">{</span>
-  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;True&quot;</span>
-<span class="p">}</span>
+<span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nt">&quot;success&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;True&quot;</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 </pre></div>
 </div>
-<p class="compound-middle"><strong>Example response</strong> (for failure):</p>
-<div class="compound-last highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<p><strong>Example response</strong> (for failure):</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
-<span class="p">{</span>
-  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;False&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;DataService doesn&#39;t exist&quot;</span>
-<span class="p">}</span>
+<span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nt">&quot;success&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;False&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">  </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;DataService doesn&#39;t exist&quot;</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 
-<span class="p">{</span>
-  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;False&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;Cannot delete DataService, contains buildings.&quot;</span>
-<span class="p">}</span>
+<span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nt">&quot;success&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;False&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">  </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Cannot delete DataService, contains buildings.&quot;</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 </pre></div>
 </div>
 </div>
-</div>
-<div class="section" id="assign-buildings-to-dataservice">
-<h2>Assign Buildings to DataService<a class="headerlink" href="#assign-buildings-to-dataservice" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="assign-buildings-to-dataservice">
+<h2>Assign Buildings to DataService<a class="headerlink" href="#assign-buildings-to-dataservice" title="Permalink to this heading">¶</a></h2>
 <p>This request assigns a specific building to DataService. Once the building is assigned to a specific DataService, the DataService handles sensor datastreams from the building.</p>
+<dl class="http post">
+<dt class="sig sig-object http" id="post--api-dataservice--name--building">
+<span class="sig-name descname"><span class="pre">POST</span> </span><span class="sig-name descname"><span class="pre">/api/dataservice/&lt;name&gt;/building</span></span><a class="headerlink" href="#post--api-dataservice--name--building" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>string</em>) – Name of the DataService</p></li>
+</ul>
+</dd>
+<dt class="field-even">JSON Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><dl class="simple">
+<dt><strong>data</strong> <cite>(dict)</cite> – Contains the information of the buildings to be added to DataService.</dt><dd><ul>
+<li><p><strong>buildings</strong> <cite>(list)</cite> – List of buildings to be added to DataService</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>success</strong> <cite>(string)</cite> – Returns ‘True’ if the building is successfully added to the DataService otherwise ‘False’</p></li>
+</ul>
+</dd>
+<dt class="field-even">Status Codes<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><span><a class="reference external" href="https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a></span> – Success</p></li>
+<li><p><span><a class="reference external" href="https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a></span> – Unauthorized Credentials</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
 <div class="compound">
-<p class="compound-first"><strong>Example request</strong>:</p>
-<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">POST</span> <span class="nn">/api/dataservice/ds1/buildings</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">POST</span> <span class="nn">/api/dataservice/ds1/buildings</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
 <span class="na">Accept</span><span class="o">:</span> <span class="l">application/json; charset=utf-8</span>
 
 
@@ -319,79 +435,137 @@
 }
 </pre></div>
 </div>
-<p class="compound-middle"><strong>Example response</strong> (for success):</p>
-<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<p><strong>Example response</strong> (for success):</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
-<span class="p">{</span>
-  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;True&quot;</span>
-<span class="p">}</span>
+<span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nt">&quot;success&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;True&quot;</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 </pre></div>
 </div>
-<p class="compound-middle"><strong>Example response</strong> (for failure):</p>
-<div class="compound-last highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<p><strong>Example response</strong> (for failure):</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
-<span class="p">{</span>
-  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;False&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot; Missing parameters&quot;</span>
-<span class="p">}</span>
+<span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nt">&quot;success&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;False&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">  </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot; Missing parameters&quot;</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 
-<span class="p">{</span>
-  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;False&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot; Missing data&quot;</span>
-<span class="p">}</span>
+<span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nt">&quot;success&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;False&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">  </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot; Missing data&quot;</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 
-<span class="p">{</span>
-  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;False&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;DataService doesn&#39;t exist&quot;</span>
-<span class="p">}</span>
+<span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nt">&quot;success&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;False&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">  </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;DataService doesn&#39;t exist&quot;</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 
-<span class="p">{</span>
-  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;False&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;One of the buildings doesn&#39;t exist&quot;</span>
-<span class="p">}</span>
+<span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nt">&quot;success&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;False&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">  </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;One of the buildings doesn&#39;t exist&quot;</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 </pre></div>
 </div>
 </div>
-</div>
-<div class="section" id="get-building-details-from-dataservice">
-<h2>Get Building Details from DataService<a class="headerlink" href="#get-building-details-from-dataservice" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="get-building-details-from-dataservice">
+<h2>Get Building Details from DataService<a class="headerlink" href="#get-building-details-from-dataservice" title="Permalink to this heading">¶</a></h2>
 <p>This request retrieves the names of buildings that the specified DataService hosts.</p>
+<dl class="http get">
+<dt class="sig sig-object http" id="get--api-dataservice--name--buildings">
+<span class="sig-name descname"><span class="pre">GET</span> </span><span class="sig-name descname"><span class="pre">/api/dataservice/&lt;name&gt;/buildings</span></span><a class="headerlink" href="#get--api-dataservice--name--buildings" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>string</em>) – Name of the DataService</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>success</strong> <cite>(string)</cite> – Returns ‘True’ if data is retrieved successfully otherwise ‘False’</p></li>
+<li><p><strong>buildings</strong> <cite>(list)</cite> – Contains the list of buildings that the the specified DataService hosts</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Status Codes<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><span><a class="reference external" href="https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a></span> – Success</p></li>
+<li><p><span><a class="reference external" href="https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a></span> – Unauthorized Credentials</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
 <div class="compound">
-<p class="compound-first"><strong>Example request</strong>:</p>
-<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">GET</span> <span class="nn">/api/dataservice/ds1/buildings</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">GET</span> <span class="nn">/api/dataservice/ds1/buildings</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
 <span class="na">Accept</span><span class="o">:</span> <span class="l">application/json; charset=utf-8</span>
 </pre></div>
 </div>
-<p class="compound-middle"><strong>Example response</strong>:</p>
-<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
-<span class="p">{</span>
-  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;True&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;buildings&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;NSH&quot;</span><span class="p">,</span> <span class="s2">&quot;GHC&quot;</span><span class="p">]</span>
-<span class="p">}</span>
+<span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nt">&quot;success&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;True&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">  </span><span class="nt">&quot;buildings&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;NSH&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;GHC&quot;</span><span class="p">]</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 </pre></div>
 </div>
-<p class="compound-middle"><strong>Example response</strong> (for failure):</p>
-<div class="compound-last highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<p><strong>Example response</strong> (for failure):</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
-<span class="p">{</span>
-  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;False&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot; DataService doesn&#39;t exist&quot;</span>
-<span class="p">}</span>
+<span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nt">&quot;success&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;False&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">  </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot; DataService doesn&#39;t exist&quot;</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 </pre></div>
 </div>
 </div>
-</div>
-<div class="section" id="remove-buildings-from-dataservice">
-<h2>Remove Buildings from DataService<a class="headerlink" href="#remove-buildings-from-dataservice" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="remove-buildings-from-dataservice">
+<h2>Remove Buildings from DataService<a class="headerlink" href="#remove-buildings-from-dataservice" title="Permalink to this heading">¶</a></h2>
 <p>This request removes specified buildings from a DataService.</p>
+<dl class="http delete">
+<dt class="sig sig-object http" id="delete--api-dataservice--name--buildings">
+<span class="sig-name descname"><span class="pre">DELETE</span> </span><span class="sig-name descname"><span class="pre">/api/dataservice/&lt;name&gt;/buildings</span></span><a class="headerlink" href="#delete--api-dataservice--name--buildings" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>string</em>) – Name of the DataService</p></li>
+</ul>
+</dd>
+<dt class="field-even">JSON Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><dl class="simple">
+<dt><strong>data</strong> <cite>(dict)</cite> – Contains the information of the buildings to be deleted from DataService.</dt><dd><ul>
+<li><p><strong>buildings</strong> <cite>(list)</cite> – List of buildings to be deleted from DataService</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>success</strong> <cite>(string)</cite> – Returns ‘True’ if the buildings are successfully deleted otherwise ‘False’</p></li>
+</ul>
+</dd>
+<dt class="field-even">Status Codes<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><span><a class="reference external" href="https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a></span> – Success</p></li>
+<li><p><span><a class="reference external" href="https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a></span> – Unauthorized Credentials</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
 <div class="compound">
-<p class="compound-first"><strong>Example request</strong>:</p>
-<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">DELETE</span> <span class="nn">/api/dataservice/ds1/buildings</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">DELETE</span> <span class="nn">/api/dataservice/ds1/buildings</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
 <span class="na">Accept</span><span class="o">:</span> <span class="l">application/json; charset=utf-8</span>
 
 {
@@ -401,43 +575,77 @@
 }
 </pre></div>
 </div>
-<p class="compound-middle"><strong>Example response</strong>:</p>
-<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
-<span class="p">{</span>
-  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;True&quot;</span>
-<span class="p">}</span>
+<span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nt">&quot;success&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;True&quot;</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 </pre></div>
 </div>
-<p class="compound-middle"><strong>Example response</strong> (for failure):</p>
-<div class="compound-last highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<p><strong>Example response</strong> (for failure):</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
-<span class="p">{</span>
-  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;False&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;Missing parameters&quot;</span>
-<span class="p">}</span>
+<span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nt">&quot;success&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;False&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">  </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Missing parameters&quot;</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 
-<span class="p">{</span>
-  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;False&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;Missing data&quot;</span>
-<span class="p">}</span>
+<span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nt">&quot;success&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;False&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">  </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Missing data&quot;</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 
-<span class="p">{</span>
-  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;False&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;DataService doesn&#39;t exist&quot;</span>
-<span class="p">}</span>
+<span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nt">&quot;success&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;False&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">  </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;DataService doesn&#39;t exist&quot;</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 </pre></div>
 </div>
 </div>
-</div>
-<div class="section" id="grant-admin-privileges-on-dataservice">
-<h2>Grant Admin Privileges on DataService<a class="headerlink" href="#grant-admin-privileges-on-dataservice" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="grant-admin-privileges-on-dataservice">
+<h2>Grant Admin Privileges on DataService<a class="headerlink" href="#grant-admin-privileges-on-dataservice" title="Permalink to this heading">¶</a></h2>
 <p>This request grants CRUD (create/read/update/delete) privileges on the DataService to the specified users.</p>
+<dl class="http post">
+<dt class="sig sig-object http" id="post--api-dataservice--name--admins">
+<span class="sig-name descname"><span class="pre">POST</span> </span><span class="sig-name descname"><span class="pre">/api/dataservice/&lt;name&gt;/admins</span></span><a class="headerlink" href="#post--api-dataservice--name--admins" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>string</em>) – Name of the DataService</p></li>
+</ul>
+</dd>
+<dt class="field-even">JSON Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><dl class="simple">
+<dt><strong>data</strong> <cite>(dict)</cite> – Contains the information of the users to whom the CRUD privileges should be given.</dt><dd><ul>
+<li><p><strong>admins</strong> <cite>(list)</cite> – List of the emails(string) of the users.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>success</strong> <cite>(string)</cite> – Returns ‘True’ if the admin privileges are successfully added to the DataService otherwise ‘False’</p></li>
+</ul>
+</dd>
+<dt class="field-even">Status Codes<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><span><a class="reference external" href="https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a></span> – Success</p></li>
+<li><p><span><a class="reference external" href="https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a></span> – Unauthorized Credentials</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
 <div class="compound">
-<p class="compound-first"><strong>Example request</strong>:</p>
-<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">POST</span> <span class="nn">/api/dataservice/ds1/admins</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">POST</span> <span class="nn">/api/dataservice/ds1/admins</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
 <span class="na">Accept</span><span class="o">:</span> <span class="l">application/json; charset=utf-8</span>
 
 {
@@ -447,79 +655,137 @@
 }
 </pre></div>
 </div>
-<p class="compound-middle"><strong>Example response</strong> (for success):</p>
-<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<p><strong>Example response</strong> (for success):</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
-<span class="p">{</span>
-  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;True&quot;</span>
-<span class="p">}</span>
+<span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nt">&quot;success&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;True&quot;</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 </pre></div>
 </div>
-<p class="compound-middle"><strong>Example response</strong> (for failure):</p>
-<div class="compound-last highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<p><strong>Example response</strong> (for failure):</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
-<span class="p">{</span>
-  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;False&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot; Missing parameters&quot;</span>
-<span class="p">}</span>
+<span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nt">&quot;success&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;False&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">  </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot; Missing parameters&quot;</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 
-<span class="p">{</span>
-  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;False&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot; Missing data&quot;</span>
-<span class="p">}</span>
+<span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nt">&quot;success&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;False&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">  </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot; Missing data&quot;</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 
-<span class="p">{</span>
-  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;False&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;DataService doesn&#39;t exist&quot;</span>
-<span class="p">}</span>
+<span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nt">&quot;success&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;False&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">  </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;DataService doesn&#39;t exist&quot;</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 
-<span class="p">{</span>
-  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;False&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;One of the users doesn\&#39;t exist&quot;</span>
-<span class="p">}</span>
+<span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nt">&quot;success&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;False&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">  </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;One of the users doesn\&#39;t exist&quot;</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 </pre></div>
 </div>
 </div>
-</div>
-<div class="section" id="get-list-of-admins-from-dataservice">
-<h2>Get List of Admins from DataService<a class="headerlink" href="#get-list-of-admins-from-dataservice" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="get-list-of-admins-from-dataservice">
+<h2>Get List of Admins from DataService<a class="headerlink" href="#get-list-of-admins-from-dataservice" title="Permalink to this heading">¶</a></h2>
 <p>This request retrieves the list of users who have the admin privileges on the specified DataService.</p>
+<dl class="http get">
+<dt class="sig sig-object http" id="get--api-dataservice--name--admins">
+<span class="sig-name descname"><span class="pre">GET</span> </span><span class="sig-name descname"><span class="pre">/api/dataservice/&lt;name&gt;/admins</span></span><a class="headerlink" href="#get--api-dataservice--name--admins" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>string</em>) – Name of the DataService</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>success</strong> <cite>(string)</cite> – Returns ‘True’ if the list is retrieved successfully otherwise ‘False’</p></li>
+<li><p><strong>admins</strong> <cite>(list)</cite> – Contains the list of emails of the users who have admin privilege on the specified DataService</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Status Codes<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><span><a class="reference external" href="https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a></span> – Success</p></li>
+<li><p><span><a class="reference external" href="https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a></span> – Unauthorized Credentials</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
 <div class="compound">
-<p class="compound-first"><strong>Example request</strong>:</p>
-<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">GET</span> <span class="nn">/api/dataservice/ds1/buildings</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">GET</span> <span class="nn">/api/dataservice/ds1/buildings</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
 <span class="na">Accept</span><span class="o">:</span> <span class="l">application/json; charset=utf-8</span>
 </pre></div>
 </div>
-<p class="compound-middle"><strong>Example response</strong>:</p>
-<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
-<span class="p">{</span>
-  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;True&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;admins&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;user1@buildingdepot.org&quot;</span><span class="p">,</span> <span class="s2">&quot;user2@buildingdepot.org&quot;</span><span class="p">]</span>
-<span class="p">}</span>
+<span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nt">&quot;success&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;True&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">  </span><span class="nt">&quot;admins&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;user1@buildingdepot.org&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;user2@buildingdepot.org&quot;</span><span class="p">]</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 </pre></div>
 </div>
-<p class="compound-middle"><strong>Example response</strong> (for failure):</p>
-<div class="compound-last highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<p><strong>Example response</strong> (for failure):</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
-<span class="p">{</span>
-  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;False&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot; DataService doesn&#39;t exist&quot;</span>
-<span class="p">}</span>
+<span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nt">&quot;success&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;False&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">  </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot; DataService doesn&#39;t exist&quot;</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 </pre></div>
 </div>
 </div>
-</div>
-<div class="section" id="revoke-admin-privileges-on-dataservice">
-<h2>Revoke Admin Privileges on DataService<a class="headerlink" href="#revoke-admin-privileges-on-dataservice" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="revoke-admin-privileges-on-dataservice">
+<h2>Revoke Admin Privileges on DataService<a class="headerlink" href="#revoke-admin-privileges-on-dataservice" title="Permalink to this heading">¶</a></h2>
 <p>This request revokes admin privileges on DataService from the specified users.</p>
+<dl class="http delete">
+<dt class="sig sig-object http" id="delete--api-dataservice--name--admins">
+<span class="sig-name descname"><span class="pre">DELETE</span> </span><span class="sig-name descname"><span class="pre">/api/dataservice/&lt;name&gt;/admins</span></span><a class="headerlink" href="#delete--api-dataservice--name--admins" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>string</em>) – Name of the DataService</p></li>
+</ul>
+</dd>
+<dt class="field-even">JSON Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><dl class="simple">
+<dt><strong>data</strong> <cite>(dict)</cite> – Contains the information of the buildings to ba deleted from DataService.</dt><dd><ul>
+<li><p><strong>admins</strong> <cite>(list)</cite> – List of the emails of users whose privileges on DataService should be revoked.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>success</strong> <cite>(string)</cite> – Returns ‘True’ if the permissions are successfully revoked otherwise ‘False’</p></li>
+</ul>
+</dd>
+<dt class="field-even">Status Codes<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><span><a class="reference external" href="https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a></span> – Success</p></li>
+<li><p><span><a class="reference external" href="https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a></span> – Unauthorized Credentials</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
 <div class="compound">
-<p class="compound-first"><strong>Example request</strong>:</p>
-<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">DELETE</span> <span class="nn">/api/dataservice/ds1/admins</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">DELETE</span> <span class="nn">/api/dataservice/ds1/admins</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
 <span class="na">Accept</span><span class="o">:</span> <span class="l">application/json; charset=utf-8</span>
 
 {
@@ -529,38 +795,38 @@
 }
 </pre></div>
 </div>
-<p class="compound-middle"><strong>Example response</strong>:</p>
-<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
-<span class="p">{</span>
-  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;True&quot;</span>
-<span class="p">}</span>
+<span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nt">&quot;success&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;True&quot;</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 </pre></div>
 </div>
-<p class="compound-middle"><strong>Example response</strong> (for failure):</p>
-<div class="compound-last highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<p><strong>Example response</strong> (for failure):</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
-<span class="p">{</span>
-  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;False&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;Missing parameters&quot;</span>
-<span class="p">}</span>
+<span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nt">&quot;success&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;False&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">  </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Missing parameters&quot;</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 
-<span class="p">{</span>
-  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;False&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;Missing data&quot;</span>
-<span class="p">}</span>
+<span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nt">&quot;success&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;False&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">  </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Missing data&quot;</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 
-<span class="p">{</span>
-  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;False&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;DataService doesn&#39;t exist&quot;</span>
-<span class="p">}</span>
+<span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nt">&quot;success&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;False&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">  </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;DataService doesn&#39;t exist&quot;</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 </pre></div>
 </div>
 </div>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>
@@ -581,7 +847,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2020, SynergyLabs.
+        &copy; Copyright 2022, SynergyLabs, Sudershan Boovaraghavan.
 
     </p>
   </div>
@@ -603,16 +869,19 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'3.2.9',
+            VERSION:'3.3',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
             SOURCELINK_SUFFIX: '.txt'
         };
     </script>
+      <script type="text/javascript" src="../../_static/documentation_options.js"></script>
       <script type="text/javascript" src="../../_static/jquery.js"></script>
       <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
       <script type="text/javascript" src="../../_static/doctools.js"></script>
+      <script type="text/javascript" src="../../_static/sphinx_highlight.js"></script>
 
   
 

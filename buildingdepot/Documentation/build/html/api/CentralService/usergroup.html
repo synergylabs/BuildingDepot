@@ -5,10 +5,11 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  
+  <meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Usergroups &mdash; BuildingDepot 3.2.9 documentation</title>
+  <title>Usergroups &mdash; BuildingDepot 3.3 documentation</title>
   
 
   
@@ -28,12 +29,16 @@
   
 
   
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  
 
   
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="BuildingDepot 3.2.9 documentation" href="../../index.html"/>
+    <link rel="top" title="BuildingDepot 3.3 documentation" href="../../index.html"/>
         <link rel="up" title="CentralService APIs" href="index.html"/>
         <link rel="next" title="Permission" href="permission.html"/>
         <link rel="prev" title="SensorGroups" href="sensorgroup.html"/> 
@@ -65,7 +70,7 @@
             
             
               <div class="version">
-                3.2.9
+                3.3
               </div>
             
           
@@ -184,15 +189,46 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="usergroups">
-<h1>Usergroups<a class="headerlink" href="#usergroups" title="Permalink to this headline">¶</a></h1>
+  <section id="usergroups">
+<h1>Usergroups<a class="headerlink" href="#usergroups" title="Permalink to this heading">¶</a></h1>
 <p>Usergroups are as the name suggests a group of users formed using the id’s with which they are registered in BuildingDepot. Usergroups when combined with SensorGroups help in bringing about the Access Control functions that BuildingDepot provides.UserGroups can be defined in the CentralService at <a class="reference external" href="http://www.example.com:81/api/usergroup">http://www.example.com:81/api/usergroup</a>.</p>
-<div class="section" id="create-usergroup">
-<h2>Create UserGroup<a class="headerlink" href="#create-usergroup" title="Permalink to this headline">¶</a></h2>
+<section id="create-usergroup">
+<h2>Create UserGroup<a class="headerlink" href="#create-usergroup" title="Permalink to this heading">¶</a></h2>
 <p>This request creates a new UserGroup with the name and description as specified by the user.</p>
+<dl class="http post">
+<dt class="sig sig-object http" id="post--api-user_group">
+<span class="sig-name descname"><span class="pre">POST</span> </span><span class="sig-name descname"><span class="pre">/api/user_group</span></span><a class="headerlink" href="#post--api-user_group" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">JSON Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><dl class="simple">
+<dt><strong>data</strong> <cite>(dictionary)</cite> – Contains the information about the UserGroup</dt><dd><ul>
+<li><p><strong>name</strong> <cite>(string)</cite> – Name of the UserGroup</p></li>
+<li><p><strong>description</strong> <cite>(string)</cite> – Description of the UserGroup</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>success</strong> <cite>(string)</cite> – Returns ‘True’ if data is posted successfully otherwise ‘False’</p></li>
+<li><p><strong>error</strong> <cite>(string)</cite> – An additional value that will be present only if the request fails specifying the cause for failure</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Status Codes<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><span><a class="reference external" href="https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a></span> – Success</p></li>
+<li><p><span><a class="reference external" href="https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a></span> – Unauthorized Credentials</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
 <div class="compound">
-<p class="compound-first"><strong>Example request</strong>:</p>
-<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">POST</span> <span class="nn">/api/user_group</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">POST</span> <span class="nn">/api/user_group</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
 <span class="na">Accept</span><span class="o">:</span> <span class="l">application/json; charset=utf-8</span>
 
 {
@@ -203,96 +239,185 @@
 }
 </pre></div>
 </div>
-<p class="compound-middle"><strong>Example response</strong> (for success):</p>
-<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<p><strong>Example response</strong> (for success):</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
-<span class="p">{</span>
-  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;True&quot;</span>
-<span class="p">}</span>
+<span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nt">&quot;success&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;True&quot;</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 </pre></div>
 </div>
-<p class="compound-middle"><strong>Example response</strong> (for failure):</p>
-<div class="compound-last highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<p><strong>Example response</strong> (for failure):</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
-<span class="p">{</span>
-  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;False&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;No Name&quot;</span>
-<span class="p">}</span>
+<span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nt">&quot;success&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;False&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">  </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;No Name&quot;</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 </pre></div>
 </div>
 </div>
-</div>
-<div class="section" id="get-usergroup-details">
-<h2>Get UserGroup Details<a class="headerlink" href="#get-usergroup-details" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="get-usergroup-details">
+<h2>Get UserGroup Details<a class="headerlink" href="#get-usergroup-details" title="Permalink to this heading">¶</a></h2>
 <p>This request retrieves the details of a UserGroup</p>
+<dl class="http get">
+<dt class="sig sig-object http" id="get--api-user_group--name-">
+<span class="sig-name descname"><span class="pre">GET</span> </span><span class="sig-name descname"><span class="pre">/api/user_group/&lt;name&gt;</span></span><a class="headerlink" href="#get--api-user_group--name-" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>string</em>) – Name of user group (compulsory)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>name</strong> <cite>(string)</cite> – Contains the name of the UserGroup</p></li>
+<li><p><strong>description</strong> <cite>(string)</cite> – Contains the description of the UserGroup</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Status Codes<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><span><a class="reference external" href="https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a></span> – Success</p></li>
+<li><p><span><a class="reference external" href="https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a></span> – Unauthorized Credentials</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
 <div class="compound">
-<p class="compound-first"><strong>Example request</strong>:</p>
-<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">GET</span> <span class="nn">/api/user_group/Test</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">GET</span> <span class="nn">/api/user_group/Test</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
 <span class="na">Accept</span><span class="o">:</span> <span class="l">application/json; charset=utf-8</span>
 </pre></div>
 </div>
-<p class="compound-middle"><strong>Example response</strong> (for success):</p>
-<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<p><strong>Example response</strong> (for success):</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
-<span class="p">{</span>
-  <span class="nt">&quot;success&quot;</span> <span class="p">:</span> <span class="s2">&quot;true&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;Test&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="s2">&quot;A UserGroup for Test&quot;</span>
-<span class="p">}</span>
+<span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nt">&quot;success&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;true&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;Test&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">  </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="s2">&quot;A UserGroup for Test&quot;</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 </pre></div>
 </div>
-<p class="compound-middle"><strong>Example response</strong> (for failure):</p>
-<div class="compound-last highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<p><strong>Example response</strong> (for failure):</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
-<span class="p">{</span>
-  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;False&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;Usergroup does not exist&quot;</span>
-<span class="p">}</span>
+<span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nt">&quot;success&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;False&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">  </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Usergroup does not exist&quot;</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 </pre></div>
 </div>
 </div>
-</div>
-<div class="section" id="delete-usergroup">
-<h2>Delete UserGroup<a class="headerlink" href="#delete-usergroup" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="delete-usergroup">
+<h2>Delete UserGroup<a class="headerlink" href="#delete-usergroup" title="Permalink to this heading">¶</a></h2>
 <p>This request deletes the UserGroup</p>
+<dl class="http delete">
+<dt class="sig sig-object http" id="delete--api-user_group-Test">
+<span class="sig-name descname"><span class="pre">DELETE</span> </span><span class="sig-name descname"><span class="pre">/api/user_group/Test</span></span><a class="headerlink" href="#delete--api-user_group-Test" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>email</strong> (<em>string</em>) – Name of the UserGroup</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>success</strong> <cite>(string)</cite> – Returns ‘True’ if the UserGroup is successfully deleted otherwise ‘False’</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Status Codes<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><span><a class="reference external" href="https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a></span> – Success</p></li>
+<li><p><span><a class="reference external" href="https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a></span> – Unauthorized Credentials</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
 <div class="compound">
-<p class="compound-first"><strong>Example request</strong>:</p>
-<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">DELETE</span> <span class="nn">/api/user_group/&lt;name&gt;</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">DELETE</span> <span class="nn">/api/user_group/&lt;name&gt;</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
 <span class="na">Accept</span><span class="o">:</span> <span class="l">application/json; charset=utf-8</span>
 </pre></div>
 </div>
-<p class="compound-middle"><strong>Example response</strong> (for success):</p>
-<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<p><strong>Example response</strong> (for success):</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
-<span class="p">{</span>
-  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;True&quot;</span>
-<span class="p">}</span>
+<span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nt">&quot;success&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;True&quot;</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 </pre></div>
 </div>
-<p class="compound-middle"><strong>Example response</strong> (for failure):</p>
-<div class="compound-last highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<p><strong>Example response</strong> (for failure):</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
-<span class="p">{</span>
-  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;False&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;Usergroup does not exist&quot;</span>
-<span class="p">}</span>
+<span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nt">&quot;success&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;False&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">  </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Usergroup does not exist&quot;</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 </pre></div>
 </div>
 </div>
-</div>
-<div class="section" id="add-users-to-usergroup">
-<h2>Add users to UserGroup<a class="headerlink" href="#add-users-to-usergroup" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="add-users-to-usergroup">
+<h2>Add users to UserGroup<a class="headerlink" href="#add-users-to-usergroup" title="Permalink to this heading">¶</a></h2>
 <p>This request adds the users specified in the request to the usergroup</p>
 <p>Note: The list of users sent in this request will overwrite the previous list</p>
+<dl class="http post">
+<dt class="sig sig-object http" id="post--api-user_group--name--users">
+<span class="sig-name descname"><span class="pre">POST</span> </span><span class="sig-name descname"><span class="pre">/api/user_group/&lt;name&gt;/users</span></span><a class="headerlink" href="#post--api-user_group--name--users" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>string</em>) – Name of UserGroup</p></li>
+</ul>
+</dd>
+<dt class="field-even">JSON Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><dl class="simple">
+<dt><strong>data</strong> <cite>(dictionary)</cite> – Contains the information of the users to be added to the UserGroup.</dt><dd><ul>
+<li><dl class="simple">
+<dt><strong>users</strong> <cite>(list)</cite> – List of user objects</dt><dd><ul>
+<li><p><strong>user_id</strong> <cite>(string)</cite> – Email of the user</p></li>
+<li><p><strong>manager</strong> <cite>(boolean)</cite> – Specifies whether the user is a manager of the UserGroup</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>success</strong> <cite>(string)</cite> – Returns ‘True’ if data is posted successfully otherwise ‘False’</p></li>
+<li><p><strong>error</strong> <cite>(string)</cite> – An additional value that will be present only if the request fails specifying the cause for failure</p></li>
+</ul>
+</dd>
+<dt class="field-even">Status Codes<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><span><a class="reference external" href="https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a></span> – Success</p></li>
+<li><p><span><a class="reference external" href="https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a></span> – Unauthorized Credentials</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
 <div class="compound">
-<p class="compound-first"><strong>Example request</strong>:</p>
-<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">POST</span> <span class="nn">/api/user_group/Test/users</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">POST</span> <span class="nn">/api/user_group/Test/users</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
 <span class="na">Accept</span><span class="o">:</span> <span class="l">application/json; charset=utf-8</span>
 
 {
@@ -311,57 +436,80 @@
 }
 </pre></div>
 </div>
-<p class="compound-middle"><strong>Example response</strong> (for success):</p>
-<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<p><strong>Example response</strong> (for success):</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
-<span class="p">{</span>
-  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;True&quot;</span>
-<span class="p">}</span>
+<span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nt">&quot;success&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;True&quot;</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 </pre></div>
 </div>
-<p class="compound-middle"><strong>Example response</strong> (for failure):</p>
-<div class="compound-last highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<p><strong>Example response</strong> (for failure):</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
-<span class="p">{</span>
-  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;False&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;One or more users not registered&quot;</span>
-<span class="p">}</span>
+<span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nt">&quot;success&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;False&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">  </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;One or more users not registered&quot;</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 </pre></div>
 </div>
 </div>
-</div>
-<div class="section" id="get-list-of-users-in-usergroup">
-<h2>Get list of users in UserGroup<a class="headerlink" href="#get-list-of-users-in-usergroup" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="get-list-of-users-in-usergroup">
+<h2>Get list of users in UserGroup<a class="headerlink" href="#get-list-of-users-in-usergroup" title="Permalink to this heading">¶</a></h2>
 <p>This request retrieves the list of users that are in the specified UserGroup</p>
+<dl class="http get">
+<dt class="sig sig-object http" id="get--api-user_group--name--users">
+<span class="sig-name descname"><span class="pre">GET</span> </span><span class="sig-name descname"><span class="pre">/api/user_group/&lt;name&gt;/users</span></span><a class="headerlink" href="#get--api-user_group--name--users" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>string</em>) – Name of user group (compulsory)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>users</strong> <cite>(list)</cite> – Contains the list of users in this UserGroup</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Status Codes<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><span><a class="reference external" href="https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a></span> – Success</p></li>
+<li><p><span><a class="reference external" href="https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a></span> – Unauthorized Credentials</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
 <div class="compound">
-<p class="compound-first"><strong>Example request</strong>:</p>
-<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">GET</span> <span class="nn">/api/user_group/Test/users</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">GET</span> <span class="nn">/api/user_group/Test/users</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
 <span class="na">Accept</span><span class="o">:</span> <span class="l">application/json; charset=utf-8</span>
 </pre></div>
 </div>
-<p class="compound-middle"><strong>Example response</strong>:</p>
-<div class="compound-last highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
-<span class="p">{</span>
-  <span class="nt">&quot;users&quot;</span><span class="p">:</span> <span class="p">[</span>
-             <span class="p">{</span>
-                <span class="nt">&quot;user_id&quot;</span><span class="p">:</span><span class="s2">&quot;synergy@gmail.com&quot;</span><span class="p">,</span>
-                <span class="nt">&quot;manager&quot;</span><span class="p">:</span> <span class="kc">true</span>
-             <span class="p">},</span>
-             <span class="p">{</span>
-                <span class="nt">&quot;user_id&quot;</span><span class="p">:</span><span class="s2">&quot;test@gmail.com&quot;</span><span class="p">,</span>
-                <span class="nt">&quot;manager&quot;</span><span class="p">:</span> <span class="kc">false</span>
-             <span class="p">}</span>
-           <span class="p">]</span>
-<span class="p">}</span>
+<span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nt">&quot;users&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<span class="w">             </span><span class="p">{</span><span class="w"></span>
+<span class="w">                </span><span class="nt">&quot;user_id&quot;</span><span class="p">:</span><span class="s2">&quot;synergy@gmail.com&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="nt">&quot;manager&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w"></span>
+<span class="w">             </span><span class="p">},</span><span class="w"></span>
+<span class="w">             </span><span class="p">{</span><span class="w"></span>
+<span class="w">                </span><span class="nt">&quot;user_id&quot;</span><span class="p">:</span><span class="s2">&quot;test@gmail.com&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="nt">&quot;manager&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w"></span>
+<span class="w">             </span><span class="p">}</span><span class="w"></span>
+<span class="w">           </span><span class="p">]</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 </pre></div>
 </div>
 </div>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>
@@ -382,7 +530,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2020, SynergyLabs.
+        &copy; Copyright 2022, SynergyLabs, Sudershan Boovaraghavan.
 
     </p>
   </div>
@@ -404,16 +552,19 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'3.2.9',
+            VERSION:'3.3',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
             SOURCELINK_SUFFIX: '.txt'
         };
     </script>
+      <script type="text/javascript" src="../../_static/documentation_options.js"></script>
       <script type="text/javascript" src="../../_static/jquery.js"></script>
       <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
       <script type="text/javascript" src="../../_static/doctools.js"></script>
+      <script type="text/javascript" src="../../_static/sphinx_highlight.js"></script>
 
   
 

@@ -5,10 +5,11 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  
+  <meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Permission &mdash; BuildingDepot 3.2.9 documentation</title>
+  <title>Permission &mdash; BuildingDepot 3.3 documentation</title>
   
 
   
@@ -28,12 +29,16 @@
   
 
   
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  
 
   
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="BuildingDepot 3.2.9 documentation" href="../../index.html"/>
+    <link rel="top" title="BuildingDepot 3.3 documentation" href="../../index.html"/>
         <link rel="up" title="CentralService APIs" href="index.html"/>
         <link rel="next" title="Permission Requests" href="permissionRequests.html"/>
         <link rel="prev" title="Usergroups" href="usergroup.html"/> 
@@ -65,7 +70,7 @@
             
             
               <div class="version">
-                3.2.9
+                3.3
               </div>
             
           
@@ -182,30 +187,30 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="permission">
-<h1>Permission<a class="headerlink" href="#permission" title="Permalink to this headline">¶</a></h1>
+  <section id="permission">
+<h1>Permission<a class="headerlink" href="#permission" title="Permalink to this heading">¶</a></h1>
 <p>The Permissions are created between SensorGroups and UserGroups in Building Depot which come together to form the access control lists.Here we select a User Group and a Sensor Group and a permission value with which we want to associate these both. There are three levels of permission defined in BuildingDepot which are ‘d/r’ (deny read) ,’r’ (read), ‘r/w’ (read write) and ‘r/w/p’ (read write permission). If there are multiple permission mappings between a user and a sensor then the one that is most restrictive is chosen. Permissions can be defined in the CentralService at <a class="reference external" href="http://www.example.com:81/api/permission">http://www.example.com:81/api/permission</a>.</p>
-<div class="section" id="create-permission">
-<h2>Create Permission<a class="headerlink" href="#create-permission" title="Permalink to this headline">¶</a></h2>
+<section id="create-permission">
+<h2>Create Permission<a class="headerlink" href="#create-permission" title="Permalink to this heading">¶</a></h2>
 <p>This request creates a new Permission link between a UserGroup and a SensorGroup.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name" colspan="2">JSON Parameters:</th></tr>
-<tr class="field-odd field"><td>&#160;</td><td class="field-body"><ul class="first simple">
-<li><dl class="first docutils">
-<dt><strong>data</strong> <cite>(dictionary)</cite> – Contains the permission value for sensorgroup and usergroup</dt>
-<dd><ul class="first last">
-<li><strong>sensor_group</strong> <cite>(string)</cite> – Name of the sensor_group</li>
-<li><strong>user_group</strong> <cite>(string)</cite> – Name of the user_group</li>
-<li><dl class="first docutils">
-<dt><strong>permission</strong> <cite>(string)</cite> – Permission level</dt>
-<dd><ul class="first last">
-<li><strong>r</strong> <cite>(string)</cite> – Read - Will give read only access to the sensors</li>
-<li><strong>rw</strong> <cite>(string)</cite> – Read-Write - Will give read and write access to the sensors</li>
-<li><strong>dr</strong> <cite>(string)</cite> – Deny-read - Will deny any access to the sensors</li>
-<li><strong>rwp</strong> <cite>(string)</cite> – Read-Write-Permission - Highest level of permission that can be assigned. Will give read and write access to the sensors. In addition to this the user will be able to add/remove tags from the sensor.</li>
+<dl class="http post">
+<dt class="sig sig-object http" id="post--api-permission">
+<span class="sig-name descname"><span class="pre">POST</span> </span><span class="sig-name descname"><span class="pre">/api/permission</span></span><a class="headerlink" href="#post--api-permission" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="field-list">
+<dt class="field-odd">JSON Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><dl class="simple">
+<dt><strong>data</strong> <cite>(dictionary)</cite> – Contains the permission value for sensorgroup and usergroup</dt><dd><ul>
+<li><p><strong>sensor_group</strong> <cite>(string)</cite> – Name of the sensor_group</p></li>
+<li><p><strong>user_group</strong> <cite>(string)</cite> – Name of the user_group</p></li>
+<li><dl class="simple">
+<dt><strong>permission</strong> <cite>(string)</cite> – Permission level</dt><dd><ul>
+<li><p><strong>r</strong> <cite>(string)</cite> – Read - Will give read only access to the sensors</p></li>
+<li><p><strong>rw</strong> <cite>(string)</cite> – Read-Write - Will give read and write access to the sensors</p></li>
+<li><p><strong>dr</strong> <cite>(string)</cite> – Deny-read - Will deny any access to the sensors</p></li>
+<li><p><strong>rwp</strong> <cite>(string)</cite> – Read-Write-Permission - Highest level of permission that can be assigned. Will give read and write access to the sensors. In addition to this the user will be able to add/remove tags from the sensor.</p></li>
 </ul>
 </dd>
 </dl>
@@ -215,33 +220,27 @@
 </dl>
 </li>
 </ul>
-<blockquote class="last">
-<div><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">returns:</th><td class="field-body"><ul class="first simple">
-<li><strong>success</strong> <cite>(string)</cite> – Returns ‘True’ if data is posted successfully otherwise ‘False’</li>
-<li><strong>error</strong> <cite>(string)</cite> – An additional value that will be present only if the request fails specifying the cause for failure</li>
+<blockquote>
+<div><dl class="field-list simple">
+<dt class="field-odd">returns<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>success</strong> <cite>(string)</cite> – Returns ‘True’ if data is posted successfully otherwise ‘False’</p></li>
+<li><p><strong>error</strong> <cite>(string)</cite> – An additional value that will be present only if the request fails specifying the cause for failure</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">status 200:</th><td class="field-body"><p class="first">Success</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">status 401:</th><td class="field-body"><p class="first last">Unauthorized Credentials</p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt class="field-even">status 200<span class="colon">:</span></dt>
+<dd class="field-even"><p>Success</p>
+</dd>
+<dt class="field-odd">status 401<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Unauthorized Credentials</p>
+</dd>
+</dl>
 </div></blockquote>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 <div class="compound">
-<p class="compound-first"><strong>Example request</strong>:</p>
-<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">POST</span> <span class="nn">/api/permission</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">POST</span> <span class="nn">/api/permission</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
 <span class="na">Accept</span><span class="o">:</span> <span class="l">application/json; charset=utf-8</span>
 
 {
@@ -253,109 +252,158 @@
 }
 </pre></div>
 </div>
-<p class="compound-middle"><strong>Example response</strong> (for success):</p>
-<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<p><strong>Example response</strong> (for success):</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
-<span class="p">{</span>
-  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;True&quot;</span>
-<span class="p">}</span>
+<span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nt">&quot;success&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;True&quot;</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 </pre></div>
 </div>
-<p class="compound-middle"><strong>Example response</strong> (for failure):</p>
-<div class="compound-last highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<p><strong>Example response</strong> (for failure):</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
-<span class="p">{</span>
-  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;False&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot; User group does not exist&quot;</span>
-<span class="p">}</span>
+<span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nt">&quot;success&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;False&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">  </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot; User group does not exist&quot;</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 
-<span class="p">{</span>
-  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;False&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot; Sensor group does not exist&quot;</span>
-<span class="p">}</span>
+<span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nt">&quot;success&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;False&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">  </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot; Sensor group does not exist&quot;</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 
-<span class="p">{</span>
-  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;False&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot; Permission value does not exist&quot;</span>
-<span class="p">}</span>
+<span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nt">&quot;success&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;False&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">  </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot; Permission value does not exist&quot;</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 </pre></div>
 </div>
 </div>
-</div>
-<div class="section" id="read-permission">
-<h2>Read Permission<a class="headerlink" href="#read-permission" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="read-permission">
+<h2>Read Permission<a class="headerlink" href="#read-permission" title="Permalink to this heading">¶</a></h2>
 <p>This request retrieves Permission level assigned for existing SensorGroup and UserGroup.</p>
+<dl class="http get">
+<dt class="sig sig-object http" id="get--api-permission?user_group=-user_group-&amp;sensor_group=-sensor_group-">
+<span class="sig-name descname"><span class="pre">GET</span> </span><span class="sig-name descname"><span class="pre">/api/permission?user_group=&lt;user_group&gt;&amp;sensor_group=&lt;sensor_group&gt;</span></span><a class="headerlink" href="#get--api-permission?user_group=-user_group-&sensor_group=-sensor_group-" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>user_group</strong> (<em>string</em>) – Name of UserGroup (compulsory)</p></li>
+<li><p><strong>sensor_group</strong> (<em>string</em>) – Name of SensorGroup (compulsory)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>success</strong> <cite>(string)</cite> – Returns ‘True’ if a permission exists between the sensor and user group otherwise ‘False’</p></li>
+<li><p><strong>permission</strong> <cite>(string)</cite> – Contains the permission level that are attached to this SensorGroup and UserGroup</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Status Codes<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><span><a class="reference external" href="https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a></span> – Success</p></li>
+<li><p><span><a class="reference external" href="https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a></span> – Unauthorized Credentials</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
 <div class="compound">
-<p class="compound-first"><strong>Example request</strong>:</p>
-<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">GET</span> <span class="nn">/api/permission?user_group=Test_User_Group&amp;sensor_group=Test_Sensor_Group</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">GET</span> <span class="nn">/api/permission?user_group=Test_User_Group&amp;sensor_group=Test_Sensor_Group</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
 <span class="na">Accept</span><span class="o">:</span> <span class="l">application/json; charset=utf-8</span>
 </pre></div>
 </div>
-<p class="compound-middle"><strong>Example response</strong>:</p>
-<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
-<span class="p">{</span>
-  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;True&quot;</span>
-  <span class="s2">&quot;permission&quot;</span><span class="p">:</span> <span class="s2">&quot;r&quot;</span>
-<span class="p">}</span>
+<span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nt">&quot;success&quot;</span><span class="p">:</span><span class="w"> </span><span class="nt">&quot;True&quot;</span><span class="w"></span>
+<span class="w">  </span><span class="nt">&quot;permission&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;r&quot;</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 </pre></div>
 </div>
-<p class="compound-middle"><strong>Example response</strong> (for failure):</p>
-<div class="compound-last highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<p><strong>Example response</strong> (for failure):</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
-<span class="p">{</span>
-  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;False&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot; Permission does not exist&quot;</span>
-<span class="p">}</span>
+<span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nt">&quot;success&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;False&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">  </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot; Permission does not exist&quot;</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 </pre></div>
 </div>
 </div>
-</div>
-<div class="section" id="delete-permission">
-<h2>Delete Permission<a class="headerlink" href="#delete-permission" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="delete-permission">
+<h2>Delete Permission<a class="headerlink" href="#delete-permission" title="Permalink to this heading">¶</a></h2>
 <p>This request deletes the permission link between the UserGroup and SensorGroup</p>
+<dl class="http delete">
+<dt class="sig sig-object http" id="delete--api-permission?user_group=-user_group-&amp;sensor_group=-sensor_group-">
+<span class="sig-name descname"><span class="pre">DELETE</span> </span><span class="sig-name descname"><span class="pre">/api/permission?user_group=&lt;user_group&gt;&amp;sensor_group=&lt;sensor_group&gt;</span></span><a class="headerlink" href="#delete--api-permission?user_group=-user_group-&sensor_group=-sensor_group-" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>user_group</strong> (<em>string</em>) – Name of UserGroup (compulsory)</p></li>
+<li><p><strong>sensor_group</strong> (<em>string</em>) – Name of SensorGroup (compulsory)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>success</strong> <cite>(string)</cite> – Returns ‘True’ if a permission is deleted between the sensor and user group otherwise ‘False’</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Status Codes<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><span><a class="reference external" href="https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a></span> – Success</p></li>
+<li><p><span><a class="reference external" href="https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a></span> – Unauthorized Credentials</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
 <div class="compound">
-<p class="compound-first"><strong>Example request</strong>:</p>
-<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">DELETE</span> <span class="nn">/api/permission?user_group=Test_User_Group&amp;sensor_group=Test_Sensor_Group</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">DELETE</span> <span class="nn">/api/permission?user_group=Test_User_Group&amp;sensor_group=Test_Sensor_Group</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
 <span class="na">Accept</span><span class="o">:</span> <span class="l">application/json; charset=utf-8</span>
 </pre></div>
 </div>
-<p class="compound-middle"><strong>Example response</strong>:</p>
-<div class="compound-middle highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
-<span class="p">{</span>
-  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;True&quot;</span>
-<span class="p">}</span>
+<span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nt">&quot;success&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;True&quot;</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 </pre></div>
 </div>
-<p class="compound-middle"><strong>Example response</strong> (for failure):</p>
-<div class="compound-last highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<p><strong>Example response</strong> (for failure):</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 
-<span class="p">{</span>
-  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;False&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot; Permission does not exist&quot;</span>
-<span class="p">}</span>
+<span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nt">&quot;success&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;False&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">  </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot; Permission does not exist&quot;</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 
-<span class="p">{</span>
-  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;False&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot; You are not authorized to delete this permission&quot;</span>
-<span class="p">}</span>
+<span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nt">&quot;success&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;False&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">  </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot; You are not authorized to delete this permission&quot;</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 
-<span class="p">{</span>
-  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;False&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;Missing parameters&quot;</span>
-<span class="p">}</span>
+<span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nt">&quot;success&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;False&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">  </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Missing parameters&quot;</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 </pre></div>
 </div>
 </div>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>
@@ -376,7 +424,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2020, SynergyLabs.
+        &copy; Copyright 2022, SynergyLabs, Sudershan Boovaraghavan.
 
     </p>
   </div>
@@ -398,16 +446,19 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'3.2.9',
+            VERSION:'3.3',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
             SOURCELINK_SUFFIX: '.txt'
         };
     </script>
+      <script type="text/javascript" src="../../_static/documentation_options.js"></script>
       <script type="text/javascript" src="../../_static/jquery.js"></script>
       <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
       <script type="text/javascript" src="../../_static/doctools.js"></script>
+      <script type="text/javascript" src="../../_static/sphinx_highlight.js"></script>
 
   
 
