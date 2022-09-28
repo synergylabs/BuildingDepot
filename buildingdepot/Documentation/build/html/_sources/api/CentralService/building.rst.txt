@@ -289,7 +289,7 @@ This request retrieves name, description and template to used in the building sp
                     "Room": [],
                     "corridor": ["floor"],
                     "floor": []
-                    },
+		            },
           "tags": [
                         {  "value": "1",
                            "parents": [],

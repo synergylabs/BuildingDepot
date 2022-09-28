@@ -26,7 +26,7 @@ if option == "install":
     configBuffer.write(open("/srv/buildingdepot/CentralService/cs_config").read())
     configBuffer.seek(0, os.SEEK_SET)
     config = configparser.ConfigParser()
-    config.readfp(configBuffer)
+    config.read_file(configBuffer)
     user = config.get("dummysection", "MONGODB_USERNAME").strip("'").strip('"')
     pwd = config.get("dummysection", "MONGODB_PWD").strip("'").strip('"')
 
@@ -41,7 +41,7 @@ elif option == "test":
     configBuffer.write(open("/srv/buildingdepot/CentralService/cs_config").read())
     configBuffer.seek(0, os.SEEK_SET)
     config = configparser.ConfigParser()
-    config.readfp(configBuffer)
+    config.read_file(configBuffer)
     user = config.get("dummysection", "MONGODB_USERNAME").strip("'").strip('"')
     pwd = config.get("dummysection", "MONGODB_PWD").strip("'").strip('"')
     configs = json.load(
@@ -60,7 +60,7 @@ else:
 # Create BuildingDepot Database
 client = MongoClient(username=user, password=pwd, authSource="admin")
 db = client.buildingdepot
-db.user.insert(
+db.user.insert_one(
     {
         "email": "admin@buildingdepot.org",
         "password": generate_password_hash(tempPwd),
@@ -69,7 +69,7 @@ db.user.insert(
         "role": "super",
     }
 )
-db.data_service.insert(
+db.data_service.insert_one(
     {
         "name": "ds1",
         "description": "",

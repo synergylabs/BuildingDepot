@@ -31,7 +31,13 @@ function setup_venv() {
 
   pip3 install --upgrade pip
   pip3 install --upgrade setuptools
+  if [ $DISTRIB_CODENAME == "focal" ]; then
+    pip3 install "Flask==2.1.3"
+  else
+    pip3 install "Flask==2.0.3"
+  fi
   pip3 install --upgrade -r pip_packages.list
+  pip3 install "firebase-admin"
 
   pip3 install --upgrade uWSGI
   mkdir -p /etc/uwsgi/apps-available/
@@ -125,15 +131,19 @@ function install_packages() {
   echo "deb https://repos.influxdata.com/${DISTRIB_ID,,} ${DISTRIB_CODENAME} stable" | sudo tee /etc/apt/sources.list.d/influxdb.list
 
   # Add keys to install mongodb
-  wget -qO - https://www.mongodb.org/static/pgp/server-4.4.asc | sudo apt-key add -
-  if [ $DISTRIB_CODENAME == "focal" ]; then
-    echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu ${DISTRIB_CODENAME}/mongodb-org/4.4 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.4.list
-  elif [ $DISTRIB_CODENAME == "bionic" ]; then
-    echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu ${DISTRIB_CODENAME}/mongodb-org/4.4 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.4.list
-  elif [ $DISTRIB_CODENAME == "xenial" ]; then
-    echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu ${DISTRIB_CODENAME}/mongodb-org/4.4 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.4.list
-  elif [ $DISTRIB_CODENAME == "trusty" ]; then
+  if [ $DISTRIB_CODENAME == "trusty" ]; then
     wget -qO - https://www.mongodb.org/static/pgp/server-4.0.asc | sudo apt-key add -
+  else
+    wget -qO - https://www.mongodb.org/static/pgp/server-6.0.asc | sudo apt-key add -
+  fi
+
+  if [ $DISTRIB_CODENAME == "focal" ]; then
+    echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu ${DISTRIB_CODENAME}/mongodb-org/6.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-6.0.list
+  elif [ $DISTRIB_CODENAME == "bionic" ]; then
+    echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu ${DISTRIB_CODENAME}/mongodb-org/6.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-6.0.list
+  elif [ $DISTRIB_CODENAME == "xenial" ]; then
+    echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu ${DISTRIB_CODENAME}/mongodb-org/6.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-6.0.list
+  elif [ $DISTRIB_CODENAME == "trusty" ]; then
     echo "deb [ arch=amd64 ] https://repo.mongodb.org/apt/${DISTRIB_ID,,} ${DISTRIB_CODENAME}/mongodb-org/4.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.0.list
   fi
 
@@ -144,7 +154,7 @@ function install_packages() {
   if [ $DISTRIB_CODENAME == "trusty" ]; then
     apt-get install -y mongodb-org=4.0.25 mongodb-org-server=4.0.25 mongodb-org-shell=4.0.25 mongodb-org-mongos=4.0.25 mongodb-org-tools=4.0.25
   else
-    apt-get install -y mongodb-org=4.4.6 mongodb-org-server=4.4.6 mongodb-org-shell=4.4.6 mongodb-org-mongos=4.4.6 mongodb-org-tools=4.4.6
+    apt-get install -y mongodb-org=6.0.1 mongodb-org-database=6.0.1 mongodb-org-server=6.0.1 mongodb-mongosh=6.0.1 mongodb-org-mongos=6.0.1 mongodb-org-tools=6.0.1
   fi
 
   apt-get install -y openssl python3-setuptools python3-dev build-essential software-properties-common
@@ -237,7 +247,6 @@ function setup_notifications() {
   echo "Enter Y to select Google FCM and N to select RabbitMQ: "
   read response
   if [ "$response" == "Y" ] || [ "$response" == "y" ]; then
-    pip3 install "firebase-admin==2.18.0"
     echo "Please provide the absolute path of where your Google Service Account JSON file is, which contains the keys for your FCM project."
     read response
     if [ ! -z "$response" ]; then
@@ -266,7 +275,11 @@ function setup_packages() {
     echo "MONGODB_PWD = '$mongoPassword'" >>$BD/DataService/ds_config
     echo "    MONGODB_USERNAME = '$mongoUsername'" >>$BD/CentralReplica/config.py
     echo "    MONGODB_PWD = '$mongoPassword'" >>$BD/CentralReplica/config.py
-    mongo --eval "db.getSiblingDB('admin').createUser({user:'$mongoUsername',pwd:'$mongoPassword',roles:['userAdminAnyDatabase','dbAdminAnyDatabase','readWriteAnyDatabase']})"
+    if [ $DISTRIB_CODENAME == "trusty" ]; then
+      mongo --eval "db.getSiblingDB('admin').createUser({user:'$mongoUsername',pwd:'$mongoPassword',roles:['userAdminAnyDatabase','dbAdminAnyDatabase','readWriteAnyDatabase']})"
+    else
+      mongosh --eval "db.getSiblingDB('admin').createUser({user:'$mongoUsername',pwd:'$mongoPassword',roles:['userAdminAnyDatabase','dbAdminAnyDatabase','readWriteAnyDatabase']})"
+    fi
     # Enable MongoDB authorization
     echo "security:" >>/etc/mongod.conf
     echo "  authorization: \"enabled\"" >>/etc/mongod.conf
@@ -344,7 +357,11 @@ function setup_packages() {
     echo "MONGODB_PWD = '$mongoPassword'" >>$BD/DataService/ds_config
     echo "    MONGODB_USERNAME = '$mongoUsername'" >>$BD/CentralReplica/config.py
     echo "    MONGODB_PWD = '$mongoPassword'" >>$BD/CentralReplica/config.py
-    mongo --eval "db.getSiblingDB('admin').createUser({user:'$mongoUsername',pwd:'$mongoPassword',roles:['userAdminAnyDatabase','dbAdminAnyDatabase','readWriteAnyDatabase']})"
+    if [ $DISTRIB_CODENAME == "trusty" ]; then
+      mongo --eval "db.getSiblingDB('admin').createUser({user:'$mongoUsername',pwd:'$mongoPassword',roles:['userAdminAnyDatabase','dbAdminAnyDatabase','readWriteAnyDatabase']})"
+    else
+      mongosh --eval "db.getSiblingDB('admin').createUser({user:'$mongoUsername',pwd:'$mongoPassword',roles:['userAdminAnyDatabase','dbAdminAnyDatabase','readWriteAnyDatabase']})"
+    fi
     # Enable MongoDB authorization
     echo "security:" >>/etc/mongod.conf
     echo "  authorization: \"enabled\"" >>/etc/mongod.conf
