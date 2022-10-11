@@ -212,3 +212,4 @@ class UserService(MethodView):
             send_mail_gmail(first_name + " " + last_name, email, password)
         elif current_app.config["EMAIL"] == "LOCAL":
             send_local_smtp(first_name + " " + last_name, email, password)
+        return jsonify(responses.success_true)
