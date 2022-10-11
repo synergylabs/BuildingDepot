@@ -154,7 +154,7 @@ function install_packages() {
   if [ $DISTRIB_CODENAME == "trusty" ]; then
     apt-get install -y mongodb-org=4.0.25 mongodb-org-server=4.0.25 mongodb-org-shell=4.0.25 mongodb-org-mongos=4.0.25 mongodb-org-tools=4.0.25
   else
-    apt-get install -y mongodb-org=6.0.1 mongodb-org-database=6.0.1 mongodb-org-server=6.0.1 mongodb-mongosh=6.0.1 mongodb-org-mongos=6.0.1 mongodb-org-tools=6.0.1
+    apt-get install -y mongodb-org=6.0.1 mongodb-org-database=6.0.1 mongodb-org-server=6.0.1 mongodb-org-mongos=6.0.1 mongodb-org-tools=6.0.1
   fi
 
   apt-get install -y openssl python3-setuptools python3-dev build-essential software-properties-common
