@@ -117,44 +117,38 @@ function deploy_config() {
 function install_packages() {
   apt-get install -y curl
   apt-get install -y apt-transport-https
+  apt-get install -y gnupg
   source /etc/lsb-release
 
   # Add keys for Rabbitmq
   curl -s https://packagecloud.io/install/repositories/rabbitmq/rabbitmq-server/script.deb.sh | bash
   # Adds Launchpad PPA that provides modern Erlang releases
-  sudo apt-key adv --keyserver "keyserver.ubuntu.com" --recv-keys "F77F1EDA57EBB1CC"
-  echo "deb http://ppa.launchpad.net/rabbitmq/rabbitmq-erlang/ubuntu ${DISTRIB_CODENAME} main" | tee /etc/apt/sources.list.d/rabbitmq-erlang.list
-  echo "deb-src http://ppa.launchpad.net/rabbitmq/rabbitmq-erlang/ubuntu ${DISTRIB_CODENAME} main" | tee -a /etc/apt/sources.list.d/rabbitmq-erlang.list
+  curl -1sLf "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0xf77f1eda57ebb1cc" | sudo gpg --dearmor | sudo tee /usr/share/keyrings/net.launchpad.ppa.rabbitmq.erlang.gpg > /dev/null
+  echo "deb [ signed-by=/usr/share/keyrings/net.launchpad.ppa.rabbitmq.erlang.gpg ] http://ppa.launchpad.net/rabbitmq/rabbitmq-erlang/ubuntu ${DISTRIB_CODENAME} main" | tee /etc/apt/sources.list.d/rabbitmq-erlang.list
+  echo "deb-src [ signed-by=/usr/share/keyrings/net.launchpad.ppa.rabbitmq.erlang.gpg ] http://ppa.launchpad.net/rabbitmq/rabbitmq-erlang/ubuntu ${DISTRIB_CODENAME} main" | tee -a /etc/apt/sources.list.d/rabbitmq-erlang.list
 
   # Add keys to install influxdb
-  curl -sL https://repos.influxdata.com/influxdb.key | sudo apt-key add -
-  echo "deb https://repos.influxdata.com/${DISTRIB_ID,,} ${DISTRIB_CODENAME} stable" | sudo tee /etc/apt/sources.list.d/influxdb.list
+  curl -s https://repos.influxdata.com/influxdata-archive_compat.key > influxdata-archive_compat.key
+  echo '393e8779c89ac8d958f81f942f9ad7fb82a25e133faddaf92e15b16e6ac9ce4c influxdata-archive_compat.key' | sha256sum -c && cat influxdata-archive_compat.key | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/influxdata-archive_compat.gpg > /dev/null
+  echo 'deb [ signed-by=/etc/apt/trusted.gpg.d/influxdata-archive_compat.gpg ] https://repos.influxdata.com/debian stable main' | sudo tee /etc/apt/sources.list.d/influxdata.list
 
   # Add keys to install mongodb
-  if [ $DISTRIB_CODENAME == "trusty" ]; then
-    wget -qO - https://www.mongodb.org/static/pgp/server-4.0.asc | sudo apt-key add -
+  if [ $DISTRIB_CODENAME == "bionic" ]; then
+    curl -fsSL https://pgp.mongodb.com/server-6.0.asc | sudo gpg -o /usr/share/keyrings/mongodb-server-6.0.gpg --dearmor
+    echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-6.0.gpg ] https://repo.mongodb.org/apt/ubuntu ${DISTRIB_CODENAME}/mongodb-org/6.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-6.0.list
   else
-    wget -qO - https://www.mongodb.org/static/pgp/server-6.0.asc | sudo apt-key add -
-  fi
-
-  if [ $DISTRIB_CODENAME == "focal" ]; then
-    echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu ${DISTRIB_CODENAME}/mongodb-org/6.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-6.0.list
-  elif [ $DISTRIB_CODENAME == "bionic" ]; then
-    echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu ${DISTRIB_CODENAME}/mongodb-org/6.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-6.0.list
-  elif [ $DISTRIB_CODENAME == "xenial" ]; then
-    echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu ${DISTRIB_CODENAME}/mongodb-org/6.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-6.0.list
-  elif [ $DISTRIB_CODENAME == "trusty" ]; then
-    echo "deb [ arch=amd64 ] https://repo.mongodb.org/apt/${DISTRIB_ID,,} ${DISTRIB_CODENAME}/mongodb-org/4.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.0.list
+    curl -fsSL https://pgp.mongodb.com/server-7.0.asc | sudo gpg -o /usr/share/keyrings/mongodb-server-7.0.gpg --dearmor
+    echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-7.0.gpg ] https://repo.mongodb.org/apt/ubuntu ${DISTRIB_CODENAME}/mongodb-org/7.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-7.0.list
   fi
 
   apt-get update -y
   apt-get install
   apt-get -y install python3-pip
 
-  if [ $DISTRIB_CODENAME == "trusty" ]; then
-    apt-get install -y mongodb-org=4.0.25 mongodb-org-server=4.0.25 mongodb-org-shell=4.0.25 mongodb-org-mongos=4.0.25 mongodb-org-tools=4.0.25
+  if [ $DISTRIB_CODENAME == "bionic" ]; then
+    apt-get install -y mongodb-org=6.0.10 mongodb-org-database=6.0.10 mongodb-org-server=6.0.10 mongodb-org-mongos=6.0.10 mongodb-org-tools=6.0.10
   else
-    apt-get install -y mongodb-org=6.0.1 mongodb-org-database=6.0.1 mongodb-org-server=6.0.1 mongodb-org-mongos=6.0.1 mongodb-org-tools=6.0.1
+    apt-get install -y mongodb-org
   fi
 
   apt-get install -y openssl python3-setuptools python3-dev build-essential software-properties-common
@@ -165,7 +159,8 @@ function install_packages() {
   apt-get install -y wget
   apt-get install -y influxdb
   service influxdb start
-  service mongod start
+  systemctl start mongod
+  systemctl enable mongod.service
   apt-get install -y erlang-base \
     erlang-asn1 erlang-crypto erlang-eldap erlang-ftp erlang-inets \
     erlang-mnesia erlang-os-mon erlang-parsetools erlang-public-key \
@@ -177,7 +172,6 @@ function install_packages() {
   apt-get install -y npm
   sed -i -e 's/"inet_interfaces = all/"inet_interfaces = loopback-only"/g' /etc/postfix/main.cf
   service postfix restart
-  systemctl enable mongod.service
 }
 
 function setup_gmail() {
