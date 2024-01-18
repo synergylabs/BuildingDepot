@@ -17,4 +17,3 @@ sphinx-theme==1.0
 sphinxcontrib-httpdomain==1.8.1
 wheel==0.42.0
 itsdangerous==2.0.1
-uWSGI==2.0.23
