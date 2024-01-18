@@ -10,6 +10,7 @@ const uuid = require('uuid/v4')
 describe('An authorized superuser should be able to ', function () {
     this.timeout(10000);
     it('generate an access token', function (done) {
+        console.log("config file contents:",config)
         if (config['clientID'].length && config['clientSecret'].length) {
             centralApi.get('/oauth/access_token/client_id=' + config['clientID'] + '/client_secret=' + config['clientSecret'])
                 .end(function (err, res) {
