@@ -31,10 +31,10 @@ function setup_venv() {
 
   pip3 install --upgrade pip
   pip3 install --upgrade setuptools
-  if [ $DISTRIB_CODENAME == "focal" ]; then
-    pip3 install "Flask==2.1.3"
-  else
+  if [ $DISTRIB_CODENAME == "bionic" ]; then
     pip3 install "Flask==2.0.3"
+  else
+    pip3 install "Flask==2.1.3"
   fi
   pip3 install --upgrade -r pip_packages.list
   pip3 install "firebase-admin"
@@ -205,11 +205,9 @@ function setup_packages() {
   echo "MONGODB_PWD = '$mongoPassword'" >>$BD/DataService/ds_config
   echo "    MONGODB_USERNAME = '$mongoUsername'" >>$BD/CentralReplica/config.py
   echo "    MONGODB_PWD = '$mongoPassword'" >>$BD/CentralReplica/config.py
-  if [ $DISTRIB_CODENAME == "trusty" ]; then
-    mongo --eval "db.getSiblingDB('admin').createUser({user:'$mongoUsername',pwd:'$mongoPassword',roles:['userAdminAnyDatabase','dbAdminAnyDatabase','readWriteAnyDatabase']})"
-  else
-    mongosh --eval "db.getSiblingDB('admin').createUser({user:'$mongoUsername',pwd:'$mongoPassword',roles:['userAdminAnyDatabase','dbAdminAnyDatabase','readWriteAnyDatabase']})"
-  fi
+
+  mongosh --eval "db.getSiblingDB('admin').createUser({user:'$mongoUsername',pwd:'$mongoPassword',roles:['userAdminAnyDatabase','dbAdminAnyDatabase','readWriteAnyDatabase']})"
+
  # Enable MongoDB authorization
   echo "security:" >>/etc/mongod.conf
   echo "  authorization: \"enabled\"" >>/etc/mongod.conf
@@ -307,5 +305,7 @@ setup_packages
 #
 echo -e "\nInstallation Finished..\n"
 supervisorctl restart all
+cat /srv/buildingdepot/CentralService/cs_config
+cat /srv/buildingdepot/DataService/ds_config
 tail -500 /var/log/buildingdepot/CentralService/uwsgi-app.log
 tail -500 /var/log/buildingdepot/DataService/uwsgi-app.log
