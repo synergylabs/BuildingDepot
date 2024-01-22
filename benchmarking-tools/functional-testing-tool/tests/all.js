@@ -33,7 +33,7 @@ describe('An authorized superuser should be able to ', function () {
                     }
                 })
                 .end(function (err, res) {
-                    console.log("using pwd response:",res.body, err)
+                    console.log("using pwd response:",res.status, err)
                     expect(res.status).to.equal(200)
                     expect(res.body).to.have.property('success')
                     expect(res.body).to.have.property('access_token')
