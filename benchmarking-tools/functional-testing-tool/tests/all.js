@@ -24,6 +24,7 @@ describe('An authorized superuser should be able to ', function () {
                     done()
                 })
         } else if (config['email'].length && config['password'].length) {
+            console.log("HERE",config)
             centralApi.post('/oauth/login')
                 .send({
                     data: {
@@ -32,13 +33,13 @@ describe('An authorized superuser should be able to ', function () {
                     }
                 })
                 .end(function (err, res) {
-                    console.log(res.body)
+                    console.log("using pwd response:",res.body, err)
                     expect(res.status).to.equal(200)
                     expect(res.body).to.have.property('success')
                     expect(res.body).to.have.property('access_token')
                     data.set('authorizedToken', res.body.access_token)
                     expect(res.body.success, res.body.error).to.equal('True')
-                    // console.log('Using access token: ' + data.get('authorizedToken'))
+                    console.log('Using access token: ' + data.get('authorizedToken'))
                     done()
                 })
         } else {
