@@ -212,8 +212,8 @@ def get_access_token(client_id, client_secret):
         # Set token expiry period and create it
         expires = datetime.utcnow() + timedelta(seconds=expires_in)
         tok = Token(
-            access_token=str(binascii.hexlify(os.urandom(16))),
-            refresh_token=str(binascii.hexlify(os.urandom(16))),
+            access_token=binascii.hexlify(os.urandom(16)).decode(),
+            refresh_token=binascii.hexlify(os.urandom(16)).decode(),
             token_type="Bearer",
             _scopes="email",
             expires=expires,
@@ -345,8 +345,8 @@ def login_credentials():
                 # Set token expiry period and create it
                 expires = datetime.utcnow() + timedelta(seconds=expires_in)
                 tok = Token(
-                    access_token=str(binascii.hexlify(os.urandom(16))),
-                    refresh_token=str(binascii.hexlify(os.urandom(16))),
+                    access_token=binascii.hexlify(os.urandom(16)).decode(),
+                    refresh_token=binascii.hexlify(os.urandom(16)).decode(),
                     token_type="Bearer",
                     _scopes="email",
                     expires=expires,
@@ -382,8 +382,8 @@ def login_credentials():
                 # Set token expiry period and create it
                 expires = datetime.utcnow() + timedelta(seconds=expires_in)
                 tok = Token(
-                    access_token=str(binascii.hexlify(os.urandom(16))),
-                    refresh_token=str(binascii.hexlify(os.urandom(16))),
+                    access_token=binascii.hexlify(os.urandom(16)).decode(),
+                    refresh_token=binascii.hexlify(os.urandom(16)).decode(),
                     token_type="Bearer",
                     _scopes="email",
                     expires=expires,
