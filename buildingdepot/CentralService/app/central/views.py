@@ -47,7 +47,7 @@ def tagtype():
     for obj in objs:
         if (
             not obj.children
-            and BuildingTemplate._get_collection().find({"tag_types": obj.name}).count()
+            and BuildingTemplate.objects(tag_types=obj.name).count()
             == 0
         ):
             obj.can_delete = True

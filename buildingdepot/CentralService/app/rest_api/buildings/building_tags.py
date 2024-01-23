@@ -49,7 +49,7 @@ class BuildingTagsService(MethodView):
             search_list = []
             for element in parents:
                 search_list.append({"$elemMatch": element})
-            if collection.find({"tags": {"$all": search_list}}).count() == 0:
+            if collection.count_documents({"tags": {"$all": search_list}}) == 0:
                 return jsonify(responses.invalid_parents)
         tag = {
             "name": str(name),
@@ -57,13 +57,13 @@ class BuildingTagsService(MethodView):
             "metadata": metadata if metadata else [],
             "parents": parents if parents else [],
         }
-        tag_exists = collection.find(
+        tag_exists = collection.count_documents(
             {
                 "name": building_name,
                 "tags": {"$elemMatch": {"name": name, "value": value}},
             }
         )
-        if tag_exists.count() == 0:
+        if tag_exists == 0:
             collection.update({"name": building_name}, {"$addToSet": {"tags": tag}})
         else:
             if parents:
@@ -121,15 +121,15 @@ class BuildingTagsService(MethodView):
             return jsonify(responses.missing_parameters)
 
         collection = Building._get_collection()
-        tag_exists = collection.find(
+        tag_exists = collection.count_documents(
             {"tags": {"$elemMatch": {"name": name, "value": value}}}
         )
-        if tag_exists.count() == 0:
+        if tag_exists == 0:
             return jsonify(responses.invalid_tag_value)
-        tag_use = collection.find(
+        tag_use = collection.count_documents(
             {"tags.parents": {"$elemMatch": {"name": name, "value": value}}}
         )
-        if tag_use.count() > 0:
+        if tag_use > 0:
             return jsonify(responses.tagtype_referenced)
         collection.update(
             {"name": building_name}, {"$pull": {"tags": {"name": name, "value": value}}}

@@ -81,24 +81,21 @@ def sensors_search():
     # Show the user PAGE_SIZE number of sensors on each page
     page = request.args.get("page", 1, type=int)
     skip_size = (page - 1) * PAGE_SIZE
-    collection = Sensor._get_collection().find(args)
-    sensors = collection.skip(skip_size).limit(PAGE_SIZE)
-
-    sensor_list = []
+    total_sensors = Sensor.objects(__raw__=args)
+    total_cnt = total_sensors.count()
+    sensors = total_sensors.skip(skip_size).limit(PAGE_SIZE)
     for sensor in sensors:
-        sensor = Sensor(**sensor)
         sensor.can_delete = True
-        sensor_list.append(sensor)
 
-    total = collection.count()
+    total = total_sensors.count()
     if total:
         pages = int(math.ceil(float(total) / PAGE_SIZE))
     else:
         pages = 0
     return render_template(
         "service/sensor.html",
-        objs=sensor_list,
-        total=total,
+        objs=sensors,
+        total=total_cnt,
         pages=pages,
         current_page=page,
         pagesize=PAGE_SIZE,

@@ -53,7 +53,7 @@ class BuildingTemplateService(MethodView):
             added, deleted = add_delete(template["tag_types"], tagtypes)
             collection = Building._get_collection()
             for tagtype in deleted:
-                if collection.find({"template": name, "tags.name": name}).count() > 0:
+                if collection.count_documents({"template": name, "tags.name": name}) > 0:
                     return jsonify(responses.tagtype_in_use)
             collection = BuildingTemplate._get_collection()
             collection.update({"name": name}, {"$set": gen_update(self.params, data)})

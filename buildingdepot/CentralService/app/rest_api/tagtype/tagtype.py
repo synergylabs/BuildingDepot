@@ -90,9 +90,7 @@ class TagTypeService(MethodView):
 
         if (
             not tagtype.children
-            and BuildingTemplate._get_collection()
-            .find({"tag_types": tagtype.name})
-            .count()
+            and BuildingTemplate.objects(tag_types=tagtype.name)
             == 0
         ):
             tagtype.delete()
