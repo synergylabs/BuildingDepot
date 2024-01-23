@@ -134,7 +134,7 @@ def connect_broker():
     """
     try:
         credentials = pika.PlainCredentials(rabbitmq_username, rabbitmq_password)
-        parameters = pika.ConnectionParameters(host="localhost", credentials=credentials)
+        parameters = pika.ConnectionParameters(host="localhost", credentials=credentials, connection_attempts=3, retry_delay=5)
         pubsub = pika.BlockingConnection(parameters)
         channel = pubsub.channel()
         channel.exchange_declare(exchange=exchange, exchange_type="direct")
