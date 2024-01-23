@@ -37,7 +37,7 @@ class AppService(MethodView):
         email = get_email()
         if email is None:
             return jsonify(responses.missing_parameters)
-        apps = Application._get_collection().find({"user": email})
+        apps = Application.objects(user=email)
         if apps.count() == 0:
             app_list = []
         else:
@@ -68,7 +68,7 @@ class AppService(MethodView):
         else:
             name = json_data["data"]["name"]
 
-        apps = Application._get_collection().find({"user": email})
+        apps = Application.objects(user=email)
         app_list = []
         json_result = {}
         if apps.count() != 0:

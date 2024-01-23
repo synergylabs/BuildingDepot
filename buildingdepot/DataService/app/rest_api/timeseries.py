@@ -88,7 +88,7 @@ class TimeSeriesService(MethodView):
 
         if resolution:
             try:
-                if fields is not '*' and fields:
+                if fields != '*' and fields:
                     fields = '/(' + '|'.join(fields.split(',')) + ')-*/'
                 query = 'select mean(' + fields + ') from "' + name + '" where (time>\'' + timestamp_to_time_string(
                     float(start_time)) \
@@ -101,7 +101,7 @@ class TimeSeriesService(MethodView):
             except influxdb.exceptions.InfluxDBClientError:
                 return jsonify(responses.resolution_high)
         else:
-            if fields is not '*' and fields:
+            if fields != '*' and fields:
                 fields = '/(' + '|'.join(fields.split(',')) + ')-*/'
             query = 'select ' + fields + ' from "' + name + '" where time>\'' + timestamp_to_time_string(
                 float(start_time)) \
