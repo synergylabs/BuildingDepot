@@ -70,5 +70,5 @@ class DataserviceAdminService(MethodView):
             return jsonify(responses.missing_parameters)
 
         collection = DataService._get_collection()
-        collection.update({"name": name}, {"$pullAll": {"admins": admins}})
+        collection.update_one({"name": name}, {"$pullAll": {"admins": admins}})
         return jsonify(responses.success_true)

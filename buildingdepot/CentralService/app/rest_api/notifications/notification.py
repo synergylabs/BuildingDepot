@@ -53,7 +53,7 @@ class NotificationClientIdService(MethodView):
             notifications_collection = NotificationClientId.objects(
                 email=get_email()
             ).first()
-            notifications_collection.update(set__client_id=data["id"])
+            notifications_collection.update_one(set__client_id=data["id"])
         except RuntimeError as error:
             print("Error", error)
 

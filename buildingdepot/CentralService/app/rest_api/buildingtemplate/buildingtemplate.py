@@ -56,7 +56,7 @@ class BuildingTemplateService(MethodView):
                 if collection.count_documents({"template": name, "tags.name": name}) > 0:
                     return jsonify(responses.tagtype_in_use)
             collection = BuildingTemplate._get_collection()
-            collection.update({"name": name}, {"$set": gen_update(self.params, data)})
+            collection.update_one({"name": name}, {"$set": gen_update(self.params, data)})
         return jsonify(responses.success_true)
 
     @check_oauth

@@ -45,7 +45,7 @@ class BuildingService(MethodView):
             Building(**gen_update(self.params, data)).save()
         else:
             collection = Building._get_collection()
-            collection.update({"name": name}, {"$set": gen_update(self.params, data)})
+            collection.update_one({"name": name}, {"$set": gen_update(self.params, data)})
         return jsonify(responses.success_true)
 
     @check_oauth

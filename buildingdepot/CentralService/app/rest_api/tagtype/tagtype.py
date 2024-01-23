@@ -56,13 +56,13 @@ class TagTypeService(MethodView):
                 self.add_children(added, name)
                 for tag in deleted:
                     collection = TagType._get_collection()
-                    collection.update(
-                        {"name": tag}, {"$pull": {"children": name}}, multi=True
+                    collection.update_many(
+                        {"name": tag}, {"$pull": {"children": name}}
                     )
             user_check = check_if_super(get_email())
             if (acl_tag is None) or (acl_tag is not None and not user_check):
                 data["acl_tag"] = user_check
-            collection.update({"name": name}, {"$set": gen_update(self.params, data)})
+            collection.update_one({"name": name}, {"$set": gen_update(self.params, data)})
         return jsonify(responses.success_true)
 
     @check_oauth
@@ -90,13 +90,13 @@ class TagTypeService(MethodView):
 
         if (
             not tagtype.children
-            and BuildingTemplate.objects(tag_types=tagtype.name)
+            and BuildingTemplate.objects(tag_types=tagtype.name).count()
             == 0
         ):
             tagtype.delete()
             collection = TagType._get_collection()
-            collection.update(
-                {"children": name}, {"$pull": {"children": name}}, multi=True
+            collection.update_many(
+                {"children": name}, {"$pull": {"children": name}}
             )
             return jsonify(responses.success_true)
         else:
@@ -105,4 +105,4 @@ class TagTypeService(MethodView):
     def add_children(self, parents, name):
         for parent in parents:
             collection = TagType._get_collection()
-            collection.update({"name": parent}, {"$addToSet": {"children": str(name)}})
+            collection.update_one({"name": parent}, {"$addToSet": {"children": str(name)}})

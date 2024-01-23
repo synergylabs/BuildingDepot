@@ -48,7 +48,7 @@ class DataserviceService(MethodView):
             ).save()
         else:
             collection = DataService._get_collection()
-            collection.update({"name": name}, {"$set": gen_update(self.params, data)})
+            collection.update_one({"name": name}, {"$set": gen_update(self.params, data)})
         return jsonify(responses.success_true)
 
     @check_oauth

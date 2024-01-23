@@ -64,17 +64,17 @@ class BuildingTagsService(MethodView):
             }
         )
         if tag_exists == 0:
-            collection.update({"name": building_name}, {"$addToSet": {"tags": tag}})
+            collection.update_one({"name": building_name}, {"$addToSet": {"tags": tag}})
         else:
             if parents:
-                collection.update(
+                collection.update_one(
                     {
                         "name": building_name,
                         "tags": {"$elemMatch": {"name": name, "value": value}},
                     },
                     {"$set": {"tags.$.parents": []}},
                 )
-                collection.update(
+                collection.update_one(
                     {
                         "name": building_name,
                         "tags": {"$elemMatch": {"name": name, "value": value}},
@@ -131,7 +131,7 @@ class BuildingTagsService(MethodView):
         )
         if tag_use > 0:
             return jsonify(responses.tagtype_referenced)
-        collection.update(
+        collection.update_one(
             {"name": building_name}, {"$pull": {"tags": {"name": name, "value": value}}}
         )
         return jsonify(responses.success_true)
