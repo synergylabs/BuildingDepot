@@ -165,7 +165,7 @@ class UserService(MethodView):
             return jsonify(responses.invalid_user)
 
         # Remove client object
-        Client._get_collection().remove({"user": email})
+        Client._get_collection().delete_many({"user": email})
 
         # Find token objects
         tokens = Token._get_collection().find({"email": email})

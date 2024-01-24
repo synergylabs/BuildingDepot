@@ -88,7 +88,7 @@ class UserGroupService(MethodView):
         if user_group is None:
             return jsonify(responses.invalid_usergroup)
         if authorize_addition(name, get_email()):
-            UserGroup._get_collection().remove({"name": user_group["name"]})
+            UserGroup._get_collection().delete_one({"name": user_group["name"]})
             response = dict(responses.success_true)
         else:
             response = dict(responses.usergroup_delete_authorization)

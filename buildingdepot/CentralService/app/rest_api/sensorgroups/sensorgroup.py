@@ -111,7 +111,7 @@ class SensorGroupService(MethodView):
         if sensor_group is None:
             return jsonify(responses.invalid_usergroup)
         if email == sensor_group.owner and defs.invalidate_permission(name):
-            SensorGroup._get_collection().remove({"name": sensor_group["name"]})
+            SensorGroup._get_collection().delete_one({"name": sensor_group["name"]})
             response = dict(responses.success_true)
         else:
             response = dict(responses.sensorgroup_delete_authorization)

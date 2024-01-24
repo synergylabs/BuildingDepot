@@ -37,10 +37,11 @@ class AppService(MethodView):
         email = get_email()
         if email is None:
             return jsonify(responses.missing_parameters)
-        apps = Application.objects(user=email)
-        if apps.count() == 0:
+        app_len = Application._get_collection().count_documents({"user": email})
+        if app_len == 0:
             app_list = []
         else:
+            apps = Application._get_collection().find({"user": email})
             app_list = apps[0]["apps"]
         return jsonify({"success": "True", "app_list": app_list})
 
@@ -186,13 +187,12 @@ class AppService(MethodView):
         """
         # get current user's list of applications
         email = get_email()
-        apps = Application._get_collection().find({"user": email})
+        app_len = Application._get_collection().count_documents({"user": email})
 
         app_to_be_deleted = []
         json_result = {}
         error_flag = False
         channel = None
-        name = ""
 
         json_data = request.get_json()
         if "data" not in list(json_data.keys()):
@@ -200,22 +200,24 @@ class AppService(MethodView):
         elif "name" not in list(json_data["data"].keys()):
             return jsonify(responses.missing_parameters)
         else:
-            name = json_data["data"]["name"]
+            app_name = json_data["data"]["name"]
 
         # check whether there is an application with the given name
         # case 1 - there is already an application instance for the given user
-        if apps.count() > 0:
-            if not isinstance(name, list):
+        if app_len > 0:
+            apps = Application._get_collection().find({"user": email})
+            if not isinstance(app_name, list):
                 app_to_be_deleted = None
-                app_filter = [x for x in apps[0]["apps"] if x["name"] == name]
+                app_filter = [x for x in apps[0]["apps"] if x["name"] == app_name]
 
                 if len(app_filter) > 0:
                     app_to_be_deleted = app_filter[0]
             else:
+                # app_name is a list
                 app_to_be_deleted = []
                 json_result = {}
                 error_flag = False
-                for nm in name:
+                for nm in app_name:
                     app_filter = [x for x in apps[0]["apps"] if x["name"] == nm]
                     if len(app_filter) > 0:
                         app_to_be_deleted.append(app_filter[0])
@@ -234,14 +236,16 @@ class AppService(MethodView):
         if pubsub is None:
             return jsonify(responses.broker_connection_failure)
 
-        if not isinstance(name, list):
+        apps = Application._get_collection().find({"user": email})
+
+        if not isinstance(app_name, list):
             try:
                 channel = pubsub.channel()
 
                 if "value" in list(app_to_be_deleted.keys()):
                     result = channel.queue_delete(queue=app_to_be_deleted["value"])
 
-                new_app_list = list([x for x in apps[0]["apps"] if x["name"] != name])
+                new_app_list = list([x for x in apps[0]["apps"] if x["name"] != app_name])
                 Application.objects(user=email).update(set__apps=new_app_list)
 
             except Exception as e:
@@ -260,7 +264,7 @@ class AppService(MethodView):
 
             return jsonify(responses.success_true)
 
-        elif isinstance(name, list):
+        elif isinstance(app_name, list):
             for app_to_delete in app_to_be_deleted:
                 try:
                     channel = pubsub.channel()
@@ -281,7 +285,7 @@ class AppService(MethodView):
                         "error": "Failed to create queue",
                     }
 
-            new_app_list = list([x for x in apps[0]["apps"] if x["name"] not in name])
+            new_app_list = list([x for x in apps[0]["apps"] if x["name"] not in app_name])
             Application.objects(user=email).update(set__apps=new_app_list)
 
             if pubsub:
