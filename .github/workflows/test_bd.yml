@@ -12,7 +12,7 @@ on:
       - develop
 jobs:
   build:
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-22.04
     strategy:
       matrix:
         os: [ubuntu-20.04, ubuntu-22.04]
