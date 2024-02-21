@@ -88,21 +88,50 @@ function joint_deployment_fix() {
   # Create join nginx config
   rm -f /etc/nginx/sites-enabled/default
   cd /srv/buildingdepot
+
   #Setting up SSL
   echo "Do you have a SSL certificate and key that you would like to use? Please enter [y/n]"
   read response
+
   #If user already has certificate
   if [ "$response" == "Y" ] || [ "$response" == "y" ]; then
-    echo "Please enter the path to the certificate:"
+    echo "Please enter the path to the CA certificate (fullchain.pem):"
+    read ca_cert_path
+    sed -i "s|<cert_path>|$ca_cert_path|g" /srv/buildingdepot/configs/together_ssl.conf
+    echo "Please enter the path to the server certificate (cert.pem):"
     read cert_path
-    sed -i "s|<cert_path>|$cert_path|g" /srv/buildingdepot/configs/together_ssl.conf
-    echo "Please enter the path to the key:"
+    echo "Please enter the path to the server key (privkey.pem):"
     read key_path
     sed -i "s|<key_path>|$key_path|g" /srv/buildingdepot/configs/together_ssl.conf
     echo "Please enter the ip address or the domain name of this installation"
     read domain
     sed -i "s|<domain>|$domain|g" /srv/buildingdepot/configs/together_ssl.conf
     cp configs/together_ssl.conf /etc/nginx/sites-available/together.conf
+
+    #Setting up SSL for packages
+    echo "Would you like to use these SSL certificates for BD packages (RabbitMQ)? [y/n]"
+    read response_packages
+    if [ "$response_packages" == "Y" ] || [ "$response_packages" == "y" ]; then
+      mkdir -p /etc/rabbitmq/ssl
+      cp -rL --remove-destination "$ca_cert_path" /etc/rabbitmq/ssl/fullchain.pem
+      cp -rL --remove-destination "$cert_path" /etc/rabbitmq/ssl/cert.pem
+      cp -rL --remove-destination "$key_path" /etc/rabbitmq/ssl/privkey.pem
+      chmod -R 555 /etc/rabbitmq/ssl/
+      cp configs/rabbitmq.conf /etc/rabbitmq/rabbitmq.conf
+      service rabbitmq-server restart
+
+      #Setting up certbot post hook
+      echo "Have you installed certbot to automatically renew the SSL certificates? [y/n]"
+      read response_certbot
+
+      if [ "$response_certbot" == "Y" ] || [ "$response_certbot" == "y" ]; then
+        sed -i "s|<cert_path>|$ca_cert_path|g" /srv/buildingdepot/configs/certbot_post_hook.sh
+        sed -i "s|<server_cert_path>|$cert_path|g" /srv/buildingdepot/configs/certbot_post_hook.sh
+        sed -i "s|<privkey_path>|$key_path|g" /srv/buildingdepot/configs/certbot_post_hook.sh
+        cp configs/certbot_post_hook.sh /etc/letsencrypt/renewal-hooks/deploy/
+        chmod +x /etc/letsencrypt/renewal-hooks/deploy/certbot_post_hook.sh
+      fi
+    fi
   else
     cp configs/together.conf /etc/nginx/sites-available/together.conf
   fi
