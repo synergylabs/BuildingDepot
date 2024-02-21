@@ -24,7 +24,6 @@ describe('An authorized superuser should be able to ', function () {
                     done()
                 })
         } else if (config['email'].length && config['password'].length) {
-            console.log("HERE",config)
             centralApi.post('/oauth/login')
                 .send({
                     data: {
