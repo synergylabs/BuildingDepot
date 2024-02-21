@@ -21,3 +21,4 @@ queue_deletion_failure = {"success": "False", "error": "Failed to delete queue"}
 queue_binding_failure = {"success": "False", "error": "Failed to bind queue"}
 queue_unbinding_failure = {"success": "False", "error": "Failed to unbind queue"}
 application_does_not_exist = {"success": "False", "error": "Application does not exist"}
+application_does_not_found_for_user = {"success": "False", "error": "No Applications found for user"}

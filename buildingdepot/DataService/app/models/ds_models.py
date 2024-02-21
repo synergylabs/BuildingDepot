@@ -10,12 +10,21 @@ these tables can have any of the paramteres defined within the class
 @license: CMU License. See License file for details.
 """
 
+import json
 from mongoengine import *
 
 
 class Node(EmbeddedDocument):
     name = StringField()
     value = StringField()
+
+
+# Custom JSON encoder for handling Node objects
+class NodeEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, Node):
+            return {"name": obj.name, "value": obj.value}
+        return super(NodeEncoder, self).default(obj)
 
 
 class UserGroupNode(EmbeddedDocument):

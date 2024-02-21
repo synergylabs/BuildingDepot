@@ -180,7 +180,7 @@ class TimeSeriesService(MethodView):
                             if type(sample[key]) is list:
                                 length = len(sample[key])
                                 for i in range(length):
-                                    if isinstance(sample[key][i], basestring):
+                                    if isinstance(sample[key][i], str):
                                         sample.update({"%s-%d" % (key, i): sample[key][i]})
                                     else:
                                         sample.update({"%s-%d" % (key, i): float(sample[key][i])})
