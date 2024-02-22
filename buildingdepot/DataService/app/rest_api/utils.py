@@ -7,7 +7,7 @@ CentralService. Any query in the CentralService that requires data from the
 CentralService such as valid tags, list of buildings etc. will have to go through
 this if data is not found in the cache
 
-@copyright: (c) 2021 SynergyLabs
+@copyright: (c) 2024 SynergyLabs
 @license: CMU License. See License file for details.
 """
 

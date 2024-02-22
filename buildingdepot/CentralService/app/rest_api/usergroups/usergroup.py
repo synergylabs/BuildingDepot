@@ -6,7 +6,7 @@ This module handles interacting with the underlying user group models.
 It handles the common services for user groups, such as making a new one
 or deleting an existing one.
 
-@copyright: (c) 2021 SynergyLabs
+@copyright: (c) 2024 SynergyLabs
 @license: CMU License. See License file for details.
 """
 import sys

@@ -6,7 +6,7 @@ All the constants i.e.  the responses that will be returned
 to the user under certain failure and success conditions are
 defined here in this file
 
-@copyright: (c) 2021 SynergyLabs
+@copyright: (c) 2024 SynergyLabs
 @license: CMU License. See License file for details.
 """
 

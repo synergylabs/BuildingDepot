@@ -6,7 +6,7 @@ This module contains the class for the domain service for time-series data. It
 handles all the logic for inserting a data value and reading from the underlying
 data stores.
 
-@copyright: (c) 2021 SynergyLabs
+@copyright: (c) 2024 SynergyLabs
 @license: CMU License. See License file for details.
 """
 import influxdb

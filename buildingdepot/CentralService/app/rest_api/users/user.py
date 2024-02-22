@@ -7,7 +7,7 @@ of all the CRUD operations on users. Whenever a new user is registered
 an email is sent out to the specified id with a temporary password that
 will have to be changed on first login.
 
-@copyright: (c) 2021 SynergyLabs
+@copyright: (c) 2024 SynergyLabs
 @license: CMU License. See License file for details.
 """
 

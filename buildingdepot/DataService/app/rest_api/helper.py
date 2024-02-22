@@ -5,7 +5,7 @@ DataService.rest_api.helper
 This module contains all the helper functions needed for the api's
 such as conversion of timestamps, strings etc.
 
-@copyright: (c) 2021 SynergyLabs
+@copyright: (c) 2024 SynergyLabs
 @license: CMU License. See License file for details.
 """
 import json
