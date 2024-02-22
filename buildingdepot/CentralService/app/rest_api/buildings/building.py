@@ -7,7 +7,7 @@ of all the CRUD operations on buildings. Each building can have values
 defined for any of the tagtypes that the template it is based on contains.
 Buildings can also have metadata attached to them.
 
-@copyright: (c) 2021 SynergyLabs
+@copyright: (c) 2024 SynergyLabs
 @license: CMU License. See License file for details.
 """
 

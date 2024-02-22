@@ -4,7 +4,7 @@ DataService.auth.forms
 
 Class definition for the login form
 
-@copyright: (c) 2021 SynergyLabs
+@copyright: (c) 2024 SynergyLabs
 @license: CMU License. See License file for details.
 """
 from flask_wtf import FlaskForm

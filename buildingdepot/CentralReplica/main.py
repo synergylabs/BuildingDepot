@@ -5,7 +5,7 @@ CentralReplica.main
 Contains the definitions for all the RPC's that the DataService
 calls in order to avoid talking to the CentralService all the time.
 
-@copyright: (c) 2021 SynergyLabs
+@copyright: (c) 2024 SynergyLabs
 @license: CMU License. See License file for details.
 """
 

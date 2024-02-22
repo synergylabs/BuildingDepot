@@ -6,7 +6,7 @@ Initializes the flask app using the configuration specified in the
 config file or falls back to the default one.
 
 
-@copyright: (c) 2021 SynergyLabs
+@copyright: (c) 2024 SynergyLabs
 @license: CMU License. See License file for details.
 """
 

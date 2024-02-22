@@ -5,7 +5,7 @@ CentalService.auth.views
 Contains all the forms for the CentralService authorization functions.
 The two forms that are used are for login and for creating a new user.
 
-@copyright: (c) 2021 SynergyLabs
+@copyright: (c) 2024 SynergyLabs
 @license: CMU License. See License file for details.
 """
 

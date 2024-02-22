@@ -5,7 +5,7 @@ DataService.rest_api.apps
 This module handles interacting with the underlying app models.
 It handles the registration and deletion of apps from the system.
 
-@copyright: (c) 2021 SynergyLabs
+@copyright: (c) 2024 SynergyLabs
 @license: CMU License. See License file for details.
 """
 

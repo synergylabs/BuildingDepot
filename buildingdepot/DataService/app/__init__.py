@@ -14,7 +14,7 @@ The flask application is also created here and all the different
 services such as the main dataservice,rest_api and oauth service are
 registered as blueprints.
 
-@copyright: (c) 2021 SynergyLabs
+@copyright: (c) 2024 SynergyLabs
 @license: See License file for details.
 """
 

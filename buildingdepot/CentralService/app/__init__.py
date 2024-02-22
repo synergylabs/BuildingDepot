@@ -11,7 +11,7 @@ The flask application is also created here and all the different
 services such as the main centralservice,auth service are
 registered as blueprints.
 
-@copyright: (c) 2021 SynergyLabs
+@copyright: (c) 2024 SynergyLabs
 @license: CMU License. See License file for details.
 """
 

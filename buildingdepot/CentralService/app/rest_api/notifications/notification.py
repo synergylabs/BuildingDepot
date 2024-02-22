@@ -4,7 +4,7 @@ DataService.rest_api.notifcation
 
 This module handles setting up and managing notifications for a given ID.
 
-@copyright: (c) 2021 SynergyLabs
+@copyright: (c) 2024 SynergyLabs
 @license: CMU License. See License file for details.
 """
 
