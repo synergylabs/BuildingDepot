@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "Please make sure you have downloaded the latest Building Depot version and are in the BD scritps folder!"
+echo "Please make sure you have downloaded the latest Building Depot version and are in the BD scripts folder!"
 read response
 cd ../
 cd buildingdepot

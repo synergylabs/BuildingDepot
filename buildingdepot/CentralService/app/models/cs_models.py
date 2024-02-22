@@ -6,14 +6,14 @@ Contains all the class definitions that are required for the CentralService.
 Each class here is a Table in MongoDB where each value that is inserted into
 these tables can have any of the paramteres defined within the class
 
-@copyright: (c) 2016 SynergyLabs
-@license: UCSD License. See License file for details.
+@copyright: (c) 2021 SynergyLabs
+@license: CMU License. See License file for details.
 """
 
 from flask import current_app
-from mongoengine import *
 from flask_login import UserMixin
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
+from mongoengine import *
 from werkzeug.security import generate_password_hash, check_password_hash
 
 
@@ -28,10 +28,12 @@ class DataService(Document):
 
     admins = ListField(StringField())
 
+
 class PermissionRequest(Document):
     email = StringField()
     timestamp = StringField()
     requests = DictField()
+
 
 class TagType(Document):
     name = StringField(required=True, unique=True)
@@ -40,6 +42,7 @@ class TagType(Document):
     parents = ListField(StringField())
     children = ListField(StringField())
     acl_tag = BooleanField()
+
 
 class BuildingTemplate(Document):
     name = StringField(required=True, unique=True)
@@ -91,30 +94,30 @@ class User(UserMixin, Document):
         return check_password_hash(self.password, password)
 
     def generate_auth_token(self, expiration):
-        s = Serializer(current_app.config['SECRET_KEY'],
-                       expires_in=expiration)
-        return s.dumps({'email': self.email})
+        s = Serializer(current_app.config["SECRET_KEY"], expires_in=expiration)
+        return s.dumps({"email": self.email})
 
     @staticmethod
     def verify_auth_token(token):
-        s = Serializer(current_app.config['SECRET_KEY'])
+        s = Serializer(current_app.config["SECRET_KEY"])
         try:
             data = s.loads(token)
         except:
             return None
 
-        return User.objects(email=data['email']).first()
+        return User.objects(email=data["email"]).first()
 
     def is_super(self):
-        return self.role.type == 'super'
+        return self.role.type == "super"
 
     def is_local(self):
-        return self.role.type == 'local'
+        return self.role.type == "local"
 
 
 class UserGroupNode(EmbeddedDocument):
     user_id = StringField()
     manager = BooleanField()
+
 
 class Sensor(Document):
     name = StringField(required=True, unique=True)
@@ -127,9 +130,11 @@ class Sensor(Document):
     tags = ListField(EmbeddedDocumentField(Node))
     subscribers = ListField(StringField())
 
+
 class NotificationClientId(Document):
     email = StringField(required=True, unique=True)
     client_id = StringField(required=True, unique=True)
+
 
 class SensorGroup(Document):
     name = StringField(required=True, unique=True)
@@ -138,6 +143,7 @@ class SensorGroup(Document):
     building = StringField()
     tags = ListField(EmbeddedDocumentField(Node))
     owner = StringField()
+
 
 class UserGroup(Document):
     name = StringField(required=True, unique=True)

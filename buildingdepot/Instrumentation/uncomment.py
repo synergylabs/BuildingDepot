@@ -7,10 +7,10 @@ import sys
 
 filename = sys.argv[1]
 
-f = open(filename, 'rb')
+f = open(filename, "rb")
 
 for line in f:
-	if line == '# @instrument\n':
-		print "@instrument\n",
-	else:
-		print line,
+    if line == "# @instrument\n":
+        print("@instrument\n", end=" ")
+    else:
+        print(line, end=" ")

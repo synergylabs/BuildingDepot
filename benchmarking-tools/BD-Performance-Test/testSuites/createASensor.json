@@ -1,7 +1,9 @@
-{	"title":"Create a sensor:",
-	"test": "create a sensor",
-	"tests": [
-		{
-			"title": "Create a sensor"
-		}]
+{
+  "title": "Create a sensor:",
+  "test": "create a sensor",
+  "tests": [
+    {
+      "title": "Create a sensor"
+    }
+  ]
 }

@@ -5,20 +5,18 @@ DataService.rest_api.apps
 This module handles interacting with the underlying app models.
 It handles the registration and deletion of apps from the system.
 
-@copyright: (c) 2016 SynergyLabs
-@license: UCSD License. See License file for details.
+@copyright: (c) 2021 SynergyLabs
+@license: CMU License. See License file for details.
 """
 
-from flask.views import MethodView
-from flask import request, jsonify
-from ..models.ds_models import Application
-from uuid import uuid4
-from .. import r, oauth, exchange
-from .helper import connect_broker, get_email, check_oauth
-from . import responses
-
-import sys
+import json
 import traceback
+from flask import request, jsonify
+from flask.views import MethodView
+
+from . import responses
+from .helper import connect_broker, get_email, check_oauth
+from ..models.ds_models import Application, NodeEncoder
 
 
 class AppService(MethodView):
@@ -37,12 +35,14 @@ class AppService(MethodView):
         email = get_email()
         if email is None:
             return jsonify(responses.missing_parameters)
-        apps = Application._get_collection().find({'user': email})
-        if apps.count() == 0:
-            app_list = []
-        else:
-            app_list = apps[0]['apps']
-        return jsonify({'success': 'True', 'app_list': app_list})
+        app_objects = Application.objects(user=email).first()
+        if not app_objects:
+            return jsonify(responses.application_does_not_found_for_user)
+
+        # Use the custom NodeEncoder to handle serialization
+        app_list_json = json.dumps(app_objects.apps, cls=NodeEncoder)
+
+        return jsonify({"success": "True", "app_list": json.loads(app_list_json)})
 
     @check_oauth
     def post(self):
@@ -58,105 +58,127 @@ class AppService(MethodView):
         }
         """
         email = get_email()
+        json_data = request.get_json()
+
+        if "data" not in json_data or "name" not in json_data["data"]:
+            return jsonify(responses.missing_parameters)
+
+        app_names = json_data["data"]["name"]
+
+        is_list = isinstance(app_names, list)
+        if not is_list:
+            if app_names is None or app_names == "":
+                return jsonify(responses.missing_parameters)
+        else:
+            if len(app_names) == 0:
+                return jsonify(responses.missing_parameters)
+
+        pubsub = None
+        json_result = None
+        app_list = None
         error_flag = False
 
-        json_data = request.get_json()
-        if 'data' not in json_data.keys():
-            return jsonify(responses.missing_parameters)
-        elif 'name' not in json_data['data'].keys():
-            return jsonify(responses.missing_parameters)
-        else:
-            name = json_data['data']['name']
+        app_objects = Application.objects(user=email).first()
 
-        apps = Application._get_collection().find({'user': email})
+        if app_objects:
+            app_list = app_objects.apps
 
-        if apps.count() != 0:
-            app_list = apps[0]['apps']
-            if not isinstance(name, list):
+            if not is_list:
                 for app in app_list:
-                    if name == app['name']:
-                        return jsonify({'success': 'True', 'app_id': app['value']})
+                    if app_names == app["name"]:
+                        return jsonify({"success": "True", "app_id": app["value"]})
             else:
                 json_result = {}
                 for app in app_list:
-                    for nm in name:
-                        if nm == app['name']:
-                            json_result[nm] = {'success': 'True', 'app_id': app['value']}
+                    for nm in app_names:
+                        if nm == app["name"]:
+                            json_result[nm] = {
+                                "success": "True",
+                                "app_id": app["value"],
+                            }
 
-                if len(json_result.keys()) == len(name):
-                    return jsonify({'success': 'True', 'app_id': json_result})
+                if len(list(json_result.keys())) == len(app_names):
+                    return jsonify({"success": "True", "app_id": json_result})
 
-        pubsub = connect_broker()
-        if pubsub is None:
-            return jsonify(responses.broker_connection_failure)
-
-        if not isinstance(name, list):
-            try:
-                channel = pubsub.channel()
-                result = channel.queue_declare(durable=True)
-            except Exception as e:
-                print "Failed to create queue " + str(e)
-                print traceback.print_exc()
-                if channel:
-                    channel.close()
-                return jsonify(responses.queue_creation_failure)
-
-            if apps.count() == 0:
-                Application(user=email,
-                            apps=[{'name': name,
-                                   'value': result.method.queue}]).save()
+        if not pubsub:
+            pubsub = connect_broker()
+            if pubsub is None:
+                return jsonify(responses.broker_connection_failure)
             else:
-                app_list.append({'name': name, 'value': result.method.queue})
-                Application.objects(user=email).update(set__apps=app_list)
+                if not is_list:
+                    try:
+                        channel = pubsub.channel()
+                        result = channel.queue_declare(durable=True, queue="")
+                    except Exception as e:
+                        print(("Failed to create queue " + str(e)))
+                        print((traceback.print_exc()))
+                        if channel is not None:
+                            channel.close()
+                        return jsonify(responses.queue_creation_failure)
 
-            if pubsub:
-                try:
-                    channel.close()
-                    pubsub.close()
-                except Exception as e:
-                    print "Failed to end RabbitMQ session" + str(e)
+                    if app_objects:
+                        app_list = app_objects.apps
+                        app_list.append({"name": app_names, "value": result.method.queue})
+                        Application.objects(user=email).update(set__apps=app_list)
+                    else:
+                        Application(
+                            user=email, apps=[{"name": app_names, "value": result.method.queue}]
+                        ).save()
 
-            return jsonify({'success': 'True', 'app_id': result.method.queue})
+                    if pubsub:
+                        try:
+                            channel.close()
+                            pubsub.close()
+                        except Exception as e:
+                            print(("Failed to end RabbitMQ session" + str(e)))
 
-        elif isinstance(name, list):
-            if not app_list:
-                app_list = []
-            for nm in name:
-                try:
-                    channel = pubsub.channel()
-                    result = channel.queue_declare(durable=True)
+                    return jsonify({"success": "True", "app_id": result.method.queue})
+                else:
+                    if json_result is None:
+                        json_result = {}
+                    if app_list is None:
+                        app_list = []
 
-                    json_result[nm] = {}
-                    json_result[nm] = {'success': 'True'}
-                    json_result[nm]['app_id'] = result.method.queue
+                    for nm in app_names:
+                        if nm not in json_result:
+                            try:
+                                channel = pubsub.channel()
+                                result = channel.queue_declare(durable=True, queue="")
 
-                    app_list.append({'name': nm, 'value': result.method.queue})
+                                json_result[nm] = {}
+                                json_result[nm] = {"success": "True"}
+                                json_result[nm]["app_id"] = result.method.queue
 
-                except Exception as e:
-                    print "Failed to create queue " + str(e)
-                    print traceback.print_exc()
-                    if channel:
-                        channel.close()
-                    error_flag = True
-                    json_result[nm] = {'success': 'False', 'error': 'Failed to create queue'}
+                                app_list.append({"name": nm, "value": result.method.queue})
 
-            if pubsub:
-                try:
-                    channel.close()
-                    pubsub.close()
-                except Exception as e:
-                    print "Failed to end RabbitMQ session" + str(e)
+                            except Exception as e:
+                                print(("Failed to create queue " + str(e)))
+                                print((traceback.print_exc()))
+                                if channel:
+                                    channel.close()
+                                error_flag = True
+                                json_result[nm] = {
+                                    "success": "False",
+                                    "error": "Failed to create queue",
+                                }
 
-            if apps.count() == 0:
-                Application(user=email,
-                            apps=app_list).save()
-            else:
-                Application.objects(user=email).update(set__apps=app_list)
+                    if pubsub:
+                        try:
+                            print("close channel pubsub")
+                            channel.close()
+                            pubsub.close()
+                        except Exception as e:
+                            print(("Failed to end RabbitMQ session" + str(e)))
 
-            if error_flag:
-                return jsonify({'success': 'False', 'app_id': json_result})
-            else:
-                return jsonify({'success': 'True', 'app_id': json_result})
+                    if app_objects:
+                        Application.objects(user=email).update(set__apps=app_list)
+                    else:
+                        Application(user=email, apps=app_list).save()
+
+                    if error_flag:
+                        return jsonify({"success": "False", "app_id": json_result})
+                    else:
+                        return jsonify({"success": "True", "app_id": json_result})
 
         return jsonify(responses.success_false)
 
@@ -178,37 +200,45 @@ class AppService(MethodView):
         """
         # get current user's list of applications
         email = get_email()
-        apps = Application._get_collection().find({'user': email})
+        app_len = Application._get_collection().count_documents({"user": email})
 
-        name = ''
+        app_to_be_deleted = []
+        json_result = {}
+        error_flag = False
+        channel = None
 
         json_data = request.get_json()
-        if 'data' not in json_data.keys():
+        if "data" not in list(json_data.keys()):
             return jsonify(responses.missing_parameters)
-        elif 'name' not in json_data['data'].keys():
+        elif "name" not in list(json_data["data"].keys()):
             return jsonify(responses.missing_parameters)
         else:
-            name = json_data['data']['name']
+            app_name = json_data["data"]["name"]
 
         # check whether there is an application with the given name
         # case 1 - there is already an application instance for the given user
-        if apps.count() > 0:
-            if not isinstance(name, list):
+        if app_len > 0:
+            apps = Application._get_collection().find({"user": email})
+            if not isinstance(app_name, list):
                 app_to_be_deleted = None
-                app_filter = filter(lambda x: x['name'] == name, apps[0]['apps'])
+                app_filter = [x for x in apps[0]["apps"] if x["name"] == app_name]
 
                 if len(app_filter) > 0:
                     app_to_be_deleted = app_filter[0]
             else:
+                # app_name is a list
                 app_to_be_deleted = []
                 json_result = {}
                 error_flag = False
-                for nm in name:
-                    app_filter = filter(lambda x: x['name'] == nm, apps[0]['apps'])
+                for nm in app_name:
+                    app_filter = [x for x in apps[0]["apps"] if x["name"] == nm]
                     if len(app_filter) > 0:
                         app_to_be_deleted.append(app_filter[0])
                     else:
-                        json_result[nm] = {'success': 'False', 'error': 'Application does not exist'}
+                        json_result[nm] = {
+                            "success": "False",
+                            "error": "Application does not exist",
+                        }
                         error_flag = True
 
         # If there is no application to be deleted
@@ -219,20 +249,21 @@ class AppService(MethodView):
         if pubsub is None:
             return jsonify(responses.broker_connection_failure)
 
-        if not isinstance(name, list):
+        apps = Application._get_collection().find({"user": email})
+
+        if not isinstance(app_name, list):
             try:
                 channel = pubsub.channel()
 
-                if 'value' in app_to_be_deleted.keys():
-                    result = channel.queue_delete(queue=app_to_be_deleted['value'])
+                if "value" in list(app_to_be_deleted.keys()):
+                    result = channel.queue_delete(queue=app_to_be_deleted["value"])
 
-                new_app_list = list(filter(lambda x: x['name'] != name,
-                                           apps[0]['apps']))
+                new_app_list = list([x for x in apps[0]["apps"] if x["name"] != app_name])
                 Application.objects(user=email).update(set__apps=new_app_list)
 
             except Exception as e:
-                print "Failed to create queue " + str(e)
-                print traceback.print_exc()
+                print(("Failed to create queue " + str(e)))
+                print((traceback.print_exc()))
                 if channel:
                     channel.close()
                 return jsonify(responses.queue_creation_failure)
@@ -242,31 +273,32 @@ class AppService(MethodView):
                     channel.close()
                     pubsub.close()
                 except Exception as e:
-                    print "Failed to end RabbitMQ session" + str(e)
+                    print(("Failed to end RabbitMQ session" + str(e)))
 
             return jsonify(responses.success_true)
 
-        elif isinstance(name, list):
+        elif isinstance(app_name, list):
             for app_to_delete in app_to_be_deleted:
                 try:
                     channel = pubsub.channel()
-                    if 'value' in app_to_delete.keys():
-                        result = channel.queue_delete(queue=app_to_delete['value'])
+                    if "value" in list(app_to_delete.keys()):
+                        result = channel.queue_delete(queue=app_to_delete["value"])
 
-                    json_result[app_to_delete['name']] = {}
-                    json_result[app_to_delete['name']] = {'success': 'True'}
+                    json_result[app_to_delete["name"]] = {}
+                    json_result[app_to_delete["name"]] = {"success": "True"}
 
                 except Exception as e:
-                    print "Failed to create queue " + str(e)
-                    print traceback.print_exc()
+                    print(("Failed to create queue " + str(e)))
+                    print((traceback.print_exc()))
                     if channel:
                         channel.close()
                     error_flag = True
-                    json_result[app_to_delete['name']] = {'success': 'False',
-                                                          'error': 'Failed to create queue'}
+                    json_result[app_to_delete["name"]] = {
+                        "success": "False",
+                        "error": "Failed to create queue",
+                    }
 
-            new_app_list = list(filter(lambda x: x['name'] not in name,
-                                       apps[0]['apps']))
+            new_app_list = list([x for x in apps[0]["apps"] if x["name"] not in app_name])
             Application.objects(user=email).update(set__apps=new_app_list)
 
             if pubsub:
@@ -275,11 +307,11 @@ class AppService(MethodView):
                         channel.close()
                     pubsub.close()
                 except Exception as e:
-                    print "Failed to end RabbitMQ session" + str(e)
+                    print(("Failed to end RabbitMQ session" + str(e)))
 
             if error_flag:
-                return jsonify({'success': 'False', 'name': json_result})
+                return jsonify({"success": "False", "name": json_result})
             else:
-                return jsonify({'success': 'True', 'name': json_result})
+                return jsonify({"success": "True", "name": json_result})
 
         return jsonify(responses.success_false)

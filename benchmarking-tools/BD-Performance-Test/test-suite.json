@@ -1,26 +1,28 @@
-{	"title":"Different number of sensors:",
-	"defaults": {
-		"test": "post time-series data"
-	},
-	"tests": [
-		{
-			"title": "Post Time-series : 1000 sensors",
-			"formData": {
-				"saveFile": "log.json",
-				"totalSensors": 1000,
-				"totalSamples": 1,
-				"totalValues": 1,
-				"dynamic": true
-			}
-		},
-		{
-			"title": "Post Time-series : 1000 sensors",
-			"formData": {
-				"saveFile": "log.json",
-				"totalSensors": 1000,
-				"totalSamples": 1,
-				"totalValues": 1,
-				"dynamic": false
-			}
-		}]
+{
+  "title": "Different number of sensors:",
+  "defaults": {
+    "test": "post time-series data"
+  },
+  "tests": [
+    {
+      "title": "Post Time-series : 1000 sensors",
+      "formData": {
+        "saveFile": "log.json",
+        "totalSensors": 1000,
+        "totalSamples": 1,
+        "totalValues": 1,
+        "dynamic": true
+      }
+    },
+    {
+      "title": "Post Time-series : 1000 sensors",
+      "formData": {
+        "saveFile": "log.json",
+        "totalSensors": 1000,
+        "totalSamples": 1,
+        "totalValues": 1,
+        "dynamic": false
+      }
+    }
+  ]
 }

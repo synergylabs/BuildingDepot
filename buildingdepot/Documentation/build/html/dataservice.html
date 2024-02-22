@@ -5,10 +5,11 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  
+  <meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Data Service &mdash; BuildingDepot 3.2.9 documentation</title>
+  <title>Data Service &mdash; BuildingDepot 3.3 documentation</title>
   
 
   
@@ -28,12 +29,16 @@
   
 
   
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
 
   
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="BuildingDepot 3.2.9 documentation" href="index.html"/>
+    <link rel="top" title="BuildingDepot 3.3 documentation" href="index.html"/>
         <link rel="next" title="Installation" href="install.html"/>
         <link rel="prev" title="Central Service" href="centralservice.html"/> 
 
@@ -64,7 +69,7 @@
             
             
               <div class="version">
-                3.2.9
+                3.3
               </div>
             
           
@@ -166,8 +171,8 @@
            <div itemprop="articleBody">
             
   <a class="reference internal image-reference" href="_images/BuildingDepot.svg"><img alt="_images/BuildingDepot.svg" src="_images/BuildingDepot.svg" width="800" /></a>
-<div class="section" id="data-service">
-<h1>Data Service<a class="headerlink" href="#data-service" title="Permalink to this headline">¶</a></h1>
+<section id="data-service">
+<h1>Data Service<a class="headerlink" href="#data-service" title="Permalink to this heading">¶</a></h1>
 <p>The DataService is the service with which users will be interacting directly most of the time. It’s within the DataService that all the data related to sensors and the timeseries data of each sensor resides. All the access control related functionality is defined and enforced within the DataService. OAuth access tokens which are required by every query that is sent to BuildingDepot are also generated via the DataService. A brief explanation will be provided here of each of the options available in the DataService.</p>
 <p>DataService stores point time series data points from the underlying point networks. The
 DataService manages the points and time series data points of points allocated to it. A
@@ -183,15 +188,15 @@ CentralService in a master­slave mode. The master CentralService only accepts w
 and each of its replicas undertakes read requests from a single DataService. In this way, the
 request traffic load can be balanced on all replicas.</p>
 <a class="reference internal image-reference" href="_images/DSComponents.svg"><img alt="_images/DSComponents.svg" src="_images/DSComponents.svg" width="800" /></a>
-<div class="section" id="sensor">
-<h2>Sensor<a class="headerlink" href="#sensor" title="Permalink to this headline">¶</a></h2>
+<section id="sensor">
+<h2>Sensor<a class="headerlink" href="#sensor" title="Permalink to this heading">¶</a></h2>
 <p>The time-series data of all the points in buildings associated with the Data Service is stored here. The sensor UUID(s) are used in all further time-series transactions with BuildingDepot whether it be reading a datapoint from a sensor or posting a bunch of datapoints to a sensor.The time-series data of all the points in buildings associated with a certain Data Service is stored here. The sensor UUID(s) are used in all further time-series transactions with BuildingDepot whether it be reading a datapoint from a sensor or posting a bunch of datapoints to a sensor.</p>
-</div>
-<div class="section" id="apps">
-<h2>Apps<a class="headerlink" href="#apps" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="apps">
+<h2>Apps<a class="headerlink" href="#apps" title="Permalink to this heading">¶</a></h2>
 <p>BuildingDepot allows users to subscribe to sensors’ time-series data. This can be done by registering a new app and associating it with the desired sensor UUIDs. All the information about a user’s apps is located here.</p>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>
@@ -212,7 +217,7 @@ request traffic load can be balanced on all replicas.</p>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2020, SynergyLabs.
+        &copy; Copyright 2022, SynergyLabs, Sudershan Boovaraghavan.
 
     </p>
   </div>
@@ -234,16 +239,19 @@ request traffic load can be balanced on all replicas.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'3.2.9',
+            VERSION:'3.3',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
             SOURCELINK_SUFFIX: '.txt'
         };
     </script>
+      <script type="text/javascript" src="_static/documentation_options.js"></script>
       <script type="text/javascript" src="_static/jquery.js"></script>
       <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/_sphinx_javascript_frameworks_compat.js"></script>
       <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="_static/sphinx_highlight.js"></script>
 
   
 

@@ -1,10 +1,11 @@
+from xmlrpc.client import ServerProxy
+
 from .. import svr
-from ..rest_api.helper import get_ds, get_sg_ds
 from ..models.cs_models import DataService
-from xmlrpclib import ServerProxy
+from ..rest_api.helper import get_ds, get_sg_ds
 
 
-def create_sensor(sensor_id, email, building, fields = None, parent = None):
+def create_sensor(sensor_id, email, building, fields=None, parent=None):
     if not parent:
         svr = get_remote(get_ds(sensor_id, building))
         try:
@@ -30,7 +31,7 @@ def invalidate_sensor(sensor_id):
     return True
 
 
-def delete_sensor(sensor_id, parent = None):
+def delete_sensor(sensor_id, parent=None):
     if not parent:
         svr = get_remote(get_ds(sensor_id))
         try:
@@ -68,10 +69,10 @@ def delete_permission(user_group, sensor_group):
 def invalidate_permission(sensor_group):
     svr = get_remote(get_sg_ds(sensor_group))
     try:
-        print "Invalidating permission"
+        print("Invalidating permission")
         svr.invalidate_permission(sensor_group)
     except Exception as e:
-        print e
+        print(e)
         return False
     return True
 

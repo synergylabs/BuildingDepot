@@ -15,8 +15,7 @@ let addTestSuite = async function (testSuite) {
     let updateInterval = await oAuthHandler.handle();
     if (testSuite.delay !== undefined) {
         await delay.inMilliseconds(testSuite.delay)
-    }
-    else if (config.defaults.delay !== undefined) {
+    } else if (config.defaults.delay !== undefined) {
         await delay.inMilliseconds(config.defaults.delay)
     }
     for (let test of testSuite.tests) {
@@ -26,8 +25,7 @@ let addTestSuite = async function (testSuite) {
         let options = await testOptions.create(test);
         if (test.test === "create sensors for performance-testing") {
             await createSensors.runTest(options);
-        }
-        else {
+        } else {
             await runTest(options);
         }
     }
@@ -39,15 +37,14 @@ let addTestSuite = async function (testSuite) {
  * Create test suite.
  */
 let createTestSuite = async function (test) {
-    if(await testOptions.testExists(test)){
+    if (await testOptions.testExists(test)) {
         return {
             title: test,
             tests: [{
                 title: test
             }]
         }
-    }
-    else{
+    } else {
         console.log('Invalid testSuite or test!');
         process.exit(1);
     }
@@ -65,7 +62,7 @@ let runTest = async function (options) {
                 resolve(true)
             }
         };
-        if(options.title === undefined){
+        if (options.title === undefined) {
             options.title = options.test;
         }
         console.log('\nTitle: ' + options.title + '\n'.padEnd(options.title.length + 8, '#'));

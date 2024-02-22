@@ -5,21 +5,23 @@ DataService.rest_api.helper
 This module contains all the helper functions needed for the api's
 such as conversion of timestamps, strings etc.
 
-@copyright: (c) 2016 SynergyLabs
-@license: UCSD License. See License file for details.
+@copyright: (c) 2021 SynergyLabs
+@license: CMU License. See License file for details.
 """
+import json
+import pika
+import time
 from datetime import datetime
+from flask import request, abort
 from functools import wraps
 
-from flask import request, abort
-from ..oauth_bd.views import Token
-from ..models.ds_models import Building, TagType, User
 from .. import exchange, r, rabbitmq_username, rabbitmq_password
-import time, json, pika
+from ..models.ds_models import Building, TagType, User
+from ..auth.views import Token
 
 
 def get_email():
-    """ Returns the email address of the user making the request
+    """Returns the email address of the user making the request
     based on the OAuth token
     Args as data:
         None - Get's OAuth token from the request context
@@ -27,8 +29,8 @@ def get_email():
         E-mail id of the user making the request
     """
     headers = request.headers
-    token = headers['Authorization'][7:]
-    user = r.get(''.join(['oauth:', token]))
+    token = headers["Authorization"][7:]
+    user = r.get("".join(["oauth:", token]))
     if user:
         return user
     token = Token.objects(access_token=token).first()
@@ -57,9 +59,9 @@ def jsonString(obj, pretty=False):
         pretty: Boolean specifying whether json object has to be formatted
     Returns:
         JSON object corresponding to the input object
-       """
+    """
     if pretty == True:
-        return json.dumps(obj, sort_keys=True, indent=4, separators=(',', ': ')) + '\n'
+        return json.dumps(obj, sort_keys=True, indent=4, separators=(",", ": ")) + "\n"
     else:
         return json.dumps(obj)
 
@@ -89,23 +91,24 @@ def create_json(sensor):
             Formatted sensor object as below
         }
     """
-    json_object = {'building': sensor.get('building'),
-                   'name': sensor.get('name'),
-                   'tags': sensor.get('tags'),
-                   'metadata': sensor.get('metadata'),
-                   'source_identifier': sensor.get('source_identifier'),
-                   'source_name': sensor.get('source_name')
-                   }
+    json_object = {
+        "building": sensor.get("building"),
+        "name": sensor.get("name"),
+        "tags": sensor.get("tags"),
+        "metadata": sensor.get("metadata"),
+        "source_identifier": sensor.get("source_identifier"),
+        "source_name": sensor.get("source_name"),
+    }
     return json_object
 
 
 def check_if_super(email=None):
     if email is None:
         email = get_email()
-    if r.sismember('superusers', email):
+    if r.sismember("superusers", email):
         return True
-    if User.objects(email=email).first().role == 'super':
-        r.sadd('superusers', email)
+    if User.objects(email=email).first().role == "super":
+        r.sadd("superusers", email)
         return True
     return False
 
@@ -117,7 +120,9 @@ def timestamp_to_time_string(t):
     Returns
         A string representation of the timestamp
     """
-    return time.strftime("%Y-%m-%dT%H:%M:%S", time.gmtime(t)) + str(t - int(t))[1:10] + 'Z'
+    return (
+        time.strftime("%Y-%m-%dT%H:%M:%S", time.gmtime(t)) + str(t - int(t))[1:10] + "Z"
+    )
 
 
 def connect_broker():
@@ -129,23 +134,23 @@ def connect_broker():
     """
     try:
         credentials = pika.PlainCredentials(rabbitmq_username, rabbitmq_password)
-        pubsub = pika.BlockingConnection(pika.ConnectionParameters(host='localhost',
-                                                                   credentials=credentials))
+        parameters = pika.ConnectionParameters(host="localhost", credentials=credentials, connection_attempts=3, retry_delay=5)
+        pubsub = pika.BlockingConnection(parameters)
         channel = pubsub.channel()
-        channel.exchange_declare(exchange=exchange, type='direct')
+        channel.exchange_declare(exchange=exchange, exchange_type="direct", durable=True)
         channel.close()
         return pubsub
     except Exception as e:
-        print "Failed to open connection to broker " + str(e)
+        print(("Failed to open connection to broker " + str(e)))
         return None
 
 
 def add_delete_users(old, now):
     user_old, user_new = [], []
     for user in old:
-        user_old.append(user['user_id'])
+        user_old.append(user["user_id"])
     for user in now:
-        user_new.append(user['user_id'])
+        user_new.append(user["user_id"])
     old, now = set(user_old), set(user_new)
     return now - old, old - now
 
@@ -157,12 +162,12 @@ def add_delete(old, now):
 
 def form_query(param, values, args, operation):
     res = []
-    if param == 'tags':
+    if param == "tags":
         for tag in values:
             key_value = tag.split(":", 1)
             current_tag = {"tags.name": key_value[0], "tags.value": key_value[1]}
             res.append(current_tag)
-    elif param == 'metadata':
+    elif param == "metadata":
         for meta in values:
             key_value = meta.split(":", 1)
             current_meta = {"metadata." + key_value[0]: key_value[1]}
@@ -178,16 +183,18 @@ def form_query(param, values, args, operation):
 
 def get_building_tags(building):
     """Get all the tags that this building has associated with it"""
-    tags = Building._get_collection().find({'name': building}, {'tags.name': 1, 'tags.value': 1, '_id': 0})[0]['tags']
+    tags = Building._get_collection().find(
+        {"name": building}, {"tags.name": 1, "tags.value": 1, "_id": 0}
+    )[0]["tags"]
     res = {}
     for tag in tags:
-        if tag['name'] in res:
-            res[tag['name']]['values'].append(tag['value'])
+        if tag["name"] in res:
+            res[tag["name"]]["values"].append(tag["value"])
         else:
             tagtype_dict = {}
-            tagtype_dict['values'] = [tag['value']]
-            tagtype_dict['acl_tag'] = TagType.objects(name=tag['name']).first().acl_tag
-            res[tag['name']] = tagtype_dict
+            tagtype_dict["values"] = [tag["value"]]
+            tagtype_dict["acl_tag"] = TagType.objects(name=tag["name"]).first().acl_tag
+            res[tag["name"]] = tagtype_dict
     return res
 
 
@@ -198,7 +205,7 @@ def check_oauth(f):
             abort(401)
         access_token = request.headers.get("Authorization")[7:]
         if request.headers.get("Authorization") is not None:
-            user = r.get(''.join(['oauth:', access_token]))
+            user = r.get("".join(["oauth:", access_token]))
             if user is not None:
                 return f(*args, **kwargs)
             else:
@@ -209,7 +216,11 @@ def check_oauth(f):
                     expires_in = (token.expires - datetime.now()).total_seconds()
                     if expires_in > 0:
                         # Still valid, adding to redis
-                        r.setex(''.join(['oauth:', access_token]), token.user, int(expires_in))
+                        r.setex(
+                            "".join(["oauth:", access_token]),
+                            int(expires_in),
+                            token.user,
+                        )
                         return f(*args, **kwargs)
                     else:
                         # Invalid, deleting
