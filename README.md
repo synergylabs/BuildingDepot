@@ -5,7 +5,7 @@ BuildingDepot v3.3 ([link](https://buildingdepot.org/))
 
 BuildingDepot (BD) is a data sensor and actuation system for building management and control. It consists of a central server that uses a RESTful API to send (POST) and retrieve (GET) data. The typical data that BD stores is sensor data for buildings, including data from wireless sensor networks, existing SCADA systems, and other related data sources. 
 
-The BD server consists of three seperate services - the DataService, the DirectoryService, and the UserService.
+The BD server consists of three separate services - the DataService, the DirectoryService, and the UserService.
 
 What's Next
 ===========
@@ -17,7 +17,7 @@ What's Next
 Installation
 ============
 
-To install BD, run the install.sh script in the Installation folder. The default installation location is /srv.
+To install BD, you can just run the install.sh script in the installation folder. The default installation location is /srv.
 
 1. Extract the package and cd into the folder**:
 
@@ -26,7 +26,7 @@ To install BD, run the install.sh script in the Installation folder. The default
     $ cd buildingdepot-3.#.#/
     ```
    
-2. Run the installer (if running installer using sudo, please consider adding -H flag)
+2. Run the installer (if running the installer using sudo, please consider adding -H flag)
 
     ```shell
     $ ./install.sh
@@ -40,11 +40,11 @@ This will install BuildingDepot in the default installation location /srv/buildi
     - venv - Python Virtual Environment
 
 * Note:
-This installer installs the BD DataService, CentralService, MongoDB, InfluxDB and Redis on the same machine.The installer also requires requires Mail Transfer Agent or use Gmail APIs. The installer has an optional requirement to use SSL certificates.
+This installer installs the BD DataService, CentralService, MongoDB, InfluxDB and Redis on the same machine. The installer also requires a Mail Transfer Agent or Gmail APIs. The installer has an optional requirement to use SSL certificates.
 
 Upgrade to New BD Version
 =========================
-To updgrade to new version of BD for an existing installation, 
+To upgrade to a new version of BD for an existing installation, 
 run the upgrade_to_latest_BD.sh script in the scripts folder. The 
 default installation location is /srv.
 
@@ -70,7 +70,7 @@ Configuration
 
 The BD Installer configures BD with some default values.
 
-The CentralService can be accessed on port 81 and the DataService on port 82.
+The CentralService can be accessed on port 81, and the DataService on port 82.
 
 CentralService
 
