@@ -1,4 +1,5 @@
-#!/bin/bash
+#!/usr/bin/env bash
+set -euox pipefail
 
 DEPLOY_TOGETHER=true
 DEPLOY_CS=true
@@ -15,6 +16,7 @@ fi
 BD=/srv/buildingdepot/
 pushd $(pwd)
 
+mkdir -p /etc/nginx
 cp configs/nginx.conf /etc/nginx/nginx.conf
 
 mkdir -p /srv/buildingdepot
@@ -23,7 +25,7 @@ mkdir -p /var/log/buildingdepot/DataService
 mkdir -p /var/sockets
 
 function setup_venv() {
-  cp pip_packages.list $1
+  cp -n pip_packages.list $1
   cd $1
 
   virtualenv ./venv
@@ -31,11 +33,7 @@ function setup_venv() {
 
   pip3 install --upgrade pip
   pip3 install --upgrade setuptools
-  if [ $DISTRIB_CODENAME == "bionic" ]; then
-    pip3 install "Flask==2.0.3"
-  else
-    pip3 install "Flask==2.1.3"
-  fi
+  pip3 install "Flask==2.1.3"
   pip3 install --upgrade -r pip_packages.list
   pip3 install "firebase-admin"
 
@@ -53,7 +51,6 @@ function deploy_centralservice() {
   cp -r buildingdepot/CentralService /srv/buildingdepot/
   cp -r buildingdepot/DataService /srv/buildingdepot/
   cp -r buildingdepot/CentralReplica /srv/buildingdepot/
-  cp -r buildingdepot/OAuth2Server /srv/buildingdepot/
   cp -r buildingdepot/Documentation /srv/buildingdepot/
   cd /srv/buildingdepot
   # copy uwsgi files
@@ -140,7 +137,7 @@ function joint_deployment_fix() {
 
 function deploy_config() {
   cp -r configs/ /srv/buildingdepot
-  mkdir /var/sockets
+  mkdir -p /var/sockets
 }
 
 function install_packages() {
@@ -149,36 +146,47 @@ function install_packages() {
   apt-get install -y gnupg
   source /etc/lsb-release
 
-  # Add keys for Rabbitmq
-  curl -s https://packagecloud.io/install/repositories/rabbitmq/rabbitmq-server/script.deb.sh | bash
-  # Adds Launchpad PPA that provides modern Erlang releases
-  curl -1sLf "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0xf77f1eda57ebb1cc" | sudo gpg --dearmor | sudo tee /usr/share/keyrings/net.launchpad.ppa.rabbitmq.erlang.gpg > /dev/null
-  echo "deb [ signed-by=/usr/share/keyrings/net.launchpad.ppa.rabbitmq.erlang.gpg ] http://ppa.launchpad.net/rabbitmq/rabbitmq-erlang/ubuntu ${DISTRIB_CODENAME} main" | tee /etc/apt/sources.list.d/rabbitmq-erlang.list
-  echo "deb-src [ signed-by=/usr/share/keyrings/net.launchpad.ppa.rabbitmq.erlang.gpg ] http://ppa.launchpad.net/rabbitmq/rabbitmq-erlang/ubuntu ${DISTRIB_CODENAME} main" | tee -a /etc/apt/sources.list.d/rabbitmq-erlang.list
-
   # Add keys to install influxdb
   curl -s https://repos.influxdata.com/influxdata-archive_compat.key > influxdata-archive_compat.key
-  echo '393e8779c89ac8d958f81f942f9ad7fb82a25e133faddaf92e15b16e6ac9ce4c influxdata-archive_compat.key' | sha256sum -c && cat influxdata-archive_compat.key | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/influxdata-archive_compat.gpg > /dev/null
-  echo 'deb [ signed-by=/etc/apt/trusted.gpg.d/influxdata-archive_compat.gpg ] https://repos.influxdata.com/debian stable main' | sudo tee /etc/apt/sources.list.d/influxdata.list
+  echo '393e8779c89ac8d958f81f942f9ad7fb82a25e133faddaf92e15b16e6ac9ce4c influxdata-archive_compat.key' | sha256sum -c && cat influxdata-archive_compat.key | gpg --dearmor | tee /etc/apt/trusted.gpg.d/influxdata-archive_compat.gpg > /dev/null
+  echo 'deb [ signed-by=/etc/apt/trusted.gpg.d/influxdata-archive_compat.gpg ] https://repos.influxdata.com/debian stable main' | tee /etc/apt/sources.list.d/influxdata.list
+
+  ## RabbitMQ's main signing key
+  curl -1sLf "https://keys.openpgp.org/vks/v1/by-fingerprint/0A9AF2115F4687BD29803A206B73A36E6026DFCA" | gpg --dearmor | tee /usr/share/keyrings/com.rabbitmq.team.gpg > /dev/null
+  ## Community mirror of Cloudsmith: modern Erlang repository
+  curl -1sLf https://github.com/rabbitmq/signing-keys/releases/download/3.0/cloudsmith.rabbitmq-erlang.E495BB49CC4BBE5B.key | gpg --dearmor | tee /usr/share/keyrings/rabbitmq.E495BB49CC4BBE5B.gpg > /dev/null
+  ## Community mirror of Cloudsmith: RabbitMQ repository
+  curl -1sLf https://github.com/rabbitmq/signing-keys/releases/download/3.0/cloudsmith.rabbitmq-server.9F4587F226208342.key | gpg --dearmor | tee /usr/share/keyrings/rabbitmq.9F4587F226208342.gpg > /dev/null
+
+  ## Add apt repositories maintained by Team RabbitMQ
+  tee /etc/apt/sources.list.d/rabbitmq.list <<EOF
+## Provides modern Erlang/OTP releases
+##
+deb [arch=amd64 signed-by=/usr/share/keyrings/rabbitmq.E495BB49CC4BBE5B.gpg] https://ppa1.rabbitmq.com/rabbitmq/rabbitmq-erlang/deb/ubuntu ${DISTRIB_CODENAME} main
+deb-src [signed-by=/usr/share/keyrings/rabbitmq.E495BB49CC4BBE5B.gpg] https://ppa1.rabbitmq.com/rabbitmq/rabbitmq-erlang/deb/ubuntu ${DISTRIB_CODENAME} main
+
+# another mirror for redundancy
+deb [arch=amd64 signed-by=/usr/share/keyrings/rabbitmq.E495BB49CC4BBE5B.gpg] https://ppa2.rabbitmq.com/rabbitmq/rabbitmq-erlang/deb/ubuntu ${DISTRIB_CODENAME} main
+deb-src [signed-by=/usr/share/keyrings/rabbitmq.E495BB49CC4BBE5B.gpg] https://ppa2.rabbitmq.com/rabbitmq/rabbitmq-erlang/deb/ubuntu ${DISTRIB_CODENAME} main
+
+## Provides RabbitMQ
+##
+deb [arch=amd64 signed-by=/usr/share/keyrings/rabbitmq.9F4587F226208342.gpg] https://ppa1.rabbitmq.com/rabbitmq/rabbitmq-server/deb/ubuntu ${DISTRIB_CODENAME} main
+deb-src [signed-by=/usr/share/keyrings/rabbitmq.9F4587F226208342.gpg] https://ppa1.rabbitmq.com/rabbitmq/rabbitmq-server/deb/ubuntu ${DISTRIB_CODENAME} main
+
+# another mirror for redundancy
+deb [arch=amd64 signed-by=/usr/share/keyrings/rabbitmq.9F4587F226208342.gpg] https://ppa2.rabbitmq.com/rabbitmq/rabbitmq-server/deb/ubuntu ${DISTRIB_CODENAME} main
+deb-src [signed-by=/usr/share/keyrings/rabbitmq.9F4587F226208342.gpg] https://ppa2.rabbitmq.com/rabbitmq/rabbitmq-server/deb/ubuntu ${DISTRIB_CODENAME} main
+EOF
 
   # Add keys to install mongodb
-  if [ $DISTRIB_CODENAME == "bionic" ]; then
-    curl -fsSL https://pgp.mongodb.com/server-6.0.asc | sudo gpg -o /usr/share/keyrings/mongodb-server-6.0.gpg --dearmor
-    echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-6.0.gpg ] https://repo.mongodb.org/apt/ubuntu ${DISTRIB_CODENAME}/mongodb-org/6.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-6.0.list
-  else
-    curl -fsSL https://pgp.mongodb.com/server-7.0.asc | sudo gpg -o /usr/share/keyrings/mongodb-server-7.0.gpg --dearmor
-    echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-7.0.gpg ] https://repo.mongodb.org/apt/ubuntu ${DISTRIB_CODENAME}/mongodb-org/7.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-7.0.list
-  fi
+  curl -fsSL https://pgp.mongodb.com/server-7.0.asc | gpg -o /usr/share/keyrings/mongodb-server-7.0.gpg --dearmor
+  echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-7.0.gpg ] https://repo.mongodb.org/apt/ubuntu ${DISTRIB_CODENAME}/mongodb-org/7.0 multiverse" | tee /etc/apt/sources.list.d/mongodb-org-7.0.list
 
   apt-get update -y
   apt-get install
   apt-get -y install python3-pip
-
-  if [ $DISTRIB_CODENAME == "bionic" ]; then
-    apt-get install -y mongodb-org=6.0.10 mongodb-org-database=6.0.10 mongodb-org-server=6.0.10 mongodb-org-mongos=6.0.10 mongodb-org-tools=6.0.10
-  else
-    apt-get install -y mongodb-org
-  fi
+  apt-get install -y mongodb-org
 
   apt-get install -y openssl python3-setuptools python3-dev build-essential software-properties-common
   apt-get install -y nginx
@@ -196,11 +204,7 @@ function install_packages() {
     erlang-runtime-tools erlang-snmp erlang-ssl \
     erlang-syntax-tools erlang-tftp erlang-tools erlang-xmerl
   apt-get install -y rabbitmq-server --fix-missing
-  curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
-  apt-get install -y nodejs
-  apt-get install -y npm
-  sed -i -e 's/"inet_interfaces = all/"inet_interfaces = loopback-only"/g' /etc/postfix/main.cf
-  service postfix restart
+  snap install node --channel=22 --classic
 }
 
 function setup_gmail() {
@@ -230,7 +234,7 @@ function setup_email() {
   echo "Enter Y to install an MTA and N to use your GMail account."
   read response
   if [ "$response" == "Y" ] || [ "$response" == "y" ]; then
-    sudo apt-get install -y mailutils
+    apt-get install -y mailutils
     sed -i -e 's/"inet_interfaces = all/"inet_interfaces = loopback-only"/g' /etc/postfix/main.cf
     service postfix restart
     while true; do
@@ -290,19 +294,26 @@ function setup_packages() {
   read response
   if [ "$response" == "Y" ] || [ "$response" == "y" ]; then
     ## Add MongoDB Admin user
-    mongoUsername="user$(openssl rand -hex 16)"
-    mongoPassword=$(openssl rand -hex 32)
-    echo "MONGODB_USERNAME = '$mongoUsername'" >>$BD/CentralService/cs_config
-    echo "MONGODB_PWD = '$mongoPassword'" >>$BD/CentralService/cs_config
-    echo "MONGODB_USERNAME = '$mongoUsername'" >>$BD/DataService/ds_config
-    echo "MONGODB_PWD = '$mongoPassword'" >>$BD/DataService/ds_config
-    echo "    MONGODB_USERNAME = '$mongoUsername'" >>$BD/CentralReplica/config.py
-    echo "    MONGODB_PWD = '$mongoPassword'" >>$BD/CentralReplica/config.py
-    mongosh --eval "db.getSiblingDB('admin').createUser({user:'$mongoUsername',pwd:'$mongoPassword',roles:['userAdminAnyDatabase','dbAdminAnyDatabase','readWriteAnyDatabase']})"
-    # Enable MongoDB authorization
-    echo "security:" >>/etc/mongod.conf
-    echo "  authorization: \"enabled\"" >>/etc/mongod.conf
-    service mongod restart
+
+    if [ -f "$BD/CentralService/cs_config" ] && [ -f "/etc/mongod.conf" ] && grep -q "authorization: \"enabled\"" /etc/mongod.conf; then
+        echo "MongoDB is already set up. Please remove MongoDB by running `sudo rm -rf /var/lib/mongodb/* /etc/mongod.conf /etc/influxdb && sudo apt remove --purge --autoremove mongodb-org redis-server rabbitmq-server influxdb` and run installation script again."
+        exit 1
+    else
+      mongoUsername="user$(openssl rand -hex 16)"
+      mongoPassword=$(openssl rand -hex 32)
+      echo "MONGODB_USERNAME = '$mongoUsername'" >>$BD/CentralService/cs_config
+      echo "MONGODB_PWD = '$mongoPassword'" >>$BD/CentralService/cs_config
+      echo "MONGODB_USERNAME = '$mongoUsername'" >>$BD/DataService/ds_config
+      echo "MONGODB_PWD = '$mongoPassword'" >>$BD/DataService/ds_config
+      echo "    MONGODB_USERNAME = '$mongoUsername'" >>$BD/CentralReplica/config.py
+      echo "    MONGODB_PWD = '$mongoPassword'" >>$BD/CentralReplica/config.py
+      mongosh --eval "db.getSiblingDB('admin').createUser({user:'$mongoUsername',pwd:'$mongoPassword',roles:['userAdminAnyDatabase','dbAdminAnyDatabase','readWriteAnyDatabase']})"
+      # Enable MongoDB authorization
+      echo "security:" >>/etc/mongod.conf
+      echo "  authorization: \"enabled\"" >>/etc/mongod.conf
+      service mongod restart
+
+    fi
 
     sleep 2
 
@@ -478,7 +489,7 @@ service mongod start
 service supervisor stop
 service supervisor start
 sleep 5
-supervisorctl restart all
+supervisorctl restart all || true # first launch of RPC will fail, that is ok
 service influxdb start
 
 if [ "$DEPLOY_TOGETHER" = true ]; then
