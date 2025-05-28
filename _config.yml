@@ -6,3 +6,7 @@ theme: jekyll-theme-cayman
 
 plugins:
   - jekyll-mentions
+
+# Include static files from the docs folder
+# Otherwise Jekyll will ignore them
+include: ["docs/_*"]
