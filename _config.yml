@@ -10,6 +10,6 @@ plugins:
 # Include static files from the docs folder
 # Otherwise Jekyll will ignore them
 include: 
-  - "docs/_static/*"
-  - "docs/_images/*"
-  - "docs/_sources/*"
+  - "docs/_static"
+  - "docs/_images"
+  - "docs/_sources"
