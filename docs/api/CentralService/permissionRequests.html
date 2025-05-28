@@ -1,0 +1,417 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Permission Requests &mdash; BuildingDepot 3.3 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../genindex.html"/>
+        <link rel="search" title="Search" href="../../search.html"/>
+    <link rel="top" title="BuildingDepot 3.3 documentation" href="../../index.html"/>
+        <link rel="up" title="CentralService APIs" href="index.html"/>
+        <link rel="next" title="User" href="user.html"/>
+        <link rel="prev" title="Permission" href="permission.html"/> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> BuildingDepot
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                3.3
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../centralservice.html">Central Service</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../dataservice.html">Data Service</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../install.html#configuration">Configuration</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">CentralService APIs</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="oauth.html">OAuth</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tagtype.html">TagType</a></li>
+<li class="toctree-l2"><a class="reference internal" href="buildingtemplate.html">BuildingTemplate</a></li>
+<li class="toctree-l2"><a class="reference internal" href="building.html">Buildings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dataservice.html">DataService</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sensor.html">Sensor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sensorgroup.html">SensorGroups</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usergroup.html">Usergroups</a></li>
+<li class="toctree-l2"><a class="reference internal" href="permission.html">Permission</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Permission Requests</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#create-permission-requests">Create Permission Requests</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#read-permission-requests">Read Permission Requests</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="user.html">User</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../DataService/index.html">DataService APIs</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">BuildingDepot</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="index.html">CentralService APIs</a> &raquo;</li>
+        
+      <li>Permission Requests</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/api/CentralService/permissionRequests.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <section id="permission-requests">
+<h1>Permission Requests<a class="headerlink" href="#permission-requests" title="Permalink to this heading">¶</a></h1>
+<p>A Permission Request can be sent to obtain access to a particular sensor entity owned by a user of BuildingDepot.
+Once the permission request is sent to the user, on approval the Permission APIs should be used to create a permission
+pair between the user and the sensor resources.
+The Permissions are created between SensorGroups and UserGroups in Building Depot which come together to form the access control lists.
+Here we select a User Group and a Sensor Group and a permission value with which we want to associate these both.
+There are three levels of permission defined in BuildingDepot which are ‘d/r’ (deny read) ,’r’ (read), ‘r/w’ (read write) and ‘r/w/p’ (read write permission).
+If there are multiple permission mappings between a user and a sensor then the one that is most restrictive is chosen.
+Permissions can be defined in the CentralService at <a class="reference external" href="http://www.example.com:81/api/permission">http://www.example.com:81/api/permission</a>.
+Note: Firebase or RabbitMQ needs to be installed during the BD installation for this to work.</p>
+<section id="create-permission-requests">
+<h2>Create Permission Requests<a class="headerlink" href="#create-permission-requests" title="Permalink to this heading">¶</a></h2>
+<p>This request creates a new Permission Request for a sensor entity owned by a user.</p>
+<dl class="http post">
+<dt class="sig sig-object http" id="post--api-permission-request">
+<span class="sig-name descname"><span class="pre">POST</span> </span><span class="sig-name descname"><span class="pre">/api/permission/request</span></span><a class="headerlink" href="#post--api-permission-request" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="field-list">
+<dt class="field-odd">JSON Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><dl class="simple">
+<dt><strong>data</strong> <cite>(dictionary)</cite> – Contains the permission value for sensorgroup and usergroup</dt><dd><ul>
+<li><p><strong>target_sensors</strong> <cite>(string)</cite> – List of Targeted sensors</p></li>
+<li><p><strong>timestamp</strong> <cite>(string)</cite> – Name of the user_group</p></li>
+<li><dl class="simple">
+<dt><strong>permission</strong> <cite>(string)</cite> – Permission level</dt><dd><ul>
+<li><p><strong>r</strong> <cite>(string)</cite> – Read - Will give read only access to the sensors</p></li>
+<li><p><strong>rw</strong> <cite>(string)</cite> – Read-Write - Will give read and write access to the sensors</p></li>
+<li><p><strong>dr</strong> <cite>(string)</cite> – Deny-read - Will deny any access to the sensors</p></li>
+<li><p><strong>rwp</strong> <cite>(string)</cite> – Read-Write-Permission - Highest level of permission that can be assigned. Will give read and write access to the sensors. In addition to this the user will be able to add/remove tags from the sensor.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+<blockquote>
+<div><dl class="field-list simple">
+<dt class="field-odd">returns<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>success</strong> <cite>(string)</cite> – Returns ‘True’ if data is posted successfully otherwise ‘False’</p></li>
+<li><p><strong>error</strong> <cite>(string)</cite> – An additional value that will be present only if the request fails specifying the cause for failure</p></li>
+</ul>
+</dd>
+<dt class="field-even">status 200<span class="colon">:</span></dt>
+<dd class="field-even"><p>Success</p>
+</dd>
+<dt class="field-odd">status 401<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Unauthorized Credentials</p>
+</dd>
+</dl>
+</div></blockquote>
+</dd>
+</dl>
+<div class="compound">
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">POST</span> <span class="nn">/api/permission/request</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Accept</span><span class="o">:</span> <span class="l">application/json; charset=utf-8</span>
+
+{
+  &quot;data&quot;:{
+      &quot;target_sensors&quot;:[6cf53d24-e3a3-41bd-b2b5-8f109694f628, 6cf53d24-e3a3-41bd-b2b5-8f109694f629],
+      &quot;timestamp&quot;:&quot;1626105964&quot;,
+      &quot;permission&quot;:&quot;r&quot;
+  }
+}
+</pre></div>
+</div>
+<p><strong>Example response</strong> (for success):</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+
+<span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nt">&quot;success&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;True&quot;</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+</pre></div>
+</div>
+<p><strong>Example response</strong> (for failure):</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+
+<span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nt">&quot;success&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;False&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">  </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot; Missing Parameters&quot;</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+
+<span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nt">&quot;success&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;False&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">  </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot; Sensor does not exist&quot;</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+
+<span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nt">&quot;success&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;False&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">  </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot; Permission value does not exist&quot;</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="read-permission-requests">
+<h2>Read Permission Requests<a class="headerlink" href="#read-permission-requests" title="Permalink to this heading">¶</a></h2>
+<p>This request retrieves Permission Request for a user.</p>
+<dl class="http get">
+<dt class="sig sig-object http" id="get--api-permission-request">
+<span class="sig-name descname"><span class="pre">GET</span> </span><span class="sig-name descname"><span class="pre">/api/permission/request</span></span><a class="headerlink" href="#get--api-permission-request" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>success</strong> <cite>(string)</cite> – Returns ‘True’ if a permission exists between the sensor and user group otherwise ‘False’</p></li>
+<li><p><strong>permission_requests</strong> <cite>(string)</cite> – Contains the permission level that are attached to this SensorGroup and UserGroup</p></li>
+</ul>
+</dd>
+<dt class="field-even">Status Codes<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><span><a class="reference external" href="https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a></span> – Success</p></li>
+<li><p><span><a class="reference external" href="https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a></span> – Unauthorized Credentials</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<div class="compound">
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">GET</span> <span class="nn">/api/permission/request</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Accept</span><span class="o">:</span> <span class="l">application/json; charset=utf-8</span>
+</pre></div>
+</div>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span>HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  &quot;success&quot;: &quot;True&quot;
+  &quot;permission_requests&quot;: [{ &quot;requester_name&quot;: Admin, &quot;requester_email&quot;: test@buildingdepot.org, &quot;requested_sensors&quot;: [6cf53d24-e3a3-41bd-b2b5-8f109694f628, 6cf53d24-e3a3-41bd-b2b5-8f109694f629] }]
+}
+</pre></div>
+</div>
+<p><strong>Example response</strong> (for failure):</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+
+<span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nt">&quot;success&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;False&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">  </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot; Permission Requests does not exist&quot;</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+</pre></div>
+</div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="user.html" class="btn btn-neutral float-right" title="User" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="permission.html" class="btn btn-neutral" title="Permission" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2022, SynergyLabs, Sudershan Boovaraghavan.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> and ❤️  using a custom <a href="https://github.com/LinxiFan/Sphinx-theme">theme</a> based on <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'3.3',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/documentation_options.js"></script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+      <script type="text/javascript" src="../../_static/sphinx_highlight.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
