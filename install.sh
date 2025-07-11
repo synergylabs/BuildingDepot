@@ -56,11 +56,13 @@ function deploy_centralservice() {
   # copy uwsgi files
   cp configs/uwsgi_cs.ini /etc/uwsgi/apps-available/cs.ini
 
-  # Create supervisor config
-  cp configs/supervisor-cs.conf /etc/supervisor/conf.d/
+  # Create systemd config for central replica
+  cp configs/bd-replica.service /etc/systemd/system/
+  systemctl enable bd-replica.service
 
-  # Create supervisor config for central replica
-  cp configs/supervisor-replica.conf /etc/supervisor/conf.d/
+  # Create systemd config for central service
+  cp configs/bd-central.service /etc/systemd/system/
+  systemctl enable bd-central.service
 
   # Create nginx config
   rm -f /etc/nginx/sites-enabled/default
@@ -74,8 +76,9 @@ function deploy_dataservice() {
   # copy uwsgi files
   cp configs/uwsgi_ds.ini /etc/uwsgi/apps-available/ds.ini
 
-  # Create supervisor config
-  cp configs/supervisor-ds.conf /etc/supervisor/conf.d/
+  # Create systemd config
+  cp configs/bd-data.service /etc/systemd/system/
+  systemctl enable bd-data.service
 
   # Create nginx config
   rm -f /etc/nginx/sites-enabled/default
@@ -190,7 +193,6 @@ EOF
 
   apt-get install -y openssl python3-setuptools python3-dev build-essential software-properties-common
   apt-get install -y nginx
-  apt-get install -y supervisor
   apt-get install -y redis-server
   pip3 install --upgrade virtualenv
   apt-get install -y wget
@@ -486,10 +488,7 @@ if [ "$DEPLOY_DS" = true ]; then
 fi
 
 service mongod start
-service supervisor stop
-service supervisor start
-sleep 5
-supervisorctl restart all || true # first launch of RPC will fail, that is ok
+# TODO you may need to set up start some of the buildingdepot systemd services here
 service influxdb start
 
 if [ "$DEPLOY_TOGETHER" = true ]; then
@@ -509,4 +508,14 @@ setup_packages
 /srv/buildingdepot/venv/bin/python setup_bd.py "install"
 #
 echo -e "\nInstallation Finished..\n"
-supervisorctl restart all
+
+if [ "$DEPLOY_CS" = true ]; then
+    systemctl stop bd-central
+    systemctl stop bd-replica
+    systemctl start bd-replica
+    systemctl start bd-central
+fi
+if [ "$DEPLOY_DS" = true ]; then
+    systemctl stop bd-data
+    systemctl start bd-data
+fi

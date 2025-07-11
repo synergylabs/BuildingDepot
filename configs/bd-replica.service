@@ -1,0 +1,13 @@
+[Unit]
+Description=BuildingDepot Central Replica
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/srv/buildingdepot/CentralReplica
+ExecStart=/srv/buildingdepot/venv/bin/python /srv/buildingdepot/CentralReplica/main.py
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target
