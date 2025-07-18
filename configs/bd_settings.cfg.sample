@@ -1,0 +1,36 @@
+DEBUG = True
+SECRET_KEY = 'This Is Secret Key. Please Make It Complicated'
+TOKEN_EXPIRATION = 3600
+EMAIL = 'LOCAL'
+EMAIL_ID = 'admin@buildingdepot.org'
+NOTIFICATION_TYPE = 'RabbitMQ'
+
+# mongodb
+MONGODB_HOST = '127.0.0.1'
+MONGODB_PORT = 27017
+MONGODB_DATABASE = 'buildingdepot'
+MONGODB_DATABASE_DS = 'dataservice'
+MONGODB_DATABASE_BD = 'buildingdepot'
+MONGODB_USERNAME = ''
+MONGODB_PWD = ''
+
+# redis
+REDIS_HOST = '127.0.0.1'
+REDIS_PWD = ''
+
+# dataservice
+NAME = 'ds1'
+
+# influxdb
+INFLUXDB_HOST = '127.0.0.1'
+INFLUXDB_PORT = 8086
+INFLUXDB_DB = 'buildingdepot'
+INFLUXDB_USERNAME = ''
+INFLUXDB_PWD = ''
+
+# rabbitmq
+RABBITMQ_ADMIN_USERNAME = ''
+RABBITMQ_ADMIN_PWD = ''
+RABBITMQ_ENDUSER_USERNAME = ''
+RABBITMQ_ENDUSER_PWD = ''
+
