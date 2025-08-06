@@ -1,0 +1,36 @@
+services:
+
+  mongo:
+    image: "docker.io/mongo:7"
+    hostname: mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGODB_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGODB_PWD}
+
+
+  influxdb:
+    image: "docker.io/influxdb:3-core"
+    hostname: influxdb
+    environment:
+      DOCKER_INFLUXDB_INIT_MODE: setup
+      DOCKER_INFLUXDB_INIT_USERNAME: ${INFLUXDB_USERNAME}
+      DOCKER_INFLUXDB_INIT_PASSWORD: ${INFLUXDB_PWD}
+      DOCKER_INFLUXDB_INIT_BUCKET: ${INFLUXDB_DB}
+
+
+  rabbitmq:
+    image: "docker.io/rabbitmq:3.13"
+    hostname: rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_ADMIN_USERNAME}
+      RABBITMQ_DEFAULT_PASSWORD: ${RABBITMQ_ADMIN_PWD}
+    post_start:
+      - command: rabbitmqctl add_user ${RABBITMQ_ENDUSER_USERNAME} ${RABBITMQ_ENDUSER_PWD}
+      - command: rabbitmqctl set_user_tags ${RABBITMQ_ENDUSER_USERNAME}
+      - command: rabbitmqctl set_permissions -p / ${RABBITMQ_ENDUSER_USERNAME} "" "" ".*"
+    # we use container networking as only needs to be accessed by other containers
+    # if you want to host on a different server, uncomment the following
+    # and update the appropriate settings.js files
+    # ports:
+    #   - "5672:5672"
+
