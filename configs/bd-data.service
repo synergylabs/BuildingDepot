@@ -1,0 +1,14 @@
+[Unit]
+Description=BuildingDepot Data Service
+After=network.target bd-central.service
+Requires=bd-central.service
+
+[Service]
+Type=simple
+WorkingDirectory=/srv/BuildingDepot/buildingdepot
+ExecStart=/snap/bin/uv run --env-file=../.env gunicorn -w 4 -b 127.0.0.1:8082 DataService:app
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target
