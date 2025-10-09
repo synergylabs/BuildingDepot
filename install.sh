@@ -1,10 +1,6 @@
 #!/usr/bin/env bash
 set -euox pipefail
 
-DEPLOY_TOGETHER=true
-DEPLOY_CS=true
-DEPLOY_DS=true
-
 ################################################################################
 # Check and make sure we are running as root or sudo (?)
 ################################################################################
@@ -13,48 +9,21 @@ if [[ $UID -ne 0 ]]; then
   exit 1
 fi
 
-BD=/srv/buildingdepot/
+BD=/srv/buildingdepot
 pushd $(pwd)
 
 mkdir -p /etc/nginx
-cp configs/nginx.conf /etc/nginx/nginx.conf
-
-mkdir -p /srv/buildingdepot
 mkdir -p /var/log/buildingdepot/CentralService
 mkdir -p /var/log/buildingdepot/DataService
 mkdir -p /var/sockets
 
-function setup_venv() {
-  cp -n pip_packages.list $1
-  cd $1
-
-  virtualenv ./venv
-  source venv/bin/activate
-
-  pip3 install --upgrade pip
-  pip3 install --upgrade setuptools
-  pip3 install "Flask==2.1.3"
-  pip3 install --upgrade -r pip_packages.list
-  pip3 install "firebase-admin"
-
-  pip3 install --upgrade uWSGI
-  mkdir -p /etc/uwsgi/apps-available/
-
-  deactivate
-  cd -
-}
 # Deploy apps
-function deploy_centralservice() {
-  setup_venv /srv/buildingdepot/
+function deploy_services() {
+  uv sync
 
   #copy and untar new dataservice tarball
-  cp -r buildingdepot/CentralService /srv/buildingdepot/
-  cp -r buildingdepot/DataService /srv/buildingdepot/
-  cp -r buildingdepot/CentralReplica /srv/buildingdepot/
-  cp -r buildingdepot/Documentation /srv/buildingdepot/
-  cd /srv/buildingdepot
-  # copy uwsgi files
-  cp configs/uwsgi_cs.ini /etc/uwsgi/apps-available/cs.ini
+  ln -s $(pwd) $BD
+  cd $BD
 
   # Create systemd config for central replica
   cp configs/bd-replica.service /etc/systemd/system/
@@ -64,30 +33,12 @@ function deploy_centralservice() {
   cp configs/bd-central.service /etc/systemd/system/
   systemctl enable bd-central.service
 
-  # Create nginx config
-  rm -f /etc/nginx/sites-enabled/default
-}
-
-function deploy_dataservice() {
-  setup_venv /srv/buildingdepot/
-
-  cd /srv/buildingdepot
-
-  # copy uwsgi files
-  cp configs/uwsgi_ds.ini /etc/uwsgi/apps-available/ds.ini
-
-  # Create systemd config
+  # Create systemd config for data service
   cp configs/bd-data.service /etc/systemd/system/
   systemctl enable bd-data.service
 
   # Create nginx config
   rm -f /etc/nginx/sites-enabled/default
-}
-
-function joint_deployment_fix() {
-  # Create join nginx config
-  rm -f /etc/nginx/sites-enabled/default
-  cd /srv/buildingdepot
 
   #Setting up SSL
   echo "Do you have a SSL certificate and key that you would like to use? Please enter [y/n]"
@@ -125,9 +76,9 @@ function joint_deployment_fix() {
       read response_certbot
 
       if [ "$response_certbot" == "Y" ] || [ "$response_certbot" == "y" ]; then
-        sed -i "s|<cert_path>|$ca_cert_path|g" /srv/buildingdepot/configs/certbot_post_hook.sh
-        sed -i "s|<server_cert_path>|$cert_path|g" /srv/buildingdepot/configs/certbot_post_hook.sh
-        sed -i "s|<privkey_path>|$key_path|g" /srv/buildingdepot/configs/certbot_post_hook.sh
+        sed -i "s|<cert_path>|$ca_cert_path|g" configs/certbot_post_hook.sh
+        sed -i "s|<server_cert_path>|$cert_path|g" configs/certbot_post_hook.sh
+        sed -i "s|<privkey_path>|$key_path|g" configs/certbot_post_hook.sh
         cp configs/certbot_post_hook.sh /etc/letsencrypt/renewal-hooks/deploy/
         chmod +x /etc/letsencrypt/renewal-hooks/deploy/certbot_post_hook.sh
       fi
@@ -138,15 +89,8 @@ function joint_deployment_fix() {
   ln -sf /etc/nginx/sites-available/buildingdepot.conf /etc/nginx/sites-enabled/buildingdepot.conf
 }
 
-function deploy_config() {
-  cp -r configs/ /srv/buildingdepot
-  mkdir -p /var/sockets
-}
-
 function install_packages() {
-  apt-get install -y curl
-  apt-get install -y apt-transport-https
-  apt-get install -y gnupg
+  apt-get install -y curl wget apt-transport-https gnupg openssl
   source /etc/lsb-release
 
   # Add keys to install influxdb
@@ -187,26 +131,26 @@ EOF
   echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-7.0.gpg ] https://repo.mongodb.org/apt/ubuntu ${DISTRIB_CODENAME}/mongodb-org/7.0 multiverse" | tee /etc/apt/sources.list.d/mongodb-org-7.0.list
 
   apt-get update -y
-  apt-get install
-  apt-get -y install python3-pip
-  apt-get install -y mongodb-org
-
-  apt-get install -y openssl python3-setuptools python3-dev build-essential software-properties-common
-  apt-get install -y nginx
-  apt-get install -y redis-server
-  pip3 install --upgrade virtualenv
-  apt-get install -y wget
-  apt-get install -y influxdb
-  service influxdb start
+  apt-get install -y \
+      python3-pip python3-setuptools python3-dev build-essential software-properties-common \
+      nginx \
+      redis-server \
+      mongodb-org \
+      influxdb \
+      erlang-base \
+      erlang-asn1 erlang-crypto erlang-eldap erlang-ftp erlang-inets \
+      erlang-mnesia erlang-os-mon erlang-parsetools erlang-public-key \
+      erlang-runtime-tools erlang-snmp erlang-ssl \
+      erlang-syntax-tools erlang-tftp erlang-tools erlang-xmerl \
+      rabbitmq-server
+  systemctl enable influxdb
+  systemctl start influxdb
+  systemctl enable mongod
   systemctl start mongod
-  systemctl enable mongod.service
-  apt-get install -y erlang-base \
-    erlang-asn1 erlang-crypto erlang-eldap erlang-ftp erlang-inets \
-    erlang-mnesia erlang-os-mon erlang-parsetools erlang-public-key \
-    erlang-runtime-tools erlang-snmp erlang-ssl \
-    erlang-syntax-tools erlang-tftp erlang-tools erlang-xmerl
-  apt-get install -y rabbitmq-server --fix-missing
+  systemctl enable mongod
+  systemctl start mongod
   snap install node --channel=22 --classic
+  snap install astral-uv --classic
 }
 
 function setup_gmail() {
@@ -477,26 +421,11 @@ function setup_packages() {
 
 }
 
-deploy_config
 install_packages
-if [ "$DEPLOY_CS" = true ]; then
-  deploy_centralservice
-fi
+deploy_services
 
-if [ "$DEPLOY_DS" = true ]; then
-  deploy_dataservice
-fi
-
-service mongod start
-# TODO you may need to set up start some of the buildingdepot systemd services here
-service influxdb start
-
-if [ "$DEPLOY_TOGETHER" = true ]; then
-  joint_deployment_fix
-  service nginx restart
-fi
-
-rm -rf configs
+service mongod restart
+service influxdb restart
 
 popd
 setup_email
@@ -505,17 +434,13 @@ setup_notifications
 # Create Database on InfluxDB
 curl -d "q=CREATE DATABASE buildingdepot" -X POST http://localhost:8086/query
 setup_packages
-/srv/buildingdepot/venv/bin/python setup_bd.py "install"
+uv run python3 setup_bd.py "install"
 #
 echo -e "\nInstallation Finished..\n"
 
-if [ "$DEPLOY_CS" = true ]; then
-    systemctl stop bd-central
-    systemctl stop bd-replica
-    systemctl start bd-replica
-    systemctl start bd-central
-fi
-if [ "$DEPLOY_DS" = true ]; then
-    systemctl stop bd-data
-    systemctl start bd-data
-fi
+systemctl stop bd-central
+systemctl stop bd-replica
+systemctl stop bd-data
+systemctl start bd-replica
+systemctl start bd-central
+systemctl start bd-data
