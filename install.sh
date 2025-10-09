@@ -9,7 +9,7 @@ if [[ $UID -ne 0 ]]; then
   exit 1
 fi
 
-BD=/srv/buildingdepot
+BD=/srv/BuildingDepot/builingdepot
 pushd $(pwd)
 
 mkdir -p /etc/nginx
@@ -21,9 +21,11 @@ mkdir -p /var/sockets
 function deploy_services() {
   uv sync
 
-  #copy and untar new dataservice tarball
-  ln -s $(pwd) $BD
-  cd $BD
+  #copy and untar new dataservice ftarball
+  ln -sf $(pwd) /srv/BuildingDepot
+  cd /srv/BuildingDepot
+  cp configs/bd_settings.cfg.sample configs/bd_settings.cfg
+  cp .env.sample .env
 
   # Create systemd config for central replica
   cp configs/bd-replica.service /etc/systemd/system/
@@ -48,16 +50,16 @@ function deploy_services() {
   if [ "$response" == "Y" ] || [ "$response" == "y" ]; then
     echo "Please enter the path to the CA certificate (fullchain.pem):"
     read ca_cert_path
-    sed -i "s|<cert_path>|$ca_cert_path|g" /srv/buildingdepot/configs/nginx_sites_ssl.conf
+    sed -i "s|<cert_path>|$ca_cert_path|g" /srv/BuildingDepot/configs/nginx_sites_ssl.conf
     echo "Please enter the path to the server certificate (cert.pem):"
     read cert_path
     echo "Please enter the path to the server key (privkey.pem):"
     read key_path
-    sed -i "s|<key_path>|$key_path|g" /srv/buildingdepot/configs/nginx_sites_ssl.conf
+    sed -i "s|<key_path>|$key_path|g" /srv/BuildingDepot/configs/nginx_sites_ssl.conf
     echo "Please enter the ip address or the domain name of this installation"
     read domain
-    sed -i "s|<domain>|$domain|g" /srv/buildingdepot/configs/nginx_sites_ssl.conf
-    ln -sf configs/nginx_sites_ssl.conf /etc/nginx/sites-available/buildingdepot.conf
+    sed -i "s|<domain>|$domain|g" /srv/BuildingDepot/configs/nginx_sites_ssl.conf
+    ln -sf /srv/BuildingDepot/configs/nginx_sites_ssl.conf /etc/nginx/sites-available/buildingdepot.conf
 
     #Setting up SSL for packages
     echo "Would you like to use these SSL certificates for BD packages (RabbitMQ)? [y/n]"
@@ -166,12 +168,12 @@ function setup_gmail() {
   read access_token
   echo "Please enter refresh token"
   read refresh_token
-  echo "EMAIL = 'GMAIL'" >>$BD/CentralService/cs_config
-  echo "EMAIL_ID = '$email_id'" >>$BD/CentralService/cs_config
-  echo "ACCESS_TOKEN = '$access_token'" >>$BD/CentralService/cs_config
-  echo "REFRESH_TOKEN = '$refresh_token'" >>$BD/CentralService/cs_config
-  echo "CLIENT_ID = '$client_id'" >>$BD/CentralService/cs_config
-  echo "CLIENT_SECRET = '$client_secret'" >>$BD/CentralService/cs_config
+  echo "EMAIL = 'GMAIL'" >>/srv/BuildingDepot/configs/bd_settings.cfg
+  echo "EMAIL_ID = '$email_id'" >>/srv/BuildingDepot/configs/bd_settings.cfg
+  echo "ACCESS_TOKEN = '$access_token'" >>/srv/BuildingDepot/configs/bd_settings.cfg
+  echo "REFRESH_TOKEN = '$refresh_token'" >>/srv/BuildingDepot/configs/bd_settings.cfg
+  echo "CLIENT_ID = '$client_id'" >>/srv/BuildingDepot/configs/bd_settings.cfg
+  echo "CLIENT_SECRET = '$client_secret'" >>/srv/BuildingDepot/configs/bd_settings.cfg
 }
 
 function setup_email() {
@@ -191,8 +193,8 @@ function setup_email() {
       echo "Please enter the number you received in the mail"
       read input
       if [ $input == $n ]; then
-        echo "EMAIL = 'LOCAL'" >>$BD/CentralService/cs_config
-        echo "EMAIL_ID = 'admin@buildingdepot.org'" >>$BD/CentralService/cs_config
+        echo "EMAIL = 'LOCAL'" >>/srv/BuildingDepot/configs/bd_settings.cfg
+        echo "EMAIL_ID = 'admin@buildingdepot.org'" >>/srv/BuildingDepot/configs/bd_settings.cfg
         break
       else
         echo "Verification failed. Enter R to retry, Y to use GMail"
@@ -223,11 +225,11 @@ function setup_notifications() {
     echo "Please provide the absolute path of where your Google Service Account JSON file is, which contains the keys for your FCM project."
     read response
     if [ ! -z "$response" ]; then
-      echo "NOTIFICATION_TYPE = 'FIREBASE'" >>$BD/CentralService/cs_config
-      echo "FIREBASE_CREDENTIALS = '$response'" >>$BD/CentralService/cs_config
+      echo "NOTIFICATION_TYPE = 'FIREBASE'" >>/srv/BuildingDepot/configs/bd_settings.cfg
+      echo "FIREBASE_CREDENTIALS = '$response'" >>/srv/BuildingDepot/configs/bd_settings.cfg
     fi
   elif [ "$response" == "N" ] || [ "$response" == "n" ]; then
-    echo "NOTIFICATION_TYPE = 'RabbitMQ'" >>$BD/CentralService/cs_config
+    echo "NOTIFICATION_TYPE = 'RabbitMQ'" >>/srv/BuildingDepot/configs/bd_settings.cfg
   fi
 }
 
@@ -236,23 +238,23 @@ function setup_packages() {
   echo
   echo "Securing BD Packages"
   echo "--------------------"
-  echo "Enter Y to auto-generate credentials for packages (MongoDB,InfluxDB & Redis). Credentials are stored in cs_config file (or) Enter N to input individual package credentials"
+  echo "Enter Y to auto-generate credentials for packages (MongoDB,InfluxDB & Redis). Credentials are stored in bd_settings.cfg file (or) Enter N to input individual package credentials"
   read response
   if [ "$response" == "Y" ] || [ "$response" == "y" ]; then
     ## Add MongoDB Admin user
 
-    if [ -f "$BD/CentralService/cs_config" ] && [ -f "/etc/mongod.conf" ] && grep -q "authorization: \"enabled\"" /etc/mongod.conf; then
-        echo "MongoDB is already set up. Please remove MongoDB by running `sudo rm -rf /var/lib/mongodb/* /etc/mongod.conf /etc/influxdb && sudo apt remove --purge --autoremove mongodb-org redis-server rabbitmq-server influxdb` and run installation script again."
+    if [ -f "/srv/BuildingDepot/configs/bd_settings.cfg" ] && [ -f "/etc/mongod.conf" ] && grep -q "authorization: \"enabled\"" /etc/mongod.conf; then
+        echo "MongoDB is already set up. Please remove MongoDB by running sudo rm -rf /var/lib/mongodb/* /etc/mongod.conf /etc/influxdb && sudo apt remove --purge --autoremove mongodb-org redis-server rabbitmq-server influxdb and run installation script again."
         exit 1
     else
       mongoUsername="user$(openssl rand -hex 16)"
       mongoPassword=$(openssl rand -hex 32)
-      echo "MONGODB_USERNAME = '$mongoUsername'" >>$BD/CentralService/cs_config
-      echo "MONGODB_PWD = '$mongoPassword'" >>$BD/CentralService/cs_config
-      echo "MONGODB_USERNAME = '$mongoUsername'" >>$BD/DataService/ds_config
-      echo "MONGODB_PWD = '$mongoPassword'" >>$BD/DataService/ds_config
-      echo "    MONGODB_USERNAME = '$mongoUsername'" >>$BD/CentralReplica/config.py
-      echo "    MONGODB_PWD = '$mongoPassword'" >>$BD/CentralReplica/config.py
+      echo "MONGODB_USERNAME = '$mongoUsername'" >>/srv/BuildingDepot/configs/bd_settings.cfg
+      echo "MONGODB_PWD = '$mongoPassword'" >>/srv/BuildingDepot/configs/bd_settings.cfg
+      echo "MONGODB_USERNAME = '$mongoUsername'" >>/srv/BuildingDepot/configs/bd_settings.cfg
+      echo "MONGODB_PWD = '$mongoPassword'" >>/srv/BuildingDepot/configs/bd_settings.cfg
+      echo "    MONGODB_USERNAME = '$mongoUsername'" >>/srv/BuildingDepot/buildingdepot/CentralReplica/config.py
+      echo "    MONGODB_PWD = '$mongoPassword'" >>/srv/BuildingDepot/buildingdepot/CentralReplica/config.py
       mongosh --eval "db.getSiblingDB('admin').createUser({user:'$mongoUsername',pwd:'$mongoPassword',roles:['userAdminAnyDatabase','dbAdminAnyDatabase','readWriteAnyDatabase']})"
       # Enable MongoDB authorization
       echo "security:" >>/etc/mongod.conf
@@ -266,8 +268,8 @@ function setup_packages() {
     ## Add InfluxDB Admin user
     influxUsername="user$(openssl rand -hex 16)"
     influxPassword=$(openssl rand -hex 32)
-    echo "INFLUXDB_USERNAME = '$influxUsername'" >>$BD/DataService/ds_config
-    echo "INFLUXDB_PWD = '$influxPassword'" >>$BD/DataService/ds_config
+    echo "INFLUXDB_USERNAME = '$influxUsername'" >>/srv/BuildingDepot/configs/bd_settings.cfg
+    echo "INFLUXDB_PWD = '$influxPassword'" >>/srv/BuildingDepot/configs/bd_settings.cfg
     sleep 1
     curl -d "q=CREATE USER $influxUsername WITH PASSWORD '$influxPassword' WITH ALL PRIVILEGES" -X POST http://localhost:8086/query
     sed -ir 's/# auth-enabled = false/auth-enabled = true/g' /etc/influxdb/influxdb.conf
@@ -277,9 +279,8 @@ function setup_packages() {
 
     ## Add Redis Admin user
     redisPassword=$(openssl rand -hex 64)
-    echo "REDIS_PWD = '$redisPassword'" >>$BD/CentralService/cs_config
-    echo "REDIS_PWD = '$redisPassword'" >>$BD/DataService/ds_config
-    echo "    REDIS_PWD = '$redisPassword'" >>$BD/CentralReplica/config.py
+    echo "REDIS_PWD = '$redisPassword'" >>/srv/BuildingDepot/configs/bd_settings.cfg
+    echo "    REDIS_PWD = '$redisPassword'" >>/srv/BuildingDepot/buildingdepot/CentralReplica/config.py
     sed -i -e '/#.* requirepass / s/.*/ requirepass  '$redisPassword'/' /etc/redis/redis.conf
     service redis restart
 
@@ -290,10 +291,10 @@ function setup_packages() {
     rabbitmqPassword=$(openssl rand -hex 32)
     rabbitmqUsername_endUser="user$(openssl rand -hex 16)"
     rabbitmqPassword_endUser=$(openssl rand -hex 32)
-    echo "RABBITMQ_ADMIN_USERNAME = '$rabbitmqUsername'" >>$BD/DataService/ds_config
-    echo "RABBITMQ_ADMIN_PWD = '$rabbitmqPassword'" >>$BD/DataService/ds_config
-    echo "RABBITMQ_ENDUSER_USERNAME = '$rabbitmqUsername_endUser'" >>$BD/DataService/ds_config
-    echo "RABBITMQ_ENDUSER_PWD = '$rabbitmqPassword_endUser'" >>$BD/DataService/ds_config
+    echo "RABBITMQ_ADMIN_USERNAME = '$rabbitmqUsername'" >>/srv/BuildingDepot/configs/bd_settings.cfg
+    echo "RABBITMQ_ADMIN_PWD = '$rabbitmqPassword'" >>/srv/BuildingDepot/configs/bd_settings.cfg
+    echo "RABBITMQ_ENDUSER_USERNAME = '$rabbitmqUsername_endUser'" >>/srv/BuildingDepot/configs/bd_settings.cfg
+    echo "RABBITMQ_ENDUSER_PWD = '$rabbitmqPassword_endUser'" >>/srv/BuildingDepot/configs/bd_settings.cfg
     # Create a Admin user.
     rabbitmqctl add_user "$rabbitmqUsername" "$rabbitmqPassword"
     # Add Administrative Rights
@@ -327,12 +328,10 @@ function setup_packages() {
     read mongoUsername
     echo "Enter MongoDB Password: "
     read -s mongoPassword
-    echo "MONGODB_USERNAME = '$mongoUsername'" >>$BD/CentralService/cs_config
-    echo "MONGODB_PWD = '$mongoPassword'" >>$BD/CentralService/cs_config
-    echo "MONGODB_USERNAME = '$mongoUsername'" >>$BD/DataService/ds_config
-    echo "MONGODB_PWD = '$mongoPassword'" >>$BD/DataService/ds_config
-    echo "    MONGODB_USERNAME = '$mongoUsername'" >>$BD/CentralReplica/config.py
-    echo "    MONGODB_PWD = '$mongoPassword'" >>$BD/CentralReplica/config.py
+    echo "MONGODB_USERNAME = '$mongoUsername'" >>/srv/BuildingDepot/configs/bd_settings.cfg
+    echo "MONGODB_PWD = '$mongoPassword'" >>/srv/BuildingDepot/configs/bd_settings.cfg
+    echo "    MONGODB_USERNAME = '$mongoUsername'" >>/srv/BuildingDepot/buildingdepot/CentralReplica/config.py
+    echo "    MONGODB_PWD = '$mongoPassword'" >>/srv/BuildingDepot/buildingdepot/CentralReplica/config.py
     mongosh --eval "db.getSiblingDB('admin').createUser({user:'$mongoUsername',pwd:'$mongoPassword',roles:['userAdminAnyDatabase','dbAdminAnyDatabase','readWriteAnyDatabase']})"
     # Enable MongoDB authorization
     echo "security:" >>/etc/mongod.conf
@@ -347,8 +346,8 @@ function setup_packages() {
     read influxUsername
     echo "Enter InfluxDB Password: "
     read -s influxPassword
-    echo "INFLUXDB_USERNAME = '$influxUsername'" >>$BD/DataService/ds_config
-    echo "INFLUXDB_PWD = '$influxPassword'" >>$BD/DataService/ds_config
+    echo "INFLUXDB_USERNAME = '$influxUsername'" >>/srv/BuildingDepot/configs/bd_settings.cfg
+    echo "INFLUXDB_PWD = '$influxPassword'" >>/srv/BuildingDepot/configs/bd_settings.cfg
     sleep 1
     curl -d "q=CREATE USER $influxUsername WITH PASSWORD '$influxPassword' WITH ALL PRIVILEGES" -X POST http://localhost:8086/query
     sed -ir 's/# auth-enabled = false/auth-enabled = true/g' /etc/influxdb/influxdb.conf
@@ -362,9 +361,9 @@ function setup_packages() {
     read redisUsername
     echo "Enter Redis Password: "
     read -s redisPassword
-    echo "REDIS_PWD = '$redisPassword'" >>$BD/CentralService/cs_config
-    echo "REDIS_PWD = '$redisPassword'" >>$BD/DataService/ds_config
-    echo "    REDIS_PWD = '$redisPassword'" >>$BD/CentralReplica/config.py
+    echo "REDIS_PWD = '$redisPassword'" >>/srv/BuildingDepot/configs/bd_settings.cfg
+    echo "REDIS_PWD = '$redisPassword'" >>/srv/BuildingDepot/configs/bd_settings.cfg
+    echo "    REDIS_PWD = '$redisPassword'" >>/srv/BuildingDepot/buildingdepot/CentralReplica/config.py
     sed -i -e '/#.* requirepass / s/.*/ requirepass  '$redisPassword'/' /etc/redis/redis.conf
     service redis restart
 
@@ -394,10 +393,10 @@ function setup_packages() {
     # Grant necessary permissions
     rabbitmqctl set_permissions -p / "$rabbitmqUsername_endUser" "" "" ".*"
 
-    echo "RABBITMQ_ADMIN_USERNAME = '$rabbitmqUsername'" >>$BD/DataService/ds_config
-    echo "RABBITMQ_ADMIN_PWD = '$rabbitmqPassword'" >>$BD/DataService/ds_config
-    echo "RABBITMQ_ENDUSER_USERNAME = '$rabbitmqUsername_endUser'" >>$BD/DataService/ds_config
-    echo "RABBITMQ_ENDUSER_PWD = '$rabbitmqPassword_endUser'" >>$BD/DataService/ds_config
+    echo "RABBITMQ_ADMIN_USERNAME = '$rabbitmqUsername'" >>/srv/BuildingDepot/configs/bd_settings.cfg
+    echo "RABBITMQ_ADMIN_PWD = '$rabbitmqPassword'" >>/srv/BuildingDepot/configs/bd_settings.cfg
+    echo "RABBITMQ_ENDUSER_USERNAME = '$rabbitmqUsername_endUser'" >>/srv/BuildingDepot/configs/bd_settings.cfg
+    echo "RABBITMQ_ENDUSER_PWD = '$rabbitmqPassword_endUser'" >>/srv/BuildingDepot/configs/bd_settings.cfg
 
     echo "BuildingDepot uses RabbitMQ Queues for Publishing and Subscribing to Sensor data. "
     echo "Some web front-end use RabbitMQ Queues use rabbitmq_web_stomp plugin"
