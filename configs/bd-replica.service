@@ -1,0 +1,14 @@
+[Unit]
+Description=BuildingDepot Central Replica
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/srv/BuildingDepot/buildingdepot/CentralReplica
+ExecStart=/snap/bin/uv run python3 main.py
+Restart=always
+RestartSec=3
+Environment="PYTHONUNBUFFERED=TRUE"
+
+[Install]
+WantedBy=multi-user.target

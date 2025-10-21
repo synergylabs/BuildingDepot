@@ -23,7 +23,7 @@ tempPwd = "".join(
 if option == "install":
     configBuffer = io.StringIO()
     configBuffer.write("[dummysection]\n")
-    configBuffer.write(open("/srv/buildingdepot/CentralService/cs_config").read())
+    configBuffer.write(open("/srv/BuildingDepot/configs/bd_settings.cfg").read())
     configBuffer.seek(0, os.SEEK_SET)
     config = configparser.ConfigParser()
     config.read_file(configBuffer)
@@ -38,7 +38,7 @@ elif option == "bd_install":
 elif option == "test":
     configBuffer = io.StringIO()
     configBuffer.write("[dummysection]\n")
-    configBuffer.write(open("/srv/buildingdepot/CentralService/cs_config").read())
+    configBuffer.write(open("/srv/BuildingDepot/configs/bd_settings.cfg").read())
     configBuffer.seek(0, os.SEEK_SET)
     config = configparser.ConfigParser()
     config.read_file(configBuffer)

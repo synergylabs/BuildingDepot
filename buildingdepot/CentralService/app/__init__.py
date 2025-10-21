@@ -24,7 +24,7 @@ from mongoengine import connect
 from xmlrpc.client import ServerProxy
 
 app = Flask(__name__)
-app.config.from_envvar("CS_SETTINGS")
+app.config.from_envvar("BD_SETTINGS")
 permissions = {"rw": "r/w", "r": "r", "dr": "d/r", "rwp": "r/w/p"}
 
 login_manager = LoginManager()
