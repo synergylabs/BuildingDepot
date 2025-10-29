@@ -25,7 +25,7 @@ function deploy_services() {
   ln -sf $(pwd) /srv/BuildingDepot
   cd /srv/BuildingDepot
   cp configs/bd_settings.cfg.sample configs/bd_settings.cfg
-  cp .env.sample .env
+  cp env.sample .env
 
   # Create systemd config for central replica
   cp configs/bd-replica.service /etc/systemd/system/
@@ -249,8 +249,6 @@ function setup_packages() {
     else
       mongoUsername="user$(openssl rand -hex 16)"
       mongoPassword=$(openssl rand -hex 32)
-      echo "MONGODB_USERNAME = '$mongoUsername'" >>/srv/BuildingDepot/configs/bd_settings.cfg
-      echo "MONGODB_PWD = '$mongoPassword'" >>/srv/BuildingDepot/configs/bd_settings.cfg
       echo "MONGODB_USERNAME = '$mongoUsername'" >>/srv/BuildingDepot/configs/bd_settings.cfg
       echo "MONGODB_PWD = '$mongoPassword'" >>/srv/BuildingDepot/configs/bd_settings.cfg
       echo "    MONGODB_USERNAME = '$mongoUsername'" >>/srv/BuildingDepot/buildingdepot/CentralReplica/config.py
