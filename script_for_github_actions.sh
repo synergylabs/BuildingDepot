@@ -15,7 +15,6 @@ fi
 BD=/srv/BuildingDepot/
 pushd $(pwd)
 
-mkdir -p /etc/nginx
 mkdir -p /var/log/buildingdepot/CentralService
 mkdir -p /var/log/buildingdepot/DataService
 mkdir -p /var/sockets
@@ -240,7 +239,7 @@ setup_email
 # Create Database on InfluxDB
 curl -d "q=CREATE DATABASE buildingdepot" -X POST http://localhost:8086/query
 setup_packages
-uv run python3 setup_bd.py "install"
+uv run python3 setup_bd.py "test"
 #
 echo -e "\nInstallation Finished..\n"
 
