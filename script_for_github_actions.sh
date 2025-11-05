@@ -12,7 +12,6 @@ if [[ $UID -ne 0 ]]; then
   exit 1
 fi
 
-BD=/srv/BuildingDepot/
 pushd $(pwd)
 
 mkdir -p /var/log/buildingdepot/CentralService
