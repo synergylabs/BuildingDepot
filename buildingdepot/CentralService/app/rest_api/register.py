@@ -122,7 +122,7 @@ def register_view(app_obj):
     # get gets a sensor's tags
     # post changes/adds to a sensor's tags
     app_obj.add_url_rule(
-        "/api/sensor/<name>/tags", view_func=sensortags_view, methods=["GET", "POST"]
+        "/api/sensor/<name>/tags", view_func=sensortags_view, methods=["GET", "POST", "PATCH"]
     )
 
     sensorgroup_view = sensorgroup.SensorGroupService.as_view("sensorgroup_api")
