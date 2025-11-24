@@ -144,15 +144,17 @@ class SensorTagsService(MethodView):
 
         Following data in JSON:
         {
-          "data": [
+          "data": {
+              "tags": [
                    {
-                    "name": <Tag-Name>,
-                    "value": <Tag-Value>
+                        "name": <Tag-Name>,
+                        "value": <Tag-Value>
                     },
                     .
                     .
                     .
-                  ]
+              ]
+           }
         }
 
         Returns:
@@ -161,7 +163,7 @@ class SensorTagsService(MethodView):
         }
         """
         tags = request.get_json()["data"]["tags"]
-        self.write_tags(name, tags, True)
+        return self.write_tags(name, tags, True)
 
     @check_oauth
     @authenticate_acl("r/w/p")
@@ -174,15 +176,17 @@ class SensorTagsService(MethodView):
 
         Following data in JSON:
         {
-          "data": [
+          "data": {
+              "tags": [
                    {
-                    "name": <Tag-Name>,
-                    "value": <Tag-Value>
+                        "name": <Tag-Name>,
+                        "value": <Tag-Value>
                     },
                     .
                     .
                     .
-                  ]
+              ]
+           }
         }
 
         Returns:
@@ -191,4 +195,4 @@ class SensorTagsService(MethodView):
         }
         """
         tags = request.get_json()["data"]["tags"]
-        self.write_tags(name, tags, False)
+        return self.write_tags(name, tags, False)
