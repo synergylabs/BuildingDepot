@@ -57,9 +57,8 @@ class SensorTagsService(MethodView):
         response.update({"tags": tags, "tags_owned": tags_owned})
         return jsonify(response)
 
-    @check_oauth
-    @authenticate_acl("r/w/p")
-    def post(self, name):
+
+    def write_tags(self, name, tags, replace_existing=True):
         """
         Args as data:
         "name" : <sensor-uuid>
@@ -83,12 +82,14 @@ class SensorTagsService(MethodView):
         }
         """
 
-        tags = request.get_json()["data"]["tags"]
         sensor = Sensor.objects(name=name).first()
         old_tags = set([(tag.name, tag.value) for tag in sensor.tags])
         new_tags = set([(tag["name"], tag["value"]) for tag in tags])
         tags_added = new_tags - old_tags
-        tags_removed = old_tags - new_tags
+        if replace_existing:
+            tags_removed = old_tags - new_tags
+        else:
+            tags_removed = set()
         if defs.invalidate_sensor(name):
             if sensor is None:
                 return jsonify(responses.invalid_uuid)
@@ -131,3 +132,67 @@ class SensorTagsService(MethodView):
         else:
             return jsonify(responses.ds_error)
         return jsonify(responses.success_true)
+
+    @check_oauth
+    @authenticate_acl("r/w/p")
+    def post(self, name):
+        """
+        Writes tags, *replacing all existing tags*
+
+        Args as data:
+        "name" : <sensor-uuid>
+
+        Following data in JSON:
+        {
+          "data": {
+              "tags": [
+                   {
+                        "name": <Tag-Name>,
+                        "value": <Tag-Value>
+                    },
+                    .
+                    .
+                    .
+              ]
+           }
+        }
+
+        Returns:
+        {
+            "success": <True or False>
+        }
+        """
+        tags = request.get_json()["data"]["tags"]
+        return self.write_tags(name, tags, True)
+
+    @check_oauth
+    @authenticate_acl("r/w/p")
+    def patch(self, name):
+        """
+        Writes tags, *without replacing existing tags*
+
+        Args as data:
+        "name" : <sensor-uuid>
+
+        Following data in JSON:
+        {
+          "data": {
+              "tags": [
+                   {
+                        "name": <Tag-Name>,
+                        "value": <Tag-Value>
+                    },
+                    .
+                    .
+                    .
+              ]
+           }
+        }
+
+        Returns:
+        {
+            "success": <True or False>
+        }
+        """
+        tags = request.get_json()["data"]["tags"]
+        return self.write_tags(name, tags, False)
