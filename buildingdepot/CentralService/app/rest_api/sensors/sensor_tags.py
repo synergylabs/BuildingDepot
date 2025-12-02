@@ -127,7 +127,16 @@ class SensorTagsService(MethodView):
                             )
                         break
 
-            Sensor.objects(name=name).update(set__tags=tags)
+            if replace_existing:
+                Sensor.objects(name=name).update(set__tags=tags)
+            else:
+                # Remove existing tags that have the same NAME as any new tag
+                new_tag_names = {tag["name"] for tag in tags}
+                existing_tags = {(tag.name, tag.value) for tag in sensor.tags
+                                if tag.name not in new_tag_names}
+                merged_tags = list(existing_tags | new_tags)
+                merged_tags = [{"name": tag[0], "value": tag[1]} for tag in merged_tags]
+                Sensor.objects(name=name).update(set__tags=merged_tags)
             r.delete(name)
         else:
             return jsonify(responses.ds_error)
