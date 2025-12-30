@@ -100,33 +100,51 @@ function install_packages() {
   echo '393e8779c89ac8d958f81f942f9ad7fb82a25e133faddaf92e15b16e6ac9ce4c influxdata-archive_compat.key' | sha256sum -c && cat influxdata-archive_compat.key | gpg --dearmor | tee /etc/apt/trusted.gpg.d/influxdata-archive_compat.gpg > /dev/null
   echo 'deb [ signed-by=/etc/apt/trusted.gpg.d/influxdata-archive_compat.gpg ] https://repos.influxdata.com/debian stable main' | tee /etc/apt/sources.list.d/influxdata.list
 
-  ## RabbitMQ's main signing key
+  ## Team RabbitMQ's signing key
   curl -1sLf "https://keys.openpgp.org/vks/v1/by-fingerprint/0A9AF2115F4687BD29803A206B73A36E6026DFCA" | gpg --dearmor | tee /usr/share/keyrings/com.rabbitmq.team.gpg > /dev/null
-  ## Community mirror of Cloudsmith: modern Erlang repository
-  curl -1sLf https://github.com/rabbitmq/signing-keys/releases/download/3.0/cloudsmith.rabbitmq-erlang.E495BB49CC4BBE5B.key | gpg --dearmor | tee /usr/share/keyrings/rabbitmq.E495BB49CC4BBE5B.gpg > /dev/null
-  ## Community mirror of Cloudsmith: RabbitMQ repository
-  curl -1sLf https://github.com/rabbitmq/signing-keys/releases/download/3.0/cloudsmith.rabbitmq-server.9F4587F226208342.key | gpg --dearmor | tee /usr/share/keyrings/rabbitmq.9F4587F226208342.gpg > /dev/null
+  # Launchpad PPA signing key for apt
+  curl -1sLf "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0xf77f1eda57ebb1cc" | gpg --dearmor | tee /usr/share/keyrings/net.launchpad.ppa.rabbitmq.erlang.gpg > /dev/null
 
   ## Add apt repositories maintained by Team RabbitMQ
   tee /etc/apt/sources.list.d/rabbitmq.list <<EOF
-## Provides modern Erlang/OTP releases
+# This Launchpad PPA repository provides Erlang packages produced by the RabbitMQ team
+#
+deb [arch=amd64 signed-by=/usr/share/keyrings/net.launchpad.ppa.rabbitmq.erlang.gpg] http://ppa.launchpad.net/rabbitmq/rabbitmq-erlang/ubuntu jammy main
+deb-src [signed-by=/usr/share/keyrings/net.launchpad.ppa.rabbitmq.erlang.gpg] http://ppa.launchpad.net/rabbitmq/rabbitmq-erlang/ubuntu jammy main
+
+## Latest RabbitMQ releases
 ##
-deb [arch=amd64 signed-by=/usr/share/keyrings/rabbitmq.E495BB49CC4BBE5B.gpg] https://ppa1.rabbitmq.com/rabbitmq/rabbitmq-erlang/deb/ubuntu ${DISTRIB_CODENAME} main
-deb-src [signed-by=/usr/share/keyrings/rabbitmq.E495BB49CC4BBE5B.gpg] https://ppa1.rabbitmq.com/rabbitmq/rabbitmq-erlang/deb/ubuntu ${DISTRIB_CODENAME} main
-
-# another mirror for redundancy
-deb [arch=amd64 signed-by=/usr/share/keyrings/rabbitmq.E495BB49CC4BBE5B.gpg] https://ppa2.rabbitmq.com/rabbitmq/rabbitmq-erlang/deb/ubuntu ${DISTRIB_CODENAME} main
-deb-src [signed-by=/usr/share/keyrings/rabbitmq.E495BB49CC4BBE5B.gpg] https://ppa2.rabbitmq.com/rabbitmq/rabbitmq-erlang/deb/ubuntu ${DISTRIB_CODENAME} main
-
-## Provides RabbitMQ
-##
-deb [arch=amd64 signed-by=/usr/share/keyrings/rabbitmq.9F4587F226208342.gpg] https://ppa1.rabbitmq.com/rabbitmq/rabbitmq-server/deb/ubuntu ${DISTRIB_CODENAME} main
-deb-src [signed-by=/usr/share/keyrings/rabbitmq.9F4587F226208342.gpg] https://ppa1.rabbitmq.com/rabbitmq/rabbitmq-server/deb/ubuntu ${DISTRIB_CODENAME} main
-
-# another mirror for redundancy
-deb [arch=amd64 signed-by=/usr/share/keyrings/rabbitmq.9F4587F226208342.gpg] https://ppa2.rabbitmq.com/rabbitmq/rabbitmq-server/deb/ubuntu ${DISTRIB_CODENAME} main
-deb-src [signed-by=/usr/share/keyrings/rabbitmq.9F4587F226208342.gpg] https://ppa2.rabbitmq.com/rabbitmq/rabbitmq-server/deb/ubuntu ${DISTRIB_CODENAME} main
+deb [arch=amd64 signed-by=/usr/share/keyrings/com.rabbitmq.team.gpg] https://deb1.rabbitmq.com/rabbitmq-server/ubuntu/jammy jammy main
+deb [arch=amd64 signed-by=/usr/share/keyrings/com.rabbitmq.team.gpg] https://deb2.rabbitmq.com/rabbitmq-server/ubuntu/jammy jammy main
 EOF
+
+  apt update
+  ## Install Erlang packages
+  ##
+  ## For versions not compatible with the latest available Erlang series, which is the case
+  ## for 3.13.x, apt must be instructed to install specifically Erlang 26.
+  ## Alternatively this can be done via version pinning, documented further in this guide.
+  supported_erlang_version="1:26.2.5.13-1"
+  apt install -y erlang-base=$supported_erlang_version \
+                        erlang-asn1=$supported_erlang_version \
+                        erlang-crypto=$supported_erlang_version \
+                        erlang-eldap=$supported_erlang_version \
+                        erlang-ftp=$supported_erlang_version \
+                        erlang-inets=$supported_erlang_version \
+                        erlang-mnesia=$supported_erlang_version \
+                        erlang-os-mon=$supported_erlang_version \
+                        erlang-parsetools=$supported_erlang_version \
+                        erlang-public-key=$supported_erlang_version \
+                        erlang-runtime-tools=$supported_erlang_version \
+                        erlang-snmp=$supported_erlang_version \
+                        erlang-ssl=$supported_erlang_version \
+                        erlang-syntax-tools=$supported_erlang_version \
+                        erlang-tftp=$supported_erlang_version \
+                        erlang-tools=$supported_erlang_version \
+                        erlang-xmerl=$supported_erlang_version
+
+## Install rabbitmq-server and its dependencies
+sudo apt-get install rabbitmq-server=3.13.7-1 -y --fix-missing -y --fix-missing
 
   # Add keys to install mongodb
   curl -fsSL https://pgp.mongodb.com/server-7.0.asc | gpg -o /usr/share/keyrings/mongodb-server-7.0.gpg --dearmor
@@ -138,13 +156,7 @@ EOF
       nginx \
       redis-server \
       mongodb-org \
-      influxdb \
-      erlang-base \
-      erlang-asn1 erlang-crypto erlang-eldap erlang-ftp erlang-inets \
-      erlang-mnesia erlang-os-mon erlang-parsetools erlang-public-key \
-      erlang-runtime-tools erlang-snmp erlang-ssl \
-      erlang-syntax-tools erlang-tftp erlang-tools erlang-xmerl \
-      rabbitmq-server
+      influxdb
   systemctl enable influxdb
   systemctl start influxdb
   systemctl enable mongod
