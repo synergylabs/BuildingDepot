@@ -108,7 +108,16 @@ class AppService(MethodView):
                 if not is_list:
                     try:
                         channel = pubsub.channel()
-                        result = channel.queue_declare(durable=True, queue="")
+                        result = channel.queue_declare(
+                                    durable=False,
+                                    auto_delete=True,
+                                    queue="",
+                                    arguments={
+                                        'x-message-ttl': 60000,  # Messages expire after 60 seconds
+                                        'x-max-length': 100,      # Keep max 100 messages
+                                        'x-overflow': 'drop-head'  # Drop oldest when full
+                                    }
+                                )
                     except Exception as e:
                         print(("Failed to create queue " + str(e)))
                         print((traceback.print_exc()))
@@ -143,8 +152,16 @@ class AppService(MethodView):
                         if nm not in json_result:
                             try:
                                 channel = pubsub.channel()
-                                result = channel.queue_declare(durable=True, queue="")
-
+                                result = channel.queue_declare(
+                                            durable=False,
+                                            auto_delete=True,
+                                            queue="",
+                                            arguments={
+                                                'x-message-ttl': 60000,
+                                                'x-max-length': 100,
+                                                'x-overflow': 'drop-head'
+                                            }
+                                        )
                                 json_result[nm] = {}
                                 json_result[nm] = {"success": "True"}
                                 json_result[nm]["app_id"] = result.method.queue
