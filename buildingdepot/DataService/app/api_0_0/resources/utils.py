@@ -165,7 +165,7 @@ def batch_permission_check(sensors_list, email=None):
         return permissions
 
     # check if the owner:sensor key is present => sensor exists
-    redis_sensor_keys = ["".join(["owner:", sensor]) for sensor in sensors_list]
+    redis_sensor_keys = ["".join(["owner:", sensor]) for sensor in missing_from_cache]
     owners = dict(list(zip(redis_sensor_keys, r.mget(*redis_sensor_keys))))
     for k, v in list(owners.items()):
         if not v:
@@ -215,14 +215,14 @@ def batch_permission_check(sensors_list, email=None):
                     if permissions_val[res] > permissions_val[current_res]:
                         current_res = res
 
-            # If not found, check from MongoDB
-            if current_res == "u/d":
-                mongo_permission = check_db(sensor, email)
-                permissions[sensors_list[i]] = mongo_permission
-                r.hset(sensor, email, mongo_permission)
-            else:
-                permissions[sensor] = current_res
-                r.hset(sensor, email, current_res)
+        # If not found, check from MongoDB
+        if current_res == "u/d":
+            mongo_permission = check_db(sensor, email)
+            permissions[sensor] = mongo_permission
+            r.hset(sensor, email, mongo_permission)
+        else:
+            permissions[sensor] = current_res
+            r.hset(sensor, email, current_res)
     return permissions
 
 
