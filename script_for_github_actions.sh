@@ -12,71 +12,32 @@ if [[ $UID -ne 0 ]]; then
   exit 1
 fi
 
-BD=/srv/buildingdepot/
 pushd $(pwd)
 
-cp configs/nginx.conf /etc/nginx/nginx.conf
-
-mkdir -p /srv/buildingdepot
 mkdir -p /var/log/buildingdepot/CentralService
 mkdir -p /var/log/buildingdepot/DataService
 mkdir -p /var/sockets
-
-function setup_venv() {
-  cp pip_packages.list $1
-  cd $1
-
-  virtualenv ./venv
-  source venv/bin/activate
-
-  pip3 install --upgrade pip
-  pip3 install --upgrade setuptools
-  if [ $DISTRIB_CODENAME == "bionic" ]; then
-    pip3 install "Flask==2.0.3"
-  else
-    pip3 install "Flask==2.1.3"
-  fi
-  pip3 install --upgrade -r pip_packages.list
-  pip3 install "firebase-admin"
-  pip3 install --upgrade uWSGI
-  mkdir -p /etc/uwsgi/apps-available/
-
-  deactivate
-  cd -
-}
 # Deploy apps
-function deploy_centralservice() {
-  setup_venv /srv/buildingdepot/
+function deploy_services() {
+  uv sync
 
   #copy and untar new dataservice tarball
-  cp -r buildingdepot/CentralService /srv/buildingdepot/
-  cp -r buildingdepot/DataService /srv/buildingdepot/
-  cp -r buildingdepot/CentralReplica /srv/buildingdepot/
-  cp -r buildingdepot/Documentation /srv/buildingdepot/
-  cd /srv/buildingdepot
-  # copy uwsgi files
-  cp configs/uwsgi_cs.ini /etc/uwsgi/apps-available/cs.ini
+  ln -sf $(pwd) /srv/BuildingDepot
+  cd /srv/BuildingDepot
+  cp configs/bd_settings.cfg.sample configs/bd_settings.cfg
+  cp env.sample .env
 
-  # Create supervisor config
-  cp configs/supervisor-cs.conf /etc/supervisor/conf.d/
+  # Create systemd config for central replica
+  cp configs/bd-replica.service /etc/systemd/system/
+  systemctl enable bd-replica.service
 
-  # Create supervisor config for central replica
-  cp configs/supervisor-replica.conf /etc/supervisor/conf.d/
+  # Create systemd config for central service
+  cp configs/bd-central.service /etc/systemd/system/
+  systemctl enable bd-central.service
 
-  # Create nginx config
-  rm -f /etc/nginx/sites-enabled/default
-}
-
-function deploy_dataservice() {
-  setup_venv /srv/buildingdepot/
-
-  cd /srv/buildingdepot
-
-  # copy uwsgi files
-  cp configs/uwsgi_ds.ini /etc/uwsgi/apps-available/ds.ini
-
-  # Create supervisor config
-  cp configs/supervisor-ds.conf /etc/supervisor/conf.d/
+  # Create systemd config for data service
+  cp configs/bd-data.service /etc/systemd/system/
+  systemctl enable bd-data.service
 
   # Create nginx config
   rm -f /etc/nginx/sites-enabled/default
@@ -85,17 +46,12 @@ function deploy_dataservice() {
 function joint_deployment_fix() {
   # Create join nginx config
   rm -f /etc/nginx/sites-enabled/default
-  cd /srv/buildingdepot
+  cd /srv/BuildingDepot
   #Setting up SSL
   echo "Skipping SSL configuration..."
   #If user already has certificate
-  cp configs/together.conf /etc/nginx/sites-available/together.conf
-  ln -sf /etc/nginx/sites-available/together.conf /etc/nginx/sites-enabled/together.conf
-}
-
-function deploy_config() {
-  cp -r configs/ /srv/buildingdepot
-  mkdir /var/sockets
+  ln -sf configs/nginx_sites.conf /etc/nginx/sites-available/buildingdepot.conf
+  ln -sf /etc/nginx/sites-available/buildingdepot.conf /etc/nginx/sites-enabled/buildingdepot.conf
 }
 
 function install_packages() {
@@ -137,14 +93,13 @@ function install_packages() {
 
   apt-get install -y openssl python3-setuptools python3-dev build-essential software-properties-common
   apt-get install -y nginx
-  apt-get install -y supervisor
   apt-get install -y redis-server
-  pip3 install --upgrade virtualenv
   apt-get install -y wget
   apt-get install -y influxdb
-  service influxdb start
+  systemctl enable influxdb
+  systemctl start influxdb
+  systemctl enable mongod
   systemctl start mongod
-  systemctl enable mongod.service
   apt-get install -y erlang-base \
     erlang-asn1 erlang-crypto erlang-eldap erlang-ftp erlang-inets \
     erlang-mnesia erlang-os-mon erlang-parsetools erlang-public-key \
@@ -152,9 +107,8 @@ function install_packages() {
     erlang-syntax-tools erlang-tftp erlang-tools erlang-xmerl
   apt-get install -y rabbitmq-server --fix-missing
   DEBIAN_FRONTEND=noninteractive apt-get install -y postfix
-  curl -fsSL https://deb.nodesource.com/setup_lts.x | -E bash -
-  apt-get install -y nodejs
-  apt-get install -y npm
+  snap install node --channel=22 --classic
+  snap install astral-uv --classic
   sed -i -e 's/"inet_interfaces = all/"inet_interfaces = loopback-only"/g' /etc/postfix/main.cf
   service postfix restart
 }
@@ -172,12 +126,12 @@ function setup_gmail() {
   read access_token
   echo "Please enter refresh token"
   read refresh_token
-  echo "EMAIL = 'GMAIL'" >>$BD/CentralService/cs_config
-  echo "EMAIL_ID = '$email_id'" >>$BD/CentralService/cs_config
-  echo "ACCESS_TOKEN = '$access_token'" >>$BD/CentralService/cs_config
-  echo "REFRESH_TOKEN = '$refresh_token'" >>$BD/CentralService/cs_config
-  echo "CLIENT_ID = '$client_id'" >>$BD/CentralService/cs_config
-  echo "CLIENT_SECRET = '$client_secret'" >>$BD/CentralService/cs_config
+  echo "EMAIL = 'GMAIL'" >>/srv/BuildingDepot/configs/bd_settings.cfg
+  echo "EMAIL_ID = '$email_id'" >>/srv/BuildingDepot/configs/bd_settings.cfg
+  echo "ACCESS_TOKEN = '$access_token'" >>/srv/BuildingDepot/configs/bd_settings.cfg
+  echo "REFRESH_TOKEN = '$refresh_token'" >>/srv/BuildingDepot/configs/bd_settings.cfg
+  echo "CLIENT_ID = '$client_id'" >>/srv/BuildingDepot/configs/bd_settings.cfg
+  echo "CLIENT_SECRET = '$client_secret'" >>/srv/BuildingDepot/configs/bd_settings.cfg
 }
 
 function setup_email() {
@@ -187,8 +141,8 @@ function setup_email() {
   apt-get install -y mailutils
   sed -i -e 's/"inet_interfaces = all/"inet_interfaces = loopback-only"/g' /etc/postfix/main.cf
   service postfix restart
-  echo "EMAIL = 'LOCAL'" >>$BD/CentralService/cs_config
-  echo "EMAIL_ID = 'admin@buildingdepot.org'" >>$BD/CentralService/cs_config
+  echo "EMAIL = 'LOCAL'" >>/srv/BuildingDepot/configs/bd_settings.cfg
+  echo "EMAIL_ID = 'admin@buildingdepot.org'" >>/srv/BuildingDepot/configs/bd_settings.cfg
 }
 
 function setup_packages() {
@@ -199,16 +153,14 @@ function setup_packages() {
   ## Add MongoDB Admin user
   mongoUsername="user$(openssl rand -hex 16)"
   mongoPassword=$(openssl rand -hex 32)
-  echo "MONGODB_USERNAME = '$mongoUsername'" >>$BD/CentralService/cs_config
-  echo "MONGODB_PWD = '$mongoPassword'" >>$BD/CentralService/cs_config
-  echo "MONGODB_USERNAME = '$mongoUsername'" >>$BD/DataService/ds_config
-  echo "MONGODB_PWD = '$mongoPassword'" >>$BD/DataService/ds_config
-  echo "    MONGODB_USERNAME = '$mongoUsername'" >>$BD/CentralReplica/config.py
-  echo "    MONGODB_PWD = '$mongoPassword'" >>$BD/CentralReplica/config.py
+  echo "MONGODB_USERNAME = '$mongoUsername'" >>/srv/BuildingDepot/configs/bd_settings.cfg
+  echo "MONGODB_PWD = '$mongoPassword'" >>/srv/BuildingDepot/configs/bd_settings.cfg
+  echo "    MONGODB_USERNAME = '$mongoUsername'" >>/srv/BuildingDepot/buildingdepot/CentralReplica/config.py
+  echo "    MONGODB_PWD = '$mongoPassword'" >>/srv/BuildingDepot/buildingdepot/CentralReplica/config.py
 
   mongosh --eval "db.getSiblingDB('admin').createUser({user:'$mongoUsername',pwd:'$mongoPassword',roles:['userAdminAnyDatabase','dbAdminAnyDatabase','readWriteAnyDatabase']})"
 
- # Enable MongoDB authorization
+  # Enable MongoDB authorization
   echo "security:" >>/etc/mongod.conf
   echo "  authorization: \"enabled\"" >>/etc/mongod.conf
   service mongod restart
@@ -218,8 +170,8 @@ function setup_packages() {
   ## Add InfluxDB Admin user
   influxUsername="user$(openssl rand -hex 16)"
   influxPassword=$(openssl rand -hex 32)
-  echo "INFLUXDB_USERNAME = '$influxUsername'" >>$BD/DataService/ds_config
-  echo "INFLUXDB_PWD = '$influxPassword'" >>$BD/DataService/ds_config
+  echo "INFLUXDB_USERNAME = '$influxUsername'" >>/srv/BuildingDepot/configs/bd_settings.cfg
+  echo "INFLUXDB_PWD = '$influxPassword'" >>/srv/BuildingDepot/configs/bd_settings.cfg
   sleep 1
   curl -d "q=CREATE USER $influxUsername WITH PASSWORD '$influxPassword' WITH ALL PRIVILEGES" -X POST http://localhost:8086/query
   sed -ir 's/# auth-enabled = false/auth-enabled = true/g' /etc/influxdb/influxdb.conf
@@ -229,9 +181,8 @@ function setup_packages() {
 
   ## Add Redis Admin user
   redisPassword=$(openssl rand -hex 64)
-  echo "REDIS_PWD = '$redisPassword'" >>$BD/CentralService/cs_config
-  echo "REDIS_PWD = '$redisPassword'" >>$BD/DataService/ds_config
-  echo "    REDIS_PWD = '$redisPassword'" >>$BD/CentralReplica/config.py
+  echo "REDIS_PWD = '$redisPassword'" >>/srv/BuildingDepot/configs/bd_settings.cfg
+  echo "    REDIS_PWD = '$redisPassword'" >>/srv/BuildingDepot/buildingdepot/CentralReplica/config.py
   sed -i -e '/#.* requirepass / s/.*/ requirepass  '$redisPassword'/' /etc/redis/redis.conf
   service redis restart
 
@@ -242,10 +193,10 @@ function setup_packages() {
   rabbitmqPassword=$(openssl rand -hex 32)
   rabbitmqUsername_endUser="user$(openssl rand -hex 16)"
   rabbitmqPassword_endUser=$(openssl rand -hex 32)
-  echo "RABBITMQ_ADMIN_USERNAME = '$rabbitmqUsername'" >>$BD/DataService/ds_config
-  echo "RABBITMQ_ADMIN_PWD = '$rabbitmqPassword'" >>$BD/DataService/ds_config
-  echo "RABBITMQ_ENDUSER_USERNAME = '$rabbitmqUsername_endUser'" >>$BD/DataService/ds_config
-  echo "RABBITMQ_ENDUSER_PWD = '$rabbitmqPassword_endUser'" >>$BD/DataService/ds_config
+  echo "RABBITMQ_ADMIN_USERNAME = '$rabbitmqUsername'" >>/srv/BuildingDepot/configs/bd_settings.cfg
+  echo "RABBITMQ_ADMIN_PWD = '$rabbitmqPassword'" >>/srv/BuildingDepot/configs/bd_settings.cfg
+  echo "RABBITMQ_ENDUSER_USERNAME = '$rabbitmqUsername_endUser'" >>/srv/BuildingDepot/configs/bd_settings.cfg
+  echo "RABBITMQ_ENDUSER_PWD = '$rabbitmqPassword_endUser'" >>/srv/BuildingDepot/configs/bd_settings.cfg
   # Create a Admin user.
   rabbitmqctl add_user "$rabbitmqUsername" "$rabbitmqPassword"
   # Add Administrative Rights
@@ -270,30 +221,16 @@ function setup_packages() {
   echo
 }
 
-deploy_config
 install_packages
-if [ "$DEPLOY_CS" = true ]; then
-  deploy_centralservice
-fi
+deploy_services
 
-if [ "$DEPLOY_DS" = true ]; then
-  deploy_dataservice
-fi
-
-service mongod start
-service influxdb start
-service supervisor stop
-service supervisor start
-sleep 5
-supervisorctl restart all
-service influxdb start
+service mongod restart
+service influxdb restart
 
 if [ "$DEPLOY_TOGETHER" = true ]; then
   joint_deployment_fix
   service nginx restart
 fi
-
-rm -rf configs
 
 popd
 setup_email
@@ -301,11 +238,13 @@ setup_email
 # Create Database on InfluxDB
 curl -d "q=CREATE DATABASE buildingdepot" -X POST http://localhost:8086/query
 setup_packages
-/srv/buildingdepot/venv/bin/python setup_bd.py "test"
+uv run python3 setup_bd.py "test"
 #
 echo -e "\nInstallation Finished..\n"
-supervisorctl restart all
-cat /srv/buildingdepot/CentralService/cs_config
-cat /srv/buildingdepot/DataService/ds_config
-tail -500 /var/log/buildingdepot/CentralService/uwsgi-app.log
-tail -500 /var/log/buildingdepot/DataService/uwsgi-app.log
+
+systemctl stop bd-central
+systemctl stop bd-replica
+systemctl stop bd-data
+systemctl start bd-replica
+systemctl start bd-central
+systemctl start bd-data
