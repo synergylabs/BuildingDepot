@@ -19,6 +19,11 @@ from flask.views import MethodView
 from . import responses
 from .helper import connect_broker
 from .helper import timestamp_to_time_string, check_oauth, get_email
+from .timeseries_aggregate import (
+    parse_time_input,
+    get_request_timezone,
+    convert_times_to_timezone,
+)
 from ..models.ds_models import Sensor
 from .. import r, influx, oauth, exchange
 
@@ -62,6 +67,7 @@ class TimeSeriesService(MethodView):
         end_time = request.args.get("end_time")
         resolution = request.args.get("resolution")
         fields = request.args.get("fields")
+        response_tz = None
         original_fields = fields
         if fields:
             fields = fields.split(";")
@@ -71,6 +77,17 @@ class TimeSeriesService(MethodView):
 
         if not all([start_time, end_time]):
             return jsonify(responses.missing_parameters)
+
+        start_time_raw = start_time
+        end_time_raw = end_time
+        start_time, start_time_error = parse_time_input(start_time_raw)
+        if start_time_error:
+            return jsonify({"success": False, "error": "Invalid start_time: " + start_time_error})
+        end_time, end_time_error = parse_time_input(end_time_raw)
+        if end_time_error:
+            return jsonify({"success": False, "error": "Invalid end_time: " + end_time_error})
+
+        response_tz = get_request_timezone(start_time_raw) or get_request_timezone(end_time_raw)
 
         if r.sismember("views", name):
             allowed_fields = [
@@ -138,6 +155,11 @@ class TimeSeriesService(MethodView):
         # print ('#' * 100 + '\n\n')
         response.update({"data": data.raw})
         del response["data"]["statement_id"]
+
+        if response_tz and "series" in response["data"]:
+            for series in response["data"]["series"]:
+                if "time" in series and isinstance(series["time"], list):
+                    series["time"] = convert_times_to_timezone(series["time"], response_tz)
 
         return jsonify(response)
 
