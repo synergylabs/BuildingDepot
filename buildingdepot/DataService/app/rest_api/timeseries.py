@@ -67,7 +67,6 @@ class TimeSeriesService(MethodView):
         end_time = request.args.get("end_time")
         resolution = request.args.get("resolution")
         fields = request.args.get("fields")
-        response_tz = None
         original_fields = fields
         if fields:
             fields = fields.split(";")
@@ -82,10 +81,14 @@ class TimeSeriesService(MethodView):
         end_time_raw = end_time
         start_time, start_time_error = parse_time_input(start_time_raw)
         if start_time_error:
-            return jsonify({"success": False, "error": "Invalid start_time: " + start_time_error})
+            response = dict(responses.success_false)
+            response.update({"error": "Invalid start_time: " + start_time_error})
+            return jsonify(response)
         end_time, end_time_error = parse_time_input(end_time_raw)
         if end_time_error:
-            return jsonify({"success": False, "error": "Invalid end_time: " + end_time_error})
+            response = dict(responses.success_false)
+            response.update({"error": "Invalid end_time: " + end_time_error})
+            return jsonify(response)
 
         response_tz = get_request_timezone(start_time_raw) or get_request_timezone(end_time_raw)
 
@@ -158,8 +161,19 @@ class TimeSeriesService(MethodView):
 
         if response_tz and "series" in response["data"]:
             for series in response["data"]["series"]:
-                if "time" in series and isinstance(series["time"], list):
-                    series["time"] = convert_times_to_timezone(series["time"], response_tz)
+                if (
+                    "columns" in series
+                    and "values" in series
+                    and isinstance(series["columns"], list)
+                    and isinstance(series["values"], list)
+                    and "time" in series["columns"]
+                ):
+                    time_index = series["columns"].index("time")
+                    rows_with_time = [row for row in series["values"] if len(row) > time_index]
+                    time_values = [row[time_index] for row in rows_with_time]
+                    converted_times = convert_times_to_timezone(time_values, response_tz)
+                    for row, converted_time in zip(rows_with_time, converted_times):
+                        row[time_index] = converted_time
 
         return jsonify(response)
 

@@ -875,8 +875,9 @@ describe('An authorized superuser should be able to ', function () {
     })
 
     it('read time-series data with timezone-aware strings', function (done) {
-        var startTime = new Date((new Date().getTime()) - (60 * 60 * 1000)).toISOString().replace('Z', '-05:00')
-        var endTime = new Date().toISOString().replace('Z', '-05:00')
+        var timezoneOffset = '+00:00'
+        var startTime = new Date((new Date().getTime()) - (60 * 60 * 1000)).toISOString().replace('Z', timezoneOffset)
+        var endTime = new Date().toISOString().replace('Z', timezoneOffset)
         dataApi.get('/api/sensor/' + data.get('sensor_uuid') + '/timeseries?start_time=' + encodeURIComponent(startTime) + '&end_time=' + encodeURIComponent(endTime))
             .set('Authorization', 'Bearer ' + data.get('authorizedToken'))
             .end(function (err, res) {
