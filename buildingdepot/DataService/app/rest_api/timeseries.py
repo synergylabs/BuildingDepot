@@ -19,7 +19,7 @@ from flask.views import MethodView
 from . import responses
 from .helper import connect_broker
 from .helper import timestamp_to_time_string, check_oauth, get_email
-from .timeseries_aggregate import (
+from .time_utils import (
     parse_time_input,
     get_request_timezone,
     convert_times_to_timezone,
