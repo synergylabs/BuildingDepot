@@ -95,8 +95,10 @@ def permission(sensor_name, email=None):
     if email is None:
         email = get_email()
     # Check if permission already cached
+    # print("Checking if permission is cached")
     current_res = r.hget(sensor_name, email)
     if current_res is not None:
+        # print("Permission is cached")
         return current_res
 
     sensor = Sensor.objects(name=sensor_name).first()
@@ -109,6 +111,7 @@ def permission(sensor_name, email=None):
         return "r/w/p"
 
     print("Not owner or admin")
+    # print(sensor_name)
 
     current_res = "u/d"
     usergroups = r.smembers("user:{}".format(email))
@@ -116,6 +119,7 @@ def permission(sensor_name, email=None):
     previous, current = 0, 0
     # Iterate over all the usergroups within which the user is present and the
     # sensorgroups within which the sensor is present and find permissions
+    # print("Checking User and Sensor Groups")
     for usergroup in usergroups:
         for sensorgroup in sensorgroups:
             # Multiple permissions may exists for the same user and sensor relation.
@@ -133,8 +137,10 @@ def permission(sensor_name, email=None):
     # If permission couldn't be calculated from cache go to MongoDB
     if current_res == "u/d":
         current_res = check_db(sensor_name, email)
+        # print("Current res from check_db: ", current_res)
     # cache the latest permission
     r.hset(sensor_name, email, current_res)
+    # print("Current res from permission: ", current_res)
     return current_res
 
 
@@ -167,17 +173,23 @@ def batch_permission_check(sensors_list, email=None):
     # check if the owner:sensor key is present => sensor exists
     redis_sensor_keys = ["".join(["owner:", sensor]) for sensor in missing_from_cache]
     owners = dict(list(zip(redis_sensor_keys, r.mget(*redis_sensor_keys))))
+    
+    # print("Owners:", owners)
+    # print("redis_sensor_keys:", redis_sensor_keys)
     for k, v in list(owners.items()):
         if not v:
             sensors_missing_from_cache.append(k[6:])
 
     # for sensors not found, query MongoDB
     if sensors_missing_from_cache:
+        # print("Querying MongoDB for sensors not found in cache:", sensors_missing_from_cache)
         sensors = Sensor._get_collection().find(
             {"name": {"$in": sensors_missing_from_cache}}
         )
+        
         for sensor in sensors:
-            owners["".join(["owner:", sensor.name])] = sensor.owner
+            # print("MongoDB query results:", sensors, "type of sensors:", type(sensors), "sensor:", sensor, "sensor name:", sensor.name)
+            owners["".join(["owner:", sensor["name"]])] = sensor["owner"]
 
     # Invalid sensors
     for k, v in list(owners.items()):
@@ -229,12 +241,17 @@ def batch_permission_check(sensors_list, email=None):
 def check_db(sensor, email):
     sensor_obj = Sensor.objects(name=sensor).first()
     args = {}
+
     tag_list = []
+    tags_to_include_in_query = ["type", "floor", "partialID", "ethernetJack", "macID", "hostname", "ipAddress", "deviceName", "placement", "location", "locationType", "department", "cardinality", "visibility", "owner"]
+    # tag_list_size = 0 # 2025-12 BW removed since we are just using list of tags to match
     # Retrieve sensor tags and form search query for Sensor groups
     for tag in sensor_obj["tags"]:
-        current_tag = {"name": tag["name"], "value": tag["value"]}
-        tag_list.append(current_tag)
-    args["tags__size"] = len(tag_list)
+        if tag["name"] in tags_to_include_in_query:
+            current_tag = {"name": tag["name"], "value": tag["value"]}
+            tag_list.append(current_tag)
+
+    # args["tags__size"] = tag_list_size
     args["tags__all"] = tag_list
     sensor_groups = SensorGroup.objects(**args)
     args = {}

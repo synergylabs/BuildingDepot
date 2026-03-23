@@ -3,7 +3,7 @@ name = "buildingdepot"
 version = "3.4.0"
 description = "An open source data storage, management, and actuation system for building-related data"
 readme = "README.md"
-requires-python = ">=3.12"
+requires-python = ">=3.12,<3.13"
 dependencies = [
     "aniso8601==8.0.0",
     "email-validator==1.1.1",
@@ -22,6 +22,7 @@ dependencies = [
     "mongoengine==0.29.1",
     "pika==1.1.0",
     "pymongo==4.9",
+    "pyyaml>=6.0.3",
     "redis==5.0.1",
     "sphinx==3.0.4",
     "sphinx-theme==1.0",

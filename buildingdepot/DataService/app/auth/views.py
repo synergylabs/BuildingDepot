@@ -78,8 +78,8 @@ def token_gen(client_id, client_secret):
         expires_in = 864000
         expires = datetime.utcnow() + timedelta(seconds=expires_in)
         tok = Token(
-            access_token=str(binascii.hexlify(os.urandom(16))),
-            refresh_token=str(binascii.hexlify(os.urandom(16))),
+            access_token=binascii.hexlify(os.urandom(16)).decode(),
+            refresh_token=binascii.hexlify(os.urandom(16)).decode(),
             token_type="Bearer",
             _scopes="email",
             expires=expires,

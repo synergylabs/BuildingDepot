@@ -8,6 +8,7 @@ such as conversion of timestamps, strings etc.
 @copyright: (c) 2024 SynergyLabs
 @license: CMU License. See License file for details.
 """
+
 import json
 import pika
 import time
@@ -113,6 +114,19 @@ def check_if_super(email=None):
     return False
 
 
+# def timestamp_to_time_string(t):
+#     """Converts a unix timestamp to a string representation of the timestamp
+#     Args:
+#         t: A unix timestamp float
+#     Returns
+#         A string representation of the timestamp
+#     """
+#
+#     return (
+#         time.strftime("%Y-%m-%dT%H:%M:%S", time.gmtime(t)) + str(t - int(t))[1:10] + "Z"
+#     )
+
+
 def timestamp_to_time_string(t):
     """Converts a unix timestamp to a string representation of the timestamp
     Args:
@@ -120,9 +134,25 @@ def timestamp_to_time_string(t):
     Returns
         A string representation of the timestamp
     """
-    return (
-        time.strftime("%Y-%m-%dT%H:%M:%S", time.gmtime(t)) + str(t - int(t))[1:10] + "Z"
-    )
+
+    # Check if the timestamp is in milliseconds (length > 10 implies milliseconds)
+    if len(str(int(t))) > 10:
+        # Convert from milliseconds to seconds
+        t_seconds = t / 1000.0
+        # Extract milliseconds
+        milliseconds = round((t_seconds - int(t_seconds)) * 1000)
+    else:
+        t_seconds = t
+        milliseconds = 0
+
+    # Format the timestamp to a string
+    time_string = time.strftime("%Y-%m-%dT%H:%M:%S", time.gmtime(t_seconds))
+
+    # Append milliseconds if present
+    if milliseconds > 0:
+        return f"{time_string}.{milliseconds:03d}Z"
+    else:
+        return f"{time_string}Z"
 
 
 def connect_broker():
@@ -134,10 +164,17 @@ def connect_broker():
     """
     try:
         credentials = pika.PlainCredentials(rabbitmq_username, rabbitmq_password)
-        parameters = pika.ConnectionParameters(host="localhost", credentials=credentials, connection_attempts=3, retry_delay=5)
+        parameters = pika.ConnectionParameters(
+            host="localhost",
+            credentials=credentials,
+            connection_attempts=3,
+            retry_delay=5,
+        )
         pubsub = pika.BlockingConnection(parameters)
         channel = pubsub.channel()
-        channel.exchange_declare(exchange=exchange, exchange_type="direct", durable=True)
+        channel.exchange_declare(
+            exchange=exchange, exchange_type="direct", durable=True
+        )
         channel.close()
         return pubsub
     except Exception as e:

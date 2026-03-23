@@ -9,6 +9,7 @@ data stores.
 @copyright: (c) 2024 SynergyLabs
 @license: CMU License. See License file for details.
 """
+
 import influxdb
 import sys
 import time
@@ -17,16 +18,15 @@ from flask.views import MethodView
 
 from . import responses
 from .helper import connect_broker
-from .helper import jsonString, timestamp_to_time_string, check_oauth, get_email
+from .helper import timestamp_to_time_string, check_oauth, get_email
+from ..models.ds_models import Sensor
 from .. import r, influx, oauth, exchange
 
 sys.path.append("/srv/buildingdepot")
 from ..api_0_0.resources.utils import (
     authenticate_acl,
-    permission,
     batch_permission_check,
 )
-
 
 class TimeSeriesService(MethodView):
     @check_oauth
@@ -88,12 +88,22 @@ class TimeSeriesService(MethodView):
 
         if resolution:
             try:
-                if fields != '*' and fields:
-                    fields = '/(' + '|'.join(fields.split(',')) + ')-*/'
-                query = 'select mean(' + fields + ') from "' + name + '" where (time>\'' + timestamp_to_time_string(
-                    float(start_time)) \
-                        + '\' and time<\'' + timestamp_to_time_string(
-                    float(end_time)) + '\')' + " GROUP BY time(" + resolution + ")"
+                if fields != "*" and fields:
+                    fields = "/(" + "|".join(fields) + ")-*/"
+                query = (
+                    "select mean("
+                    + fields
+                    + ') from "'
+                    + name
+                    + "\" where (time>'"
+                    + timestamp_to_time_string(float(start_time))
+                    + "' and time<'"
+                    + timestamp_to_time_string(float(end_time))
+                    + "')"
+                    + " GROUP BY time("
+                    + resolution
+                    + ")"
+                )
                 # print('\n\n' + '{s:{c}^{n}}'.format(s=' InfluxDB Query ', n=100, c='#'))
                 # print(query)
                 # print('#' * 100 + '\n\n')
@@ -101,11 +111,19 @@ class TimeSeriesService(MethodView):
             except influxdb.exceptions.InfluxDBClientError:
                 return jsonify(responses.resolution_high)
         else:
-            if fields != '*' and fields:
-                fields = '/(' + '|'.join(fields.split(',')) + ')-*/'
-            query = 'select ' + fields + ' from "' + name + '" where time>\'' + timestamp_to_time_string(
-                float(start_time)) \
-                    + '\' and time<\'' + timestamp_to_time_string(float(end_time)) + '\''
+            if fields != "*" and fields:
+                fields = "/(" + "|".join(fields) + ")-*/"
+            query = (
+                "select "
+                + fields
+                + ' from "'
+                + name
+                + "\" where time>'"
+                + timestamp_to_time_string(float(start_time))
+                + "' and time<'"
+                + timestamp_to_time_string(float(end_time))
+                + "'"
+            )
 
             # # Log InfluxDB Query # #
             # print ('\n\n' + '{s:{c}^{n}}'.format(s=' InfluxDB Query ', n=100, c='#'))
@@ -181,18 +199,25 @@ class TimeSeriesService(MethodView):
                                 length = len(sample[key])
                                 for i in range(length):
                                     if isinstance(sample[key][i], str):
-                                        sample.update({"%s-%d" % (key, i): sample[key][i]})
+                                        sample.update(
+                                            {"%s-%d" % (key, i): sample[key][i]}
+                                        )
                                     else:
-                                        sample.update({"%s-%d" % (key, i): float(sample[key][i])})
+                                        sample.update(
+                                            {"%s-%d" % (key, i): float(sample[key][i])}
+                                        )
                                 del sample[key]
                         dic = {
                             "measurement": sensor["sensor_id"],
                             "time": timestamp_to_time_string(sample["time"]),
                             "fields": {
-                                "inserted_at": timestamp_to_time_string(time.time()),
+                                "inserted_at": timestamp_to_time_string(
+                                    time.time() * 1000
+                                ),
                                 # 'value': sample['value']
                             },
                         }
+                        # print(timestamp_to_time_string(time.time() * 1000))
                         del sample["time"]
                         dic["fields"].update(sample)
                         points.append(dic)
@@ -204,7 +229,9 @@ class TimeSeriesService(MethodView):
                             fields = [field.strip() for field in view_fields.split(",")]
                         view_dic = dict(dic)
                         view_fields = {
-                            k: v for k, v in list(dic["fields"].items()) if k.rsplit('-', 1)[0] in fields
+                            k: v
+                            for k, v in list(dic["fields"].items())
+                            if k.rsplit("-", 1)[0] in fields
                         }
                         view_dic.update({"fields": view_fields})
                         if apps[view]:
@@ -217,9 +244,9 @@ class TimeSeriesService(MethodView):
                                     except Exception as e:
                                         print(
                                             (
-                                                    "Failed to open channel"
-                                                    + " error"
-                                                    + str(e)
+                                                "Failed to open channel"
+                                                + " error"
+                                                + str(e)
                                             )
                                         )
                             try:
