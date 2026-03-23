@@ -10,4 +10,11 @@ cd buildingdepot
 sudo rsync -a . /srv/buildingdepot/ --exclude CentralReplica/config.py --exclude CentralService/cs_config --exclude DataService/ds_config
 
 # restart services
-sudo supervisorctl restart all
+sudo supervisorctl stop all
+
+# services must be started in order
+sudo supervisorctl start cs
+sleep 2
+sudo supervisorctl start ds
+sleep 2
+sudo supervisorctl start rpc

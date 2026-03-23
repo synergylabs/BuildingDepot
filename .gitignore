@@ -1,5 +1,7 @@
 *.pyc
 *.idea/
 influxdata-archive_compat.key
+scripts/.venv/
 .env
 configs/bd_settings.cfg
+configs/nginx_sites_ssl.conf
