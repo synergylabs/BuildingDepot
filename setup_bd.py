@@ -13,22 +13,31 @@ print("Setting up BuildingDepot.. ")
 
 option = sys.argv[1:][0]  # get arguments
 
+BD_SETTINGS_PATH = os.environ.get(
+    "BD_SETTINGS", "/srv/BuildingDepot/configs/bd_settings.cfg"
+)
+
 # Create a temporary password
 tempPwd = "".join(
     random.choice(string.ascii_uppercase + string.digits + string.ascii_lowercase)
     for _ in range(16)
 )
 
+mongo_host = os.environ.get("MONGODB_HOST", "127.0.0.1")
+mongo_port = int(os.environ.get("MONGODB_PORT", "27017"))
+
 # Get Username and Password for MongoDB
 if option == "install":
     configBuffer = io.StringIO()
     configBuffer.write("[dummysection]\n")
-    configBuffer.write(open("/srv/BuildingDepot/configs/bd_settings.cfg").read())
+    configBuffer.write(open(BD_SETTINGS_PATH, encoding="utf-8").read())
     configBuffer.seek(0, os.SEEK_SET)
     config = configparser.ConfigParser()
     config.read_file(configBuffer)
     user = config.get("dummysection", "MONGODB_USERNAME").strip("'").strip('"')
     pwd = config.get("dummysection", "MONGODB_PWD").strip("'").strip('"')
+    mongo_host = config.get("dummysection", "MONGODB_HOST").strip("'").strip('"')
+    mongo_port = int(config.get("dummysection", "MONGODB_PORT").strip("'").strip('"'))
 
 elif option == "bd_install":
     configs = json.load(open("configs/bd_config.json", "r"))
@@ -38,12 +47,14 @@ elif option == "bd_install":
 elif option == "test":
     configBuffer = io.StringIO()
     configBuffer.write("[dummysection]\n")
-    configBuffer.write(open("/srv/BuildingDepot/configs/bd_settings.cfg").read())
+    configBuffer.write(open(BD_SETTINGS_PATH, encoding="utf-8").read())
     configBuffer.seek(0, os.SEEK_SET)
     config = configparser.ConfigParser()
     config.read_file(configBuffer)
     user = config.get("dummysection", "MONGODB_USERNAME").strip("'").strip('"')
     pwd = config.get("dummysection", "MONGODB_PWD").strip("'").strip('"')
+    mongo_host = config.get("dummysection", "MONGODB_HOST").strip("'").strip('"')
+    mongo_port = int(config.get("dummysection", "MONGODB_PORT").strip("'").strip('"'))
     configs = json.load(
         open("benchmarking-tools/functional-testing-tool/tests/config.json", "r")
     )
@@ -58,7 +69,13 @@ else:
     exit(0)
 
 # Create BuildingDepot Database
-client = MongoClient(username=user, password=pwd, authSource="admin")
+client = MongoClient(
+    host=mongo_host,
+    port=mongo_port,
+    username=user,
+    password=pwd,
+    authSource="admin",
+)
 db = client.buildingdepot
 db.user.insert_one(
     {

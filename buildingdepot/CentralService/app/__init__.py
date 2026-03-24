@@ -15,6 +15,7 @@ registered as blueprints.
 @license: CMU License. See License file for details.
 """
 
+import os
 import redis
 from flask import Flask
 from flask_bootstrap import Bootstrap
@@ -33,7 +34,8 @@ login_manager.login_view = "auth.login"
 
 bootstrap = Bootstrap()
 oauth = OAuth2Provider()
-svr = ServerProxy("http://localhost:8080")
+_replica_host = os.environ.get("CENTRALREPLICA_HOST", "localhost")
+svr = ServerProxy(f"http://{_replica_host}:8080")
 r = redis.Redis(
     host=app.config["REDIS_HOST"],
     password=app.config["REDIS_PWD"],

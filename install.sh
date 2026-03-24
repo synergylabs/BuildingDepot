@@ -1,6 +1,50 @@
 #!/usr/bin/env bash
 set -euox pipefail
 
+show_docker_instructions() {
+  cat <<EOF
+Docker Compose deployment
+-------------------------
+1. Install Docker Engine and the Compose plugin (docker compose).
+2. In the repository root, run ./scripts/generate-env.sh (or copy env.sample to .env and set
+   secrets: MONGO_ROOT_*, MONGODB_*, REDIS_*, INFLUXDB_*, RABBITMQ_*, SECRET_KEY).
+3. Build and start:
+     docker compose build
+     docker compose up -d
+4. The init service runs setup_bd.py install once; nginx exposes the API on
+   ports 81 (Central Service) and 82 (Data Service). Port 80 serves a short stub.
+   RabbitMQ management UI is published on port 15672 (see docker-compose.yml).
+
+Inside the app image, entrypoint.sh generates configs/bd_settings.cfg from
+configs/bd_settings.cfg.template using envsubst and the same variables as .env.
+
+For a non-interactive reference:  $0 --docker
+EOF
+}
+
+if [[ "${1:-}" == "--docker" ]]; then
+  show_docker_instructions
+  exit 0
+fi
+
+################################################################################
+# Docker vs traditional install
+################################################################################
+if [[ -t 0 ]]; then
+  echo "Select deployment:"
+  echo "  1) Docker Compose (see docker-compose.yml; databases run in containers)"
+  echo "  2) Traditional install on this host (systemd, apt packages, requires root)"
+  read -r -p "Choice [1/2] (default 2): " deploy_choice
+else
+  deploy_choice=2
+fi
+case "${deploy_choice:-2}" in
+  1)
+    show_docker_instructions
+    exit 0
+    ;;
+esac
+
 ################################################################################
 # Check and make sure we are running as root or sudo (?)
 ################################################################################
@@ -9,7 +53,7 @@ if [[ $UID -ne 0 ]]; then
   exit 1
 fi
 
-BD=/srv/BuildingDepot/builingdepot
+BD=/srv/BuildingDepot/buildingdepot
 pushd $(pwd)
 
 mkdir -p /etc/nginx
@@ -26,9 +70,22 @@ function deploy_services() {
   cd /srv/BuildingDepot
   cp configs/bd_settings.cfg.sample configs/bd_settings.cfg
   cp env.sample .env
+  # env.sample defaults target Docker Compose service names; use loopback for local daemons.
+  sed -i \
+    -e 's/^CENTRALREPLICA_HOST=.*/CENTRALREPLICA_HOST=127.0.0.1/' \
+    -e 's/^MONGODB_HOST=.*/MONGODB_HOST=127.0.0.1/' \
+    -e 's/^REDIS_HOST=.*/REDIS_HOST=127.0.0.1/' \
+    -e 's/^INFLUXDB_HOST=.*/INFLUXDB_HOST=127.0.0.1/' \
+    .env
 
   # Create systemd config for central replica
   cp configs/bd-replica.service /etc/systemd/system/
+  mkdir -p /etc/systemd/system/bd-replica.service.d
+  cat >/etc/systemd/system/bd-replica.service.d/env.conf <<'EOF'
+[Service]
+# CentralReplica reads credentials from the environment (see buildingdepot/CentralReplica/config.py).
+EnvironmentFile=-/srv/BuildingDepot/.env
+EOF
   systemctl enable bd-replica.service
 
   # Create systemd config for central service
@@ -38,6 +95,8 @@ function deploy_services() {
   # Create systemd config for data service
   cp configs/bd-data.service /etc/systemd/system/
   systemctl enable bd-data.service
+
+  systemctl daemon-reload
 
   # Create nginx config
   rm -f /etc/nginx/sites-enabled/default
@@ -270,8 +329,9 @@ function setup_packages() {
       mongoPassword=$(openssl rand -hex 32)
       echo "MONGODB_USERNAME = '$mongoUsername'" >>/srv/BuildingDepot/configs/bd_settings.cfg
       echo "MONGODB_PWD = '$mongoPassword'" >>/srv/BuildingDepot/configs/bd_settings.cfg
-      echo "    MONGODB_USERNAME = '$mongoUsername'" >>/srv/BuildingDepot/buildingdepot/CentralReplica/config.py
-      echo "    MONGODB_PWD = '$mongoPassword'" >>/srv/BuildingDepot/buildingdepot/CentralReplica/config.py
+      sed -i '/^MONGODB_USERNAME=/d;/^MONGODB_PWD=/d' /srv/BuildingDepot/.env
+      echo "MONGODB_USERNAME=$mongoUsername" >>/srv/BuildingDepot/.env
+      echo "MONGODB_PWD=$mongoPassword" >>/srv/BuildingDepot/.env
       mongosh --eval "db.getSiblingDB('admin').createUser({user:'$mongoUsername',pwd:'$mongoPassword',roles:['userAdminAnyDatabase','dbAdminAnyDatabase','readWriteAnyDatabase']})"
       # Enable MongoDB authorization
       echo "security:" >>/etc/mongod.conf
@@ -297,7 +357,8 @@ function setup_packages() {
     ## Add Redis Admin user
     redisPassword=$(openssl rand -hex 64)
     echo "REDIS_PWD = '$redisPassword'" >>/srv/BuildingDepot/configs/bd_settings.cfg
-    echo "    REDIS_PWD = '$redisPassword'" >>/srv/BuildingDepot/buildingdepot/CentralReplica/config.py
+    sed -i '/^REDIS_PWD=/d' /srv/BuildingDepot/.env
+    echo "REDIS_PWD=$redisPassword" >>/srv/BuildingDepot/.env
     sed -i -e '/#.* requirepass / s/.*/ requirepass  '$redisPassword'/' /etc/redis/redis.conf
     service redis restart
 
@@ -347,8 +408,9 @@ function setup_packages() {
     read -s mongoPassword
     echo "MONGODB_USERNAME = '$mongoUsername'" >>/srv/BuildingDepot/configs/bd_settings.cfg
     echo "MONGODB_PWD = '$mongoPassword'" >>/srv/BuildingDepot/configs/bd_settings.cfg
-    echo "    MONGODB_USERNAME = '$mongoUsername'" >>/srv/BuildingDepot/buildingdepot/CentralReplica/config.py
-    echo "    MONGODB_PWD = '$mongoPassword'" >>/srv/BuildingDepot/buildingdepot/CentralReplica/config.py
+    sed -i '/^MONGODB_USERNAME=/d;/^MONGODB_PWD=/d' /srv/BuildingDepot/.env
+    echo "MONGODB_USERNAME=$mongoUsername" >>/srv/BuildingDepot/.env
+    echo "MONGODB_PWD=$mongoPassword" >>/srv/BuildingDepot/.env
     mongosh --eval "db.getSiblingDB('admin').createUser({user:'$mongoUsername',pwd:'$mongoPassword',roles:['userAdminAnyDatabase','dbAdminAnyDatabase','readWriteAnyDatabase']})"
     # Enable MongoDB authorization
     echo "security:" >>/etc/mongod.conf
@@ -380,7 +442,8 @@ function setup_packages() {
     read -s redisPassword
     echo "REDIS_PWD = '$redisPassword'" >>/srv/BuildingDepot/configs/bd_settings.cfg
     echo "REDIS_PWD = '$redisPassword'" >>/srv/BuildingDepot/configs/bd_settings.cfg
-    echo "    REDIS_PWD = '$redisPassword'" >>/srv/BuildingDepot/buildingdepot/CentralReplica/config.py
+    sed -i '/^REDIS_PWD=/d' /srv/BuildingDepot/.env
+    echo "REDIS_PWD=$redisPassword" >>/srv/BuildingDepot/.env
     sed -i -e '/#.* requirepass / s/.*/ requirepass  '$redisPassword'/' /etc/redis/redis.conf
     service redis restart
 

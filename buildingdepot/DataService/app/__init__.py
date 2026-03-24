@@ -18,6 +18,7 @@ registered as blueprints.
 @license: See License file for details.
 """
 
+import os
 import pdb
 import redis
 from flask import Flask
@@ -51,7 +52,8 @@ r = redis.Redis(
 )
 
 bootstrap = Bootstrap()
-svr = ServerProxy("http://127.0.0.1:8080")
+_replica_host = os.environ.get("CENTRALREPLICA_HOST", "127.0.0.1")
+svr = ServerProxy(f"http://{_replica_host}:8080")
 
 oauth = OAuth2Provider()
 

@@ -1,21 +1,21 @@
 FROM ubuntu:24.04
 
-WORKDIR /artifact
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    ca-certificates python3 python3-dev build-essential curl gettext-base \
+    && rm -rf /var/lib/apt/lists/*
 
-# install repositories for mongodb 7
+# Install uv
+RUN curl -LsSf https://astral.sh/uv/install.sh | sh
+ENV PATH="/root/.cargo/bin:/root/.local/bin:$PATH"
 
-RUN curl -fsSL https://pgp.mongodb.com/server-7.0.asc \
-    | gpg -o /usr/share/keyrings/mongodb-server-7.0.gpg --dearmor \
-    %% echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-7.0.gpg ] https://repo.mongodb.org/apt/ubuntu ${DISTRIB_CODENAME}/mongodb-org/7.0 multiverse" \
-    | tee /etc/apt/sources.list.d/mongodb-org-7.0.list
+WORKDIR /app
+COPY pyproject.toml uv.lock ./
+RUN uv sync --frozen --no-dev
 
-# install system packages
-RUN apt-get -q --no-allow-insecure-repositories update \
-  && apt-get install --assume-yes --no-install-recommends \
-  curl wget apt-transport-https gnupg openssl \
-  build-essential software-properties-common \
-  python3 python3-pip python3-setuptools python3-virtualenv python3-dev \
-  mongodb-org redis-server \
-  nginx \
-  influxdb \
-  && rm -rf /var/lib/apt/lists/*
+COPY buildingdepot/ ./buildingdepot/
+COPY configs/ ./configs/
+COPY setup_bd.py ./
+COPY entrypoint.sh ./
+RUN chmod +x /app/entrypoint.sh
+
+ENTRYPOINT ["/app/entrypoint.sh"]
