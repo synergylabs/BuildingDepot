@@ -142,8 +142,11 @@ def timestamp_to_time_string(t):
         # Extract milliseconds
         milliseconds = round((t_seconds - int(t_seconds)) * 1000)
     else:
+        # Float seconds (e.g. 1778735455.123). The previous code dropped the
+        # fractional part, collapsing all sub-second writes to the same Influx
+        # point. Preserve millisecond precision.
         t_seconds = t
-        milliseconds = 0
+        milliseconds = round((t - int(t)) * 1000)
 
     # Format the timestamp to a string
     time_string = time.strftime("%Y-%m-%dT%H:%M:%S", time.gmtime(t_seconds))
