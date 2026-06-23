@@ -19,6 +19,10 @@ from . import responses
 from .helper import connect_broker, get_email, check_oauth
 from .. import r, oauth, exchange
 from ..models.ds_models import Application
+from ..api_0_0.resources.utils import batch_permission_check
+
+# permission() levels that include read access.
+READ_LEVELS = ("r/w/p", "r/w", "r")
 
 
 class AppSubscriptionService(MethodView):
@@ -44,6 +48,13 @@ class AppSubscriptionService(MethodView):
             sensor = json_data["sensor"]
         except Exception as e:
             return jsonify(responses.missing_parameters)
+
+        # Enforce per-sensor read access before binding. The queue is bound to
+        # the sensor server-side over the internal broker connection, so
+        # RabbitMQ's own per-routing-key authorization never runs for this
+        # flow — this is the only place the per-sensor check can happen.
+        if batch_permission_check([sensor], email).get(sensor, "u/d") not in READ_LEVELS:
+            return jsonify(responses.permission_denied)
 
         app_list = Application._get_collection().find({"user": email})[0]["apps"]
         pubsub = connect_broker()
