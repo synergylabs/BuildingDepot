@@ -22,3 +22,4 @@ queue_binding_failure = {"success": "False", "error": "Failed to bind queue"}
 queue_unbinding_failure = {"success": "False", "error": "Failed to unbind queue"}
 application_does_not_exist = {"success": "False", "error": "Application does not exist"}
 application_does_not_found_for_user = {"success": "False", "error": "No Applications found for user"}
+permission_denied = {"success": "False", "error": "You do not have read permission to this sensor"}
