@@ -79,11 +79,15 @@ def send_local_smtp(user_name, to_email, password):
     )
 
     try:
-        smtpObj = smtplib.SMTP(
-            current_app.config.get("SMTP_HOST", "localhost"),
-            current_app.config.get("SMTP_PORT", 25),
-        )
-        smtpObj.sendmail(sender, receivers, message)
+        smtp_host = current_app.config.get("SMTP_HOST", "localhost")
+        smtp_port = current_app.config.get("SMTP_PORT", 25)
+        try:
+            smtp_port = int(smtp_port)
+        except (TypeError, ValueError):
+            smtp_port = 25
+
+        with smtplib.SMTP(smtp_host, smtp_port) as smtpObj:
+            smtpObj.sendmail(sender, receivers, message)
     except smtplib.SMTPException:
         print(("Failed to send registration mail to %s" % (to_email)))
 
