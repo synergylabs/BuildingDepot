@@ -11,12 +11,27 @@ It handles the registration and deletion of apps from the system.
 
 import json
 import traceback
+import hashlib
+import uuid
 from flask import request, jsonify
 from flask.views import MethodView
 
 from . import responses
 from .helper import connect_broker, get_email, check_oauth
 from ..models.ds_models import Application, NodeEncoder
+
+
+def app_queue_name(email):
+    """Durable, owner-scoped name for an app's live-data queue.
+
+    Encodes the owner (a hash of the email, so it is safe in a queue name) so
+    the RabbitMQ /resource auth backend can gate queue access by the connecting
+    user. Explicit + durable so the queue survives broker restarts and can be
+    re-declared idempotently, instead of a transient server-named amq.gen-*
+    queue whose name was persisted in Mongo but vanished on restart.
+    """
+    owner = hashlib.sha256(email.encode("utf-8")).hexdigest()[:16]
+    return "bd.{}.{}".format(owner, uuid.uuid4().hex)
 
 
 class AppService(MethodView):
@@ -109,9 +124,9 @@ class AppService(MethodView):
                     try:
                         channel = pubsub.channel()
                         result = channel.queue_declare(
-                                    durable=False,
-                                    auto_delete=True,
-                                    queue="",
+                                    durable=True,
+                                    auto_delete=False,
+                                    queue=app_queue_name(email),
                                     arguments={
                                         'x-message-ttl': 60000,  # Messages expire after 60 seconds
                                         'x-max-length': 100,      # Keep max 100 messages
@@ -153,9 +168,9 @@ class AppService(MethodView):
                             try:
                                 channel = pubsub.channel()
                                 result = channel.queue_declare(
-                                            durable=False,
-                                            auto_delete=True,
-                                            queue="",
+                                            durable=True,
+                                            auto_delete=False,
+                                            queue=app_queue_name(email),
                                             arguments={
                                                 'x-message-ttl': 60000,
                                                 'x-max-length': 100,
