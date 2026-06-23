@@ -1,0 +1,27 @@
+# BD app image: replica + central + data all run from this image,
+# differentiated by `command:` in compose.
+FROM python:3.12-slim
+
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    UV_LINK_MODE=copy \
+    UV_PROJECT_ENVIRONMENT=/opt/venv \
+    PATH=/opt/venv/bin:/root/.local/bin:$PATH \
+    BD_SETTINGS=/etc/buildingdepot/bd_settings.cfg
+
+RUN apt-get update \
+ && apt-get install -y --no-install-recommends curl ca-certificates build-essential \
+ && rm -rf /var/lib/apt/lists/* \
+ && curl -LsSf https://astral.sh/uv/install.sh | sh
+
+WORKDIR /app
+COPY pyproject.toml uv.lock ./
+RUN uv sync --frozen --no-install-project
+
+COPY buildingdepot ./buildingdepot
+COPY docker/entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN chmod +x /usr/local/bin/entrypoint.sh \
+ && mkdir -p /etc/buildingdepot /var/log/buildingdepot
+
+WORKDIR /app/buildingdepot
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]

@@ -1,0 +1,1 @@
+[rabbitmq_management,rabbitmq_web_stomp,rabbitmq_auth_backend_http,rabbitmq_auth_backend_cache].
