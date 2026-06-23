@@ -32,7 +32,7 @@ app.config.from_envvar("BD_SETTINGS")
 permissions = {"rw": "r/w", "r": "r", "dr": "d/r", "rwp": "r/w/p"}
 
 exchange = 'master_exchange'
-rabbitmq_host = app.config['RABBITMQ_HOST']
+rabbitmq_host = app.config.get("RABBITMQ_HOST", "localhost")
 rabbitmq_username = app.config['RABBITMQ_ADMIN_USERNAME']
 rabbitmq_password = app.config['RABBITMQ_ADMIN_PWD']
 
