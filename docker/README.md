@@ -8,14 +8,16 @@ Dev/test stack. Brings up Mongo + Redis + InfluxDB 1.8 + RabbitMQ + the three BD
 cd docker
 cp .env.example .env
 # edit .env — at minimum replace every `replace-me`
+# provision TLS certs into docker/certs (required for nginx + RabbitMQ wss); see "TLS" below
+sudo CERT_PROVIDER=tailscale ./refresh-cert.sh   # or CERT_PROVIDER=certbot BD_CERT_DOMAIN=...
 docker compose up -d --build
 ./bootstrap_admin.sh         # creates admin@buildingdepot.org + registers ds1
 ```
 
 Then:
 
-- CentralService — `http://localhost:81`
-- DataService — `http://localhost:82`
+- CentralService — `https://localhost:81`
+- DataService — `https://localhost:82`
 - Mailpit inbox — `http://localhost:8025`
 
 ## Email (dev SMTP)
@@ -75,7 +77,7 @@ Reach BD at `https://<node>.<tailnet>.ts.net:81` / `:82`. Certs are 90-day; run 
 
 ### Live data over wss (RabbitMQ web-STOMP)
 
-Browsers stream live sensor data over web-STOMP, and an `https://` page can only open a `wss://` socket. RabbitMQ serves that on **15675** using the same `certs/bd.crt` / `bd.key`, configured in `rabbitmq.conf`. Plain `ws://` stays on 15674 for in-network use. nginx runs as root so it reads the `0600` key, but the RabbitMQ node runs as the unprivileged `rabbitmq` user, so `refresh-cert.sh` sets the key world-readable (`0644`) after issuing it. That is fine on a single-user host; the key never leaves the box. Point the UI at `wss://<node>.<tailnet>.ts.net:15675/ws` (`PUBLIC_RABBITMQ_HOSTNAME` = the node name, `PUBLIC_RABBITMQ_PORT` = 15675).
+Browsers stream live sensor data over web-STOMP, and an `https://` page can only open a `wss://` socket. RabbitMQ serves that on **15675** using the same `certs/bd.crt` / `bd.key`, configured in `rabbitmq.conf`. Plain `ws://` stays on 15674 for in-network use. nginx runs as root so it can read the private key, but the RabbitMQ node runs as the unprivileged `rabbitmq` user, so `refresh-cert.sh` makes the key group-readable (`0640`) and sets its group to RabbitMQ’s container GID (default `999`, override via `RABBITMQ_CERT_GID`). Point the UI at `wss://<node>.<tailnet>.ts.net:15675/ws` (`PUBLIC_RABBITMQ_HOSTNAME` = the node name, `PUBLIC_RABBITMQ_PORT` = 15675).
 
 ## RabbitMQ access (BD token as the broker credential)
 
@@ -104,5 +106,5 @@ Design and rationale: `docs/rabbitmq-auth.md`.
 
 - **InfluxDB 1.8** — BD pins `influxdb-python==5.3.1` which speaks the v1 line protocol. Do not bump to 2.x without porting the BD client.
 - **Secrets at container start, not build time.** `entrypoint.sh` renders `bd_settings.cfg` and `CentralReplica/config.py` from env. The image has no secrets baked in.
-- **No TLS in this compose.** Add a real cert at the nginx layer for production.
+- **TLS is terminated at nginx (81/82).** Provision `certs/bd.crt` + `certs/bd.key` (via `refresh-cert.sh`) before relying on HTTPS/wss.
 - **Volumes** are named (`mongo-data`, `redis-data`, `influx-data`, `rabbit-data`). Survive `docker compose down`; wiped by `docker compose down -v`.

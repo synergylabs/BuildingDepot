@@ -51,9 +51,12 @@ case "$PROVIDER" in
 esac
 
 # nginx runs as root and reads the 0600 key fine, but the RabbitMQ node runs as
-# the unprivileged 'rabbitmq' user, so the key must be world-readable for the
-# web-STOMP TLS listener (15675) to start. Acceptable on a single-user host.
-chmod 0644 "$CERT_DIR/bd.crt" "$CERT_DIR/bd.key"
+# the unprivileged 'rabbitmq' user, so the key must be readable by that UID/GID.
+# Prefer group-read rather than world-read; override the GID if your image differs.
+RABBITMQ_CERT_GID="${RABBITMQ_CERT_GID:-999}"
+chown :"$RABBITMQ_CERT_GID" "$CERT_DIR/bd.key" 2>/dev/null || true
+chmod 0644 "$CERT_DIR/bd.crt"
+chmod 0640 "$CERT_DIR/bd.key"
 
 # Only reload if the cert actually changed, so a daily timer is a no-op until a
 # real renewal and does not bounce the broker every day.

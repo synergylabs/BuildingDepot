@@ -45,7 +45,7 @@ except Exception as e:
 db.data_service.update_one(
     {'name': 'ds1'},
     {'$set': {
-        'name': 'ds1', 'description': '', 'host': 'bd-replica', 'port': 8082,
+        'name': 'ds1', 'description': '', 'host': 'bd-replica', 'port': '8082',
     }, '$setOnInsert': {'buildings': [], 'admins': []}},
     upsert=True,
 )
