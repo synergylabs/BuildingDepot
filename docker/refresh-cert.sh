@@ -50,13 +50,12 @@ case "$PROVIDER" in
     ;;
 esac
 
-# nginx runs as root and reads the 0600 key fine, but the RabbitMQ node runs as
-# the unprivileged 'rabbitmq' user, so the key must be readable by that UID/GID.
-# Prefer group-read rather than world-read; override the GID if your image differs.
-RABBITMQ_CERT_GID="${RABBITMQ_CERT_GID:-999}"
-chown :"$RABBITMQ_CERT_GID" "$CERT_DIR/bd.key" 2>/dev/null || true
+# Only nginx reads these (it terminates TLS for CS/DS on 81/82 and for RabbitMQ
+# web-STOMP wss on 15675), and its container process runs as root, so owner-only
+# on the key is enough under both rootful Docker and rootless Podman. The cert is
+# public; the key stays 0600.
 chmod 0644 "$CERT_DIR/bd.crt"
-chmod 0640 "$CERT_DIR/bd.key"
+chmod 0600 "$CERT_DIR/bd.key"
 
 # Only reload if the cert actually changed, so a daily timer is a no-op until a
 # real renewal and does not bounce the broker every day.
@@ -66,14 +65,12 @@ if [ "$NEW_HASH" = "$OLD_HASH" ]; then
   exit 0
 fi
 
-# nginx (81/82) reloads in place; fall back to a recreate if it is not up yet.
+# nginx terminates all TLS (CS/DS on 81/82 and web-STOMP wss on 15675), so a
+# renewal only needs nginx to reload. It reloads in place; fall back to a recreate
+# if it is not up yet.
 if docker compose -f "$DIR/docker-compose.yml" exec -T nginx nginx -s reload 2>/dev/null; then
   echo "nginx reloaded."
 else
   docker compose -f "$DIR/docker-compose.yml" up -d --force-recreate nginx
   echo "nginx (re)started."
 fi
-
-# RabbitMQ loads its TLS cert when the listener starts, so it needs a restart to
-# pick up a renewed cert for web-STOMP on 15675.
-docker compose -f "$DIR/docker-compose.yml" restart rabbitmq 2>/dev/null && echo "rabbitmq restarted." || true
