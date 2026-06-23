@@ -175,8 +175,11 @@ def connect_broker():
         )
         pubsub = pika.BlockingConnection(parameters)
         channel = pubsub.channel()
+        # Topic (not direct) so RabbitMQ runs its per-routing-key authorization
+        # callback, which lets the BD auth backend gate reads per sensor_id.
+        # Exact sensor_id keys match identically on a topic exchange.
         channel.exchange_declare(
-            exchange=exchange, exchange_type="direct", durable=True
+            exchange=exchange, exchange_type="topic", durable=True
         )
         channel.close()
         return pubsub

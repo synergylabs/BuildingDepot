@@ -315,33 +315,35 @@ def get_sg_ds(sensor_group):
     # return DataService.objects(buildings__contains=sg.building).first().name
 
 
+def user_for_token(access_token):
+    """Resolve an OAuth access token to its user email, or None if the token is
+    missing, unknown, or expired. Redis cache first, then Mongo (refreshing the
+    cache). Token validation lives here so check_oauth and the RabbitMQ auth
+    backend share exactly one implementation."""
+    if not access_token:
+        return None
+    user = r.get("".join(["oauth:", access_token]))
+    if user is not None:
+        return user
+    # Not in Redis, check MongoDB.
+    token = Token.objects(access_token=access_token).first()
+    if token:
+        expires_in = (token.expires - datetime.now()).total_seconds()
+        if expires_in > 0:
+            r.setex("".join(["oauth:", access_token]), int(expires_in), token.user)
+            return token.user
+        token.delete()
+    return None
+
+
 def check_oauth(f):
     @wraps(f)
     def secure(*args, **kwargs):
-        if not request.headers.get("Authorization"):
+        auth = request.headers.get("Authorization")
+        if not auth:
             abort(401)
-        access_token = request.headers.get("Authorization")[7:]
-        if request.headers.get("Authorization") is not None:
-            user = r.get("".join(["oauth:", access_token]))
-            if user is not None:
-                return f(*args, **kwargs)
-            else:
-                # Not found in Redis, checking in MongoDB
-                token = Token.objects(access_token=access_token).first()
-                if token:
-                    # Calculate time to expire in seconds using timedelta
-                    expires_in = (token.expires - datetime.now()).total_seconds()
-                    if expires_in > 0:
-                        # Still valid, adding to redis
-                        r.setex(
-                            "".join(["oauth:", access_token]),
-                            int(expires_in),
-                            token.user,
-                        )
-                        return f(*args, **kwargs)
-                    else:
-                        # Invalid, deleting
-                        token.delete()
+        if user_for_token(auth[7:]) is not None:
+            return f(*args, **kwargs)
         abort(401)
 
     return secure
