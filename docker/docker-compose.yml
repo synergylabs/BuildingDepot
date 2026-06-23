@@ -1,0 +1,179 @@
+# BuildingDepot dev/test stack. Run from this directory:
+#   cp .env.example .env && $EDITOR .env
+#   docker compose up -d --build
+#   ./bootstrap_admin.sh
+# Production deploy will fork this for TLS, real volumes, and resource limits.
+
+name: buildingdepot
+
+x-bd-app: &bd-app
+  build:
+    context: ..
+    dockerfile: docker/Dockerfile.bd
+  image: buildingdepot:dev
+  pull_policy: build  # locally built — never try to fetch from a registry
+  env_file: .env
+  restart: unless-stopped
+  depends_on:
+    mongo:     { condition: service_healthy }
+    redis:     { condition: service_healthy }
+    influxdb:  { condition: service_healthy }
+    rabbitmq:  { condition: service_healthy }
+
+services:
+  mongo:
+    image: mongo:7
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PWD}
+    volumes:
+      - mongo-data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping').ok"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    command: ["redis-server", "--requirepass", "${REDIS_PWD}", "--appendonly", "yes"]
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "${REDIS_PWD}", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  influxdb:
+    # 1.x — BD pins influxdb-python==5.3.1 which speaks the v1 line protocol.
+    image: influxdb:1.8
+    restart: unless-stopped
+    environment:
+      INFLUXDB_HTTP_AUTH_ENABLED: "true"
+      INFLUXDB_ADMIN_USER: ${INFLUX_USER}
+      INFLUXDB_ADMIN_PASSWORD: ${INFLUX_PWD}
+      INFLUXDB_DB: ${INFLUX_DB}
+    volumes:
+      - influx-data:/var/lib/influxdb
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:8086/ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    restart: unless-stopped
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBIT_ADMIN_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBIT_ADMIN_PWD}
+    # Broker reachable from the host so non-container clients (analytics consumers,
+    # a web UI) can consume BD's live fan-out. AMQP for native clients; web-STOMP for websockets.
+    ports:
+      - "${HOST_PORT_AMQP:-5672}:5672"            # AMQP (e.g. native pika clients)
+      - "${HOST_PORT_RABBIT_MGMT:-15672}:15672"   # management UI + HTTP API
+      - "${HOST_PORT_RABBIT_WS:-15674}:15674"     # web-STOMP plain ws (in-network)
+      - "${HOST_PORT_RABBIT_WSS:-15675}:15675"    # web-STOMP over TLS (wss: browsers)
+    volumes:
+      - rabbit-data:/var/lib/rabbitmq
+      # Enable web-STOMP (websocket) alongside management; see rabbitmq-enabled-plugins.
+      - ./rabbitmq-enabled-plugins:/etc/rabbitmq/enabled_plugins:ro
+      # TLS web-STOMP on 15675 using the Tailscale cert (see rabbitmq.conf).
+      - ./rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf:ro
+      - ./certs:/etc/rabbitmq/certs:ro
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 10s
+      timeout: 10s
+      retries: 20
+
+  bd-replica:
+    <<: *bd-app
+    working_dir: /app/buildingdepot/CentralReplica
+    command: ["python3", "main.py"]
+    healthcheck:
+      # XML-RPC server returns "Method Not Allowed" on plain GET — that's
+      # enough to prove the socket is up and the process is serving.
+      test: ["CMD-SHELL", "python3 -c 'import socket; s=socket.create_connection((\"127.0.0.1\",8080),2)' "]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  bd-central:
+    <<: *bd-app
+    command:
+      - gunicorn
+      - "-w"
+      - "4"
+      - "-b"
+      - "0.0.0.0:8081"
+      - "--access-logfile"
+      - "-"
+      - "CentralService:app"
+    depends_on:
+      mongo:      { condition: service_healthy }
+      redis:      { condition: service_healthy }
+      influxdb:   { condition: service_healthy }
+      rabbitmq:   { condition: service_healthy }
+      bd-replica: { condition: service_healthy }
+    healthcheck:
+      test: ["CMD-SHELL", "python3 -c 'import urllib.request; urllib.request.urlopen(\"http://127.0.0.1:8081/auth/login\", timeout=2)' "]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  bd-data:
+    <<: *bd-app
+    command:
+      - gunicorn
+      - "-w"
+      - "4"
+      - "--timeout"
+      - "120"
+      - "-b"
+      - "0.0.0.0:8082"
+      - "--access-logfile"
+      - "-"
+      - "DataService:app"
+    depends_on:
+      mongo:      { condition: service_healthy }
+      redis:      { condition: service_healthy }
+      influxdb:   { condition: service_healthy }
+      rabbitmq:   { condition: service_healthy }
+      bd-replica: { condition: service_healthy }
+    healthcheck:
+      test: ["CMD-SHELL", "python3 -c 'import socket; s=socket.create_connection((\"127.0.0.1\",8082),2)' "]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  nginx:
+    image: nginx:alpine
+    restart: unless-stopped
+    depends_on:
+      bd-central: { condition: service_healthy }
+      bd-data:    { condition: service_healthy }
+    ports:
+      - "${HOST_PORT_CS:-81}:81"
+      - "${HOST_PORT_DS:-82}:82"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./certs:/etc/nginx/certs:ro   # Tailscale-issued bd.crt / bd.key (see refresh-cert.sh)
+
+  # Dev SMTP catcher. CentralService sends signup/reset mail here (SMTP 1025);
+  # read the captured messages, including temp passwords, at http://localhost:8025.
+  # Dev only — not a real relay.
+  mailpit:
+    image: axllent/mailpit
+    restart: unless-stopped
+    ports:
+      - "8025:8025"
+
+volumes:
+  mongo-data:
+  redis-data:
+  influx-data:
+  rabbit-data:
