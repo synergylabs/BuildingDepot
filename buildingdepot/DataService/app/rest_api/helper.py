@@ -16,7 +16,7 @@ from datetime import datetime
 from flask import request, abort
 from functools import wraps
 
-from .. import exchange, r, rabbitmq_username, rabbitmq_password
+from .. import exchange, r, rabbitmq_host, rabbitmq_username, rabbitmq_password
 from ..models.ds_models import Building, TagType, User
 from ..auth.views import Token
 
@@ -168,7 +168,7 @@ def connect_broker():
     try:
         credentials = pika.PlainCredentials(rabbitmq_username, rabbitmq_password)
         parameters = pika.ConnectionParameters(
-            host="localhost",
+            host=rabbitmq_host,
             credentials=credentials,
             connection_attempts=3,
             retry_delay=5,
