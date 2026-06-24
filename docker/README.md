@@ -77,7 +77,7 @@ Reach BD at `https://<node>.<tailnet>.ts.net:81` / `:82`. Certs are 90-day; run 
 
 ### Live data over wss (RabbitMQ web-STOMP)
 
-Browsers stream live sensor data over web-STOMP, and an `https://` page can only open a `wss://` socket. RabbitMQ serves that on **15675** using the same `certs/bd.crt` / `bd.key`, configured in `rabbitmq.conf`. Plain `ws://` stays on 15674 for in-network use. nginx runs as root so it can read the private key, but the RabbitMQ node runs as the unprivileged `rabbitmq` user, so `refresh-cert.sh` makes the key group-readable (`0640`) and sets its group to RabbitMQ’s container GID (default `999`, override via `RABBITMQ_CERT_GID`). Point the UI at `wss://<node>.<tailnet>.ts.net:15675/ws` (`PUBLIC_RABBITMQ_HOSTNAME` = the node name, `PUBLIC_RABBITMQ_PORT` = 15675).
+Browsers stream live sensor data over web-STOMP, and an `https://` page can only open a `wss://` socket. **nginx terminates that TLS on 15675** and proxies to RabbitMQ's plain web-STOMP listener on **15674** (`nginx.conf`); the broker itself speaks only plain `ws`. This keeps a single TLS termination point and, deliberately, keeps the private key out of the broker: nginx already reads `certs/bd.crt` / `bd.key` as root, whereas the RabbitMQ node runs as the unprivileged `rabbitmq` user — handing it the key would mean either a world-readable key or fighting the container-user/host-user UID mapping (which differs between Docker and rootless Podman). Plain `ws://` on 15674 stays available for in-network use. Point the UI at `wss://<node>.<tailnet>.ts.net:15675/ws` (`PUBLIC_RABBITMQ_HOSTNAME` = the node name, `PUBLIC_RABBITMQ_PORT` = 15675).
 
 ## RabbitMQ access (BD token as the broker credential)
 
@@ -101,6 +101,46 @@ Two setup-flow notes:
 - **Token auth needs `bd-central` reachable.** RabbitMQ calls CentralService to authorize, with a short cache. Internal users (`bdadmin`) keep working even if BD is down; token users cannot connect until BD is up. There is no compose `depends_on` from rabbitmq to bd-central (that would be a cycle), and none is needed since auth happens on client connect, by which point BD is up.
 
 Design and rationale: `docs/rabbitmq-auth.md`.
+
+## Running under rootless Podman
+
+The stack also runs under rootless Podman (via `podman-docker`, so the `docker compose` commands above work unchanged). Two host-level adjustments are needed because rootless containers run in a user namespace.
+
+### 1. Network backend — use slirp4netns instead of pasta
+
+Podman's default rootless network helper is `pasta`. On some distros the packaged `passt`/`pasta` binary segfaults at startup (seen on Ubuntu *resolute* with glibc 2.43 and the `git20260120` passt snapshot — `pasta --version` itself crashes), which makes every container fail at the networking step:
+
+```
+Error response from daemon: setting up Pasta: pasta failed with exit code -1
+```
+
+Switch the rootless backend to `slirp4netns` (Podman's previous default; fully supported, just slightly lower throughput). Create `~/.config/containers/containers.conf`:
+
+```ini
+[network]
+default_rootless_network_cmd = "slirp4netns"
+```
+
+Then `docker compose up -d` works. This is a per-user setting. Once a fixed `passt` lands (`apt upgrade passt`), you can delete this override to go back to pasta.
+
+### 2. Privileged ports (81/82)
+
+Rootless containers cannot bind host ports below 1024, so publishing CS/DS on **81/82** fails with:
+
+```
+rootlessport cannot expose privileged port 81 ... bind: permission denied
+```
+
+Pick one:
+
+- **Lower the threshold (keeps the :81/:82 URLs).** Persist it so it survives reboots:
+  ```bash
+  echo 'net.ipv4.ip_unprivileged_port_start=80' | sudo tee /etc/sysctl.d/50-bd-ports.conf
+  sudo sysctl --system
+  ```
+  This is host-wide. (`sudo sysctl -w net.ipv4.ip_unprivileged_port_start=80` sets it for the current boot only.)
+
+- **Remap to unprivileged ports (no root, self-contained).** In `.env` set e.g. `HOST_PORT_CS=8081` and `HOST_PORT_DS=8082` (and `HOST_PORT_RABBIT_WSS` ≥ 1024 if you also hit it). Reach BD at `https://<host>:8081` / `:8082` instead. The container-internal ports and `nginx.conf` are unaffected.
 
 ## Notes
 

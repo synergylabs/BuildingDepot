@@ -71,19 +71,18 @@ services:
       RABBITMQ_DEFAULT_USER: ${RABBIT_ADMIN_USER}
       RABBITMQ_DEFAULT_PASS: ${RABBIT_ADMIN_PWD}
     # Broker reachable from the host so non-container clients (analytics consumers,
-    # a web UI) can consume BD's live fan-out. AMQP for native clients; web-STOMP for websockets.
+    # a web UI) can consume BD's live fan-out. AMQP for native clients; web-STOMP for
+    # websockets. The broker speaks only plain ws (15674); nginx terminates TLS and
+    # proxies browser wss to it (see nginx.conf), so rabbitmq never handles the key.
     ports:
       - "${HOST_PORT_AMQP:-5672}:5672"            # AMQP (e.g. native pika clients)
       - "${HOST_PORT_RABBIT_MGMT:-15672}:15672"   # management UI + HTTP API
       - "${HOST_PORT_RABBIT_WS:-15674}:15674"     # web-STOMP plain ws (in-network)
-      - "${HOST_PORT_RABBIT_WSS:-15675}:15675"    # web-STOMP over TLS (wss: browsers)
     volumes:
       - rabbit-data:/var/lib/rabbitmq
       # Enable web-STOMP (websocket) alongside management; see rabbitmq-enabled-plugins.
       - ./rabbitmq-enabled-plugins:/etc/rabbitmq/enabled_plugins:ro
-      # TLS web-STOMP on 15675 using the Tailscale cert (see rabbitmq.conf).
       - ./rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf:ro
-      - ./certs:/etc/rabbitmq/certs:ro
     healthcheck:
       test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
       interval: 10s
@@ -156,9 +155,11 @@ services:
     depends_on:
       bd-central: { condition: service_healthy }
       bd-data:    { condition: service_healthy }
+      rabbitmq:   { condition: service_healthy }
     ports:
       - "${HOST_PORT_CS:-81}:81"
       - "${HOST_PORT_DS:-82}:82"
+      - "${HOST_PORT_RABBIT_WSS:-15675}:15675"   # web-STOMP over TLS (wss); proxied to rabbitmq:15674
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
       - ./certs:/etc/nginx/certs:ro   # Tailscale-issued bd.crt / bd.key (see refresh-cert.sh)
