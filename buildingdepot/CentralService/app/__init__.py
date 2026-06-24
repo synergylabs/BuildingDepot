@@ -86,6 +86,10 @@ def create_app(config_mode):  # TODO: remove config_mode
 
     app.register_blueprint(oauth_bd_blueprint, url_prefix="/oauth")
 
+    from .rabbitmq_auth import rabbitmq_auth as rabbitmq_auth_blueprint
+
+    app.register_blueprint(rabbitmq_auth_blueprint, url_prefix="/rabbitmq")
+
     return app
 
 
