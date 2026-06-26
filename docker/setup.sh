@@ -79,11 +79,12 @@ port_in_use() {
   (exec 3<>"/dev/tcp/127.0.0.1/$p") 2>/dev/null && return 0 || return 1
 }
 
-# Best-effort "what is this process" for a listening port.
+# Best-effort "what is this process" for a listening port. `|| true` so a no-match
+# pipeline can't abort a `var="$(who_on_port ...)"` assignment under `set -e`.
 who_on_port() {
   local p="$1"
   if have ss; then ss -ltnpH "( sport = :$p )" 2>/dev/null \
-      | grep -oE 'users:\(\("[^"]+"' | head -1 | sed -E 's/.*\("//'; fi
+      | grep -oE 'users:\(\("[^"]+"' | head -1 | sed -E 's/.*\("//' || true; fi
 }
 
 # ------------------------------------------------------------------------------
@@ -97,7 +98,7 @@ gen_secret() { openssl rand -hex 32; }
 # (empty or matches replace-me*). Real values are left untouched.
 fill_if_placeholder() {
   local key="$1" val="$2" cur
-  cur="$(grep -E "^${key}=" .env | head -1 | cut -d= -f2-)"
+  cur="$(grep -E "^${key}=" .env | head -1 | cut -d= -f2- || true)"
   if [[ -z "$cur" || "$cur" == replace-me* ]]; then
     # portable in-place edit (BSD/GNU sed differ on -i); use a temp file
     sed -E "s|^${key}=.*|${key}=${val}|" .env > .env.tmp && mv .env.tmp .env
@@ -135,7 +136,9 @@ ensure_env() {
 # 2. Ports — surface conflicts and the co-deploy picture before bringing up.
 # ------------------------------------------------------------------------------
 # Read a single var from .env (used to honour any HOST_PORT_* the user set).
-env_val() { grep -E "^$1=" .env 2>/dev/null | head -1 | cut -d= -f2-; }
+# `|| true`: a missing key makes grep exit non-zero, which under `set -e` would
+# abort the surrounding `var="$(env_val ...)"` assignment. Absent == empty here.
+env_val() { grep -E "^$1=" .env 2>/dev/null | head -1 | cut -d= -f2- || true; }
 
 choose_ports() {
   say "== Step 2/4: ports =="
@@ -227,7 +230,7 @@ fix_cert_ownership() {
 cert_tailscale() {
   need tailscale "https://tailscale.com/install.sh, then 'sudo tailscale up' + enable HTTPS certs"
   REACH_HOST="$(tailscale status --json 2>/dev/null \
-      | grep -oE '"DNSName":[[:space:]]*"[^"]+"' | head -1 | sed -E 's/.*"([^"]+)"/\1/; s/\.$//')"
+      | grep -oE '"DNSName":[[:space:]]*"[^"]+"' | head -1 | sed -E 's/.*"([^"]+)"/\1/; s/\.$//' || true)"
   say "issuing a Tailscale (Let's Encrypt) cert${REACH_HOST:+ for $REACH_HOST} ..."
   $SUDO env RELOAD_NGINX=0 CERT_PROVIDER=tailscale ./refresh-cert.sh
   fix_cert_ownership
@@ -270,7 +273,7 @@ cert_existing() {
 ensure_certs() {
   say "== Step 3/4: TLS cert (CS:${PORTS[CS]} / DS:${PORTS[DS]} / RMQ-wss:${PORTS[RABBIT_WSS]}) =="
   if cert_is_valid; then
-    local cn; cn="$(openssl x509 -noout -subject -in "$CERT_DIR/bd.crt" 2>/dev/null | sed -E 's/.*CN ?= ?//; s/,.*//')"
+    local cn; cn="$(openssl x509 -noout -subject -in "$CERT_DIR/bd.crt" 2>/dev/null | sed -E 's/.*CN ?= ?//; s/,.*//' || true)"
     REACH_HOST="${cn:-$REACH_HOST}"
     say "a valid cert is already in docker/certs (CN=${cn:-unknown})."
     confirm "Keep it?" && { say; return 0; }
