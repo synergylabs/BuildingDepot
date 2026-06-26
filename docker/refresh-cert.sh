@@ -65,6 +65,14 @@ if [ "$NEW_HASH" = "$OLD_HASH" ]; then
   exit 0
 fi
 
+# setup.sh issues the cert before the stack exists and brings nginx up itself,
+# so it calls this with RELOAD_NGINX=0 to get just the PEMs. Default stays 1 so
+# a renewal timer reloads exactly as before.
+if [ "${RELOAD_NGINX:-1}" != "1" ]; then
+  echo "cert written; skipping nginx reload (RELOAD_NGINX=$RELOAD_NGINX)."
+  exit 0
+fi
+
 # nginx terminates all TLS (CS/DS on 81/82 and web-STOMP wss on 15675), so a
 # renewal only needs nginx to reload. It reloads in place; fall back to a recreate
 # if it is not up yet.
