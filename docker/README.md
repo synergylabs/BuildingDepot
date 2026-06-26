@@ -4,6 +4,17 @@ Dev/test stack. Brings up Mongo + Redis + InfluxDB 1.8 + RabbitMQ + the three BD
 
 ## Quick start
 
+Fastest — the guided script walks all of it (fills `.env` secrets, provisions the cert, brings the stack up, creates the admin user):
+
+```bash
+cd docker
+./setup.sh
+```
+
+It only detects tools, it does not install them, so on a vanilla host install `docker` + `openssl` first (and `tailscale` or `certbot` for the cert step). It is safe to re-run after a crash — it fills only what is missing and never regenerates secrets the data volumes were created with. See "Guided setup" below.
+
+Or do the same steps by hand:
+
 ```bash
 cd docker
 cp .env.example .env
@@ -19,6 +30,19 @@ Then:
 - CentralService — `https://localhost:81`
 - DataService — `https://localhost:82`
 - Mailpit inbox — `http://localhost:8025`
+
+## Guided setup (`setup.sh`)
+
+`./setup.sh` is the interactive equivalent of the manual steps above, meant for a fresh host. It:
+
+1. Creates `docker/.env` from the example and generates each secret with `openssl rand -hex 32`, filling only placeholders so an existing `.env` is left as-is.
+2. Checks the host ports the stack publishes and offers a rootless-engine remap (`81/82` → `8081/8082`) when needed.
+3. Asks for a cert source — Tailscale, Let's Encrypt, or a cert you already hold — and drives `refresh-cert.sh` to provision `certs/bd.crt` + `bd.key` (one cert fronts CS:81, DS:82, and RabbitMQ wss:15675).
+4. Builds and starts the stack, waits for health, and runs `bootstrap_admin.sh`.
+
+It **detects** tools and never installs them; if something is missing it tells you exactly what. It is **idempotent** — re-running after a crash repeats the steps without regenerating secrets, reissuing a still-valid cert, or flagging the stack's own ports as conflicts.
+
+**Co-located with another service?** The stack only ever publishes `81/82/15675` (plus `5672/15672/15674/8025`) and adds no host-level redirect — it never binds `80` or `443`. So it coexists with a reverse proxy already on the host (for example one fronting another backend on `443`). The one exception is the Let's Encrypt path: `certbot --standalone` wants port `80`, so if a proxy already holds it, use the Tailscale or bring-your-own-cert option instead — the script detects this and says so.
 
 ## Email (dev SMTP)
 
