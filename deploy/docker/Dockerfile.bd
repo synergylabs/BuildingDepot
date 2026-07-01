@@ -19,7 +19,7 @@ COPY pyproject.toml uv.lock ./
 RUN uv sync --frozen --no-install-project
 
 COPY buildingdepot ./buildingdepot
-COPY docker/entrypoint.sh /usr/local/bin/entrypoint.sh
+COPY deploy/docker/entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh \
  && mkdir -p /etc/buildingdepot /var/log/buildingdepot
 

@@ -10,7 +10,7 @@ BD is an old codebase. It was written to run as a few Python processes sitting o
 
 ## The shape of the stack
 
-There are nine containers. Four are off-the-shelf data stores, three are BuildingDepot's own processes, one is nginx in front, and one is a dev mail catcher. They split into three groups.
+There are eight containers. Four are off-the-shelf data stores, three are BuildingDepot's own processes, and one is a dev mail catcher. TLS termination is **not** in this stack — a host nginx (outside compose) fronts it; see [`../docs/deployment.md`](deployment.md). They split into three groups.
 
 The backing stores hold state:
 
@@ -25,7 +25,7 @@ The three BuildingDepot processes are where BD's own logic runs:
 - **bd-central** is the CentralService, usually shortened to CS. This is the main REST API. Login and OAuth, creating users, defining buildings and sensors, tags, permissions: all of it is CS. It runs under gunicorn on 8081.
 - **bd-data** is the DataService, shortened to DS. This is the timeseries side. Posting readings and querying them back out of InfluxDB goes through DS. It runs under gunicorn on 8082, with a longer request timeout because timeseries queries can be heavy.
 
-In front of everything sits **nginx**, the single entry point. It listens on 81 and forwards to CS, and on 82 and forwards to DS. Clients only ever talk to 81 and 82, never to the gunicorn ports directly. nginx is also where TLS is terminated.
+The gunicorn ports are published to **host loopback** — CS on `127.0.0.1:8081`, DS on `127.0.0.1:8082` — and RabbitMQ's plain web-STOMP on `127.0.0.1:15674`. Nothing binds a public interface here. A **host nginx**, outside this stack, terminates TLS on 81/82 (and wss on 15675) and forwards to those loopback ports. Keeping TLS on the host lets one nginx front BD alongside other co-located services and keeps the private key out of every container.
 
 Last is **mailpit**, which only exists in dev. CentralService emails a temporary password on signup and password reset, and with no real mail server around, mailpit catches those messages so you can read them in a browser. It is described in the README, not here.
 
@@ -45,7 +45,7 @@ The entrypoint does one more thing worth knowing. The legacy CS and DS code hard
 
 ## How the pieces find each other
 
-Containers on the same compose network reach each other by service name. CS and DS connect to `mongo`, `redis`, `influxdb`, and `rabbitmq` by those names, which is exactly what the rendered settings contain. nginx forwards to `bd-central` and `bd-data` by name. The replica is reached at `bd-replica`.
+Containers on the same compose network reach each other by service name. CS and DS connect to `mongo`, `redis`, `influxdb`, and `rabbitmq` by those names, which is exactly what the rendered settings contain. The replica is reached at `bd-replica`. The host nginx, being outside the network, reaches CS and DS through their published loopback ports, not by service name.
 
 There is one registration detail that lives in the database rather than in config. BD keeps a registry of data services in Mongo, and CS looks a data service up there to find the host it should call for certain operations. The bootstrap step writes a row named `ds1` with its host set to `bd-replica`, so that CS's lookups resolve to the replica container. That row is easy to miss and the system does not work without it, which is why bootstrap creates it for you.
 
@@ -67,7 +67,7 @@ Then build the image and start the whole stack:
 docker compose up -d --build
 ```
 
-Compose builds `buildingdepot:dev` once, starts the four data stores, waits for each to report healthy, then starts the replica, then CS and DS once the replica is healthy, then nginx. The health gating is why startup is ordered and not a race.
+Compose builds `buildingdepot:dev` once, starts the four data stores, waits for each to report healthy, then starts the replica, then CS and DS once the replica is healthy. The health gating is why startup is ordered and not a race.
 
 Now create the admin user and register the data service:
 
@@ -82,22 +82,29 @@ At this point BD is up with an empty data model. Populate it (tag types, buildin
 To check the stack is serving:
 
 ```bash
-curl -s -o /dev/null -w "CS %{http_code}\n" http://localhost:81/auth/login
-curl -s -o /dev/null -w "DS %{http_code}\n" http://localhost:82/
+curl -s -o /dev/null -w "CS %{http_code}\n" http://127.0.0.1:8081/auth/login
+curl -s -o /dev/null -w "DS %{http_code}\n" http://127.0.0.1:8082/
 ```
+
+(These hit the loopback app ports directly. Public HTTPS on 81/82 is the host
+nginx's job — see [`deployment.md`](deployment.md).)
 
 ## Ports and who talks to them
 
-| Host port | Lands on | Used by |
+| Host binding | Lands on | Used by |
 |---|---|---|
-| 81 | nginx to CentralService | REST API: login, users, buildings, sensors, tags |
-| 82 | nginx to DataService | timeseries reads and writes |
+| 127.0.0.1:8081 | CentralService (gunicorn) | host nginx -> REST API: login, users, buildings, sensors, tags |
+| 127.0.0.1:8082 | DataService (gunicorn) | host nginx -> timeseries reads and writes |
+| 127.0.0.1:15674 | RabbitMQ web-STOMP (plain ws) | host nginx -> browser live streaming (wss on 15675) |
 | 5672 | RabbitMQ AMQP | native live consumers |
 | 15672 | RabbitMQ management | the broker's admin UI and HTTP API |
-| 15674 | RabbitMQ web-STOMP | browser live streaming over websocket |
 | 8025 | mailpit | reading dev signup and reset emails |
 
-The gunicorn ports 8081 and 8082, the replica's 8080, and the four data stores' own ports stay inside the compose network. Nothing outside reaches them directly.
+CS/DS/web-STOMP are published to **loopback only**; the host nginx terminates
+TLS on 81/82/15675 and proxies to them. The replica's 8080 and the four data
+stores' own ports stay inside the compose network. AMQP (5672) and the
+management UI (15672) are published on all interfaces for native clients and
+ops.
 
 ## Day to day
 
@@ -105,9 +112,15 @@ Logs come from compose. `docker compose logs -f bd-central` follows CentralServi
 
 After a code change, rebuild and restart with `docker compose up -d --build`. Compose rebuilds the shared image and recreates the BD services that use it.
 
-There is one sharp edge worth remembering. nginx resolves `bd-central` and `bd-data` to their container IPs once, when it starts. If you recreate either of those containers on its own, it can come back with a new IP while nginx still points at the old one, and you get a 502 until nginx is restarted. So after recreating a BD app container, restart nginx with `docker compose restart nginx`.
+Because the host nginx proxies to fixed loopback ports (`127.0.0.1:8081`/`8082`)
+rather than to container IPs, recreating a BD app container does not strand
+nginx — Docker re-establishes the published port mapping, and nginx keeps
+pointing at the same loopback address.
 
-Email and TLS each have their own section in the README. The short version is that mailpit catches dev mail on 8025, and nginx terminates TLS on 81 and 82 using a cert that `refresh-cert.sh` issues from either Let's Encrypt or Tailscale. The README walks through both.
+Email is dev-only: mailpit catches signup/reset mail on 8025 (see
+[`../deploy/docker/README.md`](../deploy/docker/README.md)). TLS is handled by
+the host nginx with a Tailscale, Let's Encrypt, or building-CA cert — see
+[`deployment.md`](deployment.md).
 
 ## State and resetting
 
@@ -115,4 +128,4 @@ The four data stores keep their data in named volumes: `mongo-data`, `redis-data
 
 ## Why it is shaped this way
 
-The design choices all come back to a few ideas. Keep the metadata and the timeseries in the databases each is good at, which is Mongo and InfluxDB. Run BD's three processes as separate containers so each can be scaled, restarted, and read in logs on its own, while still sharing one image so there is only one thing to build. Render config and secrets at container start so the image stays clean and portable. Put a single nginx in front so there is one address surface and one place for TLS. Expose RabbitMQ to the host because the live consumers genuinely live outside this stack. Everything else, the health gating, the bootstrap, the XML-RPC patching, exists to make an older single-host codebase behave correctly now that its parts live in separate containers.
+The design choices all come back to a few ideas. Keep the metadata and the timeseries in the databases each is good at, which is Mongo and InfluxDB. Run BD's three processes as separate containers so each can be scaled, restarted, and read in logs on its own, while still sharing one image so there is only one thing to build. Render config and secrets at container start so the image stays clean and portable. Publish the app ports to host loopback and let a single host nginx terminate TLS in front, so there is one address surface and one place for TLS across every co-located service, and no private key ever enters a container. Expose RabbitMQ to the host because the live consumers genuinely live outside this stack. Everything else, the health gating, the bootstrap, the XML-RPC patching, exists to make an older single-host codebase behave correctly now that its parts live in separate containers.
