@@ -1,15 +1,17 @@
-# BuildingDepot dev/test stack. Run from this directory:
+# BuildingDepot app stack. Run from this directory:
 #   cp .env.example .env && $EDITOR .env
 #   docker compose up -d --build
 #   ./bootstrap_admin.sh
-# Production deploy will fork this for TLS, real volumes, and resource limits.
+# TLS is terminated by the host nginx (deploy/nginx/buildingdepot.conf.sample),
+# not in this stack. App ports are published to host loopback only; the host
+# nginx proxies 81/82/15675 -> these loopback ports.
 
 name: buildingdepot
 
 x-bd-app: &bd-app
   build:
-    context: ..
-    dockerfile: docker/Dockerfile.bd
+    context: ../..
+    dockerfile: deploy/docker/Dockerfile.bd
   image: buildingdepot:dev
   pull_policy: build  # locally built — never try to fetch from a registry
   env_file: .env
@@ -72,12 +74,14 @@ services:
       RABBITMQ_DEFAULT_PASS: ${RABBIT_ADMIN_PWD}
     # Broker reachable from the host so non-container clients (analytics consumers,
     # a web UI) can consume BD's live fan-out. AMQP for native clients; web-STOMP for
-    # websockets. The broker speaks only plain ws (15674); nginx terminates TLS and
-    # proxies browser wss to it (see nginx.conf), so rabbitmq never handles the key.
+    # websockets. The broker speaks only plain ws (15674); the HOST nginx terminates
+    # TLS and proxies browser wss (15675) to it, so rabbitmq never handles the key.
+    # web-STOMP is bound to loopback (nginx fronts it); AMQP + mgmt stay published for
+    # native clients and the management UI.
     ports:
-      - "${HOST_PORT_AMQP:-5672}:5672"            # AMQP (e.g. native pika clients)
-      - "${HOST_PORT_RABBIT_MGMT:-15672}:15672"   # management UI + HTTP API
-      - "${HOST_PORT_RABBIT_WS:-15674}:15674"     # web-STOMP plain ws (in-network)
+      - "${HOST_PORT_AMQP:-5672}:5672"                        # AMQP (e.g. native pika clients)
+      - "${HOST_PORT_RABBIT_MGMT:-15672}:15672"               # management UI + HTTP API
+      - "127.0.0.1:${HOST_PORT_RABBIT_WS:-15674}:15674"       # web-STOMP plain ws (host nginx -> here)
     volumes:
       - rabbit-data:/var/lib/rabbitmq
       # Enable web-STOMP (websocket) alongside management; see rabbitmq-enabled-plugins.
@@ -103,6 +107,10 @@ services:
 
   bd-central:
     <<: *bd-app
+    # Published to host loopback only; the host nginx terminates TLS on 81 and
+    # proxies here.
+    ports:
+      - "127.0.0.1:${HOST_PORT_CS:-8081}:8081"
     command:
       - gunicorn
       - "-w"
@@ -126,6 +134,10 @@ services:
 
   bd-data:
     <<: *bd-app
+    # Published to host loopback only; the host nginx terminates TLS on 82 and
+    # proxies here.
+    ports:
+      - "127.0.0.1:${HOST_PORT_DS:-8082}:8082"
     command:
       - gunicorn
       - "-w"
@@ -148,21 +160,6 @@ services:
       interval: 5s
       timeout: 5s
       retries: 20
-
-  nginx:
-    image: nginx:alpine
-    restart: unless-stopped
-    depends_on:
-      bd-central: { condition: service_healthy }
-      bd-data:    { condition: service_healthy }
-      rabbitmq:   { condition: service_healthy }
-    ports:
-      - "${HOST_PORT_CS:-81}:81"
-      - "${HOST_PORT_DS:-82}:82"
-      - "${HOST_PORT_RABBIT_WSS:-15675}:15675"   # web-STOMP over TLS (wss); proxied to rabbitmq:15674
-    volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf:ro
-      - ./certs:/etc/nginx/certs:ro   # Tailscale-issued bd.crt / bd.key (see refresh-cert.sh)
 
   # Dev SMTP catcher. CentralService sends signup/reset mail here (SMTP 1025);
   # read the captured messages, including temp passwords, at http://localhost:8025.

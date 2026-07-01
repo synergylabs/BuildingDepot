@@ -5,3 +5,5 @@ scripts/.venv/
 .env
 configs/bd_settings.cfg
 configs/nginx_sites_ssl.conf
+# Python bytecode caches (incl. vendored deploy library)
+__pycache__/

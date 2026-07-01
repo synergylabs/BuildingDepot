@@ -1,0 +1,68 @@
+# BuildingDepot — host nginx site fragment.
+#
+# TLS is terminated here (moved out of the compose stack): CentralService on 81,
+# DataService on 82, and RabbitMQ web-STOMP wss on 15675 -> the broker's plain
+# ws on 15674. All upstreams are published to host loopback by the compose stack.
+# Enable it with the host tooling, which renders the {{ }} placeholders,
+# provisions the cert, and reloads nginx:
+#
+#   sudo python3 deploy/shared/host.py enable deploy/nginx/buildingdepot.conf.sample \
+#       --domain <host> --cert <tailscale|letsencrypt|building_ca>
+#
+# The websocket upgrade map ($connection_upgrade), TLS params, CORS, and common
+# proxy headers come from the shared base config (deploy/shared/nginx_base).
+
+# CentralService (CS) — https://<host>:81 -> 127.0.0.1:8081
+server {
+    listen 81 ssl;
+    listen [::]:81 ssl;
+    server_name {{ DOMAIN }};
+    ssl_certificate     {{ SSL_CERT }};
+    ssl_certificate_key {{ SSL_KEY }};
+
+    # Friendly redirect if a plain-HTTP request hits the TLS port.
+    error_page 497 =301 https://$host:$server_port$request_uri;
+
+    location / {
+        proxy_pass http://127.0.0.1:8081;
+        include    /etc/nginx/conf.d/proxy-common.conf;
+        include    /etc/nginx/conf.d/cors.conf;
+    }
+}
+
+# DataService (DS) — https://<host>:82 -> 127.0.0.1:8082
+server {
+    listen 82 ssl;
+    listen [::]:82 ssl;
+    server_name {{ DOMAIN }};
+    ssl_certificate     {{ SSL_CERT }};
+    ssl_certificate_key {{ SSL_KEY }};
+
+    error_page 497 =301 https://$host:$server_port$request_uri;
+
+    location / {
+        proxy_pass http://127.0.0.1:8082;
+        include    /etc/nginx/conf.d/proxy-common.conf;
+        include    /etc/nginx/conf.d/cors.conf;
+    }
+}
+
+# RabbitMQ web-STOMP over TLS — wss://<host>:15675/ws -> 127.0.0.1:15674 (plain ws)
+server {
+    listen 15675 ssl;
+    listen [::]:15675 ssl;
+    server_name {{ DOMAIN }};
+    ssl_certificate     {{ SSL_CERT }};
+    ssl_certificate_key {{ SSL_KEY }};
+
+    error_page 497 =301 https://$host:$server_port$request_uri;
+
+    location / {
+        proxy_pass         http://127.0.0.1:15674;
+        proxy_http_version 1.1;
+        include            /etc/nginx/conf.d/proxy-common.conf;
+        proxy_set_header   Upgrade    $http_upgrade;
+        proxy_set_header   Connection $connection_upgrade;
+        proxy_read_timeout 3600s;   # web-STOMP connections are long-lived
+    }
+}

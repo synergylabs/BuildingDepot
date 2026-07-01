@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
-# One-shot: create the BD admin user inside the running bd-central container.
-# Idempotent: if the user already exists, MongoDB raises DuplicateKey and we exit 0.
+# One-shot: create the BD admin user and register the ds1 data service. Runs
+# inside the bd-central container. Idempotent: existing records are left in
+# place / upserted, so re-running is safe.
 set -euo pipefail
 
 cd "$(dirname "$0")"
