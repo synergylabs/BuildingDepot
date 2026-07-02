@@ -29,7 +29,7 @@ host):
 
 ```shell
 sudo python3 deploy/shared/host.py install
-sudo python3 deploy/shared/host.py enable deploy/nginx/buildingdepot.conf.sample \
+sudo python3 deploy/shared/host.py enable deploy/nginx/buildingdepot.conf \
     --domain <host> --cert <tailscale|letsencrypt>
 ```
 
@@ -53,7 +53,7 @@ BuildingDepot/
 │   ├── install.py                     # docker provision + build + bootstrap
 │   ├── shared/                        # vendored deploy library (do not edit)
 │   ├── docker/                        # compose stack, Dockerfile, entrypoint, bootstrap
-│   └── nginx/buildingdepot.conf.sample  # host nginx site fragment (81/82/15675)
+│   └── nginx/buildingdepot.conf  # host nginx site fragment (81/82/15675)
 ├── docs/                             # deployment + docker internals
 ├── buildingdepot/                    # BD source (CentralService, DataService, CentralReplica)
 ├── scripts/                          # repo/dev utilities

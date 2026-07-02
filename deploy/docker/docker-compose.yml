@@ -2,7 +2,7 @@
 #   cp .env.example .env && $EDITOR .env
 #   docker compose up -d --build
 #   ./bootstrap_admin.sh
-# TLS is terminated by the host nginx (deploy/nginx/buildingdepot.conf.sample),
+# TLS is terminated by the host nginx (deploy/nginx/buildingdepot.conf),
 # not in this stack. App ports are published to host loopback only; the host
 # nginx proxies 81/82/15675 -> these loopback ports.
 
