@@ -47,65 +47,21 @@ sudo python3 deploy/shared/host.py enable deploy/nginx/buildingdepot.conf \
 into `sites-enabled/`, runs `nginx -t`, and reloads. The connecting hostname
 must match the cert's name.
 
-### Private / no public IP -> Tailscale (default)
+### Cert sources
 
-For a host with no public IP but on your tailnet. The cert comes from Tailscale
-for the node's MagicDNS name (Let's Encrypt backed, validated over `ts.net`
-DNS). Requires `tailscale up` and HTTPS certs enabled in the tailnet admin
-console.
+Two issuers, selected with `--cert`:
 
-```bash
-sudo python3 deploy/shared/host.py enable deploy/nginx/buildingdepot.conf \
-    --cert tailscale          # --domain auto-detected from `tailscale status`
-```
+- **tailscale** (how the BD box is set up) — a host with no public IP but on
+  your tailnet; `--domain` auto-detected from `tailscale status`. Needs
+  MagicDNS + HTTPS Certificates enabled in the tailnet admin console. Reach BD
+  at `https://<node>.<tailnet>.ts.net:81` / `:82`.
+- **letsencrypt** — a host with a real domain. HTTP-01 on `:80` by default, or
+  a DNS-01 plugin via repeated `--certbot-auth-arg` flags when `:80` isn't
+  reachable (NAT/CGNAT).
 
-Reach BD at `https://<node>.<tailnet>.ts.net:81` / `:82`. Tailscale certs are
-90-day; re-run on a daily timer to renew (it reloads nginx).
-
-### Public IP + domain -> Let's Encrypt (certbot, HTTP-01)
-
-For a host with a public IP and a real domain whose A record points at it.
-certbot validates over HTTP-01 (needs port 80 free and reachable).
-
-```bash
-sudo apt install certbot
-sudo python3 deploy/shared/host.py enable deploy/nginx/buildingdepot.conf \
-    --domain bd.example.com --cert letsencrypt --email you@example.com
-```
-
-certbot installs its own renewal timer.
-
-### Behind NAT/CGNAT -> Let's Encrypt (certbot, DNS-01 plugin)
-
-For a host with a real domain but no reachable port 80 (NAT, CGNAT, firewalled),
-validate over DNS-01 instead. certbot proves control by writing a TXT record
-through your DNS provider's API, so nothing needs to be inbound-reachable.
-Cloudflare is shown; the same pattern works for any
-[certbot DNS plugin](https://eff-certbot.readthedocs.io/en/stable/using.html#dns-plugins)
-(Route 53, Google, DigitalOcean, …) — swap the `--dns-*` flags.
-
-```bash
-# 1. Install the plugin (matches your certbot install method)
-sudo apt install python3-certbot-dns-cloudflare
-
-# 2. Drop the API token where certbot can read it. Use a scoped Cloudflare token
-#    with Zone:DNS:Edit on the relevant zone (not the global API key).
-sudo install -d -m 700 /root/.secrets
-printf 'dns_cloudflare_api_token = %s\n' "$CF_TOKEN" | sudo tee /root/.secrets/cloudflare.ini >/dev/null
-sudo chmod 600 /root/.secrets/cloudflare.ini
-
-# 3. Issue, pointing the authenticator at the plugin (repeat --certbot-auth-arg
-#    per token). Add `--certbot-auth-arg --dns-cloudflare-propagation-seconds`
-#    `--certbot-auth-arg 30` if DNS needs a moment to propagate.
-sudo python3 deploy/shared/host.py enable deploy/nginx/buildingdepot.conf \
-    --domain bd.example.com --cert letsencrypt --email you@example.com \
-    --certbot-auth-arg --dns-cloudflare \
-    --certbot-auth-arg --dns-cloudflare-credentials \
-    --certbot-auth-arg /root/.secrets/cloudflare.ini
-```
-
-certbot records the authenticator + credentials path in the renewal config at
-first issue, so `certbot renew` reuses the DNS plugin automatically.
+Full walkthroughs (Tailscale prerequisites and renewal, certbot HTTP-01,
+DNS-01 plugin setup):
+[`deploy/shared/docs/certificates.md`](../deploy/shared/docs/certificates.md).
 
 ## Live data over wss (RabbitMQ web-STOMP)
 
