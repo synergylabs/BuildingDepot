@@ -38,7 +38,7 @@ install the shared base config once per host, then enable BD's site fragment
 sudo python3 deploy/shared/host.py install
 
 # Per app: provision a cert and enable the BD site fragment.
-sudo python3 deploy/shared/host.py enable deploy/nginx/buildingdepot.conf.sample \
+sudo python3 deploy/shared/host.py enable deploy/nginx/buildingdepot.conf \
     --domain <host> --cert <tailscale|letsencrypt> [options]
 ```
 
@@ -55,7 +55,7 @@ DNS). Requires `tailscale up` and HTTPS certs enabled in the tailnet admin
 console.
 
 ```bash
-sudo python3 deploy/shared/host.py enable deploy/nginx/buildingdepot.conf.sample \
+sudo python3 deploy/shared/host.py enable deploy/nginx/buildingdepot.conf \
     --cert tailscale          # --domain auto-detected from `tailscale status`
 ```
 
@@ -69,7 +69,7 @@ certbot validates over HTTP-01 (needs port 80 free and reachable).
 
 ```bash
 sudo apt install certbot
-sudo python3 deploy/shared/host.py enable deploy/nginx/buildingdepot.conf.sample \
+sudo python3 deploy/shared/host.py enable deploy/nginx/buildingdepot.conf \
     --domain bd.example.com --cert letsencrypt --email you@example.com
 ```
 
@@ -97,7 +97,7 @@ sudo chmod 600 /root/.secrets/cloudflare.ini
 # 3. Issue, pointing the authenticator at the plugin (repeat --certbot-auth-arg
 #    per token). Add `--certbot-auth-arg --dns-cloudflare-propagation-seconds`
 #    `--certbot-auth-arg 30` if DNS needs a moment to propagate.
-sudo python3 deploy/shared/host.py enable deploy/nginx/buildingdepot.conf.sample \
+sudo python3 deploy/shared/host.py enable deploy/nginx/buildingdepot.conf \
     --domain bd.example.com --cert letsencrypt --email you@example.com \
     --certbot-auth-arg --dns-cloudflare \
     --certbot-auth-arg --dns-cloudflare-credentials \

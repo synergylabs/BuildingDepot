@@ -14,7 +14,7 @@ Two subcommands, both operating on the one nginx that fronts every co-located se
 
 Usage from any app's vendored copy:
   sudo python3 deploy/shared/host.py install
-  sudo python3 deploy/shared/host.py enable deploy/nginx/<app>.conf.sample \
+  sudo python3 deploy/shared/host.py enable deploy/nginx/<app>.conf \
       --domain host.tailnet.ts.net --cert tailscale
 """
 
