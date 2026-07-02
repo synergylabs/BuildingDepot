@@ -7,7 +7,7 @@
 # provisions the cert, and reloads nginx:
 #
 #   sudo python3 deploy/shared/host.py enable deploy/nginx/buildingdepot.conf.sample \
-#       --domain <host> --cert <tailscale|letsencrypt|building_ca>
+#       --domain <host> --cert <tailscale|letsencrypt>
 #
 # The websocket upgrade map ($connection_upgrade), TLS params, CORS, and common
 # proxy headers come from the shared base config (deploy/shared/nginx_base).
