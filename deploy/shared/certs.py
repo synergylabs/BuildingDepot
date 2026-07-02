@@ -7,8 +7,6 @@ Three issuers, consolidated from the apps' former cert scripts:
                     name, validated over the tailnet — no public IP needed.
   - letsencrypt   : certbot, HTTP-01 on :80 by default, or DNS-01 via
                     `certbot_auth_args` when :80 is not publicly reachable.
-  - building_ca   : an existing cert+key already on disk (building-CA-signed or
-                    any other) — nothing is issued, the paths are just validated.
 
 Each issuer writes (or points at) a cert/key pair and returns their paths. The
 proxy config (nginx.py) consumes those paths; this module never touches nginx.
@@ -24,11 +22,11 @@ import proc
 
 CERT_DIR = "/etc/nginx/certs"
 
-CERT_MODES = ("tailscale", "letsencrypt", "building_ca")
+CERT_MODES = ("tailscale", "letsencrypt")
 
 
 def _ensure_cert_dir() -> None:
-    proc.run(["mkdir", "-p", CERT_DIR])
+    os.makedirs(CERT_DIR, exist_ok=True)
 
 
 def _site_paths(site: str) -> tuple[str, str]:
@@ -63,8 +61,6 @@ def provision_cert(
     *,
     site: str,
     domain: str | None = None,
-    cert_file: str | None = None,
-    key_file: str | None = None,
     email: str | None = None,
     certbot_auth_args: list[str] | None = None,
 ) -> tuple[str, str]:
@@ -73,8 +69,6 @@ def provision_cert(
         return _cert_tailscale(site, domain)
     if mode == "letsencrypt":
         return _cert_letsencrypt(domain, email, certbot_auth_args)
-    if mode == "building_ca":
-        return _cert_existing(cert_file, key_file)
     log.die(f"unknown cert mode: {mode} (use one of {', '.join(CERT_MODES)})")
 
 
@@ -93,7 +87,7 @@ def _cert_tailscale(site: str, domain: str | None) -> tuple[str, str]:
     cert_file, key_file = _site_paths(site)
     log.info(f"requesting a Tailscale cert for {domain}")
     proc.run(["tailscale", "cert", "--cert-file", cert_file, "--key-file", key_file, domain])
-    proc.run(["chmod", "600", key_file])
+    os.chmod(key_file, 0o600)
     return cert_file, key_file
 
 
@@ -121,11 +115,4 @@ def _cert_letsencrypt(
     return f"{live}/fullchain.pem", f"{live}/privkey.pem"
 
 
-def _cert_existing(cert_file: str | None, key_file: str | None) -> tuple[str, str]:
-    if not cert_file or not key_file:
-        log.die("building_ca mode needs --cert-file and --key-file pointing at an existing pair")
-    if not os.path.isfile(cert_file):
-        log.die(f"cert not found: {cert_file}")
-    if not os.path.isfile(key_file):
-        log.die(f"key not found: {key_file}")
-    return cert_file, key_file
+

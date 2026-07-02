@@ -1,7 +1,7 @@
 # vendored deploy library — do not edit here; regenerate from the deploy source.
 """Host nginx: install the shared base config and enable per-app site fragments.
 
-The host runs one nginx that terminates TLS for every co-located service.
+The host runs one nginx that terminates TLS for every co-located Mites service.
 `install_base` lays down the shared base `nginx.conf` + `conf.d/` snippets (the
 websocket map, ssl params, common proxy headers, CORS) once per host.
 `enable_site` renders an app's site fragment (substituting the domain and cert
@@ -49,22 +49,22 @@ def install_base(base_dir: str) -> None:
     if not os.path.isfile(src_conf):
         log.die(f"base nginx.conf not found at {src_conf}")
 
-    proc.run(["mkdir", "-p", SITES_AVAILABLE])
-    proc.run(["mkdir", "-p", SITES_ENABLED])
-    proc.run(["mkdir", "-p", CONF_D])
+    os.makedirs(SITES_AVAILABLE, exist_ok=True)
+    os.makedirs(SITES_ENABLED, exist_ok=True)
+    os.makedirs(CONF_D, exist_ok=True)
 
     dest_conf = os.path.join(NGINX_ROOT, "nginx.conf")
     if os.path.isfile(dest_conf):
         backup = dest_conf + ".pre-deploy.bak"
         if not os.path.exists(backup):
-            proc.run(["cp", "-p", dest_conf, backup])
+            shutil.copy2(dest_conf, backup)
             log.step(f"backed up existing nginx.conf -> {backup}")
-    proc.run(["cp", "-p", src_conf, dest_conf])
+    shutil.copy2(src_conf, dest_conf)
     log.step(f"installed {dest_conf}")
 
     for name in sorted(os.listdir(src_confd)):
         if name.endswith(".conf"):
-            proc.run(["cp", "-p", os.path.join(src_confd, name), os.path.join(CONF_D, name)])
+            shutil.copy2(os.path.join(src_confd, name), os.path.join(CONF_D, name))
             log.step(f"installed conf.d/{name}")
 
     nginx_test()
@@ -83,24 +83,26 @@ def enable_site(
     """Render and enable an app's site fragment, then test + reload nginx."""
     if not os.path.isfile(fragment_path):
         log.die(f"site fragment not found: {fragment_path}")
-    proc.run(["mkdir", "-p", SITES_AVAILABLE])
-    proc.run(["mkdir", "-p", SITES_ENABLED])
+    os.makedirs(SITES_AVAILABLE, exist_ok=True)
+    os.makedirs(SITES_ENABLED, exist_ok=True)
 
     available = os.path.join(SITES_AVAILABLE, site)
     enabled = os.path.join(SITES_ENABLED, site)
 
     if os.path.isfile(available):
         backup = f"{available}.bak"
-        proc.run(["cp", "-p", available, backup])
+        shutil.copy2(available, backup)
         log.step(f"backed up existing site -> {backup}")
 
     rendered = template.render(
         _read(fragment_path),
         {"DOMAIN": domain, "SSL_CERT": cert_file, "SSL_KEY": key_file},
     )
-    proc.run(["tee", available], input_text=rendered, capture=True, quiet=True)
-    proc.run(["rm", "-f", enabled])
-    proc.run(["ln", "-s", available, enabled])
+    with open(available, "w", encoding="utf-8") as handle:
+        handle.write(rendered)
+    if os.path.islink(enabled) or os.path.exists(enabled):
+        os.remove(enabled)
+    os.symlink(available, enabled)
     log.step(f"enabled site {site} -> {domain}")
 
     nginx_test()

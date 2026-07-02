@@ -39,7 +39,7 @@ sudo python3 deploy/shared/host.py install
 
 # Per app: provision a cert and enable the BD site fragment.
 sudo python3 deploy/shared/host.py enable deploy/nginx/buildingdepot.conf.sample \
-    --domain <host> --cert <tailscale|letsencrypt|building_ca> [options]
+    --domain <host> --cert <tailscale|letsencrypt> [options]
 ```
 
 `enable` renders the fragment's `{{ DOMAIN }}` / `{{ SSL_CERT }}` /
@@ -106,14 +106,6 @@ sudo python3 deploy/shared/host.py enable deploy/nginx/buildingdepot.conf.sample
 
 certbot records the authenticator + credentials path in the renewal config at
 first issue, so `certbot renew` reuses the DNS plugin automatically.
-
-### Building-CA cert, or any cert you already hold
-
-```bash
-sudo python3 deploy/shared/host.py enable deploy/nginx/buildingdepot.conf.sample \
-    --domain bd.example.org --cert building_ca \
-    --cert-file /path/fullchain.pem --key-file /path/privkey.pem
-```
 
 ## Live data over wss (RabbitMQ web-STOMP)
 

@@ -30,7 +30,7 @@ host):
 ```shell
 sudo python3 deploy/shared/host.py install
 sudo python3 deploy/shared/host.py enable deploy/nginx/buildingdepot.conf.sample \
-    --domain <host> --cert <tailscale|letsencrypt|building_ca>
+    --domain <host> --cert <tailscale|letsencrypt>
 ```
 
 Reach CentralService at `https://<host>:81` and DataService at `https://<host>:82`.

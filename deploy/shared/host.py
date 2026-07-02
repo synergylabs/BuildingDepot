@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
 # vendored deploy library — do not edit here; regenerate from the deploy source.
-"""Host-level reverse-proxy CLI (runs as user, uses sudo when needed).
+"""Host-level reverse-proxy CLI (run as root).
 
-Two subcommands, both operating on the one nginx that fronts every co-located
-service:
+Two subcommands, both operating on the one nginx that fronts every co-located service:
 
   install
       Install nginx and lay down the shared base config (nginx.conf + conf.d/).
@@ -11,11 +10,11 @@ service:
 
   enable <fragment> --domain <d> --cert <mode> [...]
       Provision a TLS cert and enable an app's site fragment. Run once per app.
-      Cert modes: tailscale | letsencrypt | building_ca.
+      Cert modes: tailscale | letsencrypt.
 
 Usage from any app's vendored copy:
-  python3 deploy/shared/host.py install
-  python3 deploy/shared/host.py enable deploy/nginx/<app>.conf.sample \
+  sudo python3 deploy/shared/host.py install
+  sudo python3 deploy/shared/host.py enable deploy/nginx/<app>.conf.sample \
       --domain host.tailnet.ts.net --cert tailscale
 """
 
@@ -34,7 +33,8 @@ import nginx  # noqa: E402
 
 
 def _require_root() -> None:
-    pass
+    if os.geteuid() != 0:
+        log.die("re-run with sudo — this edits /etc/nginx and runs cert tooling")
 
 
 def _default_site_name(fragment_path: str) -> str:
@@ -59,8 +59,6 @@ def cmd_enable(args: argparse.Namespace) -> None:
         args.cert,
         site=site,
         domain=args.domain,
-        cert_file=args.cert_file,
-        key_file=args.key_file,
         email=args.email,
         certbot_auth_args=args.certbot_auth_arg or None,
     )
@@ -90,8 +88,7 @@ def build_parser() -> argparse.ArgumentParser:
         help="certificate issuer",
     )
     p_enable.add_argument("--site", help="site name (defaults to the fragment filename)")
-    p_enable.add_argument("--cert-file", help="building_ca: existing cert path")
-    p_enable.add_argument("--key-file", help="building_ca: existing key path")
+
     p_enable.add_argument("--email", help="letsencrypt: contact email")
     p_enable.add_argument(
         "--certbot-auth-arg",

@@ -1,5 +1,5 @@
 # vendored deploy library — do not edit here; regenerate from the deploy source.
-"""Host package installation (apt / snap / node / pnpm / docker).
+"""Host package installation (apt / snap / node / docker).
 
 Every helper is idempotent: it checks whether the tool is already present before
 shelling out, so re-running an install is cheap and safe. apt/snap calls need
@@ -25,7 +25,8 @@ def _is_root() -> bool:
 
 
 def _require_root(action: str) -> None:
-    pass
+    if not _is_root():
+        log.die(f"{action} needs root — re-run this step with sudo")
 
 
 def apt_install(packages: Sequence[str]) -> None:
@@ -71,18 +72,6 @@ def ensure_node() -> str:
     proc.run(["snap", "install", "node", "--classic"])
     return NODE_BIN
 
-
-def ensure_pnpm() -> None:
-    """Ensure pnpm is available, via corepack when possible."""
-    if proc.have("pnpm"):
-        log.step("pnpm: already installed")
-        return
-    if proc.have("corepack"):
-        log.info("enabling pnpm via corepack")
-        proc.run(["corepack", "enable", "pnpm"])
-        proc.run(["corepack", "prepare", "pnpm@latest", "--activate"])
-        return
-    log.die("pnpm not found and corepack unavailable — install pnpm, then re-run")
 
 
 def ensure_docker() -> None:

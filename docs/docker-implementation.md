@@ -119,7 +119,7 @@ pointing at the same loopback address.
 
 Email is dev-only: mailpit catches signup/reset mail on 8025 (see
 [`../deploy/docker/README.md`](../deploy/docker/README.md)). TLS is handled by
-the host nginx with a Tailscale, Let's Encrypt, or building-CA cert — see
+the host nginx with a Tailscale or Let's Encrypt cert — see
 [`deployment.md`](deployment.md).
 
 ## State and resetting
