@@ -70,6 +70,35 @@ def _write_secure(path: str, content: str) -> None:
         os.chmod(path, 0o600)
 
 
+def update_env(path: str, values: Mapping[str, str]) -> None:
+    """Update assignments in an existing env-format file, in place.
+
+    Lines whose key is in `values` are rewritten where they stand; keys the file
+    doesn't have yet are appended at the end. Comments, blank lines, and
+    unrelated assignments survive untouched, so this is safe on files owned by a
+    package (e.g. /etc/default/grafana-server). The file is created if missing
+    and left chmod 600 either way — the merged values may hold secrets.
+    """
+    out_lines: list[str] = []
+    seen: set[str] = set()
+    if os.path.exists(path):
+        with open(path, "r", encoding="utf-8") as handle:
+            for line in handle:
+                match = _ASSIGN.match(line)
+                if match and match.group(2) in values:
+                    key = match.group(2)
+                    out_lines.append(f"{match.group(1)}{key}={values[key]}\n")
+                    seen.add(key)
+                else:
+                    out_lines.append(line)
+    missing = [key for key in values if key not in seen]
+    if missing:
+        if out_lines and not out_lines[-1].endswith("\n"):
+            out_lines[-1] += "\n"
+        out_lines.extend(f"{key}={values[key]}\n" for key in missing)
+    _write_secure(path, "".join(out_lines))
+
+
 def provision_env(
     example_path: str,
     dest_path: str,
