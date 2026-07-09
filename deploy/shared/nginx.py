@@ -7,8 +7,10 @@ websocket map, ssl params, common proxy headers, CORS) once per host.
 `enable_site` renders an app's site fragment (substituting the domain and cert
 paths), symlinks it into `sites-enabled/`, tests, and reloads.
 
-A site fragment is plain nginx with three `{{ }}` placeholders — `{{ DOMAIN }}`,
-`{{ SSL_CERT }}`, `{{ SSL_KEY }}` — and nothing else templated, so nginx's own
+A site fragment is plain nginx with `{{ }}` placeholders for `{{ DOMAIN }}`,
+`{{ SSL_CERT }}`, `{{ SSL_KEY }}` — plus `{{ HTPASSWD_FILE }}` in fragments
+gated by HTTP basic auth (`host.py enable --basic-auth` supplies it via
+`write_htpasswd`) — and nothing else templated, so nginx's own
 `$host`/`$connection_upgrade`/… survive verbatim.
 """
 
@@ -16,6 +18,7 @@ from __future__ import annotations
 
 import os
 import shutil
+from typing import Mapping
 
 import log
 import proc
@@ -25,6 +28,7 @@ NGINX_ROOT = "/etc/nginx"
 SITES_AVAILABLE = os.path.join(NGINX_ROOT, "sites-available")
 SITES_ENABLED = os.path.join(NGINX_ROOT, "sites-enabled")
 CONF_D = os.path.join(NGINX_ROOT, "conf.d")
+HTPASSWD_DIR = os.path.join(NGINX_ROOT, "htpasswd")
 
 
 def install_nginx() -> None:
@@ -72,6 +76,37 @@ def install_base(base_dir: str) -> None:
     log.ok("base nginx config installed")
 
 
+def write_htpasswd(site: str, user: str, password: str) -> str:
+    """Write an htpasswd file for `site` and return its path.
+
+    The hash is apr1 (via openssl), which nginx's `auth_basic_user_file`
+    accepts. The file must be readable by the nginx workers, so it is group
+    www-data mode 640 (falling back to 644 with a warning when that group
+    doesn't exist).
+    """
+    proc.require_cmd("openssl", "needed to hash the basic-auth password")
+    os.makedirs(HTPASSWD_DIR, exist_ok=True)
+    path = os.path.join(HTPASSWD_DIR, site)
+    # -stdin keeps the password out of the process list.
+    result = proc.run(
+        ["openssl", "passwd", "-apr1", "-stdin"],
+        capture=True,
+        quiet=True,
+        input_text=password + "\n",
+    )
+    fd = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o640)
+    with os.fdopen(fd, "w", encoding="utf-8") as handle:
+        handle.write(f"{user}:{result.stdout.strip()}\n")
+    try:
+        shutil.chown(path, group="www-data")
+        os.chmod(path, 0o640)
+    except (LookupError, PermissionError):
+        os.chmod(path, 0o644)
+        log.warn(f"no www-data group — {path} left world-readable (hash only)")
+    log.step(f"wrote basic-auth file {path} (user {user})")
+    return path
+
+
 def enable_site(
     fragment_path: str,
     *,
@@ -79,6 +114,7 @@ def enable_site(
     domain: str,
     cert_file: str,
     key_file: str,
+    extra_variables: Mapping[str, str] | None = None,
 ) -> None:
     """Render and enable an app's site fragment, then test + reload nginx."""
     if not os.path.isfile(fragment_path):
@@ -94,10 +130,13 @@ def enable_site(
         shutil.copy2(available, backup)
         log.step(f"backed up existing site -> {backup}")
 
-    rendered = template.render(
-        _read(fragment_path),
-        {"DOMAIN": domain, "SSL_CERT": cert_file, "SSL_KEY": key_file},
-    )
+    variables: dict[str, str] = {
+        "DOMAIN": domain,
+        "SSL_CERT": cert_file,
+        "SSL_KEY": key_file,
+        **(extra_variables or {}),
+    }
+    rendered = template.render(_read(fragment_path), variables)
     with open(available, "w", encoding="utf-8") as handle:
         handle.write(rendered)
     if os.path.islink(enabled) or os.path.exists(enabled):

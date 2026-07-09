@@ -10,7 +10,9 @@ Two subcommands, both operating on the one nginx that fronts every co-located se
 
   enable <fragment> --domain <d> --cert <mode> [...]
       Provision a TLS cert and enable an app's site fragment. Run once per app.
-      Cert modes: tailscale | letsencrypt.
+      Cert modes: tailscale | letsencrypt. Fragments gated by HTTP basic auth
+      (they reference {{ HTPASSWD_FILE }}) also need --basic-auth USER:PASSWORD,
+      which writes the site's htpasswd file.
 
 Usage from any app's vendored copy:
   sudo python3 deploy/shared/host.py install
@@ -30,6 +32,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import certs  # noqa: E402
 import log  # noqa: E402
 import nginx  # noqa: E402
+import template  # noqa: E402
 
 
 def _require_root() -> None:
@@ -55,6 +58,12 @@ def cmd_install(_: argparse.Namespace) -> None:
 def cmd_enable(args: argparse.Namespace) -> None:
     _require_root()
     site = args.site or _default_site_name(args.fragment)
+    extra: dict[str, str] = {}
+    if args.basic_auth:
+        user, sep, password = args.basic_auth.partition(":")
+        if not (sep and user and password):
+            log.die("--basic-auth expects USER:PASSWORD")
+        extra["HTPASSWD_FILE"] = nginx.write_htpasswd(site, user, password)
     cert_file, key_file = certs.provision_cert(
         args.cert,
         site=site,
@@ -62,13 +71,20 @@ def cmd_enable(args: argparse.Namespace) -> None:
         email=args.email,
         certbot_auth_args=args.certbot_auth_arg or None,
     )
-    nginx.enable_site(
-        args.fragment,
-        site=site,
-        domain=args.domain or "",
-        cert_file=cert_file,
-        key_file=key_file,
-    )
+    try:
+        nginx.enable_site(
+            args.fragment,
+            site=site,
+            domain=args.domain or "",
+            cert_file=cert_file,
+            key_file=key_file,
+            extra_variables=extra,
+        )
+    except template.MissingKeyError as exc:
+        log.die(
+            f"unresolved fragment placeholder: {exc} — fragments referencing "
+            "{{ HTPASSWD_FILE }} need --basic-auth USER:PASSWORD"
+        )
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -88,6 +104,11 @@ def build_parser() -> argparse.ArgumentParser:
         help="certificate issuer",
     )
     p_enable.add_argument("--site", help="site name (defaults to the fragment filename)")
+    p_enable.add_argument(
+        "--basic-auth",
+        metavar="USER:PASSWORD",
+        help="write an htpasswd for the site and fill {{ HTPASSWD_FILE }} in the fragment",
+    )
 
     p_enable.add_argument("--email", help="letsencrypt: contact email")
     p_enable.add_argument(
