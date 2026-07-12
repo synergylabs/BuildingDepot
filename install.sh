@@ -157,14 +157,14 @@ sudo apt-get install rabbitmq-server=3.13.7-1 -y --fix-missing -y --fix-missing
       nginx \
       redis-server \
       mongodb-org \
-      influxdb
+      influxdb \
+      nodejs npm
   systemctl enable influxdb
   systemctl start influxdb
   systemctl enable mongod
   systemctl start mongod
   systemctl enable mongod
   systemctl start mongod
-  snap install node --channel=22 --classic
   snap install astral-uv --classic
 }
 

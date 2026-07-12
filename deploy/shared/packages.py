@@ -1,8 +1,8 @@
 # vendored deploy library — do not edit here; regenerate from the deploy source.
-"""Host package installation (apt / snap / node / docker).
+"""Host package installation (apt / node / docker).
 
 Every helper is idempotent: it checks whether the tool is already present before
-shelling out, so re-running an install is cheap and safe. apt/snap calls need
+shelling out, so re-running an install is cheap and safe. apt calls need
 root; the helpers say so rather than failing obscurely.
 """
 
@@ -15,9 +15,9 @@ from typing import Sequence
 import log
 import proc
 
-# Node is installed as a classic snap to match the systemd units, which call
-# /snap/bin/node by absolute path (the --user manager has no snap bin on PATH).
-NODE_BIN = "/snap/bin/node"
+# Node is installed from apt (nodejs package). /usr/bin/node is the well-known
+# path; the --user manager may not have it on PATH so units reference it absolutely.
+NODE_BIN = "/usr/bin/node"
 
 
 def _is_root() -> bool:
@@ -46,18 +46,13 @@ def _dpkg_installed(package: str) -> bool:
     return proc.run_ok(["dpkg", "-s", package])
 
 
-def ensure_snapd() -> None:
-    """Make sure snapd is available (needed for the node snap)."""
-    if proc.have("snap"):
-        return
-    apt_install(["snapd"])
-
-
 def ensure_node() -> str:
     """Ensure a Node runtime exists; return the absolute node path.
 
-    Prefers an existing `node` on PATH; otherwise installs the classic node snap
-    and returns its well-known path.
+    Prefers an existing `node` on PATH; otherwise installs the nodejs + npm apt
+    packages and returns its well-known path. npm is a separate apt package (the
+    `nodejs` package only Suggests it) but the install scripts need it for
+    `npm ci` / `npm run build`, so both are installed together.
     """
     existing = shutil.which("node")
     if existing:
@@ -66,10 +61,9 @@ def ensure_node() -> str:
     if os.path.exists(NODE_BIN):
         log.step(f"node: present at {NODE_BIN}")
         return NODE_BIN
-    ensure_snapd()
-    _require_root("installing the node snap")
-    log.info("installing node (classic snap)")
-    proc.run(["snap", "install", "node", "--classic"])
+    _require_root("installing nodejs")
+    log.info("installing nodejs + npm (apt)")
+    apt_install(["nodejs", "npm"])
     return NODE_BIN
 
 
