@@ -24,8 +24,9 @@ python3 deploy/install.py        # provision docker/.env, build + up, bootstrap 
 
 `deploy/install.py` provisions `deploy/docker/.env`, builds and starts the
 stack, and registers the admin user (`admin@buildingdepot.org`, temp password
-printed) and the `ds1` data service. Then put HTTPS in front (root, once per
-host):
+printed) and the `ds1` data service. Accepts `--no-ask-sudo` to suppress sudo
+confirmation prompts (used by `bootstrap_host.py` for unattended installs).
+Then put HTTPS in front (root, once per host):
 
 ```shell
 sudo python3 deploy/shared/host.py install
