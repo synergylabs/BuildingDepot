@@ -2,8 +2,9 @@
 """Host package installation (apt / node / docker).
 
 Every helper is idempotent: it checks whether the tool is already present before
-shelling out, so re-running an install is cheap and safe. apt calls need
-root; the helpers say so rather than failing obscurely.
+shelling out, so re-running an install is cheap and safe. apt calls escalate
+to sudo when needed, prompting the user for confirmation (suppress with
+``proc.set_sudo_ask(False)`` or ``--no-ask-sudo`` at the CLI level).
 """
 
 from __future__ import annotations
@@ -20,15 +21,6 @@ import proc
 NODE_BIN = "/usr/bin/node"
 
 
-def _is_root() -> bool:
-    return os.geteuid() == 0
-
-
-def _require_root(action: str) -> None:
-    if not _is_root():
-        log.die(f"{action} needs root — re-run this step with sudo")
-
-
 def apt_install(packages: Sequence[str]) -> None:
     """Install apt packages if any are missing. No-op when all present."""
     missing = [p for p in packages if not _dpkg_installed(p)]
@@ -36,10 +28,11 @@ def apt_install(packages: Sequence[str]) -> None:
         log.step(f"apt: already installed: {', '.join(packages)}")
         return
     proc.require_cmd("apt-get", "this helper assumes a Debian/Ubuntu host")
-    _require_root(f"installing {', '.join(missing)}")
     log.info(f"apt-get install {' '.join(missing)}")
-    proc.run(["apt-get", "update", "-qq"])
-    proc.run(["apt-get", "install", "-y", "-qq", *missing])
+    reason = f"installing {', '.join(missing)}"
+    proc.sudo_run(["apt-get", "update", "-qq"], reason=reason)
+    # Second sudo_run inherits the cached sudo credential — no double-prompt.
+    proc.sudo_run(["apt-get", "install", "-y", "-qq", *missing], reason=reason, confirm=False)
 
 
 def _dpkg_installed(package: str) -> bool:
@@ -61,7 +54,6 @@ def ensure_node() -> str:
     if os.path.exists(NODE_BIN):
         log.step(f"node: present at {NODE_BIN}")
         return NODE_BIN
-    _require_root("installing nodejs")
     log.info("installing nodejs + npm (apt)")
     apt_install(["nodejs", "npm"])
     return NODE_BIN

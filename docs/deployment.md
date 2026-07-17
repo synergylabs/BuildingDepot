@@ -22,7 +22,7 @@ python3 deploy/install.py        # provision docker/.env, build + up, bootstrap
 `deploy/install.py` provisions `deploy/docker/.env` from `.env.example`
 (generating fresh infra secrets), builds and starts the stack, and runs
 `bootstrap_admin.sh` to create the admin user and register the `ds1` data
-service. Flags: `--no-build`, `--no-bootstrap`, `--force-env`.
+service. Flags: `--no-build`, `--no-bootstrap`, `--force-env`, `--no-ask-sudo`.
 
 The admin credential (`admin@buildingdepot.org` + a generated temp password) is
 printed by the bootstrap step — change it on first login.

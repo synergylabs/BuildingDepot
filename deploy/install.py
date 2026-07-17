@@ -8,6 +8,7 @@ Run from the repo root:
     python3 deploy/install.py --no-bootstrap   # skip the admin/ds1 bootstrap
     python3 deploy/install.py --force-env       # re-provision docker/.env from example
     python3 deploy/install.py --no-build        # `up -d` without rebuilding the image
+    python3 deploy/install.py --no-ask-sudo    # don't prompt before sudo (for automation)
 
 `.env` is provisioned from `.env.example` with fresh infra secrets generated
 locally. TLS is a separate, root step handled by the host nginx — see the
@@ -68,7 +69,11 @@ def main(argv: list[str] | None = None) -> None:
     parser.add_argument("--no-build", action="store_true", help="`up -d` without rebuilding the image")
     parser.add_argument("--no-bootstrap", action="store_true", help="skip the admin/ds1 bootstrap")
     parser.add_argument("--force-env", action="store_true", help="overwrite an existing docker/.env")
+    parser.add_argument("--no-ask-sudo", action="store_true", help="skip confirmation prompts before sudo commands")
     args = parser.parse_args(argv)
+
+    if args.no_ask_sudo:
+        proc.set_sudo_ask(False)
 
     provision_env(args.force_env)
     compose_up(build=not args.no_build)
