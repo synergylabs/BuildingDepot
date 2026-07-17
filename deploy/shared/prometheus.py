@@ -128,7 +128,12 @@ def _expose_remote_prometheus(args: argparse.Namespace) -> None:
         log.die("--expose-remote-prometheus needs --domain (none given, no tailnet name found)")
 
     htpasswd = nginx.write_htpasswd(EXPOSE_SITE, user, password)
-    cert_file, key_file = certs.provision_cert(args.cert, site=EXPOSE_SITE, domain=domain)
+    cert_file, key_file = certs.provision_cert(
+        args.cert,
+        site=EXPOSE_SITE,
+        domain=domain,
+        cloudflare_token=args.cloudflare_token,
+    )
     nginx.enable_site(
         EXPOSE_FRAGMENT,
         site=EXPOSE_SITE,
@@ -189,11 +194,15 @@ def build_parser() -> argparse.ArgumentParser:
         "for a Grafana on another host (needs the nginx base from host.py install)",
     )
     p_install.add_argument("--domain", help="exposure hostname (default: the tailnet name)")
-    p_install.add_argument("--cert", choices=certs.CERT_MODES, help="exposure certificate issuer")
+    p_install.add_argument("--cert", choices=(*certs.CERT_MODES, *certs._LEGACY_ALIASES), help="exposure certificate issuer")
     p_install.add_argument(
         "--basic-auth",
         metavar="USER:PASSWORD",
         help="exposure credentials — the pair the remote Grafana datasource authenticates with",
+    )
+    p_install.add_argument(
+        "--cloudflare-token",
+        help="dns-cloudflare: Cloudflare API token (or set CF_DNS_API_TOKEN env var)",
     )
     p_install.set_defaults(func=cmd_install)
 

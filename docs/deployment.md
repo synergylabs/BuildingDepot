@@ -39,7 +39,7 @@ sudo python3 deploy/shared/host.py install
 
 # Per app: provision a cert and enable the BD site fragment.
 sudo python3 deploy/shared/host.py enable deploy/nginx/buildingdepot.conf \
-    --domain <host> --cert <tailscale|letsencrypt> [options]
+    --domain <host> --cert <tailscale|http|dns-cloudflare> [options]
 ```
 
 `enable` renders the fragment's `{{ DOMAIN }}` / `{{ SSL_CERT }}` /
@@ -49,18 +49,19 @@ must match the cert's name.
 
 ### Cert sources
 
-Two issuers, selected with `--cert`:
+Three issuers, selected with `--cert`:
 
 - **tailscale** (how the BD box is set up) — a host with no public IP but on
   your tailnet; `--domain` auto-detected from `tailscale status`. Needs
   MagicDNS + HTTPS Certificates enabled in the tailnet admin console. Reach BD
   at `https://<node>.<tailnet>.ts.net:81` / `:82`.
-- **letsencrypt** — a host with a real domain. HTTP-01 on `:80` by default, or
-  a DNS-01 plugin via repeated `--certbot-auth-arg` flags when `:80` isn't
-  reachable (NAT/CGNAT).
+- **http** — a host with a real domain. HTTP-01 on `:80` by default.
+  (`letsencrypt` accepted as legacy alias.)
+- **dns-cloudflare** — DNS-01 via the Cloudflare API. Works behind NAT/CGNAT.
+  Pass `--cloudflare-token` or set `CF_DNS_API_TOKEN`.
 
 Full walkthroughs (Tailscale prerequisites and renewal, certbot HTTP-01,
-DNS-01 plugin setup):
+DNS-01 via Cloudflare):
 [`deploy/shared/docs/certificates.md`](../deploy/shared/docs/certificates.md).
 
 ## Live data over wss (RabbitMQ web-STOMP)

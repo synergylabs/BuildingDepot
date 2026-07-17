@@ -4,10 +4,13 @@
 
 `host.py enable` provisions a real certificate — Tailscale or Let's Encrypt,
 never self-signed in production — before enabling a site fragment. `certs.py`
-implements the two issuers, selected with `--cert`. Certs land in
+implements the issuers, selected with `--cert`. Certs land in
 `/etc/nginx/certs/<site>.{crt,key}` (tailscale) or under
-`/etc/letsencrypt/live/<domain>/` (letsencrypt); keys are chmod 600. The
-connecting hostname must match the cert's name.
+`/etc/letsencrypt/live/<domain>/` (http, dns-cloudflare); keys are chmod 600.
+The connecting hostname must match the cert's name.
+
+certbot (and the Cloudflare DNS plugin when needed) is installed automatically
+via apt on first use — no manual `apt install` required.
 
 The examples below use a placeholder fragment path — substitute this app's
 `deploy/nginx/<app>.conf`.
@@ -27,47 +30,58 @@ sudo python3 deploy/shared/host.py enable deploy/nginx/<app>.conf \
 
 Tailscale certs are 90-day; re-run on a timer to renew (it reloads nginx).
 
-## Public IP + domain → Let's Encrypt (certbot, HTTP-01)
+## Public IP + domain → HTTP-01 (`--cert http`)
 
 For a host with a public IP and a real domain whose A/AAAA record points at it.
 certbot validates over HTTP-01 (needs port 80 free and reachable).
 
 ```bash
-sudo apt install certbot
 sudo python3 deploy/shared/host.py enable deploy/nginx/<app>.conf \
-    --domain app.example.com --cert letsencrypt --email you@example.com
+    --domain app.example.com --cert http --email you@example.com
 ```
 
-certbot installs its own renewal timer.
+certbot installs its own renewal timer (`certbot.timer`).
 
-## Behind NAT/CGNAT → Let's Encrypt (certbot, DNS-01 plugin)
+> **Note**: `--cert letsencrypt` is accepted as a legacy alias for `--cert http`.
+
+## Behind NAT/CGNAT → DNS-01 via Cloudflare (`--cert dns-cloudflare`)
 
 For a host with a real domain but no reachable port 80 (NAT, CGNAT,
-firewalled), validate over DNS-01 instead. certbot proves control by writing a
-TXT record through your DNS provider's API, so nothing needs to be
-inbound-reachable. Cloudflare is shown; the same pattern works for any
-[certbot DNS plugin](https://eff-certbot.readthedocs.io/en/stable/using.html#dns-plugins)
-(Route 53, Google, DigitalOcean, …) — swap the `--dns-*` flags.
+firewalled). certbot proves domain control by writing a TXT record through the
+Cloudflare API — nothing needs to be inbound-reachable.
+
+### 1. Create a scoped Cloudflare API token
+
+In the Cloudflare dashboard, create an API token with:
+- **Zone / DNS / Edit** — on the relevant zone
+- **Zone / Zone / Read** — on the relevant zone
+
+Do **not** use the Global API Key.
+
+### 2. Make the token available
+
+Either set it in the environment:
 
 ```bash
-# 1. Install the plugin (matches your certbot install method)
-sudo apt install python3-certbot-dns-cloudflare
-
-# 2. Drop the API token where certbot can read it. Use a scoped Cloudflare token
-#    with Zone:DNS:Edit on the relevant zone (not the global API key).
-sudo install -d -m 700 /root/.secrets
-printf 'dns_cloudflare_api_token = %s\n' "$CF_TOKEN" | sudo tee /root/.secrets/cloudflare.ini >/dev/null
-sudo chmod 600 /root/.secrets/cloudflare.ini
-
-# 3. Issue, pointing the authenticator at the plugin (repeat --certbot-auth-arg
-#    per token). Add `--certbot-auth-arg --dns-cloudflare-propagation-seconds`
-#    `--certbot-auth-arg 30` if DNS needs a moment to propagate.
-sudo python3 deploy/shared/host.py enable deploy/nginx/<app>.conf \
-    --domain app.example.com --cert letsencrypt --email you@example.com \
-    --certbot-auth-arg --dns-cloudflare \
-    --certbot-auth-arg --dns-cloudflare-credentials \
-    --certbot-auth-arg /root/.secrets/cloudflare.ini
+export CF_DNS_API_TOKEN="your-token-here"
 ```
 
-certbot records the authenticator + credentials path in the renewal config at
-first issue, so `certbot renew` reuses the DNS plugin automatically.
+Or pass it directly:
+
+```bash
+--cloudflare-token "your-token-here"
+```
+
+In a multi-service deployment, add `CF_DNS_API_TOKEN` to `site.env`.
+
+### 3. Issue the certificate
+
+```bash
+sudo python3 deploy/shared/host.py enable deploy/nginx/<app>.conf \
+    --domain app.example.com --cert dns-cloudflare --email you@example.com
+```
+
+The token is written to `/etc/letsencrypt/cloudflare.ini` (chmod 600). certbot
+records the authenticator + credentials path in the renewal config at first
+issue, so `certbot renew` (via `certbot.timer`) reuses the DNS plugin
+automatically.
