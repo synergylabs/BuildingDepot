@@ -31,7 +31,7 @@ Then put HTTPS in front (root, once per host):
 ```shell
 sudo python3 deploy/shared/host.py install
 sudo python3 deploy/shared/host.py enable deploy/nginx/buildingdepot.conf \
-    --domain <host> --cert <tailscale|letsencrypt>
+    --domain <host> --cert <tailscale|http|dns-cloudflare>
 ```
 
 Reach CentralService at `https://<host>:81` and DataService at `https://<host>:82`.

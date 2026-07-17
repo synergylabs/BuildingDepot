@@ -3,10 +3,16 @@
 
 Three issuers, consolidated from the apps' former cert scripts:
 
-  - tailscale     : a Let's Encrypt cert for this node's MagicDNS (*.ts.net)
-                    name, validated over the tailnet — no public IP needed.
-  - letsencrypt   : certbot, HTTP-01 on :80 by default, or DNS-01 via
-                    `certbot_auth_args` when :80 is not publicly reachable.
+  - tailscale       : a Let's Encrypt cert for this node's MagicDNS (*.ts.net)
+                      name, validated over the tailnet — no public IP needed.
+  - http            : certbot, HTTP-01 on :80 by default. Needs a public IP and
+                      a domain whose A/AAAA record points at this host.
+                      (`letsencrypt` is accepted as a legacy alias.)
+  - dns-cloudflare  : certbot + the dns-cloudflare plugin, DNS-01 via the
+                      Cloudflare API. Works behind NAT/CGNAT — no inbound port
+                      needed. Requires a Cloudflare API token.
+
+certbot (and the DNS plugin when needed) is installed via apt on first use.
 
 Each issuer writes (or points at) a cert/key pair and returns their paths. The
 proxy config (nginx.py) consumes those paths; this module never touches nginx.
@@ -18,11 +24,15 @@ import json
 import os
 
 import log
+import packages
 import proc
 
 CERT_DIR = "/etc/nginx/certs"
 
-CERT_MODES = ("tailscale", "letsencrypt")
+CERT_MODES = ("tailscale", "http", "dns-cloudflare")
+_LEGACY_ALIASES: dict[str, str] = {"letsencrypt": "http"}
+
+_CF_CREDENTIALS_PATH = "/etc/letsencrypt/cloudflare.ini"
 
 
 def _ensure_cert_dir() -> None:
@@ -63,12 +73,16 @@ def provision_cert(
     domain: str | None = None,
     email: str | None = None,
     certbot_auth_args: list[str] | None = None,
+    cloudflare_token: str | None = None,
 ) -> tuple[str, str]:
     """Provision a cert for `site` using `mode`; return (cert_path, key_path)."""
+    mode = _LEGACY_ALIASES.get(mode, mode)
     if mode == "tailscale":
         return _cert_tailscale(site, domain)
-    if mode == "letsencrypt":
-        return _cert_letsencrypt(domain, email, certbot_auth_args)
+    if mode == "http":
+        return _cert_http(domain, email, certbot_auth_args)
+    if mode == "dns-cloudflare":
+        return _cert_dns_cloudflare(domain, email, cloudflare_token)
     log.die(f"unknown cert mode: {mode} (use one of {', '.join(CERT_MODES)})")
 
 
@@ -91,28 +105,67 @@ def _cert_tailscale(site: str, domain: str | None) -> tuple[str, str]:
     return cert_file, key_file
 
 
-def _cert_letsencrypt(
+def _cert_http(
     domain: str | None,
     email: str | None,
     certbot_auth_args: list[str] | None,
 ) -> tuple[str, str]:
     if not domain:
-        log.die("letsencrypt needs a public --domain that resolves to this host")
-    proc.require_cmd(
-        "certbot",
-        "apt-install certbot (and the DNS plugin if you use DNS-01), then re-run",
-    )
-    # HTTP-01 on :80 by default; override with DNS-01 plugin flags for NAT'd hosts.
+        log.die("http cert mode needs a public --domain that resolves to this host")
+    packages.apt_install(["certbot"])
+    # HTTP-01 on :80 by default; override with custom authenticator flags.
     auth_args = certbot_auth_args if certbot_auth_args else ["--standalone"]
     argv = ["certbot", "certonly", *auth_args, "--non-interactive", "--agree-tos", "-d", domain]
     if email:
         argv += ["-m", email]
     else:
         argv += ["--register-unsafely-without-email"]
-    log.info(f"obtaining a Let's Encrypt cert for {domain}")
+    log.info(f"obtaining a Let's Encrypt cert for {domain} (HTTP-01)")
     proc.run(argv)
+    return _letsencrypt_paths(domain)
+
+
+def _cert_dns_cloudflare(
+    domain: str | None,
+    email: str | None,
+    cloudflare_token: str | None,
+) -> tuple[str, str]:
+    if not domain:
+        log.die("dns-cloudflare cert mode needs --domain")
+    token = cloudflare_token or os.environ.get("CF_DNS_API_TOKEN")
+    if not token:
+        log.die(
+            "dns-cloudflare needs a Cloudflare API token — pass --cloudflare-token "
+            "or set the CF_DNS_API_TOKEN environment variable"
+        )
+    packages.apt_install(["certbot", "python3-certbot-dns-cloudflare"])
+    _write_cf_credentials(token)
+    argv = [
+        "certbot", "certonly",
+        "--dns-cloudflare",
+        "--dns-cloudflare-credentials", _CF_CREDENTIALS_PATH,
+        "--non-interactive", "--agree-tos",
+        "-d", domain,
+    ]
+    if email:
+        argv += ["-m", email]
+    else:
+        argv += ["--register-unsafely-without-email"]
+    log.info(f"obtaining a Let's Encrypt cert for {domain} (DNS-01 via Cloudflare)")
+    proc.run(argv)
+    return _letsencrypt_paths(domain)
+
+
+def _write_cf_credentials(token: str) -> None:
+    """Write the Cloudflare credentials .ini for certbot (chmod 600)."""
+    os.makedirs(os.path.dirname(_CF_CREDENTIALS_PATH), exist_ok=True)
+    fd = os.open(_CF_CREDENTIALS_PATH, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)
+    with os.fdopen(fd, "w", encoding="utf-8") as handle:
+        handle.write(f"dns_cloudflare_api_token = {token}\n")
+    log.step(f"wrote Cloudflare credentials to {_CF_CREDENTIALS_PATH}")
+
+
+def _letsencrypt_paths(domain: str) -> tuple[str, str]:
+    """Return the cert/key paths under /etc/letsencrypt/live/."""
     live = f"/etc/letsencrypt/live/{domain}"
     return f"{live}/fullchain.pem", f"{live}/privkey.pem"
-
-
-

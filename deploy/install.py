@@ -61,7 +61,7 @@ def print_next_steps() -> None:
     log.info("BuildingDepot is up. Next, put HTTPS in front (root, once per host):")
     log.step("sudo python3 deploy/shared/host.py install")
     log.step("sudo python3 deploy/shared/host.py enable deploy/nginx/buildingdepot.conf \\")
-    log.step("     --domain <host> --cert <tailscale|letsencrypt>")
+    log.step("     --domain <host> --cert <tailscale|http|dns-cloudflare>")
 
 
 def main(argv: list[str] | None = None) -> None:

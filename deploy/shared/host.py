@@ -10,7 +10,8 @@ Two subcommands, both operating on the one nginx that fronts every co-located se
 
   enable <fragment> --domain <d> --cert <mode> [...]
       Provision a TLS cert and enable an app's site fragment. Run once per app.
-      Cert modes: tailscale | letsencrypt. Fragments gated by HTTP basic auth
+      Cert modes: tailscale | http | dns-cloudflare (letsencrypt is a legacy
+      alias for http). Fragments gated by HTTP basic auth
       (they reference {{ HTPASSWD_FILE }}) also need --basic-auth USER:PASSWORD,
       which writes the site's htpasswd file.
 
@@ -70,6 +71,7 @@ def cmd_enable(args: argparse.Namespace) -> None:
         domain=args.domain,
         email=args.email,
         certbot_auth_args=args.certbot_auth_arg or None,
+        cloudflare_token=args.cloudflare_token,
     )
     try:
         nginx.enable_site(
@@ -100,7 +102,7 @@ def build_parser() -> argparse.ArgumentParser:
     p_enable.add_argument(
         "--cert",
         required=True,
-        choices=certs.CERT_MODES,
+        choices=(*certs.CERT_MODES, *certs._LEGACY_ALIASES),
         help="certificate issuer",
     )
     p_enable.add_argument("--site", help="site name (defaults to the fragment filename)")
@@ -114,7 +116,11 @@ def build_parser() -> argparse.ArgumentParser:
     p_enable.add_argument(
         "--certbot-auth-arg",
         action="append",
-        help="letsencrypt: extra certbot authenticator arg (repeatable, e.g. for DNS-01)",
+        help="http: extra certbot authenticator arg (repeatable, e.g. for DNS-01)",
+    )
+    p_enable.add_argument(
+        "--cloudflare-token",
+        help="dns-cloudflare: Cloudflare API token (or set CF_DNS_API_TOKEN env var)",
     )
     p_enable.set_defaults(func=cmd_enable)
     return parser
