@@ -1,0 +1,56 @@
+# Slim compose for the bare-metal BuildingDepot stack. Only the services that
+# cannot come from apt run here; everything else (BD Python services, Valkey,
+# RabbitMQ, nginx) is bare-metal + systemd. All ports are loopback-only.
+#
+# Usage:
+#   docker compose -f deploy/compose.yml up -d
+#   docker compose -f deploy/compose.yml --profile dev up -d   # includes mailpit
+
+name: buildingdepot-datastores
+
+services:
+  mongo:
+    image: mongo:7
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PWD}
+    ports:
+      - "127.0.0.1:27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping').ok"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  influxdb:
+    image: influxdb:1.8
+    restart: unless-stopped
+    environment:
+      INFLUXDB_HTTP_AUTH_ENABLED: "true"
+      INFLUXDB_ADMIN_USER: ${INFLUX_USER}
+      INFLUXDB_ADMIN_PASSWORD: ${INFLUX_PWD}
+      INFLUXDB_DB: ${INFLUX_DB}
+    ports:
+      - "127.0.0.1:8086:8086"
+    volumes:
+      - influx-data:/var/lib/influxdb
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:8086/ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  mailpit:
+    image: axllent/mailpit
+    restart: unless-stopped
+    profiles: ["dev"]
+    ports:
+      - "127.0.0.1:1025:1025"
+      - "127.0.0.1:8025:8025"
+
+volumes:
+  mongo-data:
+  influx-data:

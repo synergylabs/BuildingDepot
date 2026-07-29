@@ -1,0 +1,16 @@
+[Unit]
+Description=BuildingDepot Central Replica (XML-RPC on 8080)
+Documentation=file://{{ WORKING_DIRECTORY }}/README.md
+
+[Service]
+Type=simple
+WorkingDirectory={{ WORKING_DIRECTORY }}/buildingdepot/CentralReplica
+ExecStart={{ UV_BIN }} run python3 main.py
+StandardOutput=journal
+StandardError=journal
+Restart=on-failure
+RestartSec=2s
+Environment="PYTHONUNBUFFERED=TRUE"
+
+[Install]
+WantedBy=default.target
