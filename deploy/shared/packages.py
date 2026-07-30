@@ -20,9 +20,10 @@ import proc
 # path; the --user manager may not have it on PATH so units reference it absolutely.
 NODE_BIN = "/usr/bin/node"
 
-# uv is installed via the standalone installer (not in apt). /usr/local/bin/uv
-# is the well-known path; units reference it absolutely (like NODE_BIN above).
-UV_BIN = "/usr/local/bin/uv"
+# uv is installed via pipx (not in apt). pipx always installs per-user into
+# ~/.local/bin regardless of who invokes it, so this is the well-known path;
+# units reference it absolutely (like NODE_BIN above).
+UV_BIN = os.path.expanduser("~/.local/bin/uv")
 
 
 def apt_install(packages: Sequence[str]) -> None:
@@ -67,10 +68,19 @@ def ensure_node() -> str:
 def ensure_uv() -> str:
     """Ensure a uv Python package manager exists; return the absolute path.
 
-    Prefers an existing ``uv`` on PATH; otherwise installs via the official
-    standalone installer to ``/usr/local/bin/`` (requires sudo). The standalone
-    installer is used instead of snap because snap classic confinement breaks
-    stdout under systemd (the same reason Node uses apt, not snap).
+    Prefers an existing ``uv`` on PATH; otherwise installs pipx from apt (a
+    system package, needs sudo once) and uses it to install uv into the
+    current user's ``~/.local/bin`` (no sudo — pipx installs are always
+    per-user, never system-wide).
+
+    Snap was tried and ruled out empirically: the only uv snap available
+    (``astral-uv``) is an unofficial third-party repackaging (publisher
+    "lengau", not astral-sh) and uses classic confinement, which hits the
+    same AppArmor profile-transition bug as the Node snap (LP #1849753) —
+    stdout silently vanishes when redirected under systemd. Verified: `uv
+    --version` under a unit with `StandardOutput=journal` exited 0 and wrote
+    zero bytes. pipx's install has no confinement wrapper and was verified to
+    work under the same conditions.
     """
     existing = shutil.which("uv")
     if existing:
@@ -79,14 +89,11 @@ def ensure_uv() -> str:
     if os.path.exists(UV_BIN):
         log.step(f"uv: present at {UV_BIN}")
         return UV_BIN
-    log.info("installing uv (standalone installer -> /usr/local/bin/)")
-    proc.require_cmd("curl", "needed to download the uv installer")
-    proc.sudo_run(
-        ["sh", "-c", "curl -LsSf https://astral.sh/uv/install.sh | env UV_INSTALL_DIR=/usr/local/bin sh"],
-        reason="install uv to /usr/local/bin",
-    )
+    log.info("installing uv via pipx")
+    apt_install(["pipx"])
+    proc.run(["pipx", "install", "uv"])
     if not os.path.exists(UV_BIN):
-        log.die(f"uv installer ran but {UV_BIN} not found — install uv manually")
+        log.die(f"pipx installed uv but {UV_BIN} not found — check pipx's bin location")
     return UV_BIN
 
 
