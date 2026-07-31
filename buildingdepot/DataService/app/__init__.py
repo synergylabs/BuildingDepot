@@ -59,8 +59,6 @@ oauth = OAuth2Provider()
 
 def create_app(config_mode):
     global app
-    app.debug = True
-    app.secret_key = "secret"
 
     oauth.init_app(app)
 
