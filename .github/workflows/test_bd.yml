@@ -1,5 +1,27 @@
-# This workflow will install Python dependencies, run tests and lint with a single version of Python
-# For more information see: https://help.github.com/actions/language-and-framework-guides/using-python-with-github-actions
+# BROKEN — this workflow no longer works and is expected to fail.
+#
+# It drives `script_for_github_actions.sh`, which installs BD to /srv/buildingdepot
+# by hand, writes `configs/bd_settings.cfg` plus per-service `cs_config`/`ds_config`
+# files, and runs `setup_bd.py "test"`. All of that assumed CS and DS read their
+# settings via `app.config.from_envvar("BD_SETTINGS")`. They no longer do: the
+# services now read the repo-root `.env` through `buildingdepot/bd_config.py`, so
+# the settings the script writes are ignored and startup fails on missing secrets.
+#
+# TODO: port CI to the supported deploy path. Sketch:
+#   1. Replace the `Install BuildingDepot` step with:
+#        python3 deploy/install.py --no-service --no-ask-sudo
+#      which provisions `.env` with generated secrets, brings up the Mongo and
+#      Influx containers, configures Valkey + RabbitMQ, and bootstraps admin/ds1.
+#   2. Start the three services in the background (the runner has no systemd
+#      --user session): `uv run gunicorn ... CentralService:app` etc., mirroring
+#      the ExecStart lines in deploy/systemd/*.service.template.
+#   3. Fold the one thing `setup_bd.py "test"` does that bootstrap_bare.py does
+#      not — rewriting the `password` field in
+#      benchmarking-tools/functional-testing-tool/tests/config.json with the
+#      generated admin password — into a small CI-only step, then delete
+#      setup_bd.py, env.sample, script_for_github_actions.sh, and legacy_scripts/.
+#
+# See docs/deployment.md for the deploy path this should target.
 
 name: BuildingDepot
 on:
