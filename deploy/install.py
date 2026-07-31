@@ -6,12 +6,16 @@ Run from the repo root:
     python3 deploy/install.py                  # full install
     python3 deploy/install.py --no-service     # skip systemd units (CI/dev)
     python3 deploy/install.py --no-bootstrap   # skip admin user + ds1 registration
-    python3 deploy/install.py --force-env      # re-provision deploy/.env from example
+    python3 deploy/install.py --force-env      # re-provision .env from example
     python3 deploy/install.py --no-ask-sudo    # don't prompt before sudo (automation)
     python3 deploy/install.py --dev            # include mailpit SMTP catcher
 
 Bare-metal: BD Python services (via uv + gunicorn), Valkey, RabbitMQ, nginx.
 Docker (loopback only): MongoDB 7, InfluxDB 1.8, optionally mailpit.
+
+The repo-root `.env` is the only config file: the BD services read it directly
+through `buildingdepot/bd_config.py`, and compose reads it for the datastore
+credentials. Nothing is rendered from it.
 
 Idempotent: existing .env is left untouched (use --force-env to overwrite). TLS
 is a separate root step handled by the host nginx — see the commands printed at
@@ -35,16 +39,10 @@ import manifest  # noqa: E402
 import packages  # noqa: E402
 import proc  # noqa: E402
 import systemd  # noqa: E402
-import template  # noqa: E402
 
-ENV_EXAMPLE = os.path.join(DEPLOY_DIR, ".env.example")
-ENV_DEST = os.path.join(DEPLOY_DIR, ".env")
+ENV_EXAMPLE = os.path.join(REPO_ROOT, ".env.example")
+ENV_DEST = os.path.join(REPO_ROOT, ".env")
 COMPOSE_FILE = os.path.join(DEPLOY_DIR, "compose.yml")
-
-BD_SETTINGS_TEMPLATE = os.path.join(DEPLOY_DIR, "templates", "bd_settings.cfg.template")
-BD_SETTINGS_DEST = os.path.join(REPO_ROOT, "configs", "bd_settings.cfg")
-CONFIG_PY_TEMPLATE = os.path.join(DEPLOY_DIR, "templates", "config.py.template")
-CONFIG_PY_DEST = os.path.join(REPO_ROOT, "buildingdepot", "CentralReplica", "config.py")
 
 RABBITMQ_CONF_SRC = os.path.join(DEPLOY_DIR, "rabbitmq", "rabbitmq.conf")
 RABBITMQ_CONF_DEST = "/etc/rabbitmq/rabbitmq.conf"
@@ -55,13 +53,28 @@ SYSTEMD_DIR = os.path.join(DEPLOY_DIR, "systemd")
 SERVICES = ("bd-replica", "bd-central", "bd-data")
 
 # Infra secrets generated locally on first provision.
-GENERATE_SECRETS = ("SECRET_KEY", "MONGO_PWD", "INFLUX_PWD", "REDIS_PWD", "RABBIT_ADMIN_PWD", "RABBIT_END_PWD")
+GENERATE_SECRETS = (
+    "SECRET_KEY",
+    "MONGODB_PWD",
+    "INFLUXDB_PWD",
+    "REDIS_PWD",
+    "RABBITMQ_ADMIN_PWD",
+    "RABBITMQ_ENDUSER_PWD",
+    "BD_CLIENT_SECRET",
+)
 
-# Manifest key -> BD .env key. Cross-app secrets from site.env; endpoint keys
+# BD .env key -> manifest key. Cross-app secrets from site.env; endpoint keys
 # are not mapped because bare-metal BD always connects to localhost.
+#
+# These are credentials BD *registers* for other apps to use, not credentials BD
+# consumes: the RabbitMQ end-user the UI subscribes with, and the OAuth client
+# MitesBackend authenticates with. Declared in the manifest so they can exist
+# before BD does; with no manifest, BD generates its own and stays standalone.
 MANIFEST_MAP: dict[str, manifest.MappingValue] = {
-    "RABBIT_END_USER": "RABBITMQ_END_USER",
-    "RABBIT_END_PWD": "RABBITMQ_END_PWD",
+    "RABBITMQ_ENDUSER_USERNAME": "RABBITMQ_END_USER",
+    "RABBITMQ_ENDUSER_PWD": "RABBITMQ_END_PWD",
+    "BD_CLIENT_ID": "BD_CLIENT_ID",
+    "BD_CLIENT_SECRET": "BD_CLIENT_SECRET",
 }
 
 # Default site manifest location for a co-located host (sibling repo).
@@ -93,7 +106,7 @@ def uv_sync(uv_bin: str) -> None:
 
 
 def provision_env(force: bool) -> dict[str, str]:
-    log.info("provisioning deploy/.env")
+    log.info("provisioning .env")
     manifest.apply_site_env(
         ENV_EXAMPLE,
         ENV_DEST,
@@ -103,21 +116,6 @@ def provision_env(force: bool) -> dict[str, str]:
         force=force,
     )
     return env_module.read_env(ENV_DEST)
-
-
-def render_configs(values: dict[str, str]) -> None:
-    log.info("rendering bd_settings.cfg + CentralReplica/config.py")
-    template_vars = {
-        **values,
-        "MONGO_HOST": "127.0.0.1",
-        "REDIS_HOST": "127.0.0.1",
-        "INFLUX_HOST": "127.0.0.1",
-        "RABBITMQ_HOST": "127.0.0.1",
-    }
-    template.render_file(BD_SETTINGS_TEMPLATE, BD_SETTINGS_DEST, template_vars)
-    log.step(f"wrote {BD_SETTINGS_DEST}")
-    template.render_file(CONFIG_PY_TEMPLATE, CONFIG_PY_DEST, template_vars)
-    log.step(f"wrote {CONFIG_PY_DEST}")
 
 
 def install_systemd_units(uv_bin: str) -> None:
@@ -145,7 +143,7 @@ def configure_valkey(values: dict[str, str]) -> None:
     log.info("configuring Valkey")
     redis_pwd = values.get("REDIS_PWD", "")
     if not redis_pwd:
-        log.die("REDIS_PWD is empty in deploy/.env — cannot configure Valkey")
+        log.die("REDIS_PWD is empty in .env — cannot configure Valkey")
 
     conf_dir = "/etc/valkey/valkey.conf.d"
     conf_path = os.path.join(conf_dir, "buildingdepot.conf")
@@ -212,14 +210,14 @@ def configure_rabbitmq(values: dict[str, str]) -> None:
     )
 
     _rabbitmq_ensure_user(
-        values.get("RABBIT_ADMIN_USER", "bdadmin"),
-        values.get("RABBIT_ADMIN_PWD", ""),
+        values.get("RABBITMQ_ADMIN_USERNAME", "bdadmin"),
+        values.get("RABBITMQ_ADMIN_PWD", ""),
         tags="administrator",
         permissions=(".*", ".*", ".*"),
     )
     _rabbitmq_ensure_user(
-        values.get("RABBIT_END_USER", "bduser"),
-        values.get("RABBIT_END_PWD", ""),
+        values.get("RABBITMQ_ENDUSER_USERNAME", "bduser"),
+        values.get("RABBITMQ_ENDUSER_PWD", ""),
         tags="",
         permissions=("", "", ".*"),
     )
@@ -235,7 +233,7 @@ def _rabbitmq_ensure_user(
 ) -> None:
     """Create or update a RabbitMQ user idempotently."""
     if not password:
-        log.die(f"password for RabbitMQ user '{username}' is empty in deploy/.env")
+        log.die(f"password for RabbitMQ user '{username}' is empty in .env")
     result = proc.sudo_run(
         ["rabbitmqctl", "list_users", "--formatter", "csv"],
         capture=True,
@@ -268,18 +266,28 @@ def _rabbitmq_ensure_user(
 
 
 def bootstrap(values: dict[str, str]) -> None:
-    """Create admin user and register ds1 data service. Idempotent."""
-    log.info("bootstrapping admin user and ds1 data service")
-    mongo_user = values.get("MONGO_USER", "bdadmin")
-    mongo_pwd = values.get("MONGO_PWD", "")
+    """Seed admin user, ds1 data service, and the OAuth client. Idempotent."""
+    log.info("bootstrapping admin user, ds1 data service, and OAuth client")
+    mongo_pwd = values.get("MONGODB_PWD", "")
     if not mongo_pwd:
-        log.die("MONGO_PWD is empty in deploy/.env — cannot bootstrap")
+        log.die("MONGODB_PWD is empty in .env — cannot bootstrap")
+
+    argv = [
+        "--mongo-user", values.get("MONGODB_USERNAME", "bdadmin"),
+        "--mongo-pwd", mongo_pwd,
+    ]
+    client_id = values.get("BD_CLIENT_ID", "")
+    client_secret = values.get("BD_CLIENT_SECRET", "")
+    if client_id and client_secret:
+        argv += ["--client-id", client_id, "--client-secret", client_secret]
+    else:
+        log.step("BD_CLIENT_ID/BD_CLIENT_SECRET unset — skipping OAuth client registration")
 
     # Run bootstrap inline via uv, using the BD venv which has pymongo + werkzeug.
     uv_bin = shutil.which("uv") or packages.UV_BIN
     bootstrap_script = os.path.join(DEPLOY_DIR, "bootstrap_bare.py")
     proc.run(
-        [uv_bin, "run", "python3", bootstrap_script, mongo_user, mongo_pwd],
+        [uv_bin, "run", "python3", bootstrap_script, *argv],
         cwd=REPO_ROOT,
     )
 
@@ -311,7 +319,7 @@ def main(argv: list[str] | None = None) -> None:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--no-service", action="store_true", help="skip installing systemd user units")
     parser.add_argument("--no-bootstrap", action="store_true", help="skip admin user + ds1 registration")
-    parser.add_argument("--force-env", action="store_true", help="overwrite an existing deploy/.env")
+    parser.add_argument("--force-env", action="store_true", help="overwrite an existing .env")
     parser.add_argument("--no-ask-sudo", action="store_true", help="skip confirmation prompts before sudo")
     parser.add_argument("--dev", action="store_true", help="include mailpit SMTP catcher (dev profile)")
     args = parser.parse_args(argv)
@@ -323,7 +331,6 @@ def main(argv: list[str] | None = None) -> None:
     uv_bin = install_uv()
     uv_sync(uv_bin)
     values = provision_env(args.force_env)
-    render_configs(values)
     compose_up(args.dev)
     configure_valkey(values)
     configure_rabbitmq(values)
