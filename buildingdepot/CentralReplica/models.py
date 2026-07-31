@@ -11,7 +11,6 @@ them for the RPCs
 @license: See License file for details.
 """
 
-from config import Config
 from flask import current_app
 from flask_login import UserMixin
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
