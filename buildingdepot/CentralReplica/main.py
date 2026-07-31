@@ -9,8 +9,15 @@ calls in order to avoid talking to the CentralService all the time.
 @license: CMU License. See License file for details.
 """
 
+import sys
+from pathlib import Path
+
+# Run directly (`python3 main.py`) from this directory, so only this directory is
+# on sys.path. Add the parent so the shared `bd_config` module is importable.
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+
 import redis
-from config import Config
+from bd_config import Config
 from models import *
 from mongoengine import connect
 from socketserver import ThreadingMixIn
