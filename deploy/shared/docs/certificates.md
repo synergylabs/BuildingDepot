@@ -72,7 +72,16 @@ Or pass it directly:
 --cloudflare-token "your-token-here"
 ```
 
-In a multi-service deployment, add `CF_DNS_API_TOKEN` to `site.env`.
+In a multi-service deployment, keep `CF_DNS_API_TOKEN` in `site.env` and pass it
+through explicitly — `sudo` scrubs the environment by default, so an exported
+variable does not reach `certbot`:
+
+```bash
+sudo CF_DNS_API_TOKEN="$CF_DNS_API_TOKEN" python3 deploy/shared/host.py enable ...
+```
+
+A `sudo VAR=...` assignment also keeps the token out of the process arguments,
+unlike `--cloudflare-token`.
 
 ### 3. Issue the certificate
 

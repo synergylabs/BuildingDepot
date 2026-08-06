@@ -3,17 +3,22 @@
 
 Usage (called by install.py, not normally run directly):
     uv run python3 deploy/bootstrap_bare.py --mongo-user U --mongo-pwd P \
+        [--admin-password P] [--reset-admin-password] \
         [--client-id ID --client-secret SECRET]
 
 Connects to MongoDB on 127.0.0.1:27017 (the loopback-published container).
 Every step is idempotent, so re-running after a config change is safe.
+
+The admin password is supplied by the caller rather than invented here, so that it
+lives somewhere recoverable — install.py passes the value from the repo's `.env`.
+Without --admin-password one is generated, which leaves it knowable only from this
+output.
 """
 
 from __future__ import annotations
 
 import argparse
-import random
-import string
+import secrets
 
 from pymongo import MongoClient
 from pymongo.database import Database
@@ -21,25 +26,36 @@ from pymongo.database import Database
 ADMIN_EMAIL = "admin@buildingdepot.org"
 
 
-def create_admin(db: Database) -> None:
-    """Insert the super user, printing a one-time password. No-op if present."""
+def create_admin(db: Database, password: str, *, reset: bool = False) -> None:
+    """Insert the super user, or optionally reset an existing one's password.
+
+    Without *reset* an existing admin is left alone, so a re-run never invalidates
+    the password whoever deployed this host wrote down. With it, the stored hash is
+    replaced — which is what makes rotating the password possible at all, since the
+    insert is a no-op once the user exists.
+    """
     from werkzeug.security import generate_password_hash
 
-    tmp_password = "".join(random.choice(string.ascii_letters + string.digits) for _ in range(16))
-    try:
-        db.user.insert_one({
-            "email": ADMIN_EMAIL,
-            "password": generate_password_hash(tmp_password),
-            "first_name": "Admin",
-            "first_login": True,
-            "role": "super",
-        })
-        print(f"\n{ADMIN_EMAIL} / {tmp_password}  (change on first login)\n")
-    except Exception as exc:
-        if "duplicate key" in str(exc).lower():
-            print("admin user already exists — skipping")
-        else:
-            raise
+    existing = db.user.find_one({"email": ADMIN_EMAIL})
+    if existing is not None:
+        if not reset:
+            print("admin user already exists — leaving its password alone")
+            return
+        db.user.update_one(
+            {"email": ADMIN_EMAIL},
+            {"$set": {"password": generate_password_hash(password), "first_login": True}},
+        )
+        print(f"reset the password for {ADMIN_EMAIL}")
+        return
+
+    db.user.insert_one({
+        "email": ADMIN_EMAIL,
+        "password": generate_password_hash(password),
+        "first_name": "Admin",
+        "first_login": True,
+        "role": "super",
+    })
+    print(f"created super user {ADMIN_EMAIL}")
 
 
 def register_data_service(db: Database) -> None:
@@ -99,9 +115,24 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--mongo-user", required=True, help="MongoDB admin username")
     parser.add_argument("--mongo-pwd", required=True, help="MongoDB admin password")
+    parser.add_argument(
+        "--admin-password", default="",
+        help="password for the super user (generated, and printed once, if omitted)",
+    )
+    parser.add_argument(
+        "--reset-admin-password", action="store_true",
+        help="replace an existing super user's password instead of leaving it alone",
+    )
     parser.add_argument("--client-id", default="", help="pre-declared BD OAuth client id")
     parser.add_argument("--client-secret", default="", help="pre-declared BD OAuth client secret")
     args = parser.parse_args()
+
+    admin_password = args.admin_password
+    if not admin_password:
+        # token_urlsafe, not random.choice: this is a credential, so it needs a
+        # cryptographically secure source.
+        admin_password = secrets.token_urlsafe(24)
+        print(f"\n{ADMIN_EMAIL} / {admin_password}  (not stored anywhere — write it down)\n")
 
     connection: MongoClient = MongoClient(
         host="127.0.0.1", port=27017,
@@ -109,7 +140,7 @@ def main() -> None:
     )
     db: Database = connection.buildingdepot
 
-    create_admin(db)
+    create_admin(db, admin_password, reset=args.reset_admin_password)
     register_data_service(db)
 
     if args.client_id and args.client_secret:
