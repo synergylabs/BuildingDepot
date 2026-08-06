@@ -61,6 +61,10 @@ GENERATE_SECRETS = (
     "RABBITMQ_ADMIN_PWD",
     "RABBITMQ_ENDUSER_PWD",
     "BD_CLIENT_SECRET",
+    # The super user's password. Generated into .env rather than invented by
+    # bootstrap_bare.py and printed, so it survives the install output scrolling
+    # past — that account cannot otherwise be recovered without re-seeding.
+    "BD_ADMIN_PWD",
 )
 
 # BD .env key -> manifest key. Cross-app secrets from site.env; endpoint keys
@@ -75,6 +79,9 @@ MANIFEST_MAP: dict[str, manifest.MappingValue] = {
     "RABBITMQ_ENDUSER_PWD": "RABBITMQ_END_PWD",
     "BD_CLIENT_ID": "BD_CLIENT_ID",
     "BD_CLIENT_SECRET": "BD_CLIENT_SECRET",
+    # BD's own super user, declared on the manifest side so a co-located host can
+    # record it alongside the other credentials it generates.
+    "BD_ADMIN_PWD": "BD_ADMIN_PASSWORD",
 }
 
 # Default site manifest location for a co-located host (sibling repo).
@@ -276,6 +283,9 @@ def bootstrap(values: dict[str, str]) -> None:
         "--mongo-user", values.get("MONGODB_USERNAME", "bdadmin"),
         "--mongo-pwd", mongo_pwd,
     ]
+    admin_pwd = values.get("BD_ADMIN_PWD", "")
+    if admin_pwd:
+        argv += ["--admin-password", admin_pwd]
     client_id = values.get("BD_CLIENT_ID", "")
     client_secret = values.get("BD_CLIENT_SECRET", "")
     if client_id and client_secret:

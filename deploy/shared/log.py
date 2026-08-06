@@ -48,6 +48,16 @@ def warn(message: str) -> None:
     print(_paint("warn", _YELLOW) + " " + message, file=sys.stderr)
 
 
+def manual(message: str) -> None:
+    """Print something the operator has to do by hand.
+
+    Louder than `warn` because these lines are the ones that stop working if they
+    are missed — an off-host DNS record, a console toggle — and they have to stand
+    out from the wall of package-manager output they arrive in the middle of.
+    """
+    print(_paint("MANUAL", _YELLOW + _BOLD) + " " + message, file=sys.stderr)
+
+
 def die(message: str, code: int = 1) -> NoReturn:
     """Print an error line and exit non-zero."""
     print(_paint("error", _RED + _BOLD) + " " + message, file=sys.stderr)
