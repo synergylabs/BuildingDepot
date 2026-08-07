@@ -139,11 +139,13 @@ def install_systemd_units(uv_bin: str) -> None:
 def compose_up(dev: bool) -> None:
     packages.ensure_docker()
     log.info("bringing up datastore containers (loopback only)")
-    argv = ["docker", "compose", "-f", COMPOSE_FILE, "--env-file", ENV_DEST]
+    argv = ["compose", "-f", COMPOSE_FILE, "--env-file", ENV_DEST]
     if dev:
         argv.extend(["--profile", "dev"])
     argv.extend(["up", "-d"])
-    proc.run(argv, cwd=DEPLOY_DIR)
+    # docker_run, not proc.run: on a host where docker was just installed the
+    # invoking user's new `docker` group is not active until they log in again.
+    packages.docker_run(argv, reason="start the datastore containers", cwd=DEPLOY_DIR)
 
 
 def configure_valkey(values: dict[str, str]) -> None:
