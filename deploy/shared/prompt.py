@@ -62,6 +62,19 @@ def _ask(question: str) -> str:
     return line.strip()
 
 
+def ask(question: str, *, default: str = "") -> str:
+    """Ask for a free-text value, returning what was typed (blank keeps *default*).
+
+    Under `--yes` the terminal is not read at all and *default* is returned, which
+    for a value nobody can invent means the empty string — so a caller that needs a
+    real answer has to check for one rather than assume the prompt happened.
+    """
+    if _yes:
+        return default
+    suffix = f" [{default}]" if default else ""
+    return _ask(f"    {question}{suffix}: ") or default
+
+
 def confirm(question: str) -> bool:
     """Ask a yes/no question, returning True only on an explicit yes.
 
