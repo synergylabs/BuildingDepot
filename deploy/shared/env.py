@@ -120,7 +120,23 @@ def provision_env(
     generate_keys = set(generate)
 
     if os.path.exists(dest_path) and not force:
-        log.step(f"{dest_path} already present — leaving it untouched")
+        if generate_keys:
+            values = read_env(dest_path)
+            new_secrets = {
+                key: generate_secret()
+                for key in generate_keys
+                if values.get(key, "").strip() in _PLACEHOLDER_VALUES
+            }
+            if new_secrets:
+                update_env(dest_path, new_secrets)
+                log.step(
+                    f"{dest_path} already present, generated "
+                    f"{', '.join(new_secrets)}"
+                )
+            else:
+                log.step(f"{dest_path} already present, nothing to generate")
+        else:
+            log.step(f"{dest_path} already present, leaving it untouched")
         return False
     if not os.path.exists(example_path):
         log.die(f"template not found: {example_path}")
