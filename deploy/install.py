@@ -35,7 +35,6 @@ sys.path.insert(0, os.path.join(DEPLOY_DIR, "shared"))
 
 import env as env_module  # noqa: E402
 import log  # noqa: E402
-import manifest  # noqa: E402
 import packages  # noqa: E402
 import proc  # noqa: E402
 import systemd  # noqa: E402
@@ -67,28 +66,6 @@ GENERATE_SECRETS = (
     "BD_ADMIN_PWD",
 )
 
-# BD .env key -> manifest key. Cross-app secrets from site.env; endpoint keys
-# are not mapped because bare-metal BD always connects to localhost.
-#
-# These are credentials BD *registers* for other apps to use, not credentials BD
-# consumes: the RabbitMQ end-user the UI subscribes with, and the OAuth client
-# MitesBackend authenticates with. Declared in the manifest so they can exist
-# before BD does; with no manifest, BD generates its own and stays standalone.
-MANIFEST_MAP: dict[str, manifest.MappingValue] = {
-    "RABBITMQ_ENDUSER_USERNAME": "RABBITMQ_END_USER",
-    "RABBITMQ_ENDUSER_PWD": "RABBITMQ_END_PWD",
-    "BD_CLIENT_ID": "BD_CLIENT_ID",
-    "BD_CLIENT_SECRET": "BD_CLIENT_SECRET",
-    # BD's own super user, declared on the manifest side so a co-located host can
-    # record it alongside the other credentials it generates.
-    "BD_ADMIN_PWD": "BD_ADMIN_PASSWORD",
-}
-
-# Default site manifest location for a co-located host (sibling repo).
-# Resolution honours $SITE_ENV first; absent any manifest, BD provisions
-# from .env.example alone (standalone fallback).
-DEFAULT_MANIFEST = os.path.join(os.path.dirname(REPO_ROOT), "Mites-Deploy", "site.env")
-
 # Bare-metal apt packages.
 APT_PACKAGES = ["valkey-server", "rabbitmq-server"]
 
@@ -114,12 +91,10 @@ def uv_sync(uv_bin: str) -> None:
 
 def provision_env(force: bool) -> dict[str, str]:
     log.info("provisioning .env")
-    manifest.apply_site_env(
+    env_module.provision_env(
         ENV_EXAMPLE,
         ENV_DEST,
-        MANIFEST_MAP,
         generate=GENERATE_SECRETS,
-        site_path=DEFAULT_MANIFEST,
         force=force,
     )
     return env_module.read_env(ENV_DEST)
