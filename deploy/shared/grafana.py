@@ -122,11 +122,11 @@ def restart() -> None:
 
 def reset_admin_password(password: str) -> None:
     """Reset the admin password on an already-initialised Grafana."""
-    proc.require_cmd("grafana-cli", "install grafana first")
+    proc.require_cmd("grafana", "install grafana first")
     log.info("resetting the Grafana admin password (grafana-cli)")
     # quiet + capture keep the password out of the step log and the terminal.
     proc.run(
-        ["grafana-cli", "admin", "reset-admin-password", password],
+        ["grafana", "cli", "admin", "reset-admin-password", password],
         quiet=True,
         capture=True,
     )
