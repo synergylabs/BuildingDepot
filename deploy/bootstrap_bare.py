@@ -78,7 +78,7 @@ def register_oauth_client(db: Database, client_id: str, client_secret: str) -> N
 
     BD normally mints clients itself (`GET /oauth/client` returns a fresh
     id/secret pair), but a co-located MitesBackend needs the pair to exist
-    *before* it first authenticates — the site manifest declares it and BD
+    *before* it first authenticates — the shared `.env` declares it and BD
     registers it here. BD's token endpoint only looks the pair up
     (`Client.objects(client_id=..., client_secret=...)` in
     `CentralService/app/oauth_bd/views.py:get_access_token`), so a declared pair

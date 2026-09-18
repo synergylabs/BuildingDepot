@@ -52,11 +52,12 @@
 
 ## System-level (BD + other services)
 
-- [ ] Manifest flow: set `$SITE_ENV` to a real `site.env`, run install.py,
-      verify `RABBITMQ_END_PWD` flows from the manifest into BD's
-      `RABBITMQ_ENDUSER_PWD` and into the RabbitMQ user.
+- [ ] Unified env flow: symlink the shared `site.env` to each app's `.env`, run
+      the installers in order, and verify the shared RabbitMQ credentials reach BD
+      and the UI.
 - [ ] RabbitMQ token auth: connect with a BD OAuth token as STOMP password,
       verify HTTP backend calls CS at `127.0.0.1:8081/rabbitmq/user`.
 - [ ] Web-STOMP end-to-end: publish a reading via DataService, subscribe over
       wss:15675, verify delivery through nginx.
-- [ ] `bootstrap_host.py` co-located deploy with BD + backend + UI.
+- [ ] Co-located deploy with BD + backend + UI, including required Broker
+      enrollment and host nginx/TLS setup.

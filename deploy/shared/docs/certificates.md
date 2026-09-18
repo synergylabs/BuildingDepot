@@ -1,96 +1,71 @@
-<!-- vendored deploy library — do not edit here; regenerate from the deploy source. -->
+<!-- vendored deploy library; do not edit here; regenerate from the deploy source. -->
 
-# Certificate provisioning (`host.py enable --cert ...`)
+# HTTPS certificates
 
-`host.py enable` provisions a real certificate — Tailscale or Let's Encrypt,
-never self-signed in production — before enabling a site fragment. `certs.py`
-implements the issuers, selected with `--cert`. Certs land in
-`/etc/nginx/certs/<site>.{crt,key}` (tailscale) or under
-`/etc/letsencrypt/live/<domain>/` (http, dns-cloudflare); keys are chmod 600.
-The connecting hostname must match the cert's name.
+Slop warning: text is LLM-written.
 
-certbot (and the Cloudflare DNS plugin when needed) is installed automatically
-via apt on first use — no manual `apt install` required.
+Use `host.py enable` to obtain a trusted certificate and publish one nginx site.
+The hostname in `--domain` must match the certificate.
 
-The examples below use a placeholder fragment path — substitute this app's
-`deploy/nginx/<app>.conf`.
+Run the following from the relevant repository.
+Use `Mites-Deploy/shared/host.py` from the deployment repository.
+Use `deploy/shared/host.py` from an application repository.
 
-## Private / no public IP → Tailscale
-
-For a host with no public IP but on your tailnet. The cert comes from Tailscale
-for the node's MagicDNS name (Let's Encrypt backed, validated over `ts.net`
-DNS), so it is real and publicly trusted. One-time: enable **MagicDNS** and
-**HTTPS Certificates** in the tailnet admin console, and `tailscale up` on the
-host.
+Install the shared nginx configuration once per host:
 
 ```bash
-sudo python3 deploy/shared/host.py enable deploy/nginx/<app>.conf \
-    --cert tailscale          # --domain auto-detected from `tailscale status`
+cd /path/to/Mites-Deploy
+sudo python3 shared/host.py install
 ```
 
-Tailscale certs are 90-day; re-run on a timer to renew (it reloads nginx).
+Run `enable` once for each nginx site.
+Run it again only after changing a site, domain, certificate mode, or certificate.
 
-## Public IP + domain → HTTP-01 (`--cert http`)
+Choose one certificate mode.
 
-For a host with a public IP and a real domain whose A/AAAA record points at it.
-certbot validates over HTTP-01 (needs port 80 free and reachable).
+## Tailscale
+
+Use this mode for a private host on your tailnet.
+Enable MagicDNS and HTTPS Certificates in the Tailscale admin console first.
 
 ```bash
+cd /path/to/<service>
+sudo python3 deploy/shared/host.py enable deploy/nginx/<app>.conf \
+    --domain <node>.<tailnet>.ts.net --cert tailscale
+```
+
+Re-run the command before the 90-day certificate expires.
+
+## Public domain
+
+Use `http` when the domain points to this host and port 80 is reachable.
+
+```bash
+cd /path/to/<service>
 sudo python3 deploy/shared/host.py enable deploy/nginx/<app>.conf \
     --domain app.example.com --cert http --email you@example.com
 ```
 
-certbot installs its own renewal timer (`certbot.timer`).
+Certbot installs a renewal timer.
 
-> **Note**: `--cert letsencrypt` is accepted as a legacy alias for `--cert http`.
+## Cloudflare DNS
 
-## Behind NAT/CGNAT → DNS-01 via Cloudflare (`--cert dns-cloudflare`)
+Use `dns-cloudflare` when port 80 is not reachable.
+Create a Cloudflare API token with `Zone:DNS:Edit` and `Zone:Zone:Read` on the
+relevant zone.
+Do not use the Global API Key.
 
-For a host with a real domain but no reachable port 80 (NAT, CGNAT,
-firewalled). certbot proves domain control by writing a TXT record through the
-Cloudflare API — nothing needs to be inbound-reachable.
-
-### 1. Create a scoped Cloudflare API token
-
-In the Cloudflare dashboard, create an API token with:
-- **Zone / DNS / Edit** — on the relevant zone
-- **Zone / Zone / Read** — on the relevant zone
-
-Do **not** use the Global API Key.
-
-### 2. Make the token available
-
-Either set it in the environment:
+Pass the token through `sudo` so it does not appear in the process arguments:
 
 ```bash
-export CF_DNS_API_TOKEN="your-token-here"
+cd /path/to/<service>
+sudo CF_DNS_API_TOKEN="$CF_DNS_API_TOKEN" \
+  python3 deploy/shared/host.py enable deploy/nginx/<app>.conf \
+  --domain app.example.com --cert dns-cloudflare --email you@example.com
 ```
 
-Or pass it directly:
+Store the token in `site.env` for a multi-service deployment.
+The installer stores it in `/etc/letsencrypt/cloudflare.ini` with restricted
+permissions and configures renewal.
 
-```bash
---cloudflare-token "your-token-here"
-```
-
-In a multi-service deployment, keep `CF_DNS_API_TOKEN` in `site.env` and pass it
-through explicitly — `sudo` scrubs the environment by default, so an exported
-variable does not reach `certbot`:
-
-```bash
-sudo CF_DNS_API_TOKEN="$CF_DNS_API_TOKEN" python3 deploy/shared/host.py enable ...
-```
-
-A `sudo VAR=...` assignment also keeps the token out of the process arguments,
-unlike `--cloudflare-token`.
-
-### 3. Issue the certificate
-
-```bash
-sudo python3 deploy/shared/host.py enable deploy/nginx/<app>.conf \
-    --domain app.example.com --cert dns-cloudflare --email you@example.com
-```
-
-The token is written to `/etc/letsencrypt/cloudflare.ini` (chmod 600). certbot
-records the authenticator + credentials path in the renewal config at first
-issue, so `certbot renew` (via `certbot.timer`) reuses the DNS plugin
-automatically.
+Replace `<app>` with the service name and repeat the enable command for each site.

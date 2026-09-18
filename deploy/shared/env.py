@@ -47,8 +47,14 @@ def read_env(path: str) -> dict[str, str]:
                 continue
             key = match.group(2)
             raw = match.group(3).strip()
-            if len(raw) >= 2 and raw[0] == raw[-1] and raw[0] in ("'", '"'):
+            quoted = len(raw) >= 2 and raw[0] == raw[-1] and raw[0] in ("'", '"')
+            if quoted:
                 raw = raw[1:-1]
+            else:
+                if raw.startswith("#"):
+                    raw = ""
+                else:
+                    raw = re.split(r"\s+#", raw, maxsplit=1)[0].rstrip()
             values[key] = raw
     return values
 

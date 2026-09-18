@@ -48,6 +48,11 @@ is no generated settings file. Copy `.env.example` to start by hand, or let
 names, `NAME=ds1`, default hosts and ports) are defaults in `bd_config.py`, not
 env keys.
 
+For a multi-service deployment, follow the authoritative procedure in
+[`Mites-Deploy/README.md`](../Mites-Deploy/README.md).
+This installer provisions BuildingDepot only; host nginx, TLS, firewall rules, and
+user-service linger are separate host steps.
+
 Documentation
 =============
 
