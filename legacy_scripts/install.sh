@@ -48,6 +48,7 @@ function deploy_services() {
 
   #If user already has certificate
   if [ "$response" == "Y" ] || [ "$response" == "y" ]; then
+    cp configs/nginx_sites_ssl.conf.sample configs/nginx_sites_ssl.conf
     echo "Please enter the path to the CA certificate (fullchain.pem):"
     read ca_cert_path
     sed -i "s|<cert_path>|$ca_cert_path|g" /srv/BuildingDepot/configs/nginx_sites_ssl.conf
@@ -156,14 +157,14 @@ sudo apt-get install rabbitmq-server=3.13.7-1 -y --fix-missing -y --fix-missing
       nginx \
       redis-server \
       mongodb-org \
-      influxdb
+      influxdb \
+      nodejs npm
   systemctl enable influxdb
   systemctl start influxdb
   systemctl enable mongod
   systemctl start mongod
   systemctl enable mongod
   systemctl start mongod
-  snap install node --channel=22 --classic
   snap install astral-uv --classic
 }
 
@@ -198,15 +199,21 @@ function setup_email() {
     sed -i -e 's/"inet_interfaces = all/"inet_interfaces = loopback-only"/g' /etc/postfix/main.cf
     service postfix restart
     while true; do
-      echo "Please enter email address to send test mail:"
+      echo "Please enter email address to verify installation:"
       read email_id
       n=$(od -An -N2 -i /dev/random)
       echo $n | mail -s "Test email from BuildingDepot" $email_id
-      echo "Please enter the number you received in the mail"
+      echo "Please enter the temporary password you received in the mail"
       read input
       if [ $input == $n ]; then
         echo "EMAIL = 'LOCAL'" >>/srv/BuildingDepot/configs/bd_settings.cfg
-        echo "EMAIL_ID = 'admin@buildingdepot.org'" >>/srv/BuildingDepot/configs/bd_settings.cfg
+        echo "Please enter an default admin email ID from which email would be sent (admin@buildingdepot.org):"
+        read userID
+        if [ -z "$userID" ]; then
+          echo "EMAIL_ID = 'admin@buildingdepot.org'" >>/srv/BuildingDepot/configs/bd_settings.cfg
+        else
+          echo "EMAIL_ID = '$userID'" >>/srv/BuildingDepot/configs/bd_settings.cfg
+        fi
         break
       else
         echo "Verification failed. Enter R to retry, Y to use GMail"

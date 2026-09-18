@@ -35,8 +35,11 @@ def authenticate_acl(permission_required):
                 sensor_name = kwargs["name"]
             except KeyError:
                 sensor_name = request.get_json()["sensor_id"]
+
+            print("SUDO sensor_name: ", sensor_name)
             # Check what level of access this user has to the sensor
             response = permission(sensor_name)
+            print("SUDO response: ", response)
             if response == "u/d":
                 if Sensor.objects(name=sensor_name).first() is None:
                     return jsonify(
@@ -70,6 +73,7 @@ def permission(sensor_name, email=None, omit_sensorgroup=None):
     if current_res is not None:
         return current_res
 
+    print("permission: ", current_res)
     sensor = Sensor.objects(name=sensor_name).first()
     if sensor is None:
         return "u/d"
@@ -84,6 +88,7 @@ def permission(sensor_name, email=None, omit_sensorgroup=None):
         return "r/w/p"
 
     current_res = check_db(sensor_name, email, omit_sensorgroup=omit_sensorgroup)
+    print("permission goes to check_db: ", current_res)
     # cache the latest permission
     r.hset(sensor_name, email, current_res)
     return current_res
@@ -94,14 +99,24 @@ def check_db(sensor, email, omit_sensorgroup=None):
     if sensor_obj.owner == email:
         return "r/w/p"
 
+    for tag in sensor_obj.tags:
+        if tag.name == "owner" and tag.value == email:
+            return "r/w/p"
+
     tag_list = []
+    tags_to_include_in_query = ["type", "floor", "partialID", "ethernetJack", "macID", "hostname", "ipAddress", "deviceName", "placement", "location", "locationType", "department", "cardinality", "visibility", "owner"]
+    # tag_list_size = 0 # 2025-12 BW removed since we are just using list of tags to match
+
     # Retrieve sensor tags and form search query for Sensor groups
     for tag in sensor_obj["tags"]:
-        current_tag = {"name": tag["name"], "value": tag["value"]}
-        tag_list.append(current_tag)
+        if tag["name"] in tags_to_include_in_query:
+            current_tag = {"name": tag["name"], "value": tag["value"]}
+            tag_list.append(current_tag)
 
+    # query for sensors that match allowlisted tags
+    # https://docs.mongoengine.org/guide/querying.html#query-operators
     args = {}
-    args["tags__size"] = len(tag_list)
+    # args["tags__size"] = tag_list_size # BW I am thinking we can remove size from the query?
     args["tags__all"] = tag_list
     sensorgroups = SensorGroup.objects(**args)
     args = {}
@@ -189,8 +204,12 @@ def permission_allowed(sensorgroup, email):
         tag_list.append(current_tag)
     args["tags__size"] = len(tag_list)
     args["tags__all"] = tag_list
+    print("permission_allowed args: ", args)
     sensors = Sensor.objects(**args)
+    print("sensors: ", sensors, tag_list)
     for sensor in sensors:
+        print("all: ", sensor["name"], email, sensorgroup)
+        print("permission: ", permission(sensor["name"], email, sensorgroup))
         if permission(sensor.name, email, sensorgroup) == "r/w/p":
             return True
     return False

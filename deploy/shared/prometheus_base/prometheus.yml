@@ -1,0 +1,29 @@
+# Shared base Prometheus config — installed once per instrumented host by
+# `prometheus.py install` (the metrics analogue of the nginx base config).
+#
+# Service-specific knowledge does NOT live here. Each service registers itself
+# with `prometheus.py enable`, which drops two files from the service's own
+# repo:
+#   targets/<job>.yml   scrape target (loopback host:port, job label)
+#   rules/<job>.yml     that service's alert rules
+# Both are picked up by the globs below on reload.
+
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+rule_files:
+  - rules/*.yml
+
+scrape_configs:
+  # One generic job; the per-service files under targets/ carry the real
+  # `job` label (and optionally __metrics_path__ / __scheme__).
+  - job_name: services
+    file_sd_configs:
+      - files:
+          - targets/*.yml
+
+  - job_name: prometheus
+    static_configs:
+      - targets:
+          - 127.0.0.1:2080

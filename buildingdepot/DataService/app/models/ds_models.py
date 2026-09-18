@@ -39,6 +39,8 @@ class User(Document):
     last_name = StringField()
     role = StringField()
     first_login = BooleanField(default=True)
+    location_owned = ListField(StringField(""))
+    about_me = StringField("")
 
     def get_id(self):
         return self.email
@@ -112,3 +114,19 @@ class Building(Document):
     description = StringField()
     metadata = DictField()
     tags = ListField(EmbeddedDocumentField(TagInstance))
+
+
+class AggregateTimeSeriesAccessLog(Document):
+    """Log of aggregate time series API requests for rate limiting purposes"""
+    user_email = StringField(required=True)
+    policy_id = StringField(required=True)
+    timestamp = DateTimeField(required=True)
+    request_params = DictField()  # Store full query parameters for auditing
+    
+    meta = {
+        'collection': 'aggregate_timeseries_access_log',
+        'indexes': [
+            {'fields': ['user_email', 'policy_id', 'timestamp']},
+            {'fields': ['timestamp'], 'expireAfterSeconds': 30 * 24 * 3600}  # Auto-expire after 30 days
+        ]
+    }

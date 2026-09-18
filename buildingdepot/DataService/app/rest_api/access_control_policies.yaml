@@ -1,0 +1,56 @@
+# Sample tag-based access control policy for aggregate query
+# Policy should be customized for the deployment, using the tags used in the deployment
+[]
+# - policy_id: own_office
+#   required_tags:
+#     owner: "<user_email>"
+#   optional_tags:
+#     - location
+#     - locationType
+#   time_restrictions:
+#     - max_recency: null
+#       min_time_resolution: null
+#   min_sensors: 1
+#   bypass_bd_acl: false
+#   rate_limit:
+#     max_requests: 100  # Maximum requests allowed per user
+#     window_days: 1     # Time window in days
+# - policy_id: public_spaces
+#   required_tags:
+#     visibility: public
+#   optional_tags:
+#     - floor
+#     - cardinality
+#     - locationType
+#     - locationNotes
+#     - department
+#     - location
+#   time_restrictions:
+#     - max_recency: 900 # 15 min
+#       min_time_resolution: 5 # 5 seconds
+#     - max_recency: 3600 # 1 hour
+#       min_time_resolution: 60 # 1 min
+#     - max_recency: 604800 # 1 week
+#       min_time_resolution: 3600 # 1 hour
+#   min_sensors: 1
+#   bypass_bd_acl: true
+#   rate_limit:
+#     max_requests: 10   # Maximum requests allowed per user
+#     window_days: 1     # Time window in days
+# - policy_id: aggregate_offices
+#   required_tags:
+#     floor: ["1", "2", "3", "4"]
+#   optional_tags:
+#     - cardinality
+#     - locationType
+#     - department
+#   time_restrictions:
+#     - max_recency: 3600 # 1 hour
+#       min_time_resolution: 300 # 5 minute
+#     - max_recency: 604800 # last week
+#       min_time_resolution: 10800 # 3 hours
+#   min_sensors: 14
+#   bypass_bd_acl: true
+#   rate_limit:
+#     max_requests: 10   # Maximum requests allowed per user
+#     window_days: 1     # Time window in days

@@ -16,6 +16,7 @@ registered as blueprints.
 """
 
 import redis
+from bd_config import CONFIG
 from flask import Flask
 from flask_bootstrap import Bootstrap
 from flask_login import LoginManager
@@ -24,7 +25,7 @@ from mongoengine import connect
 from xmlrpc.client import ServerProxy
 
 app = Flask(__name__)
-app.config.from_envvar("BD_SETTINGS")
+app.config.update(CONFIG)
 permissions = {"rw": "r/w", "r": "r", "dr": "d/r", "rwp": "r/w/p"}
 
 login_manager = LoginManager()

@@ -20,6 +20,7 @@ registered as blueprints.
 
 import pdb
 import redis
+from bd_config import CONFIG
 from flask import Flask
 from flask_bootstrap import Bootstrap
 from flask_oauthlib.provider import OAuth2Provider
@@ -28,10 +29,11 @@ from mongoengine import connect, register_connection
 from xmlrpc.client import ServerProxy
 
 app = Flask(__name__)
-app.config.from_envvar("BD_SETTINGS")
+app.config.update(CONFIG)
 permissions = {"rw": "r/w", "r": "r", "dr": "d/r", "rwp": "r/w/p"}
 
 exchange = 'master_exchange'
+rabbitmq_host = app.config.get("RABBITMQ_HOST", "localhost")
 rabbitmq_username = app.config['RABBITMQ_ADMIN_USERNAME']
 rabbitmq_password = app.config['RABBITMQ_ADMIN_PWD']
 
@@ -58,8 +60,6 @@ oauth = OAuth2Provider()
 
 def create_app(config_mode):
     global app
-    app.debug = True
-    app.secret_key = "secret"
 
     oauth.init_app(app)
 

@@ -3,123 +3,98 @@ BuildingDepot v3.3 ([link](https://buildingdepot.org/))
 
 ![BuildingDepot](https://github.com/synergylabs/BuildingDepot-v3/workflows/BuildingDepot/badge.svg)
 
-BuildingDepot (BD) is a data sensor and actuation system for building management and control. It consists of a central server that uses a RESTful API to send (POST) and retrieve (GET) data. The typical data that BD stores is sensor data for buildings, including data from wireless sensor networks, existing SCADA systems, and other related data sources. 
+BuildingDepot (BD) is a data storage and actuation system for building
+management and control. A central server exposes a RESTful API to send (POST)
+and retrieve (GET) data — typically sensor time series from buildings (wireless
+sensor networks, existing SCADA systems, and related sources). BD is made up of
+three services: the **CentralService**, the **DataService**, and the
+**CentralReplica**.
 
-The BD server consists of three seperate services - the DataService, the DirectoryService, and the UserService.
-
-What's Next
+Quick start
 ===========
 
-1. Installation
-2. What's Installed
-3. Configuration
+BD runs **bare metal** under systemd user units (the three Python services,
+Valkey, RabbitMQ), with only the two datastores that cannot come from apt —
+MongoDB 7 and InfluxDB 1.8 — in loopback-only containers. A **host nginx**
+terminates TLS in front.
 
-Installation
-============
+```shell
+git clone <repo-url> && cd BuildingDepot
+python3 deploy/install.py        # provision .env, install services, bootstrap admin/ds1
+```
 
-To install BD, run the install.sh script in the Installation folder. The default installation location is /srv.
+`deploy/install.py` provisions the repo-root `.env`, installs the apt packages
+and systemd units, brings up the datastore containers, and registers the admin
+user (`admin@buildingdepot.org`, temp password printed) and the `ds1` data
+service. Accepts `--no-ask-sudo` to suppress sudo confirmation prompts (used by
+`bootstrap_host.py` for unattended installs). Then put HTTPS in front (root,
+once per host):
 
-1. Extract the package and cd into the folder**:
+```shell
+sudo python3 deploy/shared/host.py install
+sudo python3 deploy/shared/host.py enable deploy/nginx/buildingdepot.conf \
+    --domain <host> --cert <tailscale|http|dns-cloudflare>
+```
 
-    ```shell
-    $ tar -xzf buildingdepot-3.#.#.tar.gz 
-    $ cd buildingdepot-3.#.#/
-    ```
-   
-2. Run the installer (if running installer using sudo, please consider adding -H flag)
-
-    ```shell
-    $ ./install.sh
-    ```
-This will install BuildingDepot in the default installation location /srv/buildingdepot with the following directory structure:
-
-- buildingdepot
-    - CentralService - CentralService
-    - DataService - DataService
-    - CentralReplica - The central replica that is present at every DataService
-    - venv - Python Virtual Environment
-
-* Note:
-This installer installs the BD DataService, CentralService, MongoDB, InfluxDB and Redis on the same machine. The installer also requires requires Mail Transfer Agent or use Gmail APIs. The installer has an optional requirement to use SSL certificates.
-
-Cleaning up an incomplete installation
---------------------------------------
-
-If the install script is partially run, existing databases can cause issues if you rerun the installation script. To clean up a partial installation, run `sudo rm -rf /srv/buildingdepot /var/lib/mongodb/* /etc/mongod.conf /etc/influxdb && sudo apt remove --purge --autoremove mongodb-org redis-server rabbitmq-server influxdb`
-
-Upgrade to New BD Version
-=========================
-To updgrade to new version of BD for an existing installation, 
-run the upgrade_to_latest_BD.sh script in the scripts folder. The 
-default installation location is /srv.
-
-1. Extract the new package and cd into the folder:
-
-    ```shell
-    $ tar -xzf buildingdepot-3.#.#.tar.gz
-    $ cd buildingdepot-3.#.#/
-    ```
-   
-2. cd into the scripts folder:
-    ```shell
-     $ cd scripts/
-    ```
-
-3. Run the installer (if running installer using sudo, please consider adding -H flag)
-    ```shell
-    $ ./install.sh
-    ```
+Reach CentralService at `https://<host>:81` and DataService at `https://<host>:82`.
 
 Configuration
 =============
 
-The BD Installer configures BD with some default values.
+One file: `.env` at the repo root, gitignored, chmod 600. Its keys are the Flask
+config keys verbatim, and `buildingdepot/bd_config.py` reads it directly — there
+is no generated settings file. Copy `.env.example` to start by hand, or let
+`deploy/install.py` provision it with fresh secrets. Structural values (database
+names, `NAME=ds1`, default hosts and ports) are defaults in `bd_config.py`, not
+env keys.
 
-The CentralService can be accessed on port 81 and the DataService on port 82.
+For a multi-service deployment, follow the authoritative procedure in
+[`Mites-Deploy/README.md`](../Mites-Deploy/README.md).
+This installer provisions BuildingDepot only; host nginx, TLS, firewall rules, and
+user-service linger are separate host steps.
 
-CentralService
+Documentation
+=============
 
-To access the CentralService, go to
+| Read this | For |
+|---|---|
+| [`docs/deployment.md`](docs/deployment.md) | full deploy: install, host nginx, cert modes, email, RabbitMQ token auth |
+| [`docs/architecture.md`](docs/architecture.md) | what BD is, what each process does, how the pieces find each other |
 
-   URL - https://<host>:81
+Layout
+======
 
-DataService
+```
+BuildingDepot/
+├── .env.example                   # the only config surface (copy to .env)
+├── deploy/
+│   ├── install.py                 # provision .env + packages + services + bootstrap
+│   ├── bootstrap_bare.py          # admin user + ds1 registration
+│   ├── compose.yml                # Mongo + Influx (+ mailpit in --dev), loopback only
+│   ├── systemd/                   # bd-replica, bd-central, bd-data user units
+│   ├── rabbitmq/                  # broker config + enabled plugins
+│   ├── shared/                    # vendored deploy library (do not edit)
+│   └── nginx/buildingdepot.conf   # host nginx site fragment (81/82/15675)
+├── docs/                          # deployment + architecture
+├── buildingdepot/                 # BD source
+│   ├── bd_config.py               # reads .env; the single config module
+│   ├── CentralService/            # REST API + auth (gunicorn, 8081)
+│   ├── DataService/               # timeseries read/write (gunicorn, 8082)
+│   └── CentralReplica/            # shared XML-RPC authority (8080)
+├── legacy_scripts/                # superseded baremetal installer
+└── configs/, pip_packages.list, Dockerfile, script_for_github_actions.sh, setup_bd.py, env.sample
+```
 
-To access the DataService, go to
+The legacy baremetal installer (`legacy_scripts/install.sh`, `setup_bd.py`,
+`env.sample`, `configs/`) and the baremetal CI (`script_for_github_actions.sh`,
+`.github/workflows/test_bd.yml`) predate the current deploy path and **no longer
+work** — see the TODO at the top of the workflow.
 
-   URL - https://<host>:82
+Do not run `legacy_scripts/install.sh` on a configured host: its line
+`cp env.sample .env` overwrites the real `.env` with the two stale `BD_SETTINGS`
+paths, taking every secret with it.
 
-What's installed
-===============
+License
+=======
 
-* The following packages are installed using apt-get
- * openssl
- * python3-setuptools
- * python3-dev
- * build-essential
- * python3-software-properties
- * mongodb
- * python3-pip
- * nginx
- * supervisor
- * redis-server
- * influxdb
-
-* The following packages are installed in the python virtual environment
- * Flask
- * mongoengine
- * Flask-Login
- * Flask-Script
- * Flask-OAuthlib
- * jsonschema
- * pika
- * Sphinx
- * sphinx-theme
- * Flask-WTF
- * Flask-Bootstrap
- * uWSGI
- * redis
- * influxdb
- * pymongo
- * aniso8601
- * firebase-admin
+See [`license.txt`](license.txt).
